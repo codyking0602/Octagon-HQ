@@ -26,6 +26,19 @@ describe("public numbered UFC Picks calendar", () => {
     ]);
   });
 
+  it("does not spend candidate slots on past numbered UFC events", () => {
+    const html = [
+      '<div id="events-list-past"><a href="/event/ufc-333">UFC 333</a></div>',
+      '<div id="events-list-upcoming"><a href="/event/ufc-334">UFC 334</a>',
+      '<a href="/event/ufc-335">UFC 335</a></div>',
+      '<div id="events-list-results"><a href="/event/ufc-331">UFC 331</a></div>',
+    ].join("");
+    expect(numberedUfcEventLinks(html)).toEqual([
+      "https://www.ufc.com/event/ufc-334",
+      "https://www.ufc.com/event/ufc-335",
+    ]);
+  });
+
   it("chooses nearest future numbered card regardless of source order", () => {
     const now = new Date("2026-10-31T22:00:00Z");
     expect(closestUpcomingNumberedEvent([
