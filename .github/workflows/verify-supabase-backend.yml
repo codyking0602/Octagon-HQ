@@ -116,7 +116,8 @@ jobs:
             supabase/tests/nba_gm_scouting_reprice.sql \
             supabase/tests/nba_gm_three_season_balance.sql \
             supabase/tests/nba_gm_private_release_playthroughs.sql \
-            supabase/tests/nba_gm_owner_starter_score_release.sql
+            supabase/tests/nba_gm_owner_starter_score_release.sql \
+            supabase/tests/nba_gm_v4_one_time_extension.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
