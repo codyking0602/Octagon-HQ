@@ -459,13 +459,19 @@ export function OfficialSportsFeudDailyView({
     ? Number(projection.officialAttempt.publicResult.fast_money_points ?? fastState.points ?? 0)
     : Number(fastState.points ?? 0);
 
+  const correctedNov1NbaBroadcast = projection.sport === "nba"
+    && projection.centralDay === "2026-11-01"
+    && projection.scheduleVersion === "nba-daily-regular-v3-oct30-public"
+    && Number(projection.officialAttempt?.publicResult.editorial_correction_points ?? 0) === 1;
   const fastRevealRows = Array.from({ length: 5 }, (_, index) => {
     const row = fastResults[index] ?? {};
+    const corrected = correctedNov1NbaBroadcast
+      && row.question_id === "nba-feud-nba-tv-broadcast" && Number(row.points ?? 0) === 0;
     return {
       prompt: String(row.prompt ?? ""),
       answer: String(row.submitted_answer ?? "NO ANSWER"),
-      points: Number(row.points ?? 0),
-      counted: row.counted === true,
+      points: corrected ? 1 : Number(row.points ?? 0),
+      counted: corrected || row.counted === true,
       accepted: records(row.accepted_answers).map((accepted) => ({
         name: entityName(accepted.entity),
         points: Number(accepted.points ?? 0),
