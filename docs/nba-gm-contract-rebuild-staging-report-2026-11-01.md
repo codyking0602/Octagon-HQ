@@ -2,6 +2,25 @@
 
 **Status: Incomplete. Do not merge or deploy.** Draft PR #2368: https://github.com/codyking0602/Octagon-HQ/pull/2368 . PR #2367 (visual parity) **merged** into main at 2026-11-01T15:54:58Z (`117238bba93b5b57931dbaf77e83fbeb6911296e`). Our branch starts from its immediately preceding main commit, modifies separate files, and retains merged parity work in the PR's base.
 
+## Owner-approved salary-average rule — NOVEMBER 1 UPDATE
+
+**New locked economic basis (private staging only):** for each of the 330 players, use the *arithmetic average of the actual signed salaries during the relevant part of the 2026-27, 2027-28, 2028-29 game window*. Signed future extensions and options count. This does **not** change any real contract expiration or force a new percentage split:
+
+- **3YR:** signed through 2028-29 or later -> average the three published 2026-27/2027-28/2028-29 salaries and lock that single average game salary for all three game seasons.
+- **1YR, deal expires 2027-28:** average the two published 2026-27/2027-28 salaries for Game Year 1, with Game Years 2-3 governed by existing development-based repricing.
+- **1YR, deal expires 2026-27:** first-year salary alone is its one signed-season average. Game Years 2-3 reprice as before.
+- **Missing future salary:** NOT zero, and NOT a guess using grade/fictional raises. Leave candidate average null and refuse V4 economy launch until sourced and independently checked.
+
+**Actual shared 1YR / 3YR rule comparison:** NFL GM published 594-player sourced catalog from October 26 is **318 1YR (53.5%) / 276 3YR (46.5%)**; NBA GM proposed 330 is **194 1YR (58.8%) / 136 3YR (41.2%)**. NFL salary basis is OverTheCap *contract APY*, not first-year salary. NBA is ~5.3 percentage points more 1YR; **do not artificially adjust cutoff or terms** to resemble NFL.
+
+**Wembanyama:** real signed 2026-27 $16,868,246; 2027-28 $43,500,000; 2028-29 $46,980,000. New staged 3YR salary = **$35,782,749** (rounded average), all three game seasons. Not a fictional Wembanyama premium. https://www.basketball-reference.com/contracts/SAS.html
+
+**Data status:** all **330 source schedule rows staged** in `docs/nba-gm-three-season-salary-averages-2026-11-01.csv`, with isolated migration 905. **258/330 have a mechanically complete candidate average; 72/330 are deliberately null** due to missing or discordant signed future salary sources (including LeBron James, Austin Reaves, several 2026 signings/rookies). Future season data from a July 2 historical snapshot are **not independently verified against November 1**; the rest have other candidate single-source provenance. **0/330 fully independently certified**. The V4 activation gate now checks salary *schedules* as well as contract end dates and refuses any launch with incomplete data.
+
+Sample staged averages: Tyrese Maxey **$43.58M**, Jaylen Brown **$61.02M**, Joel Embiid **$62.75M**, all Philadelphia *game-assigned* 3YR players (not necessarily real Philadelphia employees); some other Philadelphia game players still lack verified future annual salaries.
+
+**Cap impact:** the prior 1,120 Year 1 screens ran on first-year salaries, so are **obsolete for the approved average model**. The screening script now requires all 330 average candidates and fails closed until the remaining 72 salaries are sourced. Cap stays **$155M live**. No justified change to the NBA 7-player game cap without real three-year server playthroughs.
+
 ## Audit census and accuracy limits
 
 - **330/330 distinct player identities and original salaries** match the existing NBA GM game catalog.
@@ -116,7 +135,7 @@ Philadelphia game-team catalog totals: old $156.50M vs candidate $198.84M. This 
 
 ## Strategic concerns: contract economics
 
-- **Victor Wembanyama:** candidate $16,868,246 (last rookie-scale salary) but confirmed 2026 extension carries through 2031–32. That is a 3YR **salary lock** under the owner rule even though real salary increases massively in 2027–28. Distorts economic price/performance unless accepted as the reward for a bargain contract; do not fudge his base.
+- **Victor Wembanyama:** prior Year 1-only candidate $16,868,246 (last rookie-scale salary) is **superseded by the owner's signed-season-average rule**; staged 3YR game salary is now **$35,782,749**. Both sources and math documented above.
 - **Nikola Jokić:** candidate $59,033,114 and signed 2027–28 *player option* as final contract year; 1YR. A hypothetical 2027 extension does not count.
 - **Herb Jones:** 2026–27 active deal alone misleadingly expires soon; signed extension starting 2027–28 means 3YR.
 - **Two-way deals:** Braden Smith and Josh Dix have candidate player base salary $678,882; actual NBA team cap hit can be $0. The game intentionally needs consistent policy for base salary versus cap hits, rather than interchanging values.
@@ -126,7 +145,7 @@ Philadelphia game-team catalog totals: old $156.50M vs candidate $198.84M. This 
 
 ## Simulations actually completed, and what remains
 
-**Completed:** 1,120 deterministic **Year 1 only** provisional draft-affordability screens were re-executed after the last salary/term corrections (160 per cap, 8 selection strategies, 7 roster roles, candidate pool from all 30 NBA game teams). Repeatable source: `scripts/nba-gm-cap-screening.mjs`. This is **not** the server-authoritative full three-season game: no seeded real development outcomes, future-year reserve constraints, offseason trades/releases/free agency, scores or championship results.
+**Previously completed on the now-superseded first-year-only salary basis:** 1,120 deterministic **Year 1 only** provisional draft-affordability screens were re-executed after the last salary/term corrections (160 per cap, 8 selection strategies, 7 roster roles, candidate pool from all 30 NBA game teams). Repeatable source: `scripts/nba-gm-cap-screening.mjs`. This is **not** the server-authoritative full three-season game: no seeded real development outcomes, future-year reserve constraints, offseason trades/releases/free agency, scores or championship results.
 
 | Salary cap | Completed | Mean Year 1 payroll | Mean cap room | Mean quality index | Choices offered/spin | Multiple Elite |
 |---|---:|---:|---:|---:|---:|---:|
@@ -138,13 +157,13 @@ Philadelphia game-team catalog totals: old $156.50M vs candidate $198.84M. This 
 | $205M | 160/160 | $127.78M | $77.22M | 81.36 | 3.12 | 5.00% |
 | $220M | 160/160 | $132.58M | $87.42M | 81.74 | 3.14 | 7.50% |
 
-These first-season-only results show no strong benefit to automatically raising $155M, but they **cannot decide the cap** before the full development/repricing/retention lifecycle is simulated. The seeds differ across cap scenarios, so these comparisons have sampling noise.
+**All table figures above use superseded first-year salary inputs and MUST NOT be used to choose a cap under the approved average method.** The previous first-season-only results showed no strong benefit to automatically raising $155M, but they **cannot decide the cap** before the full development/repricing/retention lifecycle is simulated. The seeds differ across cap scenarios, so these comparisons have sampling noise.
 
 **NOT completed:** valid 330/330 independent source verification (all 330 provisional game term counts ARE now computed), new-run routing to economyVersion 4, three-year true server-affordability/reprice/stress tests, 1,000+ true full franchise playthroughs, saved-run/backward compatibility tests, production SQL migration replay, TypeScript/build/full test suite. **No one preferred cap is defensible yet.** The preliminary Year 1 test does *not* justify automatically increasing $155M but ignores potentially severe future repricing crises.
 
 ## Implementation and release boundary
 
-Staged migrations 903 and 904 remain **unmerged**. Migration 903 inserts 330 *unverified* candidate records into private, RLS-protected source table, with authenticated/anon/public direct privileges revoked. Migration 904 defines isolated `nba_gm_v4_contract` and `nba_gm_v4_salary` functions **fail closed** unless all 330 explicitly certified; no live action, catalog or saved run uses them. Repricing follows existing player-specific seeded grade/market factors. Old V2/V3 economies remain untouched.
+Staged migrations **903, 904, and 905** remain **unmerged**. Migration 905 adds the sourced signed-season average and strengthens the V4 source-readiness gate. Migration 903 inserts 330 *unverified* candidate records into private, RLS-protected source table, with authenticated/anon/public direct privileges revoked. Migration 904 defines isolated `nba_gm_v4_contract` and `nba_gm_v4_salary` functions **fail closed** unless all 330 explicitly certified; no live action, catalog or saved run uses them. Repricing follows existing player-specific seeded grade/market factors. Old V2/V3 economies remain untouched.
 
 Source completeness script `node scripts/nba-gm-contract-coverage.mjs --strict` must **fail** while 330 verification incomplete. Private SQL regression tests assert guard behavior and preservation of original 330 salaries and teams; tests are authored but not verified in a full local migration replay.
 
