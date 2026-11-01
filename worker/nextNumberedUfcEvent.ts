@@ -1,4 +1,5 @@
 import { parseUfcEventPage } from "../supabase/functions/sync-next-ufc-event/ufcEventParser.ts";
+import { parseOfficialUfcSegmentTimes } from "../supabase/functions/sync-next-ufc-event/importPolicy.ts";
 import { absoluteUfcEventUrl } from "../supabase/functions/sync-next-ufc-event/sourceUrls.ts";
 
 /**
@@ -40,6 +41,50 @@ function safeOfficialImageUrl(html: string) {
     } catch { /* Invalid images fall back to the atmospheric card treatment. */ }
   }
   return null;
+}
+
+/**
+ * The official calendar sometimes lists the next numbered event before four
+ * matchups are booked. In that case retain only independently sourced event
+ * timing and identity, without fabricating the main event.
+ */
+export function numberedEventScheduleFallback(html: string, url: string, now = new Date()): NextNumberedUfcEvent | null {
+  const number = new URL(url).pathname.match(/^\/event\/ufc-(\d{3})(?:-|$)/)?.[1];
+  if (!number) return null;
+  const headline = (html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1]
+    ?? html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? "")
+    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  if (!new RegExp("\\bUFC\\s*" + number + "\\b", "i").test(headline)) return null;
+
+  const rawTimestamp = html.match(/\bdata-timestamp\s*=\s*["']([^"']+)["']/i)?.[1] ?? "";
+  const parsedTimestamp = /^\d{9,14}$/.test(rawTimestamp)
+    ? new Date(Number(rawTimestamp) * (rawTimestamp.length > 10 ? 1 : 1000))
+    : new Date(rawTimestamp);
+  if (!Number.isFinite(parsedTimestamp.getTime())) return null;
+
+  const text = html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ");
+  let startsAt = "";
+  try {
+    startsAt = parseOfficialUfcSegmentTimes(text, parsedTimestamp.toISOString(), false, now).mainCardStartsAt;
+  } catch {
+    return null;
+  }
+  const hero = html.match(/<[^>]*class\s*=\s*["'][^"']*c-hero__headline(?:\s|["'])[^>]*>([\s\S]*?)<\/[^>]+>/i)?.[1] ?? "";
+  const matchup = hero.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const venue = html.match(/<[^>]*class\s*=\s*["'][^"']*field--name-venue(?:\s|["'])[^>]*>([\s\S]*?)<\/[^>]+>/i)?.[1]
+    ?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() ?? "";
+  return {
+    name: "UFC " + number,
+    matchup: /\bvs\.?\b/i.test(matchup) ? matchup : "Main event to be announced",
+    startsAt,
+    venue,
+    location: "",
+    imageUrl: safeOfficialImageUrl(html),
+  };
 }
 
 export function numberedUfcEventLinks(html: string) {
@@ -89,16 +134,20 @@ export async function discoverNextNumberedUfcEvent(now = new Date(), fetchImpl: 
   const candidates = await Promise.all(links.map(async (url) => {
     try {
       const html = await officialHtml(url, fetchImpl);
-      const parsed = parseUfcEventPage(html, url, "", now);
-      if (parsed.metadata.eventType !== "numbered") return null;
-      return {
-        name: parsed.metadata.name,
-        matchup: parsed.metadata.subtitle,
-        startsAt: parsed.metadata.starts_at,
-        venue: parsed.metadata.venue,
-        location: parsed.metadata.location,
-        imageUrl: safeOfficialImageUrl(html),
-      } satisfies NextNumberedUfcEvent;
+      try {
+        const parsed = parseUfcEventPage(html, url, "", now);
+        if (parsed.metadata.eventType !== "numbered") return null;
+        return {
+          name: parsed.metadata.name,
+          matchup: parsed.metadata.subtitle,
+          startsAt: parsed.metadata.starts_at,
+          venue: parsed.metadata.venue,
+          location: parsed.metadata.location,
+          imageUrl: safeOfficialImageUrl(html),
+        } satisfies NextNumberedUfcEvent;
+      } catch {
+        return numberedEventScheduleFallback(html, url, now);
+      }
     } catch {
       // Individual unfinished/revised cards must not block other official events.
       return null;
