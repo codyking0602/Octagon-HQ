@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { PickEvent } from "../picks/picksModel";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import {
+  footballGotwNotificationMatchupId,
   footballPublishedSpotlight,
   mergeFootballWeeklyMatchupBreakdowns,
   parsePublishedFootballWeek,
@@ -210,6 +211,20 @@ describe("public Football weekly release projection", () => {
     expect(display.compact?.things).toHaveLength(3);
     expect(display.compact?.bottomLine).toEqual([{ text: bottomLine }]);
     expect(display.pathsToWin).toBeUndefined();
+  });
+
+  it("routes the NFL and CFB reminders to their own currently published sheet after authored merges", () => {
+    const cfb = publishedFootballMatchup("cfb", item.cfb!);
+    const nfl = publishedFootballMatchup("nfl", {
+      ...item.cfb!,
+      game: { ...item.cfb!.game, away_team: "Chicago Bears", home_team: "Seattle Seahawks" },
+    });
+    const approvedNfl = { ...nfl, id: "2026-approved-bears-seahawks" };
+    const published = [cfb, nfl];
+    const merged = mergeFootballWeeklyMatchupBreakdowns(published, [approvedNfl]);
+    expect(footballGotwNotificationMatchupId("cfb", published, merged)).toBe(cfb.id);
+    expect(footballGotwNotificationMatchupId("nfl", published, merged)).toBe(approvedNfl.id);
+    expect(footballGotwNotificationMatchupId("nfl", [cfb], [cfb, approvedNfl])).toBeNull();
   });
 
   it("rejects incomplete or unexpected live Spotlight and editorial contracts", () => {
