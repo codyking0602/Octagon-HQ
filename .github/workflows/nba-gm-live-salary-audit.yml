@@ -1,0 +1,44 @@
+name: NBA GM Live Salary Source Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "scripts/nba-gm-fetch-public-contract-snapshot.py"
+      - "docs/nba-gm-330-reconciled-salary-averages-2026-11-01.csv"
+      - ".github/workflows/nba-gm-live-salary-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nba-gm-salary-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  fetch-current-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Validate exact audited SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source parsing dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4
+      - name: Capture BRef signed salary schedule
+        run: python scripts/nba-gm-fetch-public-contract-snapshot.py
+      - name: Archive current external-source snapshot for manual review
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-gm-live-salary-${{ github.event.pull_request.head.sha }}
+          path: /tmp/nba-gm-live-contract-source.json
+          retention-days: 7
