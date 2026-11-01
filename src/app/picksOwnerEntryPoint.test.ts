@@ -12,6 +12,7 @@ const integrationSql = readFileSync(
 const identityGateway = readFileSync("src/features/identity/identityGateway.ts", "utf8");
 const identityControl = readFileSync("src/features/identity/IdentityControl.tsx", "utf8");
 const picksPage = readFileSync("src/features/picks/PicksPage.tsx", "utf8");
+const nextNumberedEvent = readFileSync("src/features/picks/NextNumberedUfcEvent.tsx", "utf8");
 const picksProvider = readFileSync("src/features/picks/PicksProvider.tsx", "utf8");
 const styles = readFileSync("src/styles/picks-owner-entry.css", "utf8");
 const main = readFileSync("src/main.tsx", "utf8");
@@ -40,10 +41,10 @@ describe("Picks owner entry point architecture", () => {
   });
 
   it("uses the canonical owner route for both discoverability surfaces", () => {
-    expect(picksPage).toContain('to="/picks/control#setup"');
-    expect(picksPage).toContain("STAGE NEXT UFC EVENT");
-    expect(picksPage).toContain("Stage → sync → review → publish → monitor → lock/results.");
-    expect(picksPage).toContain('"Check back when the next UFC main card is ready."');
+    expect(picksPage).toContain("<NextNumberedUfcEvent");
+    expect(nextNumberedEvent).toContain('to="/picks/control#setup"');
+    expect(nextNumberedEvent).toContain("Manage Picks event setup");
+    expect(nextNumberedEvent).not.toContain("STAGE NEXT UFC EVENT");
     expect(identityControl).toContain('to="/picks/control"');
     expect(identityControl).toContain("MANAGE PICKS");
     expect(occurrences(identityControl, /canControlPicks === true/g)).toBe(1);

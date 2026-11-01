@@ -116,21 +116,22 @@ describe("Fight Night control entry", () => {
     expect(screen.queryByRole("link", { name: "MANAGE EVENT ›" })).not.toBeInTheDocument();
   });
 
-  it("guides the designated owner to the canonical setup anchor when no card exists", async () => {
+  it("keeps the canonical owner setup anchor discreet beneath the numbered countdown", async () => {
     renderPage(null, true);
 
-    expect(await screen.findByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: "STAGE NEXT UFC EVENT" });
+    expect(await screen.findByRole("heading", { name: "NEXT NUMBERED UFC EVENT" })).toBeInTheDocument();
+    const link = await screen.findByRole("link", { name: "Manage Picks event setup" });
     expect(link).toHaveAttribute("href", "/picks/control#setup");
-    expect(screen.getByText("Stage → sync → review → publish → monitor → lock/results.")).toBeInTheDocument();
+    expect(screen.queryByText("STAGE NEXT UFC EVENT")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Stage → sync/)).not.toBeInTheDocument();
   });
 
-  it("keeps the ordinary no-card state unchanged and private", async () => {
+  it("shows the numbered-event countdown placeholder without exposing owner setup", async () => {
     renderPage(null, false);
 
-    expect(await screen.findByRole("heading", { name: "The next Picks card is being prepared." })).toBeInTheDocument();
-    expect(screen.getByText("Check back when the next UFC main card is ready.")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "STAGE NEXT UFC EVENT" })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Stage → sync/)).not.toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "NEXT NUMBERED UFC EVENT" })).toBeInTheDocument();
+    expect(screen.getByText("Picks open closer to fight night")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Manage Picks event setup" })).not.toBeInTheDocument();
+    expect(screen.queryByText("NO ACTIVE CARD")).not.toBeInTheDocument();
   });
 });

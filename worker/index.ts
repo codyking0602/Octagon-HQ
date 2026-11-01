@@ -1,3 +1,4 @@
+import { serveNextNumberedUfcEvent } from "./nextNumberedUfcEvent";
 import {
   dynamicPreviewRequest,
   resolveRichPreview,
@@ -394,6 +395,9 @@ export default {
   async fetch(request: Request, env: Env, context: WorkerExecutionContext): Promise<Response> {
     const requestUrl = new URL(request.url);
     if (request.method !== "GET") return env.ASSETS.fetch(request);
+    if (requestUrl.pathname === "/api/ufc/next-numbered-event") {
+      return serveNextNumberedUfcEvent(request, context);
+    }
     if (requestUrl.pathname === "/api/football/nfl-roster") {
       return serveNflRoster(requestUrl);
     }
