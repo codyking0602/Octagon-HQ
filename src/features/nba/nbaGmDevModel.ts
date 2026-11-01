@@ -88,8 +88,9 @@ export function nbaGmDevEligible(player: NbaGmDevPlayer, slot: NbaGmSlot) {
   return nbaGmEligibleForSlot(player,slot);
 }
 
-/** Match all chosen players to legal NBA roles. Reflow is deterministic and
- * keeps the five starters filled first whenever the roster allows it. */
+/** Exhaustive legal assignment: fill five starters first, then maximize their
+ * rated talent. Position familiarity breaks ties, never star-vs-bench value.
+ * Match the authoritative server order in NBA GM migration 202612310902. */
 export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: readonly NbaGmDevPlayer[]): NbaGmPick[] | null {
   if (playerIds.length > 7 || new Set(playerIds).size !== playerIds.length) return null;
   const byId=new Map(catalog.map(p=>[p.id,p]));
@@ -97,15 +98,17 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
   if (players.some(p=>!p))return null;
   // Exhaustive matching like the server: minimize bench assignments globally
   // before off-primary roles, not merely the first successful DFS branch.
-  let best:{picks:NbaGmPick[];bench:number;offRole:number;tie:string}|null=null;
+  let best:{picks:NbaGmPick[];bench:number;offRole:number;starterPower:number;tie:string}|null=null;
   function visit(index:number,used:Set<NbaGmSlot>,picks:NbaGmPick[],
-    bench:number,offRole:number):void {
-    if(best&&(bench>best.bench||(bench===best.bench&&offRole>best.offRole)))return;
+    bench:number,offRole:number,starterPower:number):void {
+    if(best&&bench>best.bench)return;
     if(index===players.length){
       const tie=JSON.stringify(picks);
-      if(!best||bench<best.bench||(bench===best.bench&&offRole<best.offRole)||
-        (bench===best.bench&&offRole===best.offRole&&tie<best.tie)){
-        best={picks,bench,offRole,tie};
+      if(!best||bench<best.bench||
+        (bench===best.bench&&starterPower>best.starterPower)||
+        (bench===best.bench&&starterPower===best.starterPower&&offRole<best.offRole)||
+        (bench===best.bench&&starterPower===best.starterPower&&offRole===best.offRole&&tie<best.tie)){
+        best={picks,bench,offRole,starterPower,tie};
       }
       return;
     }
@@ -114,10 +117,11 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
       if(used.has(slot)||!nbaGmDevEligible(player,slot))continue;
       visit(index+1,new Set([...used,slot]),[...picks,{slot,playerId:player.id}],
         bench+(slot==="GUARD"||slot==="BIG"?1:0),
-        offRole+(slot===player.positions[0]?0:1));
+        offRole+(slot===player.positions[0]?0:1),
+        starterPower+(slot==="GUARD"||slot==="BIG"?0:player.currentGrade));
     }
   }
-  visit(0,new Set(),[],0,0);
+  visit(0,new Set(),[],0,0,0);
   return best ? (best as {picks:NbaGmPick[]}).picks : null;
 }
 

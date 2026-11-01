@@ -203,6 +203,20 @@ export default function NbaGmDevPage(){
     }
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
+  // Historical completed sessions remain immutable. Surface old accidental
+  // superstar bench assignments rather than silently rewriting their records.
+  const benchAlert=run?.picks.some(bench=>{
+    if(bench.slot!=="GUARD"&&bench.slot!=="BIG")return false;
+    const p=byId.get(bench.playerId);
+    if(!p)return false;
+    return run.picks.some(starter=>{
+      if(starter.slot==="BIG"||starter.slot==="GUARD")return false;
+      const sp=byId.get(starter.playerId);
+      return sp&&p.currentGrade>=sp.currentGrade+5&&
+        (bench.slot==="BIG"?["PF","C"].includes(starter.slot):["PG","SG"].includes(starter.slot))&&
+        p.positions.includes(starter.slot as "PG"|"SG"|"SF"|"PF"|"C");
+    });
+  })??false;
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
   const displaySalaryYear=run?nbaGmDevDisplaySalaryYear(run.phase):0;
   const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
@@ -263,6 +277,8 @@ export default function NbaGmDevPage(){
       </section>
       <section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
+        <p className="nba-gm-dev__hint">The strongest eligible five start automatically. Guard and Big are backups with reduced minutes in the season simulation.</p>
+        {benchAlert&&<p className="nba-gm-dev__notice" role="status">Older saved rotation: a higher-rated eligible player is on your bench. New franchises optimize starters. Your saved result is unchanged.</p>}
         <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
             const pick=run.picks.find(p=>p.slot===slot);

@@ -77,7 +77,7 @@ export function NbaGmFinalExperience({
   const missedEveryPlayoff=results.length===3&&results.every(season=>season.finish==="Missed Playoffs");
   const totalWins=results.reduce((sum,season)=>sum+season.wins,0);
   const verdict=!score?"LEGACY RUN"
-    :missedEveryPlayoff&&score.score>=78?"TALENT, NO PLAYOFFS"
+    :missedEveryPlayoff?(score.roster>=80?"TALENT, NO PLAYOFFS":"MISSED THE PLAYOFFS")
     :score.score>=92?"ELITE RUN":score.score>=85?"STRONG BUILD"
       :score.score>=78?"SOLID FOUNDATION":score.score>=70?"MIXED RESULTS":"REBUILD NEEDED";
   const verdictDetail=missedEveryPlayoff
@@ -93,21 +93,22 @@ export function NbaGmFinalExperience({
           <span>{verdictDetail}</span></div>
       </div>
       <div className="gm-final__stats">
-        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>ROSTER GRADE</small></div>
+        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>3-YR TALENT GRADE</small></div>
         <div><b>{score?score.playoffs.toFixed(1):"—"}</b><small>PLAYOFF GRADE</small></div>
         <div><b>{retained}/7</b><small>CORE RETAINED</small></div>
         <div><b>{arrivals.length}</b><small>OFFSEASON CHANGES</small></div>
       </div>
     </section>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
-      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>STRENGTH · RECORD · PLAYOFF FINISH</small></header>
+      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH</small></header>
       <div className="gm-final__seasons">
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
-          <div><strong>{Math.round((season.offense+season.defense)/2)}</strong><span>STR</span></div>
+          <div><strong>{Math.round((season.offense+season.defense)/2)}</strong><span>SIM</span></div>
           <b>{season.wins}–{season.losses}</b><em>{season.finish}</em>
         </div>)}
       </div>
+      <p className="gm-final__hint">SIM measures on-court offense/defense, not your three-year GM talent grade. Future seasons include bounded win variance.</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
