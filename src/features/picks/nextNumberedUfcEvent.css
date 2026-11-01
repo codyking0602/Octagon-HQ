@@ -4,7 +4,7 @@
 /* A shorter, cinematic holding-state hero. Actual reviewed event art wins;
    if the CDN fails, the arena remains usable with no broken-image artifact. */
 .ufc-next-event__art{
-  position:relative;height:clamp(96px,25vw,128px);overflow:hidden;isolation:isolate;
+  position:relative;width:100%;height:auto;aspect-ratio:2.35 / 1;min-height:140px;overflow:hidden;isolation:isolate;
   display:grid;place-items:center;
   background:
     radial-gradient(ellipse at 49% -18%,#f0544260,transparent 54%),
@@ -40,13 +40,17 @@
 }
 .ufc-next-event__poster{
   position:absolute;inset:0;width:100%;height:100%;z-index:1;
-  object-fit:cover;object-position:center 19%;
+  /* The 1000x563 reviewed poster puts heads at the top and the full
+     GANE vs HOKIT lettering by ~y=380. Top align within the taller banner
+     instead of clipping the heads and obscuring the typography. */
+  object-fit:cover;object-position:center top;
 }
 .ufc-next-event__art.has-artwork::before,
 .ufc-next-event__art.has-artwork .ufc-next-event__arena{display:none}
 .ufc-next-event__art.has-artwork::after{
-  background:linear-gradient(0deg,#111113 0%,#11111344 25%,transparent 72%),
-    linear-gradient(90deg,#09090b88,transparent 15%,transparent 85%,#09090b88);
+  /* Only feather the bottom edge; never fade through matchup lettering. */
+  background:linear-gradient(0deg,#111113 0%,#11111366 3%,transparent 9%),
+    linear-gradient(90deg,#09090b55,transparent 12%,transparent 88%,#09090b55);
 }
 .ufc-next-event__body{padding:8px clamp(16px,4vw,25px) 18px;display:grid;justify-items:center;gap:5px;text-align:center;min-width:0}
 .ufc-next-event__eyebrow{margin:0;color:#fa4248;font-size:10px;line-height:1.3;font-weight:900;letter-spacing:.17em}
@@ -64,5 +68,5 @@
 .ufc-next-event__status{margin:6px 0 0;padding:7px 12px;border-radius:999px;background:#252528;color:#bdbdc3;font-size:11px;font-weight:750;line-height:1.35}
 .ufc-next-event__fallback{color:#bcbcc1;font-size:13px;line-height:1.4;margin:8px 0}
 .ufc-next-event__owner{justify-self:end;padding:3px 4px;color:#96969d;text-decoration:underline;text-underline-offset:3px;font-size:11px;font-weight:750}
-@media(max-width:360px){.ufc-next-event__art{height:92px}.ufc-next-event__body{padding:8px 13px 15px}.ufc-next-event__date{font-size:11px}.ufc-next-event__venue{font-size:9px}}
+@media(max-width:360px){.ufc-next-event__art{min-height:138px}.ufc-next-event__body{padding:8px 13px 15px}.ufc-next-event__date{font-size:11px}.ufc-next-event__venue{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.ufc-next-event__art{scroll-behavior:auto}}
