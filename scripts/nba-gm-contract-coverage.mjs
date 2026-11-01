@@ -14,14 +14,14 @@ const auditPath="docs/nba-gm-contract-source-audit-2026-11-01.csv";
 const board=JSON.parse(data("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json")).players;
 const fixture=data("supabase/migrations/202612310894_nba_gm_private_330_development_fixtures.sql");
 const oldSalary=new Map([...fixture.matchAll(
-  /\\('(nba-gm-draft-[^']+)','(?:''|[^'])*','[A-Z]{3}',ARRAY\\[[^\\]]+\\]::text\\[\\],\\d+,'[^']+'::jsonb,ARRAY\\[(\\d+),(\\d+),(\\d+)\\]::bigint\\[\\]/g
+  /\('(nba-gm-draft-[^']+)','(?:''|[^'])*','[A-Z]{3}',ARRAY\[[^\]]+\]::text\[\],\d+,'[^']+'::jsonb,ARRAY\[(\d+),(\d+),(\d+)\]::bigint\[\]/g
 )].map(m=>[m[1],Number(m[2])]));
 function parseCSV(text){
   const out=[];let row=[],value="",quoted=false;
   for(let i=0;i<text.length;i++){const c=text[i];
     if(c==='"'){if(quoted&&text[i+1]==='"'){value+='"';i++}else quoted=!quoted}
     else if(c===","&&!quoted){row.push(value);value=""}
-    else if(c==="\\n"&&!quoted){row.push(value.replace(/\\r$/,""));if(row.length>1)out.push(row);row=[];value=""}
+    else if(c==="\n"&&!quoted){row.push(value.replace(/\r$/,""));if(row.length>1)out.push(row);row=[];value=""}
     else value+=c;
   }
   if(row.length||value)out.push([...row,value]);
@@ -49,12 +49,12 @@ for(const row of records){
   const start=Number(row.candidate_2026_27_salary_usd);
   if(!Number.isSafeInteger(start)||start<=0)errors.push("Missing or invalid 2026-27 candidate salary "+b.editorialId);
   if(row.real_contract_end_season){
-    const m=/^(20\\d\\d)-(\\d\\d)$/.exec(row.real_contract_end_season);
+    const m=/^(20\d\d)-(\d\d)$/.exec(row.real_contract_end_season);
     if(!m||Number(m[2])!==Number(m[1])+1)errors.push("Invalid end season "+b.editorialId);
     else if(row.proposed_contract!==(Number(m[1])>=2028?"3YR":"1YR"))
       errors.push("Wrong option-inclusive term "+b.editorialId);
   }else if(row.proposed_contract)errors.push("Term without expiry "+b.editorialId);
-  if(!row.source_url||!/^https:\\/\\//.test(row.source_url))errors.push("Missing source "+b.editorialId);
+  if(!row.source_url||!/^https:\/\//.test(row.source_url))errors.push("Missing source "+b.editorialId);
   if(!row.verification_status)errors.push("Missing verification status "+b.editorialId);
 }
 const verified=records.filter(r=>r.verification_status==="VERIFIED_INDEPENDENT"&&r.proposed_contract);
