@@ -419,9 +419,13 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
     const alsoAcceptedEntityIds = [...(question.alsoAcceptedEntityIds ?? [])];
     const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
     for (const [name, aliases] of additions) {
-      if (candidateIds.some((candidate) => entities.some(
-        (entity) => entity.id === candidate && entity.displayName.toLowerCase() === name.toLowerCase(),
-      ))) continue;
+      const existingIndex = entities.findIndex((entity) =>
+        candidateIds.includes(entity.id) && entity.displayName.toLowerCase() === name.toLowerCase());
+      if (existingIndex >= 0) {
+        const existing = entities[existingIndex]!;
+        entities[existingIndex] = { ...existing, aliases: [...new Set([...(existing.aliases ?? []), ...aliases])] };
+        continue;
+      }
       let suffix = 9;
       while (entities.some((entity) => entity.id === id + ":v" + suffix)) suffix += 1;
       const entityId = id + ":v" + suffix;
