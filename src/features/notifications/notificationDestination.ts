@@ -11,6 +11,13 @@ function isFootballRecap(item: Pick<NotificationItem, "title" | "summary">) {
 export function notificationDestination(
   item: Pick<NotificationItem, "kind" | "route" | "title" | "summary">,
 ): string | null {
+  // Legacy GOTW alerts (including already-delivered inbox rows) still carry
+  // /football. Route each sport to the published matchup sheet instead.
+  if (item.kind === "football_gotw_starting") {
+    const league = /^(NFL|CFB) Game of the Week starts soon$/i.exec(item.title.trim())?.[1]?.toLowerCase();
+    if (league) return `/football/picks?gotw=${league}`;
+  }
+
   if (item.kind === "picks_recap_ready") {
     if (item.route?.startsWith("/football/picks")) {
       if (item.route.includes("view=recap")) return item.route;
