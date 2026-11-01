@@ -126,19 +126,19 @@ Philadelphia game-team catalog totals: old $156.50M vs candidate $198.84M. This 
 
 ## Simulations actually completed, and what remains
 
-**Completed:** 1,120 deterministic **Year 1 only** provisional draft-affordability screens (160 each across seven cap scenarios and eight selection policies). The seed-based screening file is `scripts/nba-gm-cap-screening.mjs`. These screens are **not actual full 3-season server action playthroughs**, use conservative distinct lower-cost slot reserves, and do not model development/repricing, cap crises, trade/release, free agency, full GM scores, playoffs/championships, or legacy saves. Prior screen sample (before final salary cross-check corrections):
+**Completed:** 1,120 deterministic **Year 1 only** provisional draft-affordability screens were re-executed after the last salary/term corrections (160 per cap, 8 selection strategies, 7 roster roles, candidate pool from all 30 NBA game teams). Repeatable source: `scripts/nba-gm-cap-screening.mjs`. This is **not** the server-authoritative full three-season game: no seeded real development outcomes, future-year reserve constraints, offseason trades/releases/free agency, scores or championship results.
 
-| Salary cap | Completed | Mean payroll | Mean room | Mean roster quality | Mean offers per spin | Multiple Elite |
+| Salary cap | Completed | Mean Year 1 payroll | Mean cap room | Mean quality index | Choices offered/spin | Multiple Elite |
 |---|---:|---:|---:|---:|---:|---:|
-| $155M | 160/160 | $112.75M | $42.25M | 80.84 | 2.95 | 2.5% |
-| $165M | 160/160 | $113.33M | $51.67M | 80.75 | 3.03 | 3.13% |
-| $175M | 160/160 | $118.43M | $56.57M | 81.13 | 3.03 | 3.13% |
-| $185M | 160/160 | $122.52M | $62.48M | 81.40 | 3.04 | 3.13% |
-| $195M | 160/160 | $124.26M | $70.74M | 81.31 | 3.10 | 5.0% |
-| $205M | 160/160 | $127.80M | $77.20M | 81.36 | 3.12 | 5.0% |
-| $220M | 160/160 | $132.61M | $87.39M | 81.72 | 3.14 | 7.5% |
+| $155M | 160/160 | $112.85M | $42.15M | 80.87 | 2.96 | 2.50% |
+| $165M | 160/160 | $113.30M | $51.70M | 80.75 | 3.04 | 3.13% |
+| $175M | 160/160 | $118.64M | $56.36M | 81.17 | 3.03 | 3.75% |
+| $185M | 160/160 | $122.48M | $62.52M | 81.43 | 3.04 | 3.13% |
+| $195M | 160/160 | $124.31M | $70.69M | 81.33 | 3.11 | 5.00% |
+| $205M | 160/160 | $127.78M | $77.22M | 81.36 | 3.12 | 5.00% |
+| $220M | 160/160 | $132.58M | $87.42M | 81.74 | 3.14 | 7.50% |
 
-Re-screening against the latest candidates yielded 160/160 drafts completed per cap again, with mean payrolls approximately $112.79M/$113.08M/$118.48M/$123.52M/$124.56M/$127.22M/$132.73M at $155M/$165M/$175M/$185M/$195M/$205M/$220M respectively. This still does not constitute a cap recommendation.
+These first-season-only results show no strong benefit to automatically raising $155M, but they **cannot decide the cap** before the full development/repricing/retention lifecycle is simulated. The seeds differ across cap scenarios, so these comparisons have sampling noise.
 
 **NOT completed:** valid 330/330 independent source verification (all 330 provisional game term counts ARE now computed), new-run routing to economyVersion 4, three-year true server-affordability/reprice/stress tests, 1,000+ true full franchise playthroughs, saved-run/backward compatibility tests, production SQL migration replay, TypeScript/build/full test suite. **No one preferred cap is defensible yet.** The preliminary Year 1 test does *not* justify automatically increasing $155M but ignores potentially severe future repricing crises.
 
