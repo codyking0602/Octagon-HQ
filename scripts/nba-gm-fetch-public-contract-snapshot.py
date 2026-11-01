@@ -22,7 +22,7 @@ def main():
     with urlopen(req, timeout=30) as res:
         html = res.read().decode("utf-8", "replace")
     soup = BeautifulSoup(html, "html.parser")
-    table = soup.select_one("table#contracts")
+    table = soup.select_one("table#player-contracts")
     if table is None:
         tables = soup.select("table")
         table = next((t for t in tables if "2028-29" in t.get_text(" ", strip=True) and "2027-28" in t.get_text(" ", strip=True)), None)
@@ -38,7 +38,7 @@ def main():
             continue
         salaries = {}
         for season in SEASONS:
-            cell = tr.select_one('[data-stat="salary_%s"]' % season.replace("-", "_"))
+            cell = tr.select_one('[data-stat="y%d"]' % (SEASONS.index(season)+1))
             if cell is None:
                 cell = next((td for td in tr.select("td") if td.get("data-stat", "").endswith(season.replace("-", "_"))), None)
             salaries[season] = dollars(cell.get_text(" ", strip=True) if cell else "")
@@ -50,7 +50,7 @@ def main():
                 salaries = dict(zip(SEASONS, numeric[:3]))
         if salaries["2026-27"] is None:
             continue
-        records.append({"name": player, "team": (tr.select_one('[data-stat="team_name_abbr"]') or tr.select_one('[data-stat="team"]')).get_text(" ", strip=True) if (tr.select_one('[data-stat="team_name_abbr"]') or tr.select_one('[data-stat="team"]')) else "", "salaries": salaries})
+        records.append({"name": player, "team": (tr.select_one('[data-stat="team_id"]') or tr.select_one('[data-stat="team"]')).get_text(" ", strip=True) if (tr.select_one('[data-stat="team_name_abbr"]') or tr.select_one('[data-stat="team"]')) else "", "salaries": salaries})
     if len(records) < 300:
         heads = [(t.get("id"), len(t.select("tbody tr")), [c.get("data-stat") for c in t.select("tbody tr:first-child td")[:8]]) for t in soup.select("table")[:12]]
         print(json.dumps({"sourceTables": heads, "htmlLength": len(html), "pageTitle": soup.title.get_text(" ", strip=True) if soup.title else None, "firstContractRow": table.select_one("tbody tr").get_text(" ", strip=True)[:300] if table.select_one("tbody tr") else None}, ensure_ascii=False))
