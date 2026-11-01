@@ -1,0 +1,54 @@
+name: NBA GM Live Salary Source Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "scripts/nba-gm-fetch-public-contract-snapshot.py"
+      - "scripts/nba-gm-compare-bref-salaries.py"
+      - "docs/nba-gm-330-reconciled-salary-averages-2026-11-01.csv"
+      - "docs/nba-gm-330-current-bref-reconciled-2026-11-01.csv"
+      - "scripts/nba-gm-330-live-salary-audit.mjs"
+      - "supabase/migrations/202612310907_nba_gm_bref_corrections_private.sql"
+      - ".github/workflows/nba-gm-live-salary-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nba-gm-salary-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  fetch-current-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - name: Validate exact audited SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source parsing dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4
+      - name: Validate exact 330 signed-window averages and game terms
+        run: node scripts/nba-gm-330-live-salary-audit.mjs
+      - name: Capture BRef signed salary schedule
+        run: python scripts/nba-gm-fetch-public-contract-snapshot.py
+      - name: Compare every game salary with current signed BRef source
+        run: python scripts/nba-gm-compare-bref-salaries.py
+      - name: Archive current source and comparison for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-gm-live-salary-${{ github.event.pull_request.head.sha }}
+          path: |
+            /tmp/nba-gm-live-contract-source.json
+            /tmp/nba-gm-bref-comparison.json
+          retention-days: 7
