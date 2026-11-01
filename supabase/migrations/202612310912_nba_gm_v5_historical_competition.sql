@@ -189,8 +189,11 @@ begin
 end $cohort$;
 
 
+-- The 2023-24 and 2024-25 NBA real top-seven workloads (60 teams) average
+-- 30.1-30.6 starter minutes and 24.1-24.5 bench minutes (minutes by
+-- team-games sorted, cited in V5 audit). 0.63/0.50 of 48 estimates 30.2/24.
 -- 7-player 5-start/2-bench game is not a full 12-player NBA roster. Each
--- starter represents 31.7 of 48 court minutes, bench player ~17.3; uncovered
+-- starter represents 30.2 of 48 court minutes, bench player ~24.0; uncovered
 -- share is modeled at replacement value (-2 BPM), not silently made elite.
 create or replace function private.nba_gm_v5_season(p_state jsonb,p_year integer)
 returns jsonb language plpgsql stable security definer set search_path='' as $v5$
@@ -246,7 +249,7 @@ begin
    -- at bounded rates so elite rim protection is not lost to raw scoring sums.
    v_o:=v_base*.62+greatest(-1.0,least(1.0,(v_off_index-80)*.05));
    v_d:=v_base*.38+greatest(-1.0,least(1.0,(v_def_index-80)*.045));
-   v_weight:=case when v_slot in ('GUARD','BIG') then .36 else .66 end;
+   v_weight:=case when v_slot in ('GUARD','BIG') then .50 else .63 end;
    v_off:=v_off+v_o*v_weight;
    v_def:=v_def+v_d*v_weight;
    if v_slot not in ('GUARD','BIG') then
@@ -270,9 +273,9 @@ begin
  if v_creator_top>=90 and v_creator_second>=80 then v_fit:=v_fit+.25;end if;
  if v_front>=90 and v_perim_sum/v_perim_count>=80 then v_fit:=v_fit+.30;end if;
  v_fit:=greatest(-1.0,least(1.0,v_fit));
- -- 0.98 unrepresented court-minute share times replacement BPM (-2.0).
+ -- 0.85 unrepresented court-minute share times replacement BPM (-2.0).
  -- This is explicit, not seven starters magically playing every minute.
- v_net:=greatest(-13.0,least(14.0,v_off+v_def-1.96+v_fit
+ v_net:=greatest(-13.0,least(14.0,v_off+v_def-1.70+v_fit
    -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.30 end));
  -- 150/150 cohort walk-forward 2025-26 calibration:
  -- W=40.9983+2.2684*observed net (heldout RMSE=3.34 wins).
