@@ -513,6 +513,41 @@ describe("Daily leaderboard game result reconstruction", () => {
     }]);
   });
 
+  it("projects the Nov 1 NBA broadcast correction without changing stored answers", () => {
+    const nba = baseProjection({
+      sport: "nba",
+      centralDay: "2026-11-01",
+      scheduleVersion: "nba-daily-regular-v3-oct30-public",
+      gameType: "sports_feud",
+      publicState: {
+        complete: true,
+        fast_money: { points: 30, results: [{
+          question_id: "nba-feud-nba-tv-broadcast",
+          submitted_answer: "3 Pointer",
+          points: 0,
+          board_rank: null,
+        }] },
+      },
+      officialAttempt: {
+        nativeScore: 83, normalizedScore: 83,
+        completedAt: "2026-11-01T14:24:17Z",
+        publicResult: { score: 83, main_points: 52, fast_money_points: 31, editorial_correction_points: 1 },
+      },
+    });
+    const detail = { fast_money_results: [{ question_id: "nba-feud-nba-tv-broadcast", submitted_text: "3 Pointer" }] };
+    expect(buildSportsFeudFastMoneyRows(nba, detail)[0]).toMatchObject({
+      rawAnswer: "3 Pointer", matchedAnswer: "3 Pointer", points: 1,
+    });
+    const original = baseProjection({
+      ...nba,
+      officialAttempt: {
+        ...nba.officialAttempt!,
+        publicResult: { score: 82, main_points: 52, fast_money_points: 30 },
+      },
+    });
+    expect(buildSportsFeudFastMoneyRows(original, detail)[0]?.points).toBe(0);
+  });
+
   it("keeps the player's raw Fast Money text while showing the canonical match", () => {
     const projection = baseProjection({
       sport: "ufc",

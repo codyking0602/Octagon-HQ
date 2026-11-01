@@ -365,6 +365,12 @@ export function buildSportsFeudFastMoneyRows(
   resultDetail: JsonRecord,
 ) {
   const state = record(projection.publicState.fast_money);
+  // Reflect the audited +1 correction in the result detail without changing the
+  // immutable recorded answer or original saved engine state.
+  const correctedNov1NbaBroadcast = projection.sport === "nba"
+    && projection.centralDay === "2026-11-01"
+    && projection.scheduleVersion === "nba-daily-regular-v3-oct30-public"
+    && Number(projection.officialAttempt?.publicResult.editorial_correction_points ?? 0) === 1;
   const rawByQuestion = new Map(
     records(resultDetail.fast_money_results).map((row) => [
       String(row.questionId ?? row.question_id ?? ""),
@@ -382,7 +388,8 @@ export function buildSportsFeudFastMoneyRows(
       rawAnswer,
       matchedAnswer,
       rank: Number(row.board_rank ?? 0),
-      points: Number(row.points ?? 0),
+      points: correctedNov1NbaBroadcast && questionId === "nba-feud-nba-tv-broadcast"
+        && Number(row.points ?? 0) === 0 ? 1 : Number(row.points ?? 0),
     };
   });
 }
@@ -702,7 +709,7 @@ function SportsFeudLeaderboardResult({
   const fast = record(state.fast_money);
   const boards = records(state.main_boards);
   const mainPoints = Number(state.main_points ?? projection.officialAttempt?.publicResult.main_points ?? 0);
-  const fastPoints = Number(fast.points ?? projection.officialAttempt?.publicResult.fast_money_points ?? 0);
+  const fastPoints = Number(projection.officialAttempt?.publicResult.fast_money_points ?? fast.points ?? 0);
   const fastRows = buildSportsFeudFastMoneyRows(projection, resultDetail);
   const timeRemainingMs = Number(
     fast.time_remaining_ms
