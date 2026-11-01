@@ -28,8 +28,8 @@ begin
   -- NFL parity: 1YR reprices ONCE after Game Year 1; Year 3 holds Year 2
   -- salary, even though the Year 3 player grade continues developing.
   -- Same existing conservative draft forecast shape; no seeded future outcome leak.
-  -- Before development outcomes are revealed, reserve the existing V3 annual
-  -- market uplift (6.5%/12%). This is a known-model baseline, not a
+  -- Before development outcomes are revealed, reserve the fixed Year-2
+  -- extension market uplift (6.5%) for both future seasons. This is a
   -- made-up cap-balancing salary or the actual outcome from seeded repricing.
   -- Calibration may determine stronger risk-aware future-year reserves.
   if coalesce(p_state->>'phase','draft') in ('draft','year1') then
