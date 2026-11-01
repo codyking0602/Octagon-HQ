@@ -21,6 +21,18 @@ Sample staged averages: Tyrese Maxey **$43.58M**, Jaylen Brown **$61.02M**, Joel
 
 **Cap impact:** the prior 1,120 Year 1 screens ran on first-year salaries, so are **obsolete for the approved average model**. The screening script now requires all 330 average candidates and fails closed until the remaining 72 salaries are sourced. Cap stays **$155M live**. No justified change to the NBA 7-player game cap without real three-year server playthroughs.
 
+## Owner-approved averaging update (November 1)
+
+Salary method: average actual signed 2026-27, 2027-28, 2028-29 season salaries that fall within each player's current signed contract. One signed season = that season; two = average of two; three or more = mean of the first three. Never assume or project unsigned years. Keep real-expiry 1YR/3YR game classification unchanged. Existing 1YR future repricing still applies, and 3YR locks the real salary-window average.
+
+Source workbook: docs/nba-gm-contract-averages-2026-11-01.csv. Candidate averages for 258/330 players (92 one-season, 165 historical multiseason, 1 Wembanyama new extension). Remaining 72 are explicitly UNRESOLVED (no invented amounts). None of these source candidates is independently verified for live gameplay. Private migration 905 updates only unused, fail-closed V4 prototype; current V2/V3 game, salary cap and history are unchanged.
+
+Wembanyama signed salaries: $16,868,246 (2026-27), $43,500,000 (2027-28), $46,980,000 (2028-29). Averaged NBA GM three-year salary: **$35,782,749**. Source: https://www.salaryswish.com/players/victor-wembanyama.
+
+NFL GM Oct 26 contract snapshot: 591 new-roster-eligible players, **315 1YR (53.3%)** and **276 3YR (46.7%)**. Includes 3 legacy, no-longer-eligible player records: 594 total / 318 1YR / 276 3YR. NBA GM provisional: **194 1YR (58.8%)** and **136 3YR (41.2%)**, 330 total. NBA is 5.5 percentage points more 1YR-heavy. No target split enforced.
+
+The previous 1,120 first-year-only salary screens used **pre-average** salaries and cannot validate the new $155M cap. Await 72 additional real signed-season values, source review, and complete three-season authoritative simulations before choosing a final cap or enabling V4.
+
 ## Audit census and accuracy limits
 
 - **330/330 distinct player identities and original salaries** match the existing NBA GM game catalog.
