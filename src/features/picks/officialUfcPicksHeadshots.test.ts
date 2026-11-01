@@ -15,7 +15,7 @@ describe("event-specific verified UFC Picks headshot contract", () => {
 
   it("uses the individually reviewed owner-supplied Johnny portrait, not the corrupted ESPN CDN", () => {
     expect(approvedUfcPicksHeadshot(NOV07_2026_UFC_EVENT_ID, "johnny-walker"))
-      .toBe("/assets/fighters/johnny-walker-thumb.webp");
+      .toBe("/assets/fighters/johnny-walker-nov07-thumb.webp");
   });
 
   it("leaves all remaining unapproved November 7 fighters blank despite legacy local files", () => {
