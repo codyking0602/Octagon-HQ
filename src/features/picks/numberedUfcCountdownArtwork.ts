@@ -22,7 +22,11 @@ const REVIEWED_COUNTDOWN_ART = [
     date: "2026-11-15",
     // UFC 334 promotional fight poster, reproduced in this reporting source.
     source: "https://fighttime.ru/news/item/44052-v-boyu-sirila-gana-i-dzhosha-khokita-opredelilsya-favorit.html",
-    src: "https://fighttime.ru/media/k2/items/webp/cache/b765efadf64015917965f8e88b571871_XL.webp?v=4",
+    src: [
+      "https://fighttime.ru/media/k2/items/webp/cache/b765efadf64015917965f8e88b571871_XL.webp?v=4",
+      // Independent second publication of the same UFC 334 promotional poster.
+      "https://ringside24.com/media/post/b034e2ed7b228c0041519c9da5e5721exl_slug.jpg",
+    ],
   },
 ] as const;
 
@@ -33,19 +37,17 @@ function validatedHttpsArtwork(value: string | null | undefined) {
     // Allow only the UFC's official media origins from the backend, or
     // the narrowly reviewed promotional source listed above.
     if (url.protocol !== "https:") return null;
-    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru"].includes(url.hostname)) {
+    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com"].includes(url.hostname)) {
       return url.toString();
     }
   } catch { /* Fallback below. */ }
   return null;
 }
 
-export function numberedUfcCountdownArtwork(event: CountdownArtworkEvent | null) {
-  if (!event || !/^UFC \d{3,4}$/.test(event.name)) return null;
+export function numberedUfcCountdownArtworkCandidates(event: CountdownArtworkEvent | null): string[] {
+  if (!event || !/^UFC \\d{3,4}$/.test(event.name)) return [];
 
   const official = validatedHttpsArtwork(event.imageUrl);
-  if (official) return official;
-
   const eventDate = event.startsAt.slice(0, 10);
   const matchup = event.matchup.toLowerCase();
   const reviewed = REVIEWED_COUNTDOWN_ART.find((poster) => (
@@ -54,5 +56,13 @@ export function numberedUfcCountdownArtwork(event: CountdownArtworkEvent | null)
     matchup.includes(poster.firstName) &&
     matchup.includes(poster.secondName)
   ));
-  return reviewed ? validatedHttpsArtwork(reviewed.src) : null;
+
+  const sources = [official, ...(reviewed?.src ?? [])]
+    .map(validatedHttpsArtwork)
+    .filter((url): url is string => Boolean(url));
+  return [...new Set(sources)];
+}
+
+export function numberedUfcCountdownArtwork(event: CountdownArtworkEvent | null) {
+  return numberedUfcCountdownArtworkCandidates(event)[0] ?? null;
 }
