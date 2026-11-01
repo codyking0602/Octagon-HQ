@@ -3,10 +3,10 @@ import {
   type NbaGmPick, type NbaGmPlayer, type NbaGmSalaryWindow, type NbaGmSlot,
 } from "./nbaGmFoundation";
 
-/** Owner-only game: ratings/positions and 1YR/3YR contracts remain private playtest fixtures. */
+/** Owner-only game: V3 fictional fixtures persist; V4 is real signed-salary-window pricing. */
 export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   gameContract: "1YR" | "3YR";
-  pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT";
+  pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT" | "SIGNED_REAL_SALARY_WINDOW";
   eligibilityKind: "PROVISIONAL_EDITORIAL";
   officialNbaPlayerId: string | null;
   /** Verified 2025–26 NBA Stats API birthdate, aged as of game launch. */
@@ -27,7 +27,7 @@ export interface NbaGmDevSeason {
 export interface NbaGmDevRun {
   version: "nba-gm-dev-v2";
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
-  economyVersion?: 3;
+  economyVersion?: 3 | 4;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
@@ -131,7 +131,7 @@ export function nbaGmDevCanAdd(
   picks:readonly NbaGmPick[], player:NbaGmDevPlayer, catalog:readonly NbaGmDevPlayer[],
   caps:NbaGmSalaryWindow=NBA_GM_DEV_CAPS, phase:NbaGmDevPhase="draft",
 ):boolean{
-  if(picks.some(p=>p.playerId===player.id)||player.pricingKind!=="GAME_FIXTURE_NOT_REAL_CONTRACT")return false;
+  if(picks.some(p=>p.playerId===player.id)||!["GAME_FIXTURE_NOT_REAL_CONTRACT","SIGNED_REAL_SALARY_WINDOW"].includes(player.pricingKind))return false;
   const assigned=nbaGmDevAssignRoster([...picks.map(p=>p.playerId),player.id],catalog);
   if(!assigned)return false;
   const owned=new Set(assigned.map(p=>p.playerId));
@@ -224,7 +224,7 @@ export function nbaGmDevCatalogErrors(catalog:readonly NbaGmDevPlayer[]):string[
       NBA_GM_SKILL_KEYS.some(key=>!Number.isInteger(p.skills[key])||p.skills[key]<0||p.skills[key]>99)||
       p.eligibilityKind!=="PROVISIONAL_EDITORIAL"||p.positionReview!=="unverified"||
       !p.officialRosterPosition||!Array.isArray(p.reviewFlags)||p.reviewFlags.length===0||
-      p.pricingKind!=="GAME_FIXTURE_NOT_REAL_CONTRACT")errors.push("Invalid provisional NBA fixture "+p.id);
+      !["GAME_FIXTURE_NOT_REAL_CONTRACT","SIGNED_REAL_SALARY_WINDOW"].includes(p.pricingKind))errors.push("Invalid provisional NBA fixture "+p.id);
   }
   return errors;
 }
