@@ -25,7 +25,7 @@ export function NbaGmDevelopmentReport({
       <div><p className="eyebrow">YEAR 1 → YEAR 2</p><h2>OFFSEASON DEVELOPMENT</h2></div>
       <span>SCOUTING REPORT</span>
     </header>
-    <p>Breakouts, improvement and regression are seeded separately for each player. Updated ability changes the next season; only 1YR game salaries reprice.</p>
+    <p>Some players took a leap. Others stalled or regressed. Each franchise run has its own outcomes. Year 2 salary changes are now set.</p>
     <div className="football-gm__development-list">
       {NBA_GM_ROSTER_SLOTS.map(slot => {
         const pick = run.yearOnePicks.find(entry => entry.slot === slot);
@@ -46,6 +46,6 @@ export function NbaGmDevelopmentReport({
         </div>;
       })}
     </div>
-    <small className="football-gm__development-footnote">Development is real within this fictional simulation; grades remain hidden. Player ages and individual ceilings are not yet fully source-verified.</small>
+    <small className="football-gm__development-footnote">Development categories reflect simulated changes in ability. Exact HQ grades stay hidden. A 3YR player's salary is locked, not his ability.</small>
   </section>;
 }

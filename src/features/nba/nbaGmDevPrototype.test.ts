@@ -187,7 +187,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(page).toContain("<PlayerPortrait player={player}/>");
   expect(page).toContain("run.phase===\"year1\"");
   expect(page).toContain('act("offseason")');
-  expect(page).toContain('run.phase==="year1"||run.phase==="offseason"');
+  expect(page).toContain('run.phase==="year1"&&<FitReport');
+  expect(page).toContain('run.phase==="offseason"&&<details className="nba-gm-dev__fit-disclosure"');
   expect(page).not.toContain("Free-agent market exhausted.");
   expect(css).toContain("@media(max-width:700px)");
   expect(css).toContain("overflow-wrap:anywhere");

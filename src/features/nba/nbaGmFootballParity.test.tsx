@@ -128,7 +128,8 @@ describe("NBA GM private Football parity boundary",()=>{
   });
   it("preserves post-Season-1-only fit and uses real server development in report",()=>{
     expect(nbaGmDevFitSignals(picks.slice(0,6),players)).toEqual([]);
-    expect(page).toContain('run.phase==="year1"||run.phase==="offseason"');
+    expect(page).toContain('run.phase==="year1"&&<FitReport');
+    expect(page).toContain('run.phase==="offseason"&&<details className="nba-gm-dev__fit-disclosure"');
     expect(page).not.toContain('run.phase==="final")&&<FitReport');
     const markup=renderToStaticMarkup(<NbaGmDevelopmentReport run={{...run,phase:"offseason"}} catalog={players}/>);
     expect(markup).toContain("OFFSEASON DEVELOPMENT");

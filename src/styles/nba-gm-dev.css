@@ -225,3 +225,50 @@
  .nba-gm-final .gm-final__tier{padding:4px 5px;font-size:9px}
  .nba-gm-final .gm-final__heading{flex-wrap:wrap}
 }
+
+/* NFL-parity offseason hierarchy: development, caps, continuity, roster, moves. */
+.nba-gm-dev .football-gm__development-report>p{margin:0;color:#a7bac8;line-height:1.45}
+.nba-gm-dev__continuity{padding:12px 15px;border:1px solid #2c4251;border-radius:14px;background:#14191e;display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.nba-gm-dev__continuity span{display:grid;gap:3px;flex:0 0 auto}
+.nba-gm-dev__continuity strong{font-size:16px;color:#8ac5ed}
+.nba-gm-dev__continuity p{margin:0;font-size:11px;line-height:1.35;color:#9db1c0;max-width:420px}
+.nba-gm-dev__offseason{background:#15191d;border-color:#343a40}
+.nba-gm-dev__offseason>.nba-gm-dev__hint{font-size:12px}
+.nba-gm-dev__release{display:grid;gap:9px;border:1px solid #3c4c59;background:#111b24;border-radius:12px;padding:12px;min-width:0}
+.nba-gm-dev__release-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nba-gm-dev__release-heading h3{margin:3px 0 0;font-size:17px}
+.nba-gm-dev__release-heading>span{color:#8ac5ed;font-size:10px;font-weight:900;letter-spacing:.06em}
+.nba-gm-dev__release-list{display:grid;gap:0}
+.nba-gm-dev__release-row{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:8px 0;border-top:1px solid #2c3d49;min-width:0}
+.nba-gm-dev__release-row>span{display:grid;gap:3px;min-width:0}
+.nba-gm-dev__release-row strong{font-size:12px;overflow-wrap:anywhere}
+.nba-gm-dev__release-row small{font-size:10px}
+.nba-gm-dev__release-row .nba-gm-dev__secondary{flex:0 0 auto;min-height:34px}
+.nba-gm-dev__window-status{display:grid;gap:4px;border:1px solid #315b53;background:#152822;border-radius:10px;padding:11px 13px}
+.nba-gm-dev__window-status strong{font-size:11px;letter-spacing:.1em;color:#79d8ad}
+.nba-gm-dev__window-status span{font-size:12px;line-height:1.45;color:#c4d6d1}
+.nba-gm-dev__window-status.is-crisis{border-color:#804f42;background:#301f1e}
+.nba-gm-dev__window-status.is-crisis strong{color:#ffa18e}
+.nba-gm-dev__fit-disclosure{min-width:0}
+.nba-gm-dev__fit-disclosure>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #2f4351;background:#101b27;color:#c6dfef;font-size:12px;font-weight:900;letter-spacing:.05em;cursor:pointer;border-radius:12px;padding:13px 15px}
+.nba-gm-dev__fit-disclosure>summary::-webkit-details-marker{display:none}
+.nba-gm-dev__fit-disclosure>summary:before{content:"▸";color:#8ac5ed}
+.nba-gm-dev__fit-disclosure[open]>summary:before{content:"▾"}
+.nba-gm-dev__fit-disclosure>summary span{color:#95acbc;font-size:9px;font-weight:700;letter-spacing:0;text-align:right}
+.nba-gm-dev__fit-disclosure[open]{display:grid;gap:8px}
+.nba-gm-dev__fit-disclosure .nba-gm-dev__fit{padding:12px}
+.nba-gm-dev .football-gm__roster-grid.nba-gm-dev__roster>article{min-height:60px;padding:7px 10px}
+.nba-gm-dev .football-gm__roster-player .nba-gm-dev__roster-copy>em{line-height:1.12}
+.nba-gm-dev__row-actions .nba-gm-dev__secondary{min-height:30px}
+@media(max-width:600px){
+ .nba-gm-dev__continuity{align-items:flex-start;flex-direction:column;gap:5px;padding:10px 12px}
+ .nba-gm-dev__continuity strong{font-size:14px}
+ .nba-gm-dev__fit-disclosure>summary span{max-width:45%}
+ .nba-gm-dev .football-gm__roster-grid.nba-gm-dev__roster>article{grid-template-columns:35px minmax(0,1fr) auto;gap:6px;padding:7px 8px}
+ .nba-gm-dev .football-gm__roster-player{gap:6px}
+ .nba-gm-dev .football-gm__roster-player .nba-gm-dev__portrait{width:36px;height:36px;min-width:36px;min-height:36px;flex-basis:36px}
+ .nba-gm-dev .football-gm__roster-player .nba-gm-dev__roster-copy>strong{font-size:12px}
+ .nba-gm-dev .football-gm__roster-scouting .nba-gm-dev__scout-pills{gap:3px}
+ .nba-gm-dev .football-gm__development-report{padding:12px}
+ .nba-gm-dev .football-gm__development-player{padding:8px 6px}
+}

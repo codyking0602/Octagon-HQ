@@ -22,7 +22,7 @@ const baseDestinations = [
 
 const SECRET_SPORT_TAP_WINDOW_MS = 350;
 
-function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
+export function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
   if (icon === "home") return pathname === "/";
   if (icon === "picks") {
     return pathname === "/picks"
@@ -32,6 +32,7 @@ function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
       || pathname === "/mlb/picks"
       || pathname.startsWith("/mlb/picks/")
       || pathname === "/nba/picks"
+      || pathname.startsWith("/nba/picks/")
       || pathname.startsWith("/mlb/series/");
   }
   if (icon === "play") {
@@ -40,6 +41,7 @@ function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
       || pathname === "/football"
       || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"))
       || pathname === "/nba"
+      || (pathname.startsWith("/nba/") && !pathname.startsWith("/nba/picks"))
       || pathname === "/mlb"
       || (pathname.startsWith("/mlb/")
         && !pathname.startsWith("/mlb/picks")
