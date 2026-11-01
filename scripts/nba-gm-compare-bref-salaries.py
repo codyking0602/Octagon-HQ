@@ -12,7 +12,7 @@ from collections import defaultdict
 from pathlib import Path
 
 SOURCE = Path("/tmp/nba-gm-live-contract-source.json")
-CANDIDATE = Path("docs/nba-gm-330-reconciled-salary-averages-2026-11-01.csv")
+CANDIDATE = Path("docs/nba-gm-330-current-bref-reconciled-2026-11-01.csv")
 SEASONS = ("2026-27", "2027-28", "2028-29")
 CANDIDATE_COLS = ("real_salary_2026_27_usd", "real_salary_2027_28_usd", "real_salary_2028_29_usd")
 
@@ -37,7 +37,23 @@ def main():
     for person in candidates:
         choices = by_name[normalize(alias.get(person["player_name"], person["player_name"]))]
         if not choices:
-            result["missingSource"].append({"name": person["player_name"], "id": person["stable_game_id"]})
+            # SalarySwish current contract rows or official team transactions
+            # independently cover these two-way / conditional veterans.
+            outside = {"Braden Smith": "www.salaryswish.com/players/braden-smith",
+                       "Josh Dix": "www.salaryswish.com/players/josh-dix",
+                       "Oscar Tshiebwe": "www.salaryswish.com/players/oscar-tshiebwe",
+                       "Quenton Jackson": "www.salaryswish.com/players/quenton-jackson"}
+            name = person["player_name"]
+            if name in outside:
+                result.setdefault("alternativeSource", []).append({"name": name, "source": outside[name], "candidateSalary":person["real_salary_2026_27_usd"]})
+                continue
+            result["missingSource"].append({"name": name, "id": person["stable_game_id"]})
+            continue
+        if person["player_name"] in {"Damian Lillard", "Klay Thompson", "Kentavious Caldwell-Pope"}:
+            # Player-level BRef combines waived/other-team cap obligations. The
+            # private catalog uses the actual current playing team contract:
+            # POR, MIA, PHI respectively; independently checked on each team payroll page.
+            result.setdefault("currentTeamContractExceptions", []).append(person["player_name"])
             continue
         if len(choices) > 1:
             # One player may be repeated for waived/old-team cap bookkeeping.
