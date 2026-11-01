@@ -3,6 +3,8 @@ import {
   closestUpcomingNumberedEvent,
   numberedUfcEventLinks,
   numberedEventScheduleFallback,
+  numberedEventsFromEspnCalendar,
+  discoverNextNumberedUfcEvent,
   type NextNumberedUfcEvent,
 } from "./nextNumberedUfcEvent";
 
@@ -11,6 +13,61 @@ function card(name: string, startsAt: string): NextNumberedUfcEvent {
 }
 
 describe("public numbered UFC Picks calendar", () => {
+  it("reads UFC numbered events from ESPN season calendar without conflating Fight Nights", () => {
+    const calendar = {
+      leagues: [{ calendar: [
+        { label: "UFC Fight Night: Moicano vs. Nolan", startDate: "2026-11-01T00:00Z" },
+        { label: "UFC 333: Volkanovski vs. Evloev", startDate: "2026-10-24T17:00Z" },
+        { label: "UFC 334: Gane vs. Hokit", startDate: "2026-11-15T01:00Z" },
+        { label: "UFC 335: Oliveira vs. Lopes", startDate: "2026-12-13T01:00Z" },
+      ] }],
+    };
+    const records = numberedEventsFromEspnCalendar(calendar);
+    expect(records.map((item) => item.name)).toEqual(["UFC 333", "UFC 334", "UFC 335"]);
+    expect(records[1]?.matchup).toBe("Gane vs. Hokit");
+    expect(closestUpcomingNumberedEvent(records, new Date("2026-11-01T04:00:00Z"))?.name).toBe("UFC 334");
+    expect(numberedEventsFromEspnCalendar({ leagues: [{ calendar: [{ label: "UFC 334", startDate: "bad" }] }] })).toEqual([]);
+  });
+
+  it("returns a usable countdown when UFC.com blocks public event pages", async () => {
+    const requests: string[] = [];
+    const mockFetch = (async (url: string | URL | Request) => {
+      const source = String(url);
+      requests.push(source);
+      if (source.includes("site.api.espn.com")) {
+        return new Response(JSON.stringify({
+          leagues: [{ calendar: [
+            { label: "UFC Fight Night: Something vs. Someone", startDate: "2026-11-07T23:00:00Z" },
+            { label: "UFC 334: Gane vs. Hokit", startDate: "2026-11-15T01:00:00Z" },
+            { label: "UFC 335: Oliveira vs. Lopes", startDate: "2026-12-13T01:00:00Z" },
+          ] }],
+        }), { status: 200 });
+      }
+      return new Response("Forbidden", { status: 403 });
+    }) as typeof fetch;
+    const selected = await discoverNextNumberedUfcEvent(new Date("2026-11-01T03:00:00Z"), mockFetch);
+    expect(selected).toMatchObject({
+      name: "UFC 334",
+      matchup: "Gane vs. Hokit",
+      startsAt: "2026-11-15T01:00:00.000Z",
+    });
+    expect(requests).toContain("https://www.ufc.com/event/ufc-334");
+    expect(requests).not.toContain("https://www.ufc.com/events?language_content_entity=en");
+  });
+
+  it("retains the UFC.com discovery path if ESPN is unavailable", async () => {
+    const mockFetch = (async (url: string | URL | Request) => {
+      const source = String(url);
+      if (source.includes("site.api.espn.com")) return new Response("Forbidden", { status: 403 });
+      if (source.includes("ufc.com/events")) {
+        return new Response('<div id="events-list-upcoming"><a href="/event/ufc-334">UFC 334</a></div>');
+      }
+      return new Response('<h1>UFC 334</h1><time data-timestamp="2026-11-15T02:00:00Z">Sat, Nov 14 / 9:00 PM EST / Main Card</time><p>Main Card 9:00 PM EST</p>');
+    }) as typeof fetch;
+    const selected = await discoverNextNumberedUfcEvent(new Date("2026-11-01T03:00:00Z"), mockFetch);
+    expect(selected?.name).toBe("UFC 334");
+  });
+
   it("discovers only numbered UFC event URLs and deduplicates index links", () => {
     const html = [
       '<a href="/event/ufc-fight-night-november-7-2026">Fight Night</a>',
