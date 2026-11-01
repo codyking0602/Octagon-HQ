@@ -21,6 +21,11 @@ begin
   if not found then raise exception 'Unknown NBA GM player'; end if;
   v_grade:=v_player.overall;
   if p_year<=1 or coalesce(p_state->>'economyVersion','') not in ('3','4') then return v_grade; end if;
+  -- Preserve the preexisting authoritative profile-based development model for
+  -- V3 saved games, and reuse those same player-specific odds in new V4.
+  if p_state->>'developmentModelVersion'='2' then
+    return private.nba_gm_v4_grade(p_state,p_id,p_year);
+  end if;
   for v_step in 2..least(3,p_year) loop
     v_roll:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':outcome'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
     v_magnitude:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':size'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
