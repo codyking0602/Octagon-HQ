@@ -199,6 +199,20 @@ export function mergeFootballWeeklyMatchupBreakdowns(
   return results;
 }
 
+/**
+ * The merge keeps published GOTW slots first (CFB then NFL), including when an
+ * approved authored sheet replaces the generated weekly ID. Never link a
+ * notification to an unrelated historical matchup from the authored archive.
+ */
+export function footballGotwNotificationMatchupId(
+  league: "cfb" | "nfl",
+  published: FootballMatchupBreakdown[],
+  merged: FootballMatchupBreakdown[],
+): string | null {
+  const position = published.findIndex((game) => game.compact?.leagueLabel === league.toUpperCase());
+  return position < 0 ? null : merged[position]?.id ?? null;
+}
+
 export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek {
   return publishedSchema.parse(raw);
 }

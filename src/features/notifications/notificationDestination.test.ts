@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { notificationDestination } from "./notificationDestination";
 
 function destination(
-  kind: "picks_recap_ready" | "picks_repick_required",
+  kind: "picks_recap_ready" | "picks_repick_required" | "football_gotw_starting",
   route: string | null,
   title = "UFC Picks recap",
   summary = "The event is final.",
@@ -40,6 +40,20 @@ describe("notificationDestination", () => {
 
   it("does not rewrite other Picks notifications", () => {
     expect(destination("picks_repick_required", "/picks")).toBe("/picks");
+  });
+
+  it("opens the correct published NFL or CFB GOTW breakdown from legacy inbox routes", () => {
+    expect(destination("football_gotw_starting", "/football",
+      "NFL Game of the Week starts soon")).toBe("/football/picks?gotw=nfl");
+    expect(destination("football_gotw_starting", "/football",
+      "CFB Game of the Week starts soon")).toBe("/football/picks?gotw=cfb");
+    expect(destination("football_gotw_starting", null,
+      "NFL Game of the Week starts soon")).toBe("/football/picks?gotw=nfl");
+  });
+
+  it("does not misroute unknown football notification titles", () => {
+    expect(destination("football_gotw_starting", "/football",
+      "Football weekly update")).toBe("/football");
   });
 
   it("preserves Football destinations through the same resolver", () => {
