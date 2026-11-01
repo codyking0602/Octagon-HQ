@@ -91,9 +91,15 @@ export function numberedUfcEventLinks(html: string) {
   // UFC event slugs contain their numbered designation; this excludes Fight
   // Nights, DWCS and Road to UFC without relying on surrounding marketing text.
   const links = new Set<string>();
+  // Match the same upcoming-only scope used by the existing UFC sync owner.
+  // Otherwise archived event links can exhaust our bounded candidate budget.
+  const upcomingStart = html.search(/\bid\s*=\s*["']events-list-upcoming["']/i);
+  const tail = upcomingStart >= 0 ? html.slice(upcomingStart) : html;
+  const pastStart = tail.search(/\bid\s*=\s*["']events-list-(?:past|previous|results)["']/i);
+  const listing = pastStart > 0 ? tail.slice(0, pastStart) : tail;
   const anchors = /<a\b[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*>/gi;
   let match: RegExpExecArray | null;
-  while ((match = anchors.exec(html)) !== null) {
+  while ((match = anchors.exec(listing)) !== null) {
     const url = absoluteUfcEventUrl(match[1]!.replace(/&amp;/g, "&"));
     if (!url) continue;
     if (!/^\/event\/ufc-\d{3}(?:-|$)/i.test(new URL(url).pathname)) continue;
