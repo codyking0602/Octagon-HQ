@@ -19,6 +19,7 @@
       "/play",
       "/play/*",
       "/deployment.json",
+      "/api/ufc/next-numbered-event",
       "/api/football/nfl-roster",
       "/api/football/cfb-roster",
       "/share-preview/*"
