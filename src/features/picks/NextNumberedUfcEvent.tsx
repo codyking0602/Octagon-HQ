@@ -41,7 +41,7 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
     const controller = new AbortController();
     async function refresh() {
       try {
-        const response = await fetch("/api/ufc/next-numbered-event", {
+        const response = await fetch("/api/ufc/next-numbered-event?v=2", {
           signal: controller.signal,
           headers: { Accept: "application/json" },
         });
