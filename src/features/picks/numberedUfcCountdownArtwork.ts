@@ -45,7 +45,7 @@ function validatedHttpsArtwork(value: string | null | undefined) {
 }
 
 export function numberedUfcCountdownArtworkCandidates(event: CountdownArtworkEvent | null): string[] {
-  if (!event || !/^UFC \\d{3,4}$/.test(event.name)) return [];
+  if (!event || !/^UFC \d{3,4}$/.test(event.name)) return [];
 
   const official = validatedHttpsArtwork(event.imageUrl);
   const eventDate = event.startsAt.slice(0, 10);
