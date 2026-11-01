@@ -30,7 +30,7 @@ begin
   -- Same existing conservative draft forecast shape; no seeded future outcome leak.
   -- Before development outcomes are revealed, reserve the fixed Year-2
   -- extension market uplift (6.5%) for both future seasons. This is a
-  -- made-up cap-balancing salary or the actual outcome from seeded repricing.
+  -- conservative forecast, not a cap-balancing value or a revealed seeded outcome.
   -- Calibration may determine stronger risk-aware future-year reserves.
   if coalesce(p_state->>'phase','draft') in ('draft','year1') then
     return greatest(2500000,
@@ -49,6 +49,6 @@ begin
   end if;
   return greatest(2500000,round(v_start*v_factor/100000)*100000)::bigint;
 end;
-$function$
+$function$;
 
 revoke all on function private.nba_gm_v4_salary(jsonb,text,integer) from public,anon,authenticated;
