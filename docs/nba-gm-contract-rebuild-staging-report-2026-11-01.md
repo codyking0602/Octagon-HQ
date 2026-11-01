@@ -1,6 +1,6 @@
 # NBA GM 2026–27 contracts — staged source audit, NOT a release candidate
 
-**Snapshot request:** November 1, 2026. **Current repo baseline:** main `87448ea131114101625ae3660ca7f9000f2cab4a`. **Branch:** `feature/nba-gm-contract-source-audit-20261101`. **Production economy untouched.**
+**Snapshot request:** November 1, 2026. **Source branch point:** main `87448ea131114101625ae3660ca7f9000f2cab4a`; **current main:** `117238bba93b5b57931dbaf77e83fbeb6911296e` (PR #2367 merged November 1 at 15:54:58 UTC). **Branch:** `feature/nba-gm-contract-source-audit-20261101`. **Production economy untouched.**
 
 ## Exact status and blockers
 
@@ -55,7 +55,7 @@ This intentionally preserves the game's 76ers allocations; the team may not matc
 
 11-player game-team candidate total $198.84M, versus prior $156.50M. This is NOT a seven-player team roster, cap usage or game starting lineup.
 
-Salary-basis distinction requires owner policy validation for partially guaranteed and minimum deals. LeBron/Calwell-Pope/Trey Lyles/Hezonja have differences between player **base salary** and league **cap hit**. Use the owner-approved 2026–27 salary basis consistently and annotate exceptions, not whichever reported amount conveniently improves cap balance.
+Salary-basis distinction requires owner policy validation for partially guaranteed and minimum deals. LeBron/Caldwell-Pope/Trey Lyles/Hezonja have differences between player **base salary** and league **cap hit**. Use the owner-approved 2026–27 salary basis consistently and annotate exceptions, not whichever reported amount conveniently improves cap balance.
 
 ## Team distribution
 
@@ -104,9 +104,25 @@ Game team totals include all candidates; contract counts display **resolved 1YR 
 6. Select one cap from documented statistical results **after** all salaries and terms are confirmed. The true NBA 2026–27 league salary cap ($164.961M) is a context reference for this **seven-player** fictional game, not a gameplay target.
 7. Verify state economy routing preserves saved franchise agreements. Complete TypeScript/build, migrations in scratch DB, SQL regression, owner-only access. Require owner approval before merge/release.
 
+## Provisional year-one draft-only cap screening (executed; 1,120 cases)
+
+Executed and committed `scripts/nba-gm-cap-screening.mjs`: eight deterministic draft strategies (best, superstar, balanced, value, offense, defense, depth, random), seven roster slots and 30 source game teams, 160 source-candidate-price drafts per cap. The wheel chooses among teams with eligible affordable players; it reserves distinct, cheap remaining-slot fillers. **This is NOT the server-authoritative three-season simulation, has NO future-year salary checks, offseason, trades, actual release action, random development, GM score or championship output.** These are planning signals only.
+
+| Cap | Completed | Average seven-player payroll | Avg cap left | Avg quality index | Mean legal choices offered per spin | Multiple Elite rosters |
+|---|---:|---:|---:|---:|---:|---:|
+| $155M | 160/160 | $112.75M | $42.25M | 80.84 | 2.95 | 2.5% |
+| $165M | 160/160 | $113.33M | $51.67M | 80.75 | 3.03 | 3.13% |
+| $175M | 160/160 | $118.43M | $56.57M | 81.13 | 3.03 | 3.13% |
+| $185M | 160/160 | $122.52M | $62.48M | 81.40 | 3.04 | 3.13% |
+| $195M | 160/160 | $124.26M | $70.74M | 81.31 | 3.10 | 5.0% |
+| $205M | 160/160 | $127.80M | $77.20M | 81.36 | 3.12 | 5.0% |
+| $220M | 160/160 | $132.61M | $87.39M | 81.72 | 3.14 | 7.5% |
+
+The limited pilot **does not show a reason to raise the cap from $155M**. Higher caps leave increasingly more unspent money without consistently improving roster quality. However these draft-only findings are insufficient to recommend retaining $155M because future salary repricing and offseason cap crises, which may favor a different cap, were not modeled. The 160 attempts per cap use different seeds; differences between caps have sampling noise. We must still run at least 1,000 true three-season full-playthroughs before deciding.
+
 ## Explicitly out of scope for this staging PR
 
-This branch does NOT replace the live game prices, does NOT change the $155M cap, does NOT classify all 330 terms, does NOT deliver a three-season cap winner, does NOT run 1,000 actual backend three-season simulations and is NOT release-ready. PR #2367 is an independent open draft for visuals/offseason; preserve it when integrating.
+This branch does NOT replace the live game prices, does NOT change the $155M cap, does NOT classify all 330 terms, does NOT deliver a three-season cap winner, does NOT run 1,000 actual backend three-season simulations and is NOT release-ready. PR #2367 merged into main while this audit was being prepared (November 1, 15:54:58 UTC); this new audit branch changes different files and PR #2368 targets the latest merged main. Preserve #2367's visuals/offseason parity when integrating.
 
 ## Source provenance
 
