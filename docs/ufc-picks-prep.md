@@ -40,7 +40,7 @@ Any checked-in thumb and every checked-in Spotlight asset must be a true transpa
 ### November 7, 2026: owner-supplied Johnny Walker source
 
 - The owner provided a clean transparent 600×436 portrait of Johnny Walker in this project; it visually matches the official ESPN MMA portrait for athlete 3146944 without the colored publisher panels visible on ESPN's live CDN URL.
-- The manually approved original is only fitted to 320×320 without background cleanup, segmentation, or substitution. The canonical file is `public/assets/fighters/johnny-walker-thumb.webp`, explicitly allowlisted for the November 7 Picks card. All 11 other main-card thumbs remain pending until separately verified.
+- The manually approved original is only fitted to 320×320 without background cleanup, segmentation, or substitution. The canonical file is `public/assets/fighters/johnny-walker-nov07-thumb.webp`, explicitly allowlisted for the November 7 Picks card. All 11 other main-card thumbs remain pending until separately verified.
 - This manually supplied media asset is **not** evidence that the original ESPN CDN file is fixed. If the actual live image fails, revert to missing instead of an old or unreviewed image. Confirm production file delivery before counting Johnny as ready.
 
 ## Editorial contract
