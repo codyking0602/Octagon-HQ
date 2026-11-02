@@ -98,6 +98,7 @@ begin
   if private.nba_gm_v2_assign(v_roster) is null then
     raise exception 'Trade action fixture has invalid NBA positions';end if;
   v_state:=v_state||jsonb_build_object(
+    'seed','nba-gm-test-offers',
     'phase','offseason','picks',v_roster,'yearOnePicks',v_roster,
     'shopPlayerId',v_anchor,'tradeTeam','LAC','tradeAttempts',0,
     'displacedAssets','[]'::jsonb,'displacedReleasedIds','[]'::jsonb);
