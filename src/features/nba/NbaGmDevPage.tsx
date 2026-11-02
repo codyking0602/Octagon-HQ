@@ -92,6 +92,12 @@ function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
     </button>}
   </article>;
 }
+function tradeYearTwoSkillLetter(player:NbaGmDevPlayer,run:NbaGmDevRun,key:keyof typeof NBA_GM_DEV_SKILL_LABELS){
+  const {currentGrade:baseGrade}=player;
+  const adjustedGrade=run.development?.[player.id]?.year2Grade;
+  const delta=adjustedGrade===undefined?0:adjustedGrade-baseGrade;
+  return nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))));
+}
 function FitReport({picks,catalog}:{
   picks:NbaGmDevRun["picks"];catalog:NbaGmDevPlayer[];
 }){
@@ -368,9 +374,7 @@ export default function NbaGmDevPage(){
                     <div className="nba-gm-dev__skills" aria-label={"Scouting grades for "+player.name}>
                       {labels.map(key=><div key={key}>
                         <small>{NBA_GM_DEV_SKILL_LABELS[key]}</small>
-                        <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+
-                          (run.development?.[player.id]?.year2Grade!==undefined
-                            ?run.development[player.id]!.year2Grade-player.currentGrade:0)))))}</strong>
+                        <strong>{tradeYearTwoSkillLetter(player,run,key)}</strong>
                       </div>)}
                     </div>
                     <button type="button" className="nba-gm-dev__primary" disabled={busy||offersBusy}
