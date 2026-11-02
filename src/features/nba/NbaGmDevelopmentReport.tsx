@@ -25,7 +25,7 @@ export function NbaGmDevelopmentReport({
       <div><p className="eyebrow">YEAR 1 → YEAR 2</p><h2>OFFSEASON DEVELOPMENT</h2></div>
       <span>SCOUTING REPORT</span>
     </header>
-    <p>Some players improved while others regressed. One-year deals now reflect their Year 2 market values; three-year salaries stay locked.</p>
+    <p>Year 2 development and salaries updated. Three-year deals stay locked.</p>
     <div className="football-gm__development-list">
       {NBA_GM_ROSTER_SLOTS.map(slot => {
         const pick = run.yearOnePicks.find(entry => entry.slot === slot);
@@ -46,6 +46,6 @@ export function NbaGmDevelopmentReport({
         </div>;
       })}
     </div>
-    <small className="football-gm__development-footnote">IMPROVED / REGRESSED describes what just happened; RISING / DECLINE RISK on the roster is a future outlook. Exact HQ grades stay hidden. A 3YR salary is locked, not the player's ability.</small>
+    <small className="football-gm__development-footnote">Development shows past change; roster badges show outlook. Exact ratings stay hidden.</small>
   </section>;
 }

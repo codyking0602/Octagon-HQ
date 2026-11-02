@@ -41,8 +41,8 @@ describe("NBA GM private offseason compact parity",()=>{
   it("shows a full-core progress meter without mislabeling retention as gameplay odds",()=>{
     expect(page).toContain("retainedCount/7*100");
     expect(page).toContain("nba-gm-dev__continuity-track");
-    expect(page).toContain("The meter measures retention, not an extra hidden team bonus");
-    expect(page).toContain("completed Year 1 stays unchanged");
+    expect(page).toContain("No extra continuity bonus.");
+    expect(page).toContain("Year 1 results are locked.");
     expect(css).toContain(".nba-gm-dev__continuity-track > em");
   });
   it("keeps SHOP in the right-hand salary stack, not a second roster grid row",()=>{
@@ -52,7 +52,7 @@ describe("NBA GM private offseason compact parity",()=>{
     expect(page).toContain('aria-label={"Shop "+player.name}');
   });
   it("puts advance ahead of optional release, keeping cap crisis recovery accessible",()=>{
-    const section=page.slice(page.indexOf('run.phase==="offseason"&&!isTradeStage&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"'));
+    const section=page.slice(page.indexOf('showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"'));
     const capRecovery=section.indexOf("{capCrisis&&releasePanel}");
     const advance=section.indexOf('SIMULATE YEARS 2 & 3');
     const optionalRelease=section.indexOf("{!capCrisis&&releasePanel}");
@@ -74,9 +74,9 @@ describe("NBA GM private offseason compact parity",()=>{
   it("differentiates past development from scouting outlook and protects 3YR terms",()=>{
     const report=renderToStaticMarkup(<NbaGmDevelopmentReport run={run} catalog={fixtures}/>);
     expect(report).toContain("OFFSEASON DEVELOPMENT");
-    expect(report).toContain("IMPROVED / REGRESSED describes what just happened");
-    expect(report).toContain("future outlook");
-    expect(report).toContain("three-year salaries stay locked");
+    expect(report).toContain("Development shows past change");
+    expect(report).toContain("roster badges show outlook");
+    expect(report).toContain("Three-year deals stay locked");
     expect(report).toContain("3YR LOCKED");
     expect(report).toContain("1YR REPRICE");
     expect(page).toContain('OWNER ONLY · NOT PUBLIC');
