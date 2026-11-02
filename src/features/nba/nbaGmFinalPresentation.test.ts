@@ -4,15 +4,15 @@ const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
 const final=readFileSync("src/features/nba/NbaGmFinalExperience.tsx","utf8");
 const css=readFileSync("src/styles/nba-gm-dev.css","utf8");
 describe("NBA GM Priority 4 — final presentation focused follow-up",()=>{
- it("shows fit after Year 1 and in offseason, never redundantly on the final recap",()=>{
-  expect(page).toContain('run.phase==="year1"&&<FitReport');
-  expect(page).toContain('run.phase==="offseason"&&<details className="nba-gm-dev__fit-disclosure"');
+ it("keeps rotation fit actionable in offseason only, not after the Year 1 CTA or final recap",()=>{
+  expect(page).not.toContain('run.phase==="year1"&&<FitReport');
+  expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
   expect(page).not.toContain('run.phase==="final")&&<FitReport');
  });
  it("keeps completed franchise recap ahead of caps and roster, and orders offseason controls like Football",()=>{
   expect(page).toContain('run.phase!=="final"&&<section className={`football-gm__cap');
   expect(page).toContain('run.phase!=="final"&&<section className="football-gm__roster');
-  expect(page.indexOf('run.phase==="offseason"&&<NbaGmDevelopmentReport')).toBeLessThan(page.indexOf('run.phase!=="final"&&<section className={`football-gm__cap'));
+  expect(page.indexOf('<NbaGmDevelopmentReport run={run} catalog={catalog}/>')).toBeLessThan(page.indexOf('run.phase!=="final"&&<section className={`football-gm__cap'));
   expect(page.indexOf('nba-gm-dev__continuity')).toBeLessThan(page.indexOf('football-gm__roster surface-card nba-gm-dev__roster-panel'));
   expect(page).toContain('ONE VOLUNTARY RELEASE');
   expect(page).toContain('window.confirm("Release "+player.name');
