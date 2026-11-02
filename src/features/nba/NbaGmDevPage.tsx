@@ -336,11 +336,6 @@ export default function NbaGmDevPage(){
     <div className="nba-gm-dev__trade-screen-context"><small>OFFSEASON · SHOPPING {byId.get(run.shopPlayerId)?.name.toUpperCase()}</small>
       <strong>{run.tradeTeam?"TRADE TALKS":"FIND A TRADE PARTNER"}</strong></div>
     <div className="nba-gm-dev__trade">
-          {!run.tradeTeam?<div className="nba-gm-dev__trade-stage-heading">
-            <small>SHOPPING {byId.get(run.shopPlayerId)?.name.toUpperCase()}</small>
-            <h2>FIND A TRADE PARTNER</h2>
-            <p>Spin one team. Choose your target. Then review the server's accepted asking prices.</p>
-          </div>:null}
           {!run.tradeTeam||wheelSpinning?
             <GmFootballWheel ariaLabel="NBA team trade wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
               pendingTeam={null} canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>:null}
@@ -355,7 +350,7 @@ export default function NbaGmDevPage(){
                   className={"nba-gm-dev__trade-candidate"+(expandedTradeCandidate===player.id?" is-expanded":"")}>
                   <button type="button" className="nba-gm-dev__trade-candidate-toggle"
                     aria-expanded={expandedTradeCandidate===player.id}
-                    aria-controls={"nba-trade-scout-"+player.id}
+                    aria-controls={expandedTradeCandidate===player.id?"nba-trade-scout-"+player.id:undefined}
                     disabled={busy||offersBusy}
                     onClick={()=>setExpandedTradeCandidate(current=>current===player.id?null:player.id)}>
                     <PlayerPortrait player={player}/>
