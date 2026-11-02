@@ -345,3 +345,80 @@
   .nba-gm-dev .nba-gm-dev__header > span small { font-size: 9px; }
   .nba-gm-dev .nba-gm-dev__header .nba-gm-dev__private { font-size: 7px; }
 }
+
+/* Year 1 parity: the NFL roster's right-side salary/contract/reprice hierarchy. */
+.nba-gm-dev .football-gm__roster > header { padding: 10px 13px; }
+.nba-gm-dev .football-gm__roster > header strong { font-size: 14px; }
+.nba-gm-dev .football-gm__roster-grid.nba-gm-dev__roster > article {
+  grid-template-columns: 43px minmax(0, 1fr) minmax(87px, auto);
+  gap: 8px;
+  min-height: 64px;
+  padding: 8px 11px;
+}
+.nba-gm-dev .nba-gm-dev__roster-contract {
+  min-width: 0;
+  max-width: 113px;
+  justify-self: end;
+  align-content: center;
+  gap: 2px;
+  text-align: right;
+}
+.nba-gm-dev .nba-gm-dev__roster-contract > span {
+  color: #8aa0b0;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.nba-gm-dev .nba-gm-dev__roster-contract > small {
+  color: #91a7b8;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.nba-gm-dev .nba-gm-dev__roster-contract > small.is-low { color: #a8d9c3; }
+.nba-gm-dev .nba-gm-dev__roster-contract > small.is-med { color: #f1c486; }
+.nba-gm-dev .nba-gm-dev__roster-contract > small.is-high { color: #f1ae8b; }
+.nba-gm-dev .football-gm__roster-scouting .nba-gm-dev__scout-pills { gap: 3px; }
+.nba-gm-dev .nba-gm-dev__year-reveal {
+  text-align: center;
+  padding: 17px 16px;
+  border-radius: 18px;
+  background: #15191d;
+  border: 1px solid rgba(255,255,255,.14);
+  min-width: 0;
+}
+.nba-gm-dev .nba-gm-dev__year-reveal > .eyebrow {
+  color: #f5b962;
+  font-size: 11px;
+  letter-spacing: .12em;
+}
+.nba-gm-dev__season-summary { min-width: 0; }
+.nba-gm-dev .nba-gm-dev__year-one-card {
+  background: rgba(182,117,43,.10);
+  border-color: rgba(245,185,98,.25);
+}
+.nba-gm-dev .nba-gm-dev__year-one-card > b { color: #f5b962; }
+.nba-gm-dev .nba-gm-dev__year-one-card > span { color: #a9bdca; }
+.nba-gm-dev .nba-gm-dev__year-reveal > .nba-gm-dev__primary {
+  width: 100%;
+  max-width: 500px;
+}
+.nba-gm-dev .nba-gm-dev__fit {
+  gap: 10px;
+}
+.nba-gm-dev .nba-gm-dev__fit .nba-gm-dev__fit-grid > div {
+  min-width: 0;
+  padding: 9px 10px;
+}
+@media(max-width:600px) {
+  .nba-gm-dev .football-gm__roster-grid.nba-gm-dev__roster > article {
+    grid-template-columns: 35px minmax(0, 1fr) minmax(83px, auto);
+    gap: 6px;
+    padding: 7px 8px;
+  }
+  .nba-gm-dev .nba-gm-dev__roster-contract > b { font-size: 11px; }
+  .nba-gm-dev .nba-gm-dev__roster-contract > span { font-size: 8px; }
+  .nba-gm-dev .nba-gm-dev__roster-contract > small { font-size: 7.5px; letter-spacing: .025em; }
+}

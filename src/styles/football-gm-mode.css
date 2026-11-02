@@ -4474,3 +4474,30 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   .football-gm__cap-forecast > span { padding: 7px 9px; }
   .football-gm__cap-forecast > span b { font-size: 10px; }
 }
+
+/* Year 1 recap parity: lead with actual record and postseason finish.
+   This opt-in treatment leaves Years 2/3 and other season-card usages intact. */
+.football-gm__year-reveal { padding: 17px 16px; }
+.football-gm__year-reveal > .eyebrow { margin: 0; }
+.football-gm__season-card.is-year-one {
+  max-width: 380px;
+  margin: 12px auto 16px;
+  padding: 18px 12px;
+  gap: 5px;
+  width: 100%;
+}
+.football-gm__season-card.is-year-one > strong {
+  font-size: clamp(43px, 10vw, 56px);
+  letter-spacing: -.045em;
+  font-variant-numeric: tabular-nums;
+}
+.football-gm__season-card.is-year-one > b {
+  font-size: 15px;
+  line-height: 1.25;
+  margin: 0 0 5px;
+}
+.football-gm__season-card.is-year-one > span {
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: .045em;
+}

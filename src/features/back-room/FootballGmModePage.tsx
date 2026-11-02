@@ -1153,21 +1153,32 @@ export function SeasonCard({
   year,
   yearOneRoster,
   roster,
+  yearOneRecap = false,
 }: {
   seed: string;
   year: 1 | 2 | 3;
   yearOneRoster: readonly FootballGmRosterEntry[];
   roster: readonly FootballGmRosterEntry[];
+  yearOneRecap?: boolean;
 }) {
   const result = footballGmSeasonResultV2({ seed, yearOneRoster, roster, year });
   return (
-    <article className="football-gm__season-card">
+    <article className={"football-gm__season-card" + (yearOneRecap ? " is-year-one" : "")}>
       <small>YEAR {year}</small>
-      <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
-      <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
-      {footballGmSeasonRecordLabel(result) ? <span>{footballGmSeasonRecordLabel(result)} REGULAR SEASON</span> : null}
-      <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
-
+      {yearOneRecap ? (
+        <>
+          <strong>{footballGmSeasonRecordLabel(result) ?? "—"}</strong>
+          <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
+          <span>{footballGmTeamOverall(result.teamGrade)} OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
+        </>
+      ) : (
+        <>
+          <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
+          <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
+          {footballGmSeasonRecordLabel(result) ? <span>{footballGmSeasonRecordLabel(result)} REGULAR SEASON</span> : null}
+          <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
+        </>
+      )}
     </article>
   );
 }
@@ -2347,8 +2358,7 @@ export default function FootballGmModePage({
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <section className="football-gm__year-reveal surface-card">
             <p className="eyebrow">YEAR 1 COMPLETE</p>
-            <SeasonCard seed={run.seed} year={1} yearOneRoster={run.roster} roster={run.roster} />
-            <p>The finish is no longer tied to a fixed grade threshold. Your roster quality sets the odds; the seeded season simulation decides what actually happened.</p>
+            <SeasonCard seed={run.seed} year={1} yearOneRoster={run.roster} roster={run.roster} yearOneRecap />
             <button className="primary-action" type="button" onClick={() => patch({
               phase: "offseason",
               finalRoster: [...run.roster],

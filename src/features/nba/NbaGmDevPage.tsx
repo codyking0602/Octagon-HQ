@@ -45,7 +45,7 @@ function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
       : <TeamMark code={player.teamCode}/>}
   </span>;
 }
-function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
+function ScoutBadges({player,run,showContract=true}:{player:NbaGmDevPlayer;run?:NbaGmDevRun;showContract?:boolean}){
   const {currentGrade:originalGrade}=player;
   const development=run?.development?.[player.id];
   const year=run?.phase==="offseason"?2:run?.phase==="final"?3:1;
@@ -58,9 +58,11 @@ function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
   return <span className="nba-gm-dev__scout-pills">
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
     {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
-    <span className="nba-gm-dev__term">{player.gameContract}</span>
-    <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
-      {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
+    {showContract&&<>
+      <span className="nba-gm-dev__term">{player.gameContract}</span>
+      <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
+        {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
+    </>}
   </span>;
 }
 function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
@@ -110,11 +112,12 @@ function FitReport({picks,catalog}:{
   </section>;
 }
 function Results({seasons}:{seasons:NbaGmDevRun["results"]}){
-  return <div className="nba-gm-dev__season-grid">
-    {seasons.map(season=><article key={season.season}>
-      <small>SEASON {season.season}</small>
-      <strong>{season.wins}–{season.losses}</strong><span>{season.finish}</span>
-      <p>Offense {season.offense.toFixed(1)} · Defense {season.defense.toFixed(1)}</p>
+  return <div className="nba-gm-dev__season-summary">
+    {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
+      <small>YEAR {season.season}</small>
+      <strong>{season.wins}–{season.losses}</strong>
+      <b>{season.finish}</b>
+      <span>OFFENSE {season.offense.toFixed(1)} · DEFENSE {season.defense.toFixed(1)}</span>
     </article>)}
   </div>;
 }
@@ -278,7 +281,10 @@ export default function NbaGmDevPage(){
         onClick={()=>void act("start")}>START THE DRAFT</button>
     </section>}
     {run&&<>
-      {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
+      {run.phase==="offseason"&&<>
+        <NbaGmDevelopmentReport run={run} catalog={catalog}/>
+        <FitReport picks={run.yearOnePicks} catalog={catalog}/>
+      </>}
       {run.phase!=="final"&&<section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
         <div className="nba-gm-dev__cap-main">
           <span><small>YEAR {displaySalaryYear+1} CAP</small>
@@ -313,11 +319,15 @@ export default function NbaGmDevPage(){
                   <span className="nba-gm-dev__roster-copy">
                     <strong>{player.name}</strong>
                     <em>{player.teamCode} · {player.positions.join(" / ")}</em>
-                    <span className="football-gm__roster-scouting"><ScoutBadges player={player} run={run}/></span>
+                    <span className="football-gm__roster-scouting"><ScoutBadges player={player} run={run} showContract={false}/></span>
                   </span>
                 </div>
-                <div className="football-gm__roster-contract">
+                <div className="football-gm__roster-contract nba-gm-dev__roster-contract">
                   <b>{money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</b>
+                  <span>{player.gameContract}</span>
+                  <small className={`nba-gm-dev__roster-reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
+                    {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}
+                  </small>
                 </div>
                 {run.phase==="offseason"&&<div className="nba-gm-dev__row-actions">
                   {run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
@@ -329,14 +339,13 @@ export default function NbaGmDevPage(){
         </div>
       </section>}
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
-      {run.phase==="year1"&&<section className="nba-gm-dev__panel nba-gm-dev__results">
-        <small>YEAR 1 COMPLETE</small><h2>YOUR FIRST SEASON</h2>
+      {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
+        <p className="eyebrow">YEAR 1 COMPLETE</p>
         <Results seasons={run.results}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {run.phase==="year1"&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
@@ -424,10 +433,6 @@ export default function NbaGmDevPage(){
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
       </section>}
-      {run.phase==="offseason"&&<details className="nba-gm-dev__fit-disclosure">
-        <summary>ROTATION FIT SCOUTING <span>SHOT CREATION · SPACING · DEFENSE</span></summary>
-        <FitReport picks={run.yearOnePicks} catalog={catalog}/>
-      </details>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
       <footer className="nba-gm-dev__disclaimer">Private owner playtest · Provisional ratings and fictional contracts · Not a public NBA forecast.</footer>
