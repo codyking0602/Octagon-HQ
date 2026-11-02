@@ -22,6 +22,8 @@ const run=z.object({
       "Champion":z.number().min(0).max(1),
     }).optional()})),
   shopPlayerId:z.string().nullable(),tradeTeam:z.string().nullable(),
+  displacedAssets:z.array(z.string()).optional(),
+  displacedReleasedIds:z.array(z.string()).optional(),
   tradeAttempts:z.number().int().nonnegative(),tradesUsed:z.number().int().nonnegative(),
   freeAgencyTeam:z.string().nullable(),freeAgencyVisits:z.number().int().nonnegative(),
   releasedIds:z.array(z.string()),
@@ -47,12 +49,24 @@ const player=z.object({
 });
 type RpcClient={rpc:(name:string,args?:Record<string,unknown>)=>
   PromiseLike<{data:unknown,error:{message?:string}|null}>};
+export interface NbaGmTradeOffer { outgoingPlayerIds: string[]; incomingPlayerIds: string[]; shape: string; requiresFreeAgency: boolean; requiresRosterMove: boolean; }
 export type NbaGmDevOperation="load"|"start"|"spin"|"pick"|"offseason"|
- "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"emergency-sign"|"advance";
+ "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"emergency-sign"|"advance"|"promote-displaced"|"release-displaced";
 export function createNbaGmDevRepository(supplied?:RpcClient|null){
   const client=supplied===undefined?getSupabaseClient() as unknown as RpcClient|null:supplied;
   if(!client)return null;
   return {
+    async tradeOffers(targetId:string):Promise<NbaGmTradeOffer[]>{
+      const {data,error}=await client.rpc("nba_gm_dev_trade_offers",{p_target_id:targetId});
+      if(error)throw Error(error.message||"Trade offers unavailable.");
+      return z.array(z.object({
+        outgoingPlayerIds:z.array(z.string().min(1)).min(1).max(2),
+        incomingPlayerIds:z.array(z.string().min(1)).min(1).max(2),
+        shape:z.string(),
+        requiresFreeAgency:z.boolean(),
+        requiresRosterMove:z.boolean(),
+      })).max(5).parse(data);
+    },
     async catalog():Promise<NbaGmDevPlayer[]>{
       const {data,error}=await client.rpc("nba_gm_dev_catalog");
       if(error)throw Error(error.message||"NBA GM private catalog unavailable.");

@@ -10,7 +10,7 @@ import {
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook, nbaGmRepriceLabel } from "./nbaGmScouting";
-import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
+import { createNbaGmDevRepository, type NbaGmDevOperation, type NbaGmTradeOffer } from "./nbaGmDevRepository";
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
 import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
@@ -146,7 +146,14 @@ export default function NbaGmDevPage(){
   const wheelSequenceRef=useRef(0);
   useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
-  const [tradeChip,setTradeChip]=useState<string|null>(null);
+  const [tradeTarget,setTradeTarget]=useState<string|null>(null);
+  const [tradeOffers,setTradeOffers]=useState<NbaGmTradeOffer[]>([]);
+  const [offersBusy,setOffersBusy]=useState(false);
+  const [tradeOfferError,setTradeOfferError]=useState("");
+  const [swapOut,setSwapOut]=useState<string>("");
+  useEffect(()=>{
+    setTradeTarget(null);setTradeOffers([]);setTradeOfferError("");
+  },[run?.shopPlayerId,run?.tradeTeam]);
   useEffect(()=>{
     if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
     let mounted=true;
@@ -169,7 +176,9 @@ export default function NbaGmDevPage(){
         setNotice("Offer declined. The partner wanted more value.");
       }
       if(action==="pick")setPositionFilter(null);
-      if(["shop","trade","cancel-trade"].includes(action))setTradeChip(null);
+      if(["shop","trade","cancel-trade"].includes(action)){
+        setTradeTarget(null);setTradeOffers([]);setTradeOfferError("");
+      }
       setRun(state);
       if(state&&["start","offseason","trade","sign","emergency-sign","advance"].includes(action)){
         void repo.catalog().then(setCatalog).catch(()=>setNotice("Salary scouting will refresh on reload."));
@@ -178,6 +187,13 @@ export default function NbaGmDevPage(){
     } catch(failure){
       setError(failure instanceof Error?failure.message:"Action rejected by the server.");
     } finally{setBusy(false);}
+  }
+  async function chooseTradeTarget(playerId:string){
+    if(!repo||offersBusy)return;
+    setTradeTarget(playerId);setOffersBusy(true);setTradeOfferError("");setTradeOffers([]);
+    try{setTradeOffers(await repo.tradeOffers(playerId));}
+    catch(failure){setTradeOfferError(failure instanceof Error?failure.message:"Could not load asking prices.");}
+    finally{setOffersBusy(false);}
   }
   async function spin(action:"spin"|"trade-spin"|"fa-spin"){
     if(!repo||busy||wheelRequestRef.current)return;
@@ -233,7 +249,14 @@ export default function NbaGmDevPage(){
         p.positions.includes(starter.slot as "PG"|"SG"|"SF"|"PF"|"C");
     });
   })??false;
-  const spend=run?nbaGmDevSpend(run.picks,catalog):null;
+  // NFL-parity held assets remain on the cap until released/traded, even when
+  // outside the active seven. They must never silently become free salaries.
+  const heldPlayers=run?.displacedAssets??[];
+  const activeSpend=run?nbaGmDevSpend(run.picks,catalog):null;
+  const spend=activeSpend&&run?activeSpend.map((v,i)=>v+heldPlayers.reduce((sum,id)=>{
+    const player=byId.get(id);
+    return sum+(player?nbaGmDevSalary(player,i as 0|1|2):0);
+  },0)) as [number,number,number]:null;
   const displaySalaryYear=run?nbaGmDevDisplaySalaryYear(run.phase):0;
   const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
@@ -257,11 +280,12 @@ export default function NbaGmDevPage(){
   // A release budget is constrained by BOTH remaining seasons, exactly as the
   // server's two-year cap gate. This is a ceiling, not guaranteed FA inventory.
   const releasePanel=run?.phase==="offseason"&&spend&&run.picks.length===7
-    &&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam
+    &&(run.releasedIds.filter(id=>!(run.displacedReleasedIds??[]).includes(id)).length<1||capCrisis)
+    &&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam
     ?<details className="nba-gm-dev__release" aria-label="Voluntary player release">
       <summary className="nba-gm-dev__release-heading">
         <span><small>ONE VOLUNTARY RELEASE · OPTIONAL</small><strong>Explore free-agent opening</strong></span>
-        <b>{run.releasedIds.length===0?"AVAILABLE":"CAP RECOVERY"}</b>
+        <b>{run.releasedIds.filter(id=>!(run.displacedReleasedIds??[]).includes(id)).length===0?"AVAILABLE":"CAP RECOVERY"}</b>
       </summary>
       <p className="nba-gm-dev__hint">Cut one player to create a roster opening. The budget shown is the smaller of your remaining Year 2 and Year 3 cap room after the release. Available replacements still depend on the team wheel, eligibility, and market visits.</p>
       <div className="nba-gm-dev__release-list">
@@ -288,7 +312,7 @@ export default function NbaGmDevPage(){
   // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
   const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(
     isDraft&&!run.pendingTeam||
-    run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
+    run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam||
     run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
   const draftStage=run?.phase==="draft"?<section className="nba-gm-dev__draft" aria-label="NBA GM draft wheel">
@@ -372,7 +396,7 @@ export default function NbaGmDevPage(){
                   <small className={`nba-gm-dev__roster-reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
                     {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}
                   </small>
-                  {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                  {run.phase==="offseason"&&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                     <button className="nba-gm-dev__secondary nba-gm-dev__inline-shop" type="button"
                       aria-label={"Shop "+player.name} disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
                 </div>
@@ -392,39 +416,89 @@ export default function NbaGmDevPage(){
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
-        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
+        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, review up to five accepted asking prices, or use one voluntary cut and the three-visit free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
-          <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
-          <GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
-            pendingTeam={wheelSpinning?null:run.tradeTeam?wheelTeam:null}
-            canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
-          {run.tradeTeam&&!wheelSpinning&&
-            <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Every available player is listed. A target may require a different legal package or more cap space. Two offers maximum.</p>
-              <div className="nba-gm-dev__chip-list" role="group" aria-label="Optional second outgoing trade player">
-                <span>OPTIONAL SECOND TRADE CHIP</span>
-                {run.picks.filter(pick=>pick.playerId!==run.shopPlayerId).map(pick=>{
-                  const player=byId.get(pick.playerId);
-                  return player?<button type="button" className={tradeChip===player.id?"is-selected":""}
-                    aria-pressed={tradeChip===player.id} key={player.id} disabled={busy}
-                    onClick={()=>setTradeChip(current=>current===player.id?null:player.id)}>
-                    {player.name}
-                  </button>:null;
-                })}
+          {!run.tradeTeam?<div className="nba-gm-dev__trade-stage-heading">
+            <small>SHOPPING {byId.get(run.shopPlayerId)?.name.toUpperCase()}</small>
+            <h2>FIND A TRADE PARTNER</h2>
+            <p>Spin one team. Choose your target. Then review the server's accepted asking prices.</p>
+          </div>:null}
+          {!run.tradeTeam||wheelSpinning?
+            <GmFootballWheel ariaLabel="NBA team trade wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+              pendingTeam={null} canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>:null}
+          {run.tradeTeam&&!wheelSpinning&&<>
+            <header className="nba-gm-dev__trade-team">
+              <TeamMark code={run.tradeTeam}/>
+              <span><small>TRADE TALKS</small><strong>{NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}</strong></span>
+            </header>
+            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Choose one target. The front office will generate up to five guaranteed-accepted legal asking prices. Some targets have no deal.</p>
+              <div className="nba-gm-dev__trade-candidates">
+                {eligibleTrade.map(player=><button type="button" key={player.id}
+                  className="nba-gm-dev__trade-candidate" disabled={busy||offersBusy}
+                  onClick={()=>void chooseTradeTarget(player.id)}>
+                  <PlayerPortrait player={player}/>
+                  <span className="nba-gm-dev__trade-candidate-copy">
+                    <small>{player.positions.join(" / ")} · AGE {nbaGmPickerAge(player)??"—"} · {player.gameContract}</small>
+                    <strong>{player.name}</strong>
+                    <ScoutBadges player={player} run={run} showContract={false}/>
+                  </span>
+                  <b>{money(nbaGmDevSalary(player,1))}</b>
+                </button>)}
               </div>
-              <div className="nba-gm-dev__candidate-grid">
-                {eligibleTrade.map(player=>{
-                  const remaining=run.picks.filter(pick=>pick.playerId!==run.shopPlayerId&&pick.playerId!==tradeChip);
-                  const legal=nbaGmDevCanAdd(remaining,player,catalog,run.caps,"offseason");
-                  return <div key={player.id} className="nba-gm-dev__trade-target">
-                    {!legal&&<small className="nba-gm-dev__trade-warning">CURRENT PACKAGE NEEDS A DIFFERENT CAP / POSITION FIT</small>}
-                    <PlayerCard player={player} run={run} disabled={busy} action={tradeChip?"OFFER PACKAGE FOR":"OFFER FOR"}
-                      salaryYear={1} onPick={()=>void act("trade",player.id,tradeChip??undefined)}/>
-                  </div>;
-                })}
+            </>:<div className="nba-gm-dev__asking-room">
+              <div className="nba-gm-dev__target-lock">
+                <span><small>YOUR TARGET</small><strong>{byId.get(tradeTarget)?.name}</strong></span>
+                <b>{byId.get(tradeTarget)?.teamCode} · {byId.get(tradeTarget)?.positions.join(" / ")}</b>
               </div>
-            </>}
-          <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
+              {byId.get(tradeTarget)&&<PlayerCard player={byId.get(tradeTarget)!} run={run} salaryYear={1}/>}
+              {offersBusy?<p role="status">Checking legal asking prices…</p>:null}
+              {tradeOfferError?<p className="nba-gm-dev__trade-warning" role="alert">{tradeOfferError}</p>:null}
+              {!offersBusy&&!tradeOfferError&&tradeOffers.length===0?<div className="nba-gm-dev__no-offer">
+                <strong>NO LEGAL DEAL AVAILABLE</strong>
+                <p>There is no fair package for this target within the Year 2 and Year 3 cap and legal rotation. You can end these talks without making a trade.</p>
+              </div>:null}
+              {tradeOffers.length>0&&<>
+                <p className="nba-gm-dev__hint">{tradeOffers.length} accepted asking {tradeOffers.length===1?"price":"prices"}. All are legal; none is automatically the best choice.</p>
+                {tradeOffers.map((offer,index)=><article key={index} className="nba-gm-dev__asking-price">
+                  <header><small>ASKING PRICE {index+1}</small><strong>{offer.shape}</strong></header>
+                  <div><small>YOU SEND</small>{offer.outgoingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
+                  <div><small>YOU GET</small>{offer.incomingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
+                  {offer.requiresFreeAgency?<p>Leaves an open slot for your three-visit free-agent market.</p>:null}
+                  {offer.requiresRosterMove?<p>One acquired asset will be held outside your seven-player rotation until you resolve it.</p>:null}
+                  <button type="button" className="nba-gm-dev__primary" disabled={busy}
+                    onClick={()=>void act("trade",tradeTarget,"offer:"+(index+1))}>ACCEPT ASKING PRICE {index+1}</button>
+                </article>)}
+              </>}
+              <small className="nba-gm-dev__target-locked-note">TARGET LOCKED · End talks to shop another target.</small>
+            </div>}
+          </>}
+          <button className="nba-gm-dev__secondary" disabled={busy||offersBusy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER · END TALKS</button>
         </div>}
+        {heldPlayers.length>0&&!run.shopPlayerId&&<section className="nba-gm-dev__displaced" aria-label="Displaced NBA trade assets">
+          <small>ROSTER WORK REQUIRED</small><h2>HELD TRADE ASSET</h2>
+          <p>You own this player outside your active seven. Promote them by choosing an active player to replace, or release the held asset. No free-agent visit is used.</p>
+          {heldPlayers.map(id=><article key={id}>
+            <strong>{byId.get(id)?.name??id}</strong>
+            <span>{byId.get(id)?.positions.join(" / ")} · {byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""} YEAR 2</span>
+            <label>Move to roster for
+              <select value={swapOut} onChange={e=>setSwapOut(e.target.value)}>
+                <option value="">Choose active player</option>
+                {run.picks.filter(pick=>{
+                  const player=byId.get(id);
+                  return player&&nbaGmDevCanAdd(run.picks.filter(row=>row.playerId!==pick.playerId),
+                    player,catalog,run.caps,"offseason");
+                }).map(pick=><option key={pick.playerId} value={pick.playerId}>
+                  {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
+              </select>
+            </label>
+            <button type="button" className="nba-gm-dev__secondary" disabled={busy}
+              onClick={()=>void act("shop",id)}>SHOP HELD ASSET</button>
+            <button type="button" className="nba-gm-dev__secondary" disabled={busy||!swapOut}
+              onClick={()=>void act("promote-displaced",id,swapOut)}>PUT IN LINEUP</button>
+            <button type="button" className="nba-gm-dev__secondary" disabled={busy}
+              onClick={()=>{if(window.confirm("Release "+(byId.get(id)?.name??id)+" from held assets?"))void act("release-displaced",id);}}>RELEASE HELD ASSET</button>
+          </article>)}
+        </section>}
         {run.picks.length<7&&!run.shopPlayerId&&
           <div className="nba-gm-dev__trade">
             <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS · 1YR SIGNINGS ONLY</p>
@@ -451,10 +525,10 @@ export default function NbaGmDevPage(){
         {capCrisis&&releasePanel}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <div className={"nba-gm-dev__window-status"+(capCrisis?" is-crisis":"")} role="status">
-            <small className="nba-gm-dev__window-eyebrow">{capCrisis?"CAP CRISIS":"WINDOW SET"}</small>
-            <strong>{capCrisis?"YOU HAVE MOVES TO MAKE":"YOU CAN MOVE FORWARD"}</strong>
-            <p>{capCrisis?"Resolve the Years 2 and 3 cap before advancing.":"Your seven-player rotation fits both future caps. Advance now or make an optional offseason move."}</p>
-            <button type="button" className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
+            <small className="nba-gm-dev__window-eyebrow">{capCrisis?"CAP CRISIS":heldPlayers.length>0?"ROSTER WORK REQUIRED":"WINDOW SET"}</small>
+            <strong>{capCrisis||heldPlayers.length>0?"YOU HAVE MOVES TO MAKE":"YOU CAN MOVE FORWARD"}</strong>
+            <p>{heldPlayers.length>0?"Resolve the held trade asset before advancing.":capCrisis?"Resolve the Years 2 and 3 cap before advancing.":"Your seven-player rotation fits both future caps. Advance now or make an optional offseason move."}</p>
+            <button type="button" className="nba-gm-dev__primary" disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}>
               SIMULATE YEARS 2 & 3
             </button>
           </div>}

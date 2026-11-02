@@ -783,3 +783,110 @@
   .nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-grid.nba-gm-dev__roster > article { min-height: 58px; padding-block: 6px; }
   .nba-gm-dev .nba-gm-dev__window-status { padding: 14px 12px; }
 }
+
+
+/* NBA GM accepted asking prices: NFL hierarchy, basketball colors, compact scrolling. */
+.nba-gm-dev .nba-gm-dev__chip-list button {
+  background:#282524;border-color:#594736;color:#f8deba;
+}
+.nba-gm-dev .nba-gm-dev__chip-list button.is-selected {
+  background:#624123;border-color:var(--nba-gm-accent);color:#fff0d7;
+  box-shadow:inset 0 0 0 1px var(--nba-gm-accent);
+}
+.nba-gm-dev .nba-gm-dev__trade { gap:12px; }
+.nba-gm-dev .nba-gm-dev__trade-stage-heading { display:grid;gap:4px;text-align:center;padding:6px 0; }
+.nba-gm-dev .nba-gm-dev__trade-stage-heading small {
+  font-size:10px;letter-spacing:.12em;font-weight:900;color:var(--nba-gm-accent-soft);
+}
+.nba-gm-dev .nba-gm-dev__trade-stage-heading h2 { margin:0;font-size:22px;line-height:1.1; }
+.nba-gm-dev .nba-gm-dev__trade-stage-heading p { margin:0;color:#b5b1ad;font-size:12px;line-height:1.4; }
+.nba-gm-dev .nba-gm-dev__trade-team {
+  display:flex;align-items:center;gap:12px;min-width:0;
+  border:1px solid #514337;border-radius:12px;
+  background:linear-gradient(105deg,#30271f,#1e1e1f 58%);
+  padding:13px;
+}
+.nba-gm-dev .nba-gm-dev__trade-team > span:last-child { display:grid;gap:4px;min-width:0; }
+.nba-gm-dev .nba-gm-dev__trade-team small {
+  color:#baac9e;font-size:10px;letter-spacing:.14em;font-weight:900;
+}
+.nba-gm-dev .nba-gm-dev__trade-team strong {
+  font-size:20px;line-height:1.2;overflow-wrap:anywhere;color:#faf7f3;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidates { display:grid;gap:5px; }
+.nba-gm-dev .nba-gm-dev__trade-candidate {
+  display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:9px;
+  align-items:center;min-width:0;min-height:72px;text-align:left;
+  border:1px solid #403b35;border-radius:11px;background:#242426;color:#f4f1ec;
+  padding:9px 10px;cursor:pointer;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate:hover,
+.nba-gm-dev .nba-gm-dev__trade-candidate:focus-visible {
+  border-color:var(--nba-gm-accent);background:#302822;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate .nba-gm-dev__portrait {
+  width:42px;height:42px;min-width:42px;min-height:42px;flex-basis:42px;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-copy { min-width:0;display:grid;gap:3px; }
+.nba-gm-dev .nba-gm-dev__trade-candidate-copy > small {
+  font-size:10px;color:#b5b0aa;letter-spacing:.025em;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-copy > strong {
+  font-size:14px;line-height:1.15;overflow-wrap:anywhere;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-copy .nba-gm-dev__scout-pills {
+  display:flex;flex-wrap:wrap;gap:4px;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate > b {
+  color:var(--nba-gm-accent-soft);white-space:nowrap;font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+.nba-gm-dev .nba-gm-dev__asking-room {display:grid;gap:9px;min-width:0;}
+.nba-gm-dev .nba-gm-dev__target-lock {
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:7px;
+  border:1px solid #46392e;background:#24201d;border-radius:10px;padding:12px;
+}
+.nba-gm-dev .nba-gm-dev__target-lock span {display:grid;gap:3px;min-width:0;}
+.nba-gm-dev .nba-gm-dev__target-lock small {font-size:10px;color:#c4a582;letter-spacing:.1em;font-weight:900;}
+.nba-gm-dev .nba-gm-dev__target-lock strong {font-size:19px;overflow-wrap:anywhere;}
+.nba-gm-dev .nba-gm-dev__target-lock > b {font-size:11px;color:#c9b6a4;}
+.nba-gm-dev .nba-gm-dev__asking-price {
+  display:grid;gap:0;overflow:hidden;min-width:0;
+  border:1px solid #514337;border-radius:12px;background:#202123;
+}
+.nba-gm-dev .nba-gm-dev__asking-price > header {display:flex;justify-content:space-between;gap:8px;align-items:center;padding:12px;}
+.nba-gm-dev .nba-gm-dev__asking-price > header small {color:#bca58e;letter-spacing:.13em;font-size:10px;font-weight:900;}
+.nba-gm-dev .nba-gm-dev__asking-price > header strong {font-size:15px;color:#fff;}
+.nba-gm-dev .nba-gm-dev__asking-price > div {display:grid;gap:7px;border-top:1px solid #393634;padding:10px 12px;}
+.nba-gm-dev .nba-gm-dev__asking-price > div > small {color:#e3b477;font-size:10px;font-weight:900;letter-spacing:.09em;}
+.nba-gm-dev .nba-gm-dev__asking-price > div > span {
+  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  font-size:13px;font-weight:800;overflow-wrap:anywhere;
+}
+.nba-gm-dev .nba-gm-dev__asking-price > div > span b {color:#eac899;white-space:nowrap;}
+.nba-gm-dev .nba-gm-dev__asking-price > p {font-size:11px;line-height:1.4;color:#e0bd93;margin:8px 12px;}
+.nba-gm-dev .nba-gm-dev__asking-price > button {
+  margin:10px 12px 12px;min-width:0;font-size:13px;letter-spacing:0;
+}
+.nba-gm-dev .nba-gm-dev__no-offer {display:grid;gap:8px;border:1px solid #5b4939;border-radius:11px;padding:14px;}
+.nba-gm-dev .nba-gm-dev__no-offer strong {color:#ffcd8d;}
+.nba-gm-dev .nba-gm-dev__no-offer p {font-size:12px;color:#c4b7a7;line-height:1.5;margin:0;}
+.nba-gm-dev .nba-gm-dev__displaced {
+  display:grid;gap:9px;background:#1c1d1f;border:1px solid #77523c;border-radius:13px;padding:14px;min-width:0;
+}
+.nba-gm-dev .nba-gm-dev__displaced > small {color:#f3a449;font-weight:900;letter-spacing:.1em;}
+.nba-gm-dev .nba-gm-dev__displaced h2 {margin:0;font-size:20px;}
+.nba-gm-dev .nba-gm-dev__displaced p {margin:0;font-size:12px;line-height:1.5;color:#c9c1ba;}
+.nba-gm-dev .nba-gm-dev__displaced article {display:grid;gap:9px;padding:11px;border-radius:10px;background:#262424;}
+.nba-gm-dev .nba-gm-dev__displaced article > span {color:#f5c58b;font-size:11px;}
+.nba-gm-dev .nba-gm-dev__displaced label {display:grid;gap:5px;font-size:11px;color:#b6afa7;}
+.nba-gm-dev .nba-gm-dev__displaced select {
+  width:100%;min-width:0;min-height:40px;background:#302921;color:#fff;
+  border:1px solid #765840;border-radius:8px;padding:8px;
+}
+@media(max-width:380px) {
+  .nba-gm-dev .nba-gm-dev__trade-candidate {grid-template-columns:37px minmax(0,1fr) auto;gap:6px;padding:8px 7px;}
+  .nba-gm-dev .nba-gm-dev__trade-candidate .nba-gm-dev__portrait {width:37px;height:37px;min-width:37px;min-height:37px;flex-basis:37px;}
+  .nba-gm-dev .nba-gm-dev__trade-candidate-copy > strong {font-size:12px;}
+  .nba-gm-dev .nba-gm-dev__trade-candidate > b {font-size:11px;}
+}
