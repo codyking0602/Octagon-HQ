@@ -4448,3 +4448,29 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   .football-gm__qb-list .football-gm__team-fallback { width: 25px; height: 25px; }
   .football-gm__qb-contract b { font-size: 11px; }
 }
+
+/* Shared GM opening cap forecast: current year prominent, other two years compact. */
+.football-gm__cap > .football-gm__cap-forecast {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+.football-gm__cap-forecast > span {
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(105, 153, 188, .11);
+  gap: 3px;
+}
+.football-gm__cap-forecast > span b {
+  color: #dce8f0;
+  font-size: 11px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 480px) {
+  .football-gm__cap-forecast > span { padding: 7px 9px; }
+  .football-gm__cap-forecast > span b { font-size: 10px; }
+}
