@@ -483,7 +483,11 @@ export default function NbaGmDevPage(){
             <label>Move to roster for
               <select value={swapOut} onChange={e=>setSwapOut(e.target.value)}>
                 <option value="">Choose active player</option>
-                {run.picks.map(pick=><option key={pick.playerId} value={pick.playerId}>
+                {run.picks.filter(pick=>{
+                  const player=byId.get(id);
+                  return player&&nbaGmDevCanAdd(run.picks.filter(row=>row.playerId!==pick.playerId),
+                    player,catalog,run.caps,"offseason");
+                }).map(pick=><option key={pick.playerId} value={pick.playerId}>
                   {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
               </select>
             </label>
