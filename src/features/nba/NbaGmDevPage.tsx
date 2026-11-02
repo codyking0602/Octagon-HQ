@@ -114,7 +114,6 @@ function FitReport({picks,catalog}:{
 function Results({seasons}:{seasons:NbaGmDevRun["results"]}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
-      <small>YEAR {season.season}</small>
       <strong>{season.wins}–{season.losses}</strong>
       <b>{season.finish}</b>
       <span>OFFENSE {season.offense.toFixed(1)} · DEFENSE {season.defense.toFixed(1)}</span>
