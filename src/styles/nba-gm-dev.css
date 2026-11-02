@@ -475,3 +475,152 @@
   font-size: 10px;
   margin: 7px 0 4px;
 }
+
+/* NBA GM offseason polish: the approved NFL hierarchy, without duplicate row actions. */
+.nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-grid.nba-gm-dev__roster > article {
+  grid-template-columns: 38px minmax(0,1fr) minmax(82px,auto);
+  gap: 7px;
+  min-height: 68px;
+  padding: 7px 10px;
+  align-items: center;
+}
+.nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-player {
+  min-width: 0;
+  gap: 7px;
+}
+.nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__roster-copy > strong {
+  line-height: 1.12;
+}
+.nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__roster-contract {
+  justify-items: end;
+  gap: 1px;
+  max-width: 105px;
+}
+.nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__inline-shop {
+  min-height: 24px;
+  padding: 3px 10px;
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 900;
+  border-radius: 7px;
+}
+.nba-gm-dev .nba-gm-dev__continuity {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 8px;
+  padding: 13px 15px;
+}
+.nba-gm-dev .nba-gm-dev__continuity > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.nba-gm-dev .nba-gm-dev__continuity > header > span { display: grid; gap: 3px; }
+.nba-gm-dev .nba-gm-dev__continuity > header > b {
+  color: #8ac5ed;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+}
+.nba-gm-dev .nba-gm-dev__continuity-track {
+  display: block;
+  height: 6px;
+  background: #263542;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.nba-gm-dev .nba-gm-dev__continuity-track > em {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg,#4b98c4,#83c8ef);
+  border-radius: inherit;
+}
+.nba-gm-dev .nba-gm-dev__continuity > p {
+  max-width: none;
+  font-size: 11px;
+}
+.nba-gm-dev .nba-gm-dev__continuity > small {
+  color: #8197a6;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.nba-gm-dev .nba-gm-dev__release {
+  display: block;
+  padding: 11px 13px;
+}
+.nba-gm-dev .nba-gm-dev__release > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  min-width: 0;
+}
+.nba-gm-dev .nba-gm-dev__release > summary::-webkit-details-marker { display: none; }
+.nba-gm-dev .nba-gm-dev__release > summary::before {
+  content: "▸";
+  color: #f5b962;
+  font-size: 15px;
+  flex: 0 0 auto;
+}
+.nba-gm-dev .nba-gm-dev__release[open] > summary::before { content: "▾"; }
+.nba-gm-dev .nba-gm-dev__release > summary > span { display: grid; gap: 3px; min-width: 0; }
+.nba-gm-dev .nba-gm-dev__release > summary > span > small {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  color: #97b2c3;
+}
+.nba-gm-dev .nba-gm-dev__release > summary > span > strong {
+  font-size: 15px;
+  color: #f5f7fa;
+}
+.nba-gm-dev .nba-gm-dev__release > summary > b {
+  color: #8ac5ed;
+  font-size: 10px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.nba-gm-dev .nba-gm-dev__release > p {
+  margin: 11px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.nba-gm-dev .nba-gm-dev__release-warning {
+  display: block;
+  padding-top: 8px;
+  color: #a5b7c3;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.nba-gm-dev .nba-gm-dev__fit .nba-gm-dev__fit-grid { gap: 6px; }
+.nba-gm-dev .nba-gm-dev__fit .nba-gm-dev__fit-grid > div {
+  min-height: 0;
+  padding: 7px 10px;
+}
+.nba-gm-dev .nba-gm-dev__fit > .nba-gm-dev__hint { font-size: 11px; line-height: 1.4; }
+@media(max-width:600px) {
+  .nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-grid.nba-gm-dev__roster > article {
+    grid-template-columns: 32px minmax(0,1fr) minmax(75px,auto);
+    gap: 5px;
+    min-height: 65px;
+    padding: 7px 8px;
+  }
+  .nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-player .nba-gm-dev__portrait {
+    width: 33px;
+    height: 33px;
+    flex: 0 0 33px;
+    min-width: 33px;
+    min-height: 33px;
+  }
+  .nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-player { gap: 5px; }
+  .nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__roster-contract { max-width: 86px; }
+  .nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__roster-contract > small {
+    font-size: 7px;
+    letter-spacing: .01em;
+  }
+  .nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__inline-shop { padding: 3px 9px; }
+}

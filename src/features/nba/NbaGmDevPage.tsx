@@ -252,6 +252,37 @@ export default function NbaGmDevPage(){
       &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
       .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
     :[];
+  const retainedCount=run?.picks.filter(pick=>
+    run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length??0;
+  // A release budget is constrained by BOTH remaining seasons, exactly as the
+  // server's two-year cap gate. This is a ceiling, not guaranteed FA inventory.
+  const releasePanel=run?.phase==="offseason"&&spend&&run.picks.length===7
+    &&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam
+    ?<details className="nba-gm-dev__release" aria-label="Voluntary player release">
+      <summary className="nba-gm-dev__release-heading">
+        <span><small>ONE VOLUNTARY RELEASE · OPTIONAL</small><strong>Explore free-agent opening</strong></span>
+        <b>{run.releasedIds.length===0?"AVAILABLE":"CAP RECOVERY"}</b>
+      </summary>
+      <p className="nba-gm-dev__hint">Cut one player to create a roster opening. The budget shown is the smaller of your remaining Year 2 and Year 3 cap room after the release. Available replacements still depend on the team wheel, eligibility, and market visits.</p>
+      <div className="nba-gm-dev__release-list">
+        {run.picks.map(pick=>{
+          const player=byId.get(pick.playerId);
+          if(!player)return null;
+          const budget=Math.max(0,Math.min(
+            run.caps[1]-spend[1]+nbaGmDevSalary(player,1),
+            run.caps[2]-spend[2]+nbaGmDevSalary(player,2)));
+          return <div className="nba-gm-dev__release-row" key={player.id}>
+            <span><strong>{player.name}</strong>
+              <small>{NBA_GM_DEV_SLOT_LABELS[pick.slot]} · FA BUDGET {money(budget)}</small></span>
+            <button type="button" className="nba-gm-dev__secondary" disabled={busy}
+              onClick={()=>{if(window.confirm("Release "+player.name+"? This move cannot be undone."))void act("release",player.id);}}>
+              RELEASE
+            </button>
+          </div>;
+        })}
+      </div>
+      <small className="nba-gm-dev__release-warning">The release is permanent. The player cannot be re-signed this offseason; your market visits do not reset.</small>
+    </details>:null;
   const isDraft=run?.phase==="draft";
   // Keep the wheel mounted during its animation and after its result.
   // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
@@ -310,8 +341,11 @@ export default function NbaGmDevPage(){
         </div>
       </section>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__continuity surface-card" aria-label="Roster continuity">
-        <span><small>ROSTER CONTINUITY</small><strong>{run.picks.filter(pick=>run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length}/7 RETAINED</strong></span>
-        <p>Keep your opening core or make a move. Replacing players affects later seasons, not your completed Year 1.</p>
+        <header><span><small>ROSTER CONTINUITY</small><strong>{retainedCount===7?"FULL CORE":retainedCount>=5?"MOSTLY INTACT":"REBUILT CORE"}</strong></span>
+          <b>{Math.round(retainedCount/7*100)}/100</b></header>
+        <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
+        <p>{retainedCount}/7 Year 1 players retained. Personnel changes can affect Years 2 and 3 through player skills and rotation fit; completed Year 1 stays unchanged.</p>
+        <small>The meter measures retention, not an extra hidden team bonus or fixed win-odds penalty.</small>
       </section>}
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {run.phase!=="final"&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
@@ -339,11 +373,10 @@ export default function NbaGmDevPage(){
                   <small className={`nba-gm-dev__roster-reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
                     {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}
                   </small>
+                  {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                    <button className="nba-gm-dev__secondary nba-gm-dev__inline-shop" type="button"
+                      aria-label={"Shop "+player.name} disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
                 </div>
-                {run.phase==="offseason"&&<div className="nba-gm-dev__row-actions">
-                  {run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                </div>}
               </>:<span className="football-gm__open">OPEN</span>}
             </article>;
           })}
@@ -416,24 +449,7 @@ export default function NbaGmDevPage(){
               salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
           </div>
         </div>}
-        {(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&run.picks.length===7&&
-          <section className="nba-gm-dev__release" aria-label="Voluntary player release">
-            <div className="nba-gm-dev__release-heading"><div><small>ONE VOLUNTARY RELEASE</small><h3>Release a player</h3></div>
-              <span>{run.releasedIds.length===0?"AVAILABLE":"CAP RECOVERY"}</span></div>
-            <p className="nba-gm-dev__hint">A release is permanent. It opens a roster spot for the free-agent wheel; you cannot re-sign this player this offseason.</p>
-            <div className="nba-gm-dev__release-list">
-              {run.picks.map(pick=>{
-                const player=byId.get(pick.playerId);
-                return player?<div className="nba-gm-dev__release-row" key={player.id}>
-                  <span><strong>{player.name}</strong><small>{NBA_GM_DEV_SLOT_LABELS[pick.slot]} · {money(nbaGmDevSalary(player,1))}</small></span>
-                  <button type="button" className="nba-gm-dev__secondary" disabled={busy}
-                    onClick={()=>{if(window.confirm("Release "+player.name+"? This move cannot be undone."))void act("release",player.id);}}>
-                    RELEASE
-                  </button>
-                </div>:null;
-              })}
-            </div>
-          </section>}
+        {capCrisis&&releasePanel}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <div className={"nba-gm-dev__window-status"+(capCrisis?" is-crisis":"")} role="status">
             <strong>{capCrisis?"CAP CRISIS":"WINDOW SET"}</strong>
@@ -443,6 +459,7 @@ export default function NbaGmDevPage(){
           <button className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
+        {!capCrisis&&releasePanel}
       </section>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
