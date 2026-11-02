@@ -610,3 +610,12 @@
 .football-gm-page:has(.football-gm-final) .football-gm-report__actions > button.gm-final__secondary-action {
   flex: 1 1 148px;
 }
+
+/* One expandable roster-evolution action in the shared final experience. */
+.gm-final > .gm-final__evolution-panel {
+  display:block;padding:0 14px;min-width:0;
+}
+.gm-final > .gm-final__evolution-panel > summary {
+  padding:15px 0;min-height:47px;align-items:center;
+}
+.gm-final > .gm-final__evolution-panel[open] { padding-bottom:12px; }
