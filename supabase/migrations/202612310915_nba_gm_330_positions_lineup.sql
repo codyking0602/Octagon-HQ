@@ -403,7 +403,7 @@ begin
   end if;
   return v_out;
 end;
-$function$
+$function$;
 
 
 -- Active, unfinished V7 offseason saves may still contain their original
