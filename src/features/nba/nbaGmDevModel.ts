@@ -35,7 +35,7 @@ export interface NbaGmDevRun {
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
-  simulationModelVersion?: 5 | 6;
+  simulationModelVersion?: 5 | 6 | 7;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
