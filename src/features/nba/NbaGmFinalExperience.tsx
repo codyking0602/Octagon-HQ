@@ -171,7 +171,9 @@ export function NbaGmFinalExperience({
           <em>ACQUIRED</em>
         </div>)}
       </div>:<p className="gm-final__hint">You kept the entire original rotation.</p>}
-      <details className="gm-final__disclosure">
+      
+    </section>}
+    <details className="gm-final__disclosure gm-final__evolution-panel surface-card">
         <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y3</span></summary>
         <div className="gm-final__evolution">
           {finalRows.map(row=><div key={row.slot}>
@@ -182,7 +184,6 @@ export function NbaGmFinalExperience({
           </div>)}
         </div>
       </details>
-    </section>}
     <div className="gm-final__bottom">
       <section className="gm-final__section surface-card" aria-label="NBA GM score breakdown">
         <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
