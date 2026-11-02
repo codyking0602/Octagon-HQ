@@ -272,3 +272,76 @@
  .nba-gm-dev .football-gm__development-report{padding:12px}
  .nba-gm-dev .football-gm__development-player{padding:8px 6px}
 }
+
+/* Shared GM opening presentation: use Football's compact front-office header. */
+.nba-gm-dev .nba-gm-dev__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 8px 2px 2px;
+}
+.nba-gm-dev .nba-gm-dev__header .nba-gm-dev__back {
+  justify-self: start;
+  min-width: 0;
+  color: #8da4b7;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.nba-gm-dev .nba-gm-dev__header > span {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+  min-width: 0;
+}
+.nba-gm-dev .nba-gm-dev__header > span small { color: #8d9eac; font-size: 10px; letter-spacing: .12em; }
+.nba-gm-dev .nba-gm-dev__header > span strong {
+  color: #fff;
+  font-size: clamp(22px, 7vw, 34px);
+  font-weight: 1000;
+  letter-spacing: -.04em;
+  font-style: italic;
+  line-height: 1.1;
+}
+.nba-gm-dev .nba-gm-dev__header .nba-gm-dev__private {
+  color: #a58d6e;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .055em;
+  line-height: 1.2;
+}
+.nba-gm-dev .nba-gm-dev__header > b {
+  justify-self: end;
+  color: #8d9eac;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+.nba-gm-dev .nba-gm-dev__draft { display: grid; gap: 10px; min-width: 0; }
+.nba-gm-dev .nba-gm-dev__draft .football-wheel { width: 100%; max-width: 420px; margin: 0 auto; }
+.nba-gm-dev .nba-gm-dev__draft-context { min-width: 0; gap: 8px; }
+.nba-gm-dev .nba-gm-dev__draft-context strong { min-width: 0; overflow-wrap: anywhere; }
+.nba-gm-dev .football-gm__roster {
+  background: #15181b;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 20px;
+}
+.nba-gm-dev .football-gm__roster > header b,
+.nba-gm-dev .football-gm__roster-grid > article > small { color: #f5b962; }
+.nba-gm-dev .nba-gm-dev__caps > .nba-gm-dev__cap-main b { color: #f5b962; }
+@media (max-width: 420px) {
+  .nba-gm-dev .nba-gm-dev__header .nba-gm-dev__back { font-size: 10px; letter-spacing: 0; }
+  .nba-gm-dev .nba-gm-dev__header > b { font-size: 9px; letter-spacing: .07em; }
+  .nba-gm-dev .nba-gm-dev__header > span small { font-size: 9px; }
+  .nba-gm-dev .nba-gm-dev__header .nba-gm-dev__private { font-size: 7px; }
+}
