@@ -1173,10 +1173,10 @@ export function SeasonCard({
         </>
       ) : (
         <>
-          <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
-          <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
-          {footballGmSeasonRecordLabel(result) ? <span>{footballGmSeasonRecordLabel(result)} REGULAR SEASON</span> : null}
+          <strong className="football-gm__reveal-overall">{footballGmTeamOverall(result.teamGrade)} <small>OVR</small></strong>
+          {footballGmSeasonRecordLabel(result) ? <span className="football-gm__reveal-record">{footballGmSeasonRecordLabel(result)}</span> : null}
           <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
+          <span className="football-gm__reveal-odds">{result.titleOdds.toFixed(1)}% TITLE ODDS</span>
         </>
       )}
     </article>
@@ -1549,13 +1549,6 @@ function FinalScreen({
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
         <button type="button" onClick={onReplay}>{replayLabel}</button>
-        <button type="button" className="gm-final__secondary-action" onClick={() => {
-          const details = document.getElementById("gm-full-roster");
-          if (details instanceof HTMLDetailsElement) {
-            details.open = true;
-            details.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }}>VIEW FULL ROSTER</button>
         <p className="football-gm__status" role="status">
           {isRecipient ? "RESULT SUBMITTED. BOTH GM SCORES REVEAL IN THE CHALLENGE RESULT." : challengeStatus}
         </p>
@@ -2576,15 +2569,13 @@ export default function FootballGmModePage({
       ) : null}
 
       {run.phase === "years23" ? (
-        <section className="football-gm__years23 surface-card">
+        <section className="football-gm__years23 surface-card" aria-label="NFL GM Years 2 and 3 results">
           <p className="eyebrow">THE WINDOW</p>
-          <h1>YEARS 2 & 3</h1>
-          <ContinuityMeter yearOneRoster={run.roster} roster={run.finalRoster} />
+          <h1>YEARS 2 &amp; 3</h1>
           <div className="football-gm__season-grid">
             <SeasonCard seed={run.seed} year={2} yearOneRoster={run.roster} roster={run.finalRoster} />
             <SeasonCard seed={run.seed} year={3} yearOneRoster={run.roster} roster={run.finalRoster} />
           </div>
-          <p>No second offseason. Talent still drives the team, but a massive Year 2 rebuild carries a continuity cost that partially recovers in Year 3.</p>
           <button className="primary-action" type="button" onClick={() => {
             const resolvedSeasons: FootballGmSeasonResultV2[] = [1, 2, 3].map((year) =>
               footballGmSeasonResultV2({
@@ -2595,7 +2586,7 @@ export default function FootballGmModePage({
               }),
             );
             patch({ phase: "final", resolvedSeasons });
-          }}>SEE 3-YEAR GM SCORE</button>
+          }}>REVEAL GM SCORE</button>
         </section>
       ) : null}
 
