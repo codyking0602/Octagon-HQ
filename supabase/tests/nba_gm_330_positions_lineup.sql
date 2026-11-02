@@ -16,8 +16,8 @@ begin
     raise exception '330 NBA GM valid dual positions required';end if;
   select jsonb_agg(jsonb_build_object('playerId',id)) into v_picks
     from unnest(v_names) id;
-  select jsonb_agg(jsonb_build_object('playerId',id)) into v_rev
-    from unnest(v_names) id order by id desc;
+  select jsonb_agg(jsonb_build_object('playerId',id) order by id desc) into v_rev
+    from unnest(v_names) id;
   v_assigned:=private.nba_gm_v2_assign(v_picks);
   if v_assigned is distinct from private.nba_gm_v2_assign(v_rev) then
     raise exception 'Draft order changes NBA starting assignment';end if;
