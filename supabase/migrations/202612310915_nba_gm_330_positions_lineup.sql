@@ -405,3 +405,42 @@ begin
 end;
 $function$
 
+
+-- Active, unfinished V7 offseason saves may still contain their original
+-- draft-era role assignment. Rebalance only the mutable CURRENT roster;
+-- retain yearOnePicks, completed results, older snapshots, and final runs.
+-- Append a new audited snapshot rather than rewriting any historical revision.
+do $nba_active_position_rebalance$
+declare
+  v_run record;
+  v_picks jsonb;
+  v_new_state jsonb;
+  v_revision integer;
+begin
+  for v_run in
+    select r.id,r.state from private.football_gm_runs r
+    where r.game_version='nba-gm-dev-v2' and r.completed_at is null
+      and r.state->>'phase'='offseason'
+      and r.state->>'simulationModelVersion'='7'
+      and jsonb_array_length(coalesce(r.state->'picks','[]'::jsonb))=7
+    order by r.id for update
+  loop
+    v_picks:=private.nba_gm_v2_assign(v_run.state->'picks');
+    if v_picks is null or v_picks is not distinct from v_run.state->'picks'
+    then continue; end if;
+    v_new_state:=jsonb_set(v_run.state,'{picks}',v_picks);
+    perform set_config('octagon.nba_gm_dev_authorized_write','yes',true);
+    update private.football_gm_runs
+      set state=v_new_state,updated_at=now()
+      where id=v_run.id;
+    select coalesce(max(revision),0)+1 into v_revision
+      from private.football_gm_run_snapshots
+      where run_id=v_run.id;
+    insert into private.football_gm_run_snapshots(run_id,revision,state)
+      values(v_run.id,v_revision,v_new_state);
+    insert into private.nba_gm_dev_action_events(run_id,revision,action,phase,accepted)
+      values(v_run.id,v_revision,'position-audit-rebalance','offseason',true);
+    perform set_config('octagon.nba_gm_dev_authorized_write','',true);
+  end loop;
+end;
+$nba_active_position_rebalance$;
