@@ -25,7 +25,7 @@ export function NbaGmDevelopmentReport({
       <div><p className="eyebrow">YEAR 1 → YEAR 2</p><h2>OFFSEASON DEVELOPMENT</h2></div>
       <span>SCOUTING REPORT</span>
     </header>
-    <p>Some players took a leap. Others stalled or regressed. Each franchise run has its own outcomes. Year 2 salary changes are now set.</p>
+    <p>Some players improved while others regressed. One-year deals now reflect their Year 2 market values; three-year salaries stay locked.</p>
     <div className="football-gm__development-list">
       {NBA_GM_ROSTER_SLOTS.map(slot => {
         const pick = run.yearOnePicks.find(entry => entry.slot === slot);
