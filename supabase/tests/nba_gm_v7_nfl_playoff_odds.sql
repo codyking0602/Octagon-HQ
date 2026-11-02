@@ -12,12 +12,12 @@ declare
  v_win_sums numeric[]:=array[0,0,0,0,0];
  v_overall numeric[]:=array[0,0,0,0,0];
  v_title numeric[]:=array[0,0,0,0,0];
- v_sum numeric;v_error text;
+ v_sum numeric;v_bucket_count integer;v_error text;
 begin
- if private.nba_gm_v7_outcome_odds(92)->>'Champion' <> '0.434000' then
+ if (private.nba_gm_v7_outcome_odds(92)->>'Champion')::numeric <> .434 then
    raise exception '92 raw grade no longer matches NFL 43.4 percent';
  end if;
- if private.nba_gm_v7_outcome_odds(92.5)->>'Champion' <> '0.496000' then
+ if (private.nba_gm_v7_outcome_odds(92.5)->>'Champion')::numeric <> .496 then
    raise exception 'NFL top-grade 49.6 percent cap drifted';
  end if;
  if private.nba_gm_v7_overall(92)<>98 or private.nba_gm_v7_overall(94)<>99
@@ -26,8 +26,8 @@ begin
  end if;
  for v_id in 78..98 loop
    v_odds:=private.nba_gm_v7_outcome_odds(v_id);
-   select sum(value::numeric) into v_sum from jsonb_each_text(v_odds);
-   if abs(v_sum-1)>.00001 or jsonb_object_length(v_odds)<>6 then
+   select sum(value::numeric),count(*) into v_sum,v_bucket_count from jsonb_each_text(v_odds);
+   if abs(v_sum-1)>.00001 or v_bucket_count<>6 then
      raise exception 'Six NFL parity outcomes not normalized: % %',v_id,v_odds;
    end if;
  end loop;
