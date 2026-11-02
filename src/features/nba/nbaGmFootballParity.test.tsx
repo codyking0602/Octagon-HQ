@@ -116,11 +116,13 @@ describe("NBA GM private Football parity boundary",()=>{
   it("shows all partner targets, two-chip proposals and capped FA recovery",()=>{
     expect(page).toContain("const eligibleTrade=run?.shopPlayerId?catalog.filter");
     expect(page).not.toContain("nbaGmDevCanAdd(run.picks.filter(pick=>pick.playerId!==run.shopPlayerId)");
-    expect(page).toContain('void act("trade",player.id,tradeChip??undefined)');
+    expect(page).toContain('void act("trade",tradeTarget,"offer:"+(index+1))');
     expect(page).toContain('void act("emergency-sign",player.id)');
     expect(page).toContain('run.freeAgencyVisits<3');
     expect(page).toContain("capCrisis");
-    expect(sql).toContain("Optional second outgoing asset");
+    expect(page).not.toContain("OPTIONAL SECOND TRADE CHIP");
+    expect(page).toContain("accepted asking");
+    expect(page).toContain("HELD TRADE ASSET");
     expect(sql).toContain("v_chip_id:=nullif(p_slot,'')");
     expect(sql).toContain("(v_state->>'freeAgencyVisits')::integer>=3");
     expect(sql).toContain("elsif p_action='emergency-sign'");
