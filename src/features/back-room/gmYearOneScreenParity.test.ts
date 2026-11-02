@@ -35,6 +35,18 @@ describe("Football and private NBA GM Year 1 parity", () => {
     expect(nbaCss).toContain(".nba-gm-dev .nba-gm-dev__year-one-card");
   });
 
+  it("shows one Year 1 label per recap and tightens spacing without changing later-year cards", () => {
+    expect(football).toContain('<p className="eyebrow">YEAR 1 COMPLETE</p>');
+    expect(nba).toContain('<p className="eyebrow">YEAR 1 COMPLETE</p>');
+    expect(football).toContain('!yearOneRecap ? <small>YEAR {year}</small> : null');
+    expect(nba).not.toContain('<small>YEAR {season.season}</small>');
+    expect(football).toContain("yearOneRecap = false");
+    expect(footballCss).toContain(".football-gm__year-reveal { display: grid; gap: 12px; padding: 14px 16px; }");
+    expect(footballCss).toContain("margin: 0 auto;\n  padding: 15px 12px;");
+    expect(nbaCss).toContain("padding: 14px 16px;");
+    expect(nbaCss).toContain(".nba-gm-dev .nba-gm-dev__year-reveal");
+  });
+
   it("shows NBA rotation fit only at the start of the offseason before cap and roster decisions", () => {
     expect(nba).toContain('run.phase==="offseason"&&<>');
     const report = nba.indexOf("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
