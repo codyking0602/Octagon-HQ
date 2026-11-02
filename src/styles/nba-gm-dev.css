@@ -890,3 +890,92 @@
   .nba-gm-dev .nba-gm-dev__trade-candidate-copy > strong {font-size:12px;}
   .nba-gm-dev .nba-gm-dev__trade-candidate > b {font-size:11px;}
 }
+
+
+/* Dedicated NBA-only trade journey. The offseason remains a separate screen. */
+.nba-gm-dev .nba-gm-dev__trade-screen{
+  width:100%;max-width:760px;margin:0 auto;min-width:0;
+  display:grid;gap:14px;padding:clamp(12px,3vw,22px);
+  background:var(--nba-gm-surface,#191a1c);
+  border:1px solid var(--nba-gm-border,#403a33);border-radius:17px;
+}
+.nba-gm-dev .nba-gm-dev__trade-screen-context{display:grid;gap:5px;}
+.nba-gm-dev .nba-gm-dev__trade-screen-context small{
+  color:var(--nba-gm-accent-soft,#ffd19a);font-size:10px;line-height:1.4;
+  font-weight:900;letter-spacing:.12em;overflow-wrap:anywhere;
+}
+.nba-gm-dev .nba-gm-dev__trade-screen-context strong{
+  font-size:clamp(21px,5vw,28px);line-height:1.15;letter-spacing:-.025em;
+}
+.nba-gm-dev .nba-gm-dev__trade-screen > .nba-gm-dev__trade{
+  display:grid;gap:12px;padding:0;border:0;background:transparent;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate{
+  display:grid;gap:0;min-width:0;min-height:0;padding:0;
+  background:#242426;border:1px solid #403b35;
+  border-radius:11px;overflow:hidden;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate.is-expanded{
+  border-color:var(--nba-gm-accent,#f3a449);
+  background:#292521;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-toggle{
+  display:grid;grid-template-columns:42px minmax(0,1fr) auto 13px;
+  align-items:center;gap:9px;width:100%;min-width:0;min-height:72px;
+  border:0;border-radius:0;padding:9px 10px;
+  background:transparent;color:#f4f1ec;text-align:left;
+  font:inherit;cursor:pointer;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-toggle:hover,
+.nba-gm-dev .nba-gm-dev__trade-candidate-toggle:focus-visible{
+  background:#362b21;outline:2px solid var(--nba-gm-accent,#f3a449);
+  outline-offset:-2px;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-toggle > b{
+  color:var(--nba-gm-accent-soft,#ffd19a);
+  white-space:nowrap;font-size:12px;font-variant-numeric:tabular-nums;
+}
+.nba-gm-dev .nba-gm-dev__trade-chevron{
+  font-size:21px;line-height:1;font-weight:900;text-align:center;
+  color:var(--nba-gm-accent-soft,#ffd19a);
+  transition:transform .14s ease;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate.is-expanded .nba-gm-dev__trade-chevron{
+  transform:rotate(180deg);
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-details{
+  display:grid;gap:11px;min-width:0;padding:12px;
+  border-top:1px solid #584534;background:#1f1e1e;
+}
+.nba-gm-dev .nba-gm-dev__trade-scout-heading{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:5px;
+}
+.nba-gm-dev .nba-gm-dev__trade-scout-heading strong{
+  color:var(--nba-gm-accent-soft,#ffd19a);
+  font-size:11px;letter-spacing:.09em;
+}
+.nba-gm-dev .nba-gm-dev__trade-scout-heading small{
+  font-size:10px;color:#beb5ab;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-details .nba-gm-dev__skills{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-details .nba-gm-dev__skills > div{
+  min-width:0;background:#292725;border:1px solid #3c3732;
+}
+.nba-gm-dev .nba-gm-dev__trade-candidate-details > .nba-gm-dev__primary{
+  width:100%;min-height:44px;font-size:clamp(11px,3.3vw,14px);
+  line-height:1.2;overflow-wrap:anywhere;
+}
+@media(max-width:380px){
+  .nba-gm-dev .nba-gm-dev__trade-screen{padding:10px;}
+  .nba-gm-dev .nba-gm-dev__trade-candidate-toggle{
+    grid-template-columns:37px minmax(0,1fr) auto 11px;
+    gap:6px;padding:8px 7px;
+  }
+  .nba-gm-dev .nba-gm-dev__trade-candidate-toggle > b{font-size:11px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .nba-gm-dev .nba-gm-dev__trade-chevron{transition:none;}
+}
