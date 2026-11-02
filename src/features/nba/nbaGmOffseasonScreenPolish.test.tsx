@@ -42,7 +42,7 @@ describe("NBA GM private offseason compact parity",()=>{
     expect(page).toContain("retainedCount/7*100");
     expect(page).toContain("nba-gm-dev__continuity-track");
     expect(page).toContain("No extra continuity bonus.");
-    expect(page).toContain("completed Year 1 stays unchanged");
+    expect(page).toContain("Year 1 results are locked.");
     expect(css).toContain(".nba-gm-dev__continuity-track > em");
   });
   it("keeps SHOP in the right-hand salary stack, not a second roster grid row",()=>{
