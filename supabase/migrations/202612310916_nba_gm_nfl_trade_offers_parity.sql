@@ -8,6 +8,7 @@ create or replace function private.nba_gm_v8_trade_offers(
 ) returns jsonb language plpgsql stable set search_path='' as $offers$
 declare
   v_anchor text:=p_state->>'shopPlayerId';
+  v_anchor_held boolean:=false;
   v_partner text:=p_state->>'tradeTeam';
   v_target private.nba_gm_dev_players%rowtype;
   v_out2 text; v_in2 text;
@@ -21,10 +22,13 @@ declare
   v_shape text;v_key text;
 begin
   if p_state->>'phase'<>'offseason' or v_anchor is null or v_partner is null
-    or jsonb_array_length(coalesce(p_state->'displacedAssets','[]'::jsonb))>0
     then return '[]'::jsonb; end if;
-  if not exists(select 1 from jsonb_array_elements(p_state->'picks') p
-      where p->>'playerId'=v_anchor) then return '[]'::jsonb; end if;
+  select exists(select 1 from jsonb_array_elements(coalesce(p_state->'displacedAssets','[]'::jsonb)) p
+    where p#>>'{}'=v_anchor) into v_anchor_held;
+  if (not v_anchor_held and not exists(select 1 from jsonb_array_elements(p_state->'picks') p
+      where p->>'playerId'=v_anchor))
+    or (not v_anchor_held and jsonb_array_length(coalesce(p_state->'displacedAssets','[]'::jsonb))>0)
+    then return '[]'::jsonb; end if;
   select * into v_target from private.nba_gm_dev_players where id=p_target_id;
   if not found or v_target.team_code<>v_partner
     or exists(select 1 from jsonb_array_elements(p_state->'picks') p where p->>'playerId'=p_target_id)
@@ -68,24 +72,30 @@ begin
       select coalesce(jsonb_agg(x),'[]'::jsonb) into v_base
         from jsonb_array_elements(p_state->'picks') x
         where x->>'playerId'<>v_anchor and (v_out2 is null or x->>'playerId'<>v_out2);
-      v_active:=private.nba_gm_v2_assign(v_base,p_target_id);
-      if v_active is null then continue; end if;
-      v_pool:='[]'::jsonb;
+      select coalesce(jsonb_agg(x),'[]'::jsonb) into v_pool
+        from jsonb_array_elements(coalesce(p_state->'displacedAssets','[]'::jsonb)) x
+        where x#>>'{}'<>v_anchor;
+      if jsonb_array_length(v_base)<7 then
+        v_active:=private.nba_gm_v2_assign(v_base,p_target_id);
+        if v_active is null then continue; end if;
+      else
+        v_active:=v_base;
+        v_pool:=v_pool||jsonb_build_array(p_target_id);
+      end if;
       if v_in2 is not null then
         if jsonb_array_length(v_active)<7 then
           v_active:=private.nba_gm_v2_assign(v_active,v_in2);
           if v_active is null then continue; end if;
         else
-          v_pool:=jsonb_build_array(v_in2);
+          v_pool:=v_pool||jsonb_build_array(v_in2);
         end if;
       end if;
       v_legal:=true;
       for v_year in 2..3 loop
         select coalesce(sum(private.nba_gm_v3_salary(p_state,x->>'playerId',v_year)),0)
           into v_spend from jsonb_array_elements(v_active) x;
-        if v_in2 is not null and jsonb_array_length(v_pool)>0 then
-          v_spend:=v_spend+private.nba_gm_v3_salary(p_state,v_in2,v_year);
-        end if;
+        v_spend:=v_spend+(select coalesce(sum(private.nba_gm_v3_salary(p_state,x#>>'{}',v_year)),0)
+          from jsonb_array_elements(v_pool) x);
         if v_spend>(p_state->'caps'->>(v_year-1))::bigint then
           v_legal:=false;exit;end if;
       end loop;
@@ -178,7 +188,16 @@ begin
   -- displaced-asset decision before beginning another shop.
   v_def:=replace(v_def,
     'or (v_state->>''tradesUsed'')::integer>=1',
-    'or jsonb_array_length(coalesce(v_state->''displacedAssets'',''[]''::jsonb))>0');
+    'or (jsonb_array_length(coalesce(v_state->''displacedAssets'',''[]''::jsonb))>0'||
+    ' and not exists(select 1 from jsonb_array_elements(v_state->''displacedAssets'') x'||
+    ' where x#>>''{}''=p_player_id))');
+  v_def:=replace(v_def,
+    'or not exists(select 1 from jsonb_array_elements(v_picks) pick'||
+    chr(10)||'        where pick->>''playerId''=p_player_id)',
+    'or not (exists(select 1 from jsonb_array_elements(v_picks) pick'||
+    chr(10)||'        where pick->>''playerId''=p_player_id)'||
+    ' or exists(select 1 from jsonb_array_elements(coalesce(v_state->''displacedAssets'',''[]''::jsonb)) x'||
+    ' where x#>>''{}''=p_player_id))');
 
   v_old:='elsif p_action=''trade'' then';
   v_new:=$offer_branch$
