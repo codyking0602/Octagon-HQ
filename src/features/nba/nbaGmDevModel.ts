@@ -52,6 +52,7 @@ export interface NbaGmDevRun {
   tradeTeam: string | null;
   tradeAttempts: number;
   displacedAssets?: string[];
+  displacedReleasedIds?: string[];
   tradesUsed: number;
   freeAgencyTeam: string | null;
   freeAgencyVisits: number;
