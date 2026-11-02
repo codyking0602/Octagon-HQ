@@ -4477,12 +4477,12 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
 
 /* Year 1 recap parity: lead with actual record and postseason finish.
    This opt-in treatment leaves Years 2/3 and other season-card usages intact. */
-.football-gm__year-reveal { padding: 17px 16px; }
+.football-gm__year-reveal { display: grid; gap: 12px; padding: 14px 16px; }
 .football-gm__year-reveal > .eyebrow { margin: 0; }
 .football-gm__season-card.is-year-one {
   max-width: 380px;
-  margin: 12px auto 16px;
-  padding: 18px 12px;
+  margin: 0 auto;
+  padding: 15px 12px;
   gap: 5px;
   width: 100%;
 }
