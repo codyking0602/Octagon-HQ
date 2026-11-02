@@ -8,7 +8,7 @@ declare
   v_owner jsonb;v_reference jsonb;v_post jsonb;v_star jsonb;v_weak jsonb;
   v_state jsonb;v_result jsonb;v_orig jsonb;v_def_changed jsonb;
   v_before_v5 jsonb;v_id integer;v_seed integer;v_year integer;
-  v_total numeric[]:=array[0,0,0,0];v_champ integer:=0;
+  v_total numeric[]:=array[0,0,0,0,0];v_champ integer:=0;
   v_count integer:=0;v_old_overall integer;v_old_skills jsonb;
   v_grade_before numeric;v_error text;
 begin
@@ -53,13 +53,13 @@ begin
 
  if private.nba_gm_v2_assign(v_owner) is null then raise exception 'Owner roster invalid';end if;
 
- for v_id in 1..4 loop
+ for v_id in 1..5 loop
   for v_seed in 1..40 loop
    v_state:=jsonb_build_object('economyVersion',4,'simulationModelVersion',6,
       'developmentModelVersion',2,'phase','offseason',
       'seed','nba-v6-independent-'||v_id||'-'||v_seed,
       'picks',case v_id when 1 then v_owner when 2 then v_reference
-                        when 3 then v_star else v_weak end,
+                        when 3 then v_post when 4 then v_star else v_weak end,
       'releasedIds','[]'::jsonb,'tradesUsed',0,
       'caps','[155000000,155000000,155000000]'::jsonb);
    for v_year in 1..3 loop
@@ -82,14 +82,16 @@ begin
    end loop;
   end loop;
  end loop;
- if v_count<>480 then raise exception 'Expected 480 V6 seasons, got %',v_count;end if;
+ if v_count<>600 then raise exception 'Expected 600 V6 seasons, got %',v_count;end if;
  if v_total[1]/120 not between 58 and 68
     or v_total[2]/120 not between 57 and 68
-    or v_total[3]/120 not between 57 and 70
-    or v_total[4]/120 >=30
-    or v_total[1]<=v_total[4]+3000 then
-   raise exception 'V6 historical ordering implausible: mean wins %, %, %, %',
-      v_total[1]/120,v_total[2]/120,v_total[3]/120,v_total[4]/120;
+    or v_total[3]/120 not between 46 and 60
+    or v_total[4]/120 not between 57 and 70
+    or v_total[5]/120 >=30
+    or v_total[2]<=v_total[3]+450
+    or v_total[1]<=v_total[5]+3000 then
+   raise exception 'V6 historical ordering implausible: mean wins %, %, %, %, %',
+      v_total[1]/120,v_total[2]/120,v_total[3]/120,v_total[4]/120,v_total[5]/120;
  end if;
  if v_champ=0 or v_champ>=120 then
     raise exception 'Owner championship deterministic or inaccessible (% of 120)',v_champ;
@@ -134,8 +136,8 @@ begin
    if v_error='NO_VERSION_GUARD' or v_error not like '%opted-in%' then
      raise exception 'V6 guard broken: %',v_error;end if;
  end;
- raise notice 'V6 480 seasons. Luka roster mean %, former owner %, star %, weak %. Championships % of 120',
-  round(v_total[1]/120,1),round(v_total[2]/120,1),round(v_total[3]/120,1),round(v_total[4]/120,1),v_champ;
+ raise notice 'V6 600 seasons. Luka mean %, previous owner %, after trade %, star %, weak %. Championships % of 120',
+  round(v_total[1]/120,1),round(v_total[2]/120,1),round(v_total[3]/120,1),round(v_total[4]/120,1),round(v_total[5]/120,1),v_champ;
 end;
 $nba_v6_proof$;
 rollback;
