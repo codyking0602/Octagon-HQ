@@ -346,7 +346,7 @@ export default function NbaGmDevPage(){
         <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
         <p>{retainedCount}/7 Year 1 players retained. Personnel changes can affect Years 2 and 3 through player skills and rotation fit; completed Year 1 stays unchanged.</p>
         <small>The meter measures retention, not an extra hidden team bonus or fixed win-odds penalty.</small>
-      </section>
+      </section>}
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {run.phase!=="final"&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
