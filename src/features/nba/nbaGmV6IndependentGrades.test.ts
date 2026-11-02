@@ -33,7 +33,7 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
   it("retains old V5 router and saved snapshots while creating V6 only for new runs", () => {
     expect(sql).toContain("v_new:=E'begin");
     expect(sql).toContain("private.nba_gm_v6_season(p_state,p_year)");
-    expect(sql).toContain("private.nba_gm_v5_season(p_state,p_year)");
+    expect(sql).toContain("''simulationModelVersion''=''5'' then");
     expect(sql).toContain("''simulationModelVersion'',6");
     expect(tests).toContain("V5 saved run changed under V6 router");
     expect(repo).toContain("simulationModelVersion:z.union([z.literal(5),z.literal(6)]).optional()");
