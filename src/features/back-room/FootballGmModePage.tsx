@@ -1495,6 +1495,33 @@ export function TradeCutResolution({
   );
 }
 
+function FootballGmFitReport({ roster, seed }: { roster: readonly FootballGmRosterEntry[]; seed: string }) {
+  const optimized = footballGmReflowRoster(roster, 2, seed) ?? roster;
+  const bySlot = new Map(optimized.map((entry) => [entry.slot, entry]));
+  return (
+    <section className="football-gm__fit-report surface-card" aria-label="Year 2 roster fit">
+      <header>
+        <span><small>YEAR 2 · POSITION FIT</small><strong>YOUR SEVEN-MAN CORE</strong></span>
+        <b>{roster.length}/7 FILLED</b>
+      </header>
+      <div className="football-gm__fit-grid">
+        {FOOTBALL_GM_ROSTER_SLOTS.map((slot) => {
+          const playerId = bySlot.get(slot)?.playerId;
+          const player = playerId ? footballGmPlayerById(playerId) : null;
+          return (
+            <div className={player ? "is-filled" : "is-open"} key={slot}>
+              <b>{footballGmSlotLabel(slot)}</b>
+              <span>{player?.name ?? "OPEN"}</span>
+              <small>{player ? `${player.team} · ${player.position}` : "ROSTER SPOT"}</small>
+            </div>
+          );
+        })}
+      </div>
+      <small className="football-gm__fit-note">Year 2 assignments reflect your current roster and player development.</small>
+    </section>
+  );
+}
+
 function FinalScreen({
   run,
   gmName,
@@ -1592,6 +1619,11 @@ export default function FootballGmModePage({
     return startImmediately ? { ...fresh, phase: "draft" } : fresh;
   });
   const [challengeStatus, setChallengeStatus] = useState("");
+  const [offseasonView, setOffseasonView] = useState<"report" | "moves">("report");
+  function selectOffseasonView(view: "report" | "moves") {
+    setOffseasonView(view);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
+  }
   const [soloStartMode, setSoloStartMode] = useState<FootballGmSoloStartMode>("classic");
   const [soloQbSearch, setSoloQbSearch] = useState("");
   const [selectedSoloQbId, setSelectedSoloQbId] = useState<string | null>(null);
@@ -1599,6 +1631,12 @@ export default function FootballGmModePage({
   const filteredSoloQuarterbacks = FOOTBALL_GM_SOLO_QUARTERBACKS.filter((player) =>
     (player.name + " " + player.team).toLowerCase().includes(soloQbSearch.trim().toLowerCase()));
   const canChooseStartingQb = standalone && !weeklyRun && !profileMatch.code;
+  // A resumed trade returns to Moves rather than dropping the user into a report.
+  useEffect(() => {
+    if (run.phase === "offseason" && (run.tradeAnchorPlayerId || run.pendingTradeResolution)) {
+      setOffseasonView("moves");
+    }
+  }, [run.phase, run.tradeAnchorPlayerId, run.pendingTradeResolution]);
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone || Boolean(weeklyRun));
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
@@ -1947,6 +1985,8 @@ export default function FootballGmModePage({
     const isHeld = run.finalRoster.some((entry) => entry.playerId === playerId)
       || run.tradeChipPlayerIds.includes(playerId);
     if (!isHeld || run.shoppedPlayerIds.includes(playerId) || run.pendingTradeResolution) return;
+    setOffseasonView("moves");
+    window.scrollTo({ top: 0, behavior: "instant" });
     patch({
       tradeAnchorPlayerId: playerId,
       tradePartnerTeam: null,
@@ -2180,6 +2220,15 @@ export default function FootballGmModePage({
     );
   }
 
+  const offseasonTradeStage = Boolean(run.tradeAnchorPlayerId || run.pendingTradeResolution);
+  const showOffseasonReport = run.phase === "offseason" && !offseasonTradeStage && offseasonView === "report";
+  const showOffseasonMoves = run.phase === "offseason" && !offseasonTradeStage && offseasonView === "moves";
+  const futureCap = ([2, 3] as const).map((year) => ({
+    year,
+    remaining: FOOTBALL_GM_CAP - footballGmAdjustedHoldingsCap(
+      run.finalRoster, run.tradeChipPlayerIds, year, run.seed, run.negotiationConsequences,
+    ),
+  }));
   const offseasonReady = footballGmIsOffseasonCompliantV2(
     run.finalRoster,
     run.seed,
@@ -2359,32 +2408,67 @@ export default function FootballGmModePage({
           <section className="football-gm__year-reveal surface-card">
             <p className="eyebrow">YEAR 1 COMPLETE</p>
             <SeasonCard seed={run.seed} year={1} yearOneRoster={run.roster} roster={run.roster} yearOneRecap />
-            <button className="primary-action" type="button" onClick={() => patch({
-              phase: "offseason",
-              finalRoster: [...run.roster],
-            })}>ENTER THE OFFSEASON</button>
+            <button className="primary-action" type="button" onClick={() => {
+              setOffseasonView("report");
+              patch({
+                phase: "offseason",
+                finalRoster: [...run.roster],
+              });
+            }}>ENTER THE OFFSEASON</button>
           </section>
         </>
       ) : null}
 
       {run.phase === "offseason" ? (
         <>
-          <FootballGmDevelopmentReport roster={run.roster} seed={run.seed} />
-          <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds}
-            year={2} seed={run.seed} consequences={run.negotiationConsequences}
-            yearOneRoster={run.roster} forecastYears />
-          <ContinuityMeter yearOneRoster={run.roster} roster={run.finalRoster} />
-          <RosterGrid
-            roster={run.finalRoster}
-            year={2}
-            seed={run.seed}
-            consequences={run.negotiationConsequences}
-            showFutureSalary
-            compact
-            onShop={!run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
-            shoppedPlayerIds={run.shoppedPlayerIds}
-          />
-
+          {!offseasonTradeStage ? (
+            <nav className="football-gm__offseason-nav" aria-label="Offseason screens">
+              <button type="button" className={offseasonView === "report" ? "is-active" : ""}
+                aria-pressed={offseasonView === "report"} onClick={() => selectOffseasonView("report")}>
+                <small>01</small> TEAM REPORT
+              </button>
+              <button type="button" className={offseasonView === "moves" ? "is-active" : ""}
+                aria-pressed={offseasonView === "moves"} onClick={() => selectOffseasonView("moves")}>
+                <small>02</small> OFFSEASON MOVES
+              </button>
+            </nav>
+          ) : <div className="football-gm__trade-context">OFFSEASON · TRADE TALKS</div>}
+          {showOffseasonReport ? (
+            <>
+              <FootballGmDevelopmentReport roster={run.roster} seed={run.seed} />
+              <FootballGmFitReport roster={run.finalRoster} seed={run.seed} />
+              <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds}
+                year={2} seed={run.seed} consequences={run.negotiationConsequences}
+                yearOneRoster={run.roster} forecastYears />
+              <ContinuityMeter yearOneRoster={run.roster} roster={run.finalRoster} />
+              <button type="button" className="primary-action football-gm__report-next"
+                onClick={() => selectOffseasonView("moves")}>CONTINUE TO OFFSEASON MOVES</button>
+            </>
+          ) : null}
+          {showOffseasonMoves ? (
+            <>
+              <div className="football-gm__moves-cap" role="status" aria-label="Offseason salary cap room">
+                {futureCap.map(({ year, remaining }) => (
+                  <span key={year} className={remaining < 0 ? "is-over" : ""}>
+                    <small>YEAR {year} CAP</small>
+                    <strong>{footballGmMoney(Math.abs(remaining))} {remaining < 0 ? "OVER" : "LEFT"}</strong>
+                  </span>
+                ))}
+              </div>
+              <RosterGrid
+                roster={run.finalRoster}
+                year={2}
+                seed={run.seed}
+                consequences={run.negotiationConsequences}
+                showFutureSalary
+                compact
+                onShop={!run.pendingFreeAgentTeam ? beginTrade : undefined}
+                shoppedPlayerIds={run.shoppedPlayerIds}
+              />
+            </>
+          ) : null}
+          {(offseasonTradeStage || showOffseasonMoves) ? (
+            <>
           {run.tradeMessage ? <section className="football-gm__trade-message surface-card">{run.tradeMessage}</section> : null}
 
           {run.pendingTradeResolution ? (
@@ -2486,6 +2570,8 @@ export default function FootballGmModePage({
               )}
             </>
           )}
+            </>
+          ) : null}
         </>
       ) : null}
 
