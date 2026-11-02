@@ -145,7 +145,7 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
     <header><small>THE WINDOW</small><h2>YEARS 2 &amp; 3</h2></header>
     <div className="nba-gm-dev__reveal-grid">
       {run.results.filter(season=>season.season>=2).map(season=><article key={season.season}>
-        <small>YEAR {season.season}</small>
+        <small className="nba-gm-dev__reveal-year">YEAR {season.season}</small>
         <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
         <b>{season.wins}–{season.losses}</b>
         <em>{nbaGmPlayoffFinishText(season.finish)}</em>
