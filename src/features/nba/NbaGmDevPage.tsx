@@ -344,8 +344,7 @@ export default function NbaGmDevPage(){
         <header><span><small>ROSTER CONTINUITY</small><strong>{retainedCount===7?"FULL CORE":retainedCount>=5?"MOSTLY INTACT":"REBUILT CORE"}</strong></span>
           <b>{Math.round(retainedCount/7*100)}/100</b></header>
         <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
-        <p>{retainedCount}/7 Year 1 players retained. Personnel changes can affect Years 2 and 3 through player skills and rotation fit; completed Year 1 stays unchanged.</p>
-        <small>The meter measures retention, not an extra hidden team bonus or fixed win-odds penalty.</small>
+        <p>{retainedCount}/7 Year 1 players retained; completed Year 1 stays unchanged. The meter measures retention, not an extra hidden team bonus or fixed win-odds penalty.</p>
       </section>}
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {run.phase!=="final"&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
@@ -452,13 +451,13 @@ export default function NbaGmDevPage(){
         {capCrisis&&releasePanel}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <div className={"nba-gm-dev__window-status"+(capCrisis?" is-crisis":"")} role="status">
-            <strong>{capCrisis?"CAP CRISIS":"WINDOW SET"}</strong>
-            <span>{capCrisis?"Resolve the Years 2 and 3 cap before advancing.":"All seven roster spots are filled. You can move forward or make an offseason move."}</span>
+            <small className="nba-gm-dev__window-eyebrow">{capCrisis?"CAP CRISIS":"WINDOW SET"}</small>
+            <strong>{capCrisis?"YOU HAVE MOVES TO MAKE":"YOU CAN MOVE FORWARD"}</strong>
+            <p>{capCrisis?"Resolve the Years 2 and 3 cap before advancing.":"Your seven-player rotation fits both future caps. Advance now or make an optional offseason move."}</p>
+            <button type="button" className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
+              SIMULATE YEARS 2 & 3
+            </button>
           </div>}
-        {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-          <button className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
-            LOCK ROSTER · SIMULATE SEASONS 2 & 3
-          </button>}
         {!capCrisis&&releasePanel}
       </section>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
