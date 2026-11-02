@@ -580,16 +580,21 @@ export function CapMeter({
   seed,
   consequences,
   tradeChipPlayerIds = [],
+  forecastYears = false,
+  yearOneRoster,
 }: {
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2 | 3;
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   tradeChipPlayerIds?: readonly string[];
+  forecastYears?: boolean;
+  yearOneRoster?: readonly FootballGmRosterEntry[];
 }) {
-  const spent = year === 1
-    ? footballGmRosterCap(roster, 1)
-    : footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, year, seed, consequences);
+  const spentForYear = (targetYear: 1 | 2 | 3) => targetYear === 1
+    ? footballGmRosterCap(yearOneRoster ?? roster, 1)
+    : footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, targetYear, seed, consequences);
+  const spent = spentForYear(year);
   const remaining = FOOTBALL_GM_CAP - spent;
   const pct = Math.min(100, Math.max(0, (spent / FOOTBALL_GM_CAP) * 100));
   return (
@@ -599,6 +604,16 @@ export function CapMeter({
         <b>{remaining >= 0 ? `${footballGmMoney(remaining)} LEFT` : `${footballGmMoney(Math.abs(remaining))} OVER`}</b>
       </div>
       <i><em style={{ width: `${pct}%` }} /></i>
+      {forecastYears ? (
+        <div className="football-gm__cap-forecast" aria-label="Other season salary caps">
+          {([1, 2, 3] as const).filter((targetYear) => targetYear !== year).map((targetYear) => (
+            <span key={targetYear}>
+              <small>YEAR {targetYear}</small>
+              <b>{footballGmMoney(spentForYear(targetYear))} / {footballGmMoney(FOOTBALL_GM_CAP)}</b>
+            </span>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -2161,6 +2176,31 @@ export default function FootballGmModePage({
     run.tradeChipPlayerIds,
   );
 
+  const draftWheelStage = run.phase === "draft" ? (
+    <>
+      {weeklyRun?.startingPlayerId ? (
+        <p className="football-gm__qb-draft-banner">YOUR CHOSEN {weeklyRun.scenario === "elite" ? "WR" : "RB"} · SIX TEAM-WHEEL PICKS · NORMAL PLAYER DEVELOPMENT</p>
+      ) : run.startMode === "choose-qb" ? (
+        <p className="football-gm__qb-draft-banner">CHOOSE YOUR QB · SIX INDEPENDENT WHEEL PICKS · NORMAL DEVELOPMENT</p>
+      ) : null}
+      <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
+        <span>ROUND {run.roster.length + 1} OF 7</span>
+        <strong>{footballGmOpenSlots(run.roster).join(" · ")}</strong>
+      </div>
+      <GmFootballWheel
+        teams={draftWheelTeams}
+        rotation={draftWheelRotation}
+        spinning={draftWheelSpinning}
+        pendingTeam={pendingDraftWheelTeam}
+        canSpin={!run.pendingTeam && draftWheelTeams.length > 0}
+        onSpin={spinDraft}
+      />
+      {run.pendingTeam ? (
+        <CandidateBoard teamCode={run.pendingTeam} roster={run.roster} year={1} onPick={makeDraftPick} />
+      ) : null}
+    </>
+  ) : null;
+
   return (
     <div className="page football-gm-page">
       {run.phase === "final" ? (
@@ -2294,32 +2334,16 @@ export default function FootballGmModePage({
 
       {run.phase === "draft" ? (
         <>
-          <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
+          <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} forecastYears />
+          {run.roster.length === 0 ? draftWheelStage : null}
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
-          {weeklyRun?.startingPlayerId ? (
-            <p className="football-gm__qb-draft-banner">YOUR CHOSEN {weeklyRun.scenario === "elite" ? "WR" : "RB"} · SIX TEAM-WHEEL PICKS · NORMAL PLAYER DEVELOPMENT</p>
-          ) : run.startMode === "choose-qb" ? <p className="football-gm__qb-draft-banner">CHOOSE YOUR QB · SIX INDEPENDENT WHEEL PICKS · NORMAL DEVELOPMENT</p> : null}
-          <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
-            <span>ROUND {run.roster.length + 1} OF 7</span>
-            <strong>{footballGmOpenSlots(run.roster).join(" · ")}</strong>
-          </div>
-          <GmFootballWheel
-            teams={draftWheelTeams}
-            rotation={draftWheelRotation}
-            spinning={draftWheelSpinning}
-            pendingTeam={pendingDraftWheelTeam}
-            canSpin={!run.pendingTeam && draftWheelTeams.length > 0}
-            onSpin={spinDraft}
-          />
-          {run.pendingTeam ? (
-            <CandidateBoard teamCode={run.pendingTeam} roster={run.roster} year={1} onPick={makeDraftPick} />
-          ) : null}
+          {run.roster.length > 0 ? draftWheelStage : null}
         </>
       ) : null}
 
       {run.phase === "year1" ? (
         <>
-          <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
+          <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} forecastYears />
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <section className="football-gm__year-reveal surface-card">
             <p className="eyebrow">YEAR 1 COMPLETE</p>
@@ -2336,10 +2360,9 @@ export default function FootballGmModePage({
       {run.phase === "offseason" ? (
         <>
           <FootballGmDevelopmentReport roster={run.roster} seed={run.seed} />
-          <div className="football-gm__dual-cap">
-            <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds} year={2} seed={run.seed} consequences={run.negotiationConsequences} />
-            <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds} year={3} seed={run.seed} consequences={run.negotiationConsequences} />
-          </div>
+          <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds}
+            year={2} seed={run.seed} consequences={run.negotiationConsequences}
+            yearOneRoster={run.roster} forecastYears />
           <ContinuityMeter yearOneRoster={run.roster} roster={run.finalRoster} />
           <RosterGrid
             roster={run.finalRoster}
