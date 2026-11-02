@@ -1,0 +1,51 @@
+{
+  "weekStart": "2026-10-26",
+  "weekEnd": "2026-11-01",
+  "publishedAt": "2026-11-02T22:05:35.943Z",
+  "player": {
+    "name": "Victor Wembanyama",
+    "team": "San Antonio Spurs",
+    "teamId": "SA",
+    "position": "F",
+    "gamesPlayed": 3,
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/5104157.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Victor%20Wembanyama",
+    "highlightUrl": "https://www.youtube.com/watch?v=bgqe5CeOYvY",
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "36.0"
+      },
+      {
+        "label": "APG",
+        "value": "3.7"
+      },
+      {
+        "label": "RPG",
+        "value": "10.3"
+      },
+      {
+        "label": "FG%",
+        "value": "56.3"
+      }
+    ]
+  },
+  "team": {
+    "name": "Dallas Mavericks",
+    "teamId": "DAL",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/dal.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/DAL/2027.html",
+    "record": "3-0",
+    "ppg": "116.3",
+    "oppPpg": "105.3",
+    "netMargin": "+11.0",
+    "fgPct": "48.2",
+    "threePct": "33.9",
+    "seasonRecord": "4-2",
+    "conference": "WEST",
+    "conferenceSeed": 7,
+    "standingsAsOf": "2026-11-02T22:05:36.007Z"
+  }
+}
