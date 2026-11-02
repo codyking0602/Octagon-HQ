@@ -23,6 +23,7 @@ const run=z.object({
     }).optional()})),
   shopPlayerId:z.string().nullable(),tradeTeam:z.string().nullable(),
   displacedAssets:z.array(z.string()).optional(),
+  displacedReleasedIds:z.array(z.string()).optional(),
   tradeAttempts:z.number().int().nonnegative(),tradesUsed:z.number().int().nonnegative(),
   freeAgencyTeam:z.string().nullable(),freeAgencyVisits:z.number().int().nonnegative(),
   releasedIds:z.array(z.string()),
