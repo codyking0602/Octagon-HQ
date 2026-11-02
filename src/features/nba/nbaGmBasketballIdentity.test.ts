@@ -45,7 +45,7 @@ describe("NBA GM orange basketball identity across every phase", () => {
     expect(page).toContain('run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"');
     expect(page).toContain("YOU CAN MOVE FORWARD");
     expect(page).toContain("SIMULATE YEARS 2 & 3");
-    expect(page).toContain('disabled={busy||capCrisis} onClick={()=>void act("advance")}');
+    expect(page).toContain('disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}');
     expect(page).toContain('<details className="nba-gm-dev__release"');
     expect(page).not.toContain("LOCK ROSTER · SIMULATE SEASONS 2 & 3");
     expect(page).toContain("The meter measures retention, not an extra hidden team bonus");
