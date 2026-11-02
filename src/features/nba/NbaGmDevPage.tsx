@@ -478,6 +478,8 @@ export default function NbaGmDevPage(){
         <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
         <p>{retainedCount}/7 Year 1 players retained. Year 1 results are locked. No extra continuity bonus.</p>
       </section>}
+      {showOffseasonReport&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__report-next"
+        onClick={()=>selectOffseasonView("moves")}>CONTINUE TO OFFSEASON MOVES</button>}
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonMoves)&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
@@ -522,8 +524,13 @@ export default function NbaGmDevPage(){
         </button>
       </section>}
       {showOffseasonMoves&&<div className="nba-gm-dev__moves-cap" role="status">
-        <span><small>YEAR 2 CAP LEFT</small><strong>{money(run.caps[1]-(spend?.[1]??0))}</strong></span>
-        <span><small>YEAR 3 CAP LEFT</small><strong>{money(run.caps[2]-(spend?.[2]??0))}</strong></span>
+        {[1,2].map(year=>{
+          const remaining=run.caps[year]!-(spend?.[year]??0);
+          return <span key={year} className={remaining<0?"is-over":""}>
+            <small>YEAR {year+1} CAP</small>
+            <strong>{money(Math.abs(remaining))} {remaining<0?"OVER":"LEFT"}</strong>
+          </span>;
+        })}
       </div>}
       {showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
