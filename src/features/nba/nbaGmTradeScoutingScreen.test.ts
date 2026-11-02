@@ -9,9 +9,9 @@ describe("NBA GM dedicated trade screen and scouting-first target selection",()=
     expect(page).toContain('const isTradeStage=run?.phase==="offseason"&&Boolean(run.shopPlayerId)');
     expect(page).toContain("const tradeStage=");
     expect(page).toContain("{tradeStage}");
-    expect(page).toContain('run.phase==="offseason"&&!isTradeStage&&<>');
-    expect(page).toContain('run.phase!=="final"&&!isTradeStage&&<section');
-    expect(page).toContain('run.phase==="offseason"&&!isTradeStage&&<section');
+    expect(page).toContain('showOffseasonReport&&<>');
+    expect(page).toContain('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section');
+    expect(page).toContain('showOffseasonMoves&&<section');
     expect(page).toContain('window.scrollTo({top:0,behavior:"instant"})');
     expect(page).toContain('!run.tradeTeam||wheelSpinning?');
     expect(page).toContain("nba-gm-dev__trade-team");
