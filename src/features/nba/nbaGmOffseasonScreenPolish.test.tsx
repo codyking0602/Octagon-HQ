@@ -54,7 +54,7 @@ describe("NBA GM private offseason compact parity",()=>{
   it("puts advance ahead of optional release, keeping cap crisis recovery accessible",()=>{
     const section=page.slice(page.indexOf('run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"'));
     const capRecovery=section.indexOf("{capCrisis&&releasePanel}");
-    const advance=section.indexOf('LOCK ROSTER · SIMULATE SEASONS 2 & 3');
+    const advance=section.indexOf('SIMULATE YEARS 2 & 3');
     const optionalRelease=section.indexOf("{!capCrisis&&releasePanel}");
     expect(capRecovery).toBeGreaterThan(0);
     expect(advance).toBeGreaterThan(capRecovery);
