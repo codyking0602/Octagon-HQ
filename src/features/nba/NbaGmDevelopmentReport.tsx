@@ -46,6 +46,6 @@ export function NbaGmDevelopmentReport({
         </div>;
       })}
     </div>
-    <small className="football-gm__development-footnote">Development categories reflect simulated changes in ability. Exact HQ grades stay hidden. A 3YR player's salary is locked, not his ability.</small>
+    <small className="football-gm__development-footnote">IMPROVED / REGRESSED describes what just happened; RISING / DECLINE RISK on the roster is a future outlook. Exact HQ grades stay hidden. A 3YR salary is locked, not the player's ability.</small>
   </section>;
 }
