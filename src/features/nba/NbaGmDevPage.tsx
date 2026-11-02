@@ -450,6 +450,7 @@ export default function NbaGmDevPage(){
                 <span><small>YOUR TARGET</small><strong>{byId.get(tradeTarget)?.name}</strong></span>
                 <b>{byId.get(tradeTarget)?.teamCode} · {byId.get(tradeTarget)?.positions.join(" / ")}</b>
               </div>
+              {byId.get(tradeTarget)&&<PlayerCard player={byId.get(tradeTarget)!} run={run} salaryYear={1}/>}
               {offersBusy?<p role="status">Checking legal asking prices…</p>:null}
               {tradeOfferError?<p className="nba-gm-dev__trade-warning" role="alert">{tradeOfferError}</p>:null}
               {!offersBusy&&!tradeOfferError&&tradeOffers.length===0?<div className="nba-gm-dev__no-offer">
