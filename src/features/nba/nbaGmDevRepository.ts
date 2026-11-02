@@ -4,14 +4,23 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6)]).optional(),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7)]).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   pendingTeam:z.string().nullable(),pendingSlot:z.null(),spinIndex:z.number().int().nonnegative(),
   caps:z.tuple([z.number().int(),z.number().int(),z.number().int()]),
   results:z.array(z.object({season:z.number().int(),wins:z.number().int(),losses:z.number().int(),
-    offense:z.number(),defense:z.number(),positionalFit:z.number(),finish:z.string()})),
+    offense:z.number(),defense:z.number(),positionalFit:z.number(),finish:z.string(),
+    teamOverall:z.number().int().min(70).max(99).optional(),titleOdds:z.number().min(0).max(100).optional(),
+    outcomeOdds:z.object({
+      "Missed Playoffs":z.number().min(0).max(1),
+      "First Round":z.number().min(0).max(1),
+      "Conference Semifinals":z.number().min(0).max(1),
+      "Conference Finals":z.number().min(0).max(1),
+      "Finals":z.number().min(0).max(1),
+      "Champion":z.number().min(0).max(1),
+    }).optional()})),
   shopPlayerId:z.string().nullable(),tradeTeam:z.string().nullable(),
   tradeAttempts:z.number().int().nonnegative(),tradesUsed:z.number().int().nonnegative(),
   freeAgencyTeam:z.string().nullable(),freeAgencyVisits:z.number().int().nonnegative(),

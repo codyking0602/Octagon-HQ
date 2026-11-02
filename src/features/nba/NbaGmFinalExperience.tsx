@@ -100,15 +100,16 @@ export function NbaGmFinalExperience({
       </div>
     </section>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
-      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{run.simulationModelVersion===6?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
+      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{(run.simulationModelVersion===6||run.simulationModelVersion===7)?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
       <div className="gm-final__seasons">
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
-          <div><strong>{Math.round((season.offense+season.defense)/2)}</strong><span>{run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
+          <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong><span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
           <b>{season.wins}–{season.losses}</b><em>{season.finish}</em>
+          {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
       </div>
-      <p className="gm-final__hint">{run.simulationModelVersion===6?"GRD averages offense and defense grades compared with 150 NBA team-seasons (2022–26); it is not the GM talent grade or a predicted efficiency rating. Wins and playoff results have seeded variance.":"SIM measures on-court offense/defense, not your three-year GM talent grade. Future seasons include bounded win variance."}</p>
+      <p className="gm-final__hint">{run.simulationModelVersion===7?"OVR reflects team strength on Football GM’s 70–99 scale. Title odds use the same calibrated playoff-outcome curve; the NBA playoffs still play four best-of-seven series. OFF/DEF are separate historical team grades.":run.simulationModelVersion===6?"GRD averages offense and defense grades compared with 150 NBA team-seasons (2022–26); it is not the GM talent grade or a predicted efficiency rating. Wins and playoff results have seeded variance.":"SIM measures on-court offense/defense, not your three-year GM talent grade. Future seasons include bounded win variance."}</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>

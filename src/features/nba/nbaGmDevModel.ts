@@ -23,13 +23,19 @@ export type NbaGmDevPhase = "draft" | "year1" | "offseason" | "final";
 export interface NbaGmDevSeason {
   season: number; wins: number; losses: number;
   offense: number; defense: number; positionalFit: number; finish: string;
+  /** NFL-style strength and six-finish odds; only V7 new games have these. */
+  teamOverall?: number;
+  titleOdds?: number; // 0–100, displayed descriptive estimate
+  outcomeOdds?: Partial<Record<
+    "Missed Playoffs"|"First Round"|"Conference Semifinals"|"Conference Finals"|"Finals"|"Champion",number
+  >>; // probability 0–1
 }
 export interface NbaGmDevRun {
   version: "nba-gm-dev-v2";
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
-  simulationModelVersion?: 5 | 6;
+  simulationModelVersion?: 5 | 6 | 7;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;

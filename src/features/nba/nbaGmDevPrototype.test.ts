@@ -179,7 +179,9 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(nbaGmScoutLetter(42)).toBe("D-");
   expect(nbaGmScoutTier(wemby)).toBe("ELITE");
   expect(nbaGmScoutTier(kennard)).toBe("DEPTH");
-  expect(page).not.toContain("OVR");
+  // Team OVR now belongs in season results, never on player scouting cards.
+  const picker=page.slice(page.indexOf("function PlayerCard("),page.indexOf("function FitReport("));
+  expect(picker).not.toContain("OVR");
   expect(page).not.toContain("player.currentGrade");
   expect(page).toContain("nbaGmScoutLetter");
   expect(page).toContain("GmFootballWheel");
