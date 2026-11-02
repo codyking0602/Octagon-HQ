@@ -280,11 +280,12 @@ export default function NbaGmDevPage(){
   // A release budget is constrained by BOTH remaining seasons, exactly as the
   // server's two-year cap gate. This is a ceiling, not guaranteed FA inventory.
   const releasePanel=run?.phase==="offseason"&&spend&&run.picks.length===7
-    &&(run.releasedIds.length<1||capCrisis)&&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam
+    &&(run.releasedIds.filter(id=>!(run.displacedReleasedIds??[]).includes(id)).length<1||capCrisis)
+    &&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam
     ?<details className="nba-gm-dev__release" aria-label="Voluntary player release">
       <summary className="nba-gm-dev__release-heading">
         <span><small>ONE VOLUNTARY RELEASE · OPTIONAL</small><strong>Explore free-agent opening</strong></span>
-        <b>{run.releasedIds.length===0?"AVAILABLE":"CAP RECOVERY"}</b>
+        <b>{run.releasedIds.filter(id=>!(run.displacedReleasedIds??[]).includes(id)).length===0?"AVAILABLE":"CAP RECOVERY"}</b>
       </summary>
       <p className="nba-gm-dev__hint">Cut one player to create a roster opening. The budget shown is the smaller of your remaining Year 2 and Year 3 cap room after the release. Available replacements still depend on the team wheel, eligibility, and market visits.</p>
       <div className="nba-gm-dev__release-list">
