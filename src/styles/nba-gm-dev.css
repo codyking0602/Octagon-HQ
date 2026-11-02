@@ -911,7 +911,8 @@
   display:grid;gap:12px;padding:0;border:0;background:transparent;
 }
 .nba-gm-dev .nba-gm-dev__trade-candidate{
-  display:grid;gap:0;min-width:0;min-height:0;padding:0;
+  display:grid;grid-template-columns:minmax(0,1fr);
+  gap:0;min-width:0;min-height:0;padding:0;
   background:#242426;border:1px solid #403b35;
   border-radius:11px;overflow:hidden;
 }
