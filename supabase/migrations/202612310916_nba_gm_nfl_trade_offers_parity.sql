@@ -191,13 +191,22 @@ begin
     'or (jsonb_array_length(coalesce(v_state->''displacedAssets'',''[]''::jsonb))>0'||
     ' and not exists(select 1 from jsonb_array_elements(v_state->''displacedAssets'') x'||
     ' where x#>>''{}''=p_player_id))');
-  v_def:=replace(v_def,
+  -- Scope the held-asset exception to SHOP ONLY. The ordinary voluntary
+  -- release must still reject IDs outside the active roster.
+  v_a:=position('elsif p_action=''shop'' then' in v_def);
+  if v_a=0 then raise exception 'NBA shop branch missing';end if;
+  v_b:=position('elsif p_action=''trade-spin'' then' in substring(v_def from v_a));
+  if v_b=0 then raise exception 'NBA shop branch end missing';end if;
+  v_old:=substring(v_def from v_a for v_b-1);
+  v_new:=replace(v_old,
     'or not exists(select 1 from jsonb_array_elements(v_picks) pick'||
     chr(10)||'        where pick->>''playerId''=p_player_id)',
     'or not (exists(select 1 from jsonb_array_elements(v_picks) pick'||
     chr(10)||'        where pick->>''playerId''=p_player_id)'||
     ' or exists(select 1 from jsonb_array_elements(coalesce(v_state->''displacedAssets'',''[]''::jsonb)) x'||
     ' where x#>>''{}''=p_player_id))');
+  if v_new=v_old then raise exception 'NBA shop guard changed';end if;
+  v_def:=replace(v_def,v_old,v_new);
 
   v_old:='elsif p_action=''trade'' then';
   v_new:=$offer_branch$
