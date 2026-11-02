@@ -111,12 +111,24 @@ function FitReport({picks,catalog}:{
     </div>
   </section>;
 }
+const NBA_GM_PLAYOFF_FINISHES = [
+  "Champion","Finals","Conference Finals","Conference Semifinals","First Round","Missed Playoffs",
+] as const;
 function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
       <strong>{season.wins}–{season.losses}</strong>
       <b>{season.finish}</b>
+      {season.teamOverall!=null&&season.titleOdds!=null&&
+        <span className="nba-gm-dev__headline-odds">{season.teamOverall} OVR · {season.titleOdds.toFixed(1)}% TITLE ODDS</span>}
       <span>{graded?`OFFENSE GRADE ${Math.round(season.offense)} · DEFENSE GRADE ${Math.round(season.defense)}`:`OFFENSE ${season.offense.toFixed(1)} · DEFENSE ${season.defense.toFixed(1)}`}</span>
+      {season.outcomeOdds&&<details className="nba-gm-dev__outcome-odds">
+        <summary>VIEW PLAYOFF OUTCOME ODDS</summary>
+        <div>{NBA_GM_PLAYOFF_FINISHES.map(finish=>
+          <div key={finish}><span>{finish==="Finals"?"Finals Loss":finish}</span>
+          <strong>{((season.outcomeOdds?.[finish]??0)*100).toFixed(1)}%</strong></div>)}</div>
+        <small>Projected outcomes, not guaranteed results. Playoffs are simulated game by game.</small>
+      </details>}
     </article>)}
   </div>;
 }
@@ -340,7 +352,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
-        <Results seasons={run.results} graded={run.simulationModelVersion===6}/>
+        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>
