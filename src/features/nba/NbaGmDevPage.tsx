@@ -14,6 +14,7 @@ import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepo
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
 import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
+import { nbaGmPickerAge } from "./nbaGmPickerAge";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-gm-final.css";
@@ -69,11 +70,12 @@ function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   const {currentGrade:originalGrade}=player;
   const delta=salaryYear===1&&run?.development?.[player.id]
     ?run.development[player.id]!.year2Grade-originalGrade:0;
+  const age=nbaGmPickerAge(player);
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
-        <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
+        <strong>{player.name}</strong><small>{player.positions.join(" / ")} · AGE {age??"—"} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
         <ScoutBadges player={player} run={run}/>
       </div>
     </div>
