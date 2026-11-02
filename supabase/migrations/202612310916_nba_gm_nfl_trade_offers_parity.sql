@@ -255,9 +255,16 @@ elsif p_action='promote-displaced' then
         from jsonb_array_elements(v_state->'displacedAssets') x where x#>>'{}'<>p_player_id));
     v_next:=jsonb_set(v_next,'{releasedIds}',
       coalesce(v_state->'releasedIds','[]'::jsonb)||jsonb_build_array(p_player_id));
+    v_next:=jsonb_set(v_next,'{displacedReleasedIds}',
+      coalesce(v_state->'displacedReleasedIds','[]'::jsonb)||jsonb_build_array(p_player_id));
   elsif p_action='release' then
 $asset_branch$;
   v_def:=replace(v_def,v_old,v_new);
+  -- A necessary held-asset cleanup is distinct from the one optional release.
+  v_def:=replace(v_def,
+    'jsonb_array_length(v_state->''releasedIds'')>=1',
+    '(jsonb_array_length(v_state->''releasedIds'')-'||
+    'jsonb_array_length(coalesce(v_state->''displacedReleasedIds'',''[]''::jsonb)))>=1');
   v_old:='or v_state->>''freeAgencyTeam'' is not null';
   -- Only restrict advance specifically (do not rewrite FA/release guards).
   v_a:=position('elsif p_action=''advance'' then' in v_def);
