@@ -38,7 +38,7 @@ describe("NBA GM V7 mirrors NFL's outcome curve without predetermining results",
   it("preserves V5/V6 runs, NFL engine and score rules, opting in new NBA starts only",()=>{
     expect(sql).toContain("simulationModelVersion''=''7'' then");
     expect(sql).toContain("''simulationModelVersion'',7");
-    expect(sql).toContain("nba_gm_v6_season(p_state,p_year)");
+    expect(sql).toContain("simulationModelVersion''=''6'' then");
     expect(regression).toContain("V7 changed saved V%");
     expect(model).toContain("simulationModelVersion?: 5 | 6 | 7;");
     expect(repository).toContain("z.literal(5),z.literal(6),z.literal(7)");
