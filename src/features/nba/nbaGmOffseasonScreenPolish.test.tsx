@@ -1,0 +1,84 @@
+import { readFileSync } from "node:fs";
+import { describe,expect,it } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { nbaGmDevFitSignals, type NbaGmDevPlayer, type NbaGmDevRun } from "./nbaGmDevModel";
+import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
+import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
+
+const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
+const css=readFileSync("src/styles/nba-gm-dev.css","utf8");
+const model=readFileSync("src/features/nba/nbaGmDevModel.ts","utf8");
+
+const fixtures=NBA_GM_ROSTER_SLOTS.map((slot,index):NbaGmDevPlayer=>({
+  id:"offseason-test-"+slot,name:"Test "+slot,teamCode:"SAS",
+  positions: [slot==="GUARD"?"SG":slot==="BIG"?"PF":slot],
+  currentGrade:slot==="C"?99:80,
+  skills:{
+    scoring:80,shooting:80,playmaking:80,perimeterDefense:78,
+    interiorDefense:slot==="C"?99:slot==="PF"||slot==="BIG"?50:70,
+    rebounding:slot==="C"?90:75,
+  },
+  salaries:[10_000_000,12_000_000,13_000_000],
+  gameContract:index%2===0?"3YR":"1YR",
+  pricingKind:"GAME_FIXTURE_NOT_REAL_CONTRACT",eligibilityKind:"PROVISIONAL_EDITORIAL",
+  officialNbaPlayerId:null,officialRosterPosition:"F",positionReview:"unverified",
+  reviewFlags:["test fixture"],
+}));
+const picks=NBA_GM_ROSTER_SLOTS.map((slot,index)=>({slot,playerId:fixtures[index]!.id}));
+const run:NbaGmDevRun={
+  version:"nba-gm-dev-v2",seed:"nba-gm-offseason-ui-locked",
+  phase:"offseason",picks,yearOnePicks:picks,pendingTeam:null,pendingSlot:null,
+  spinIndex:7,caps:[155_000_000,155_000_000,155_000_000],results:[],
+  shopPlayerId:null,tradeTeam:null,tradeAttempts:0,tradesUsed:0,
+  freeAgencyTeam:null,freeAgencyVisits:0,releasedIds:[],
+  development:Object.fromEntries(fixtures.map(p=>[p.id,{
+    startingGrade:p.currentGrade,year2Grade:p.currentGrade+2,
+    year3Grade:p.currentGrade+3,year2Salary:p.salaries[1],year3Salary:p.salaries[2],
+  }])),
+};
+
+describe("NBA GM private offseason compact parity",()=>{
+  it("shows a full-core progress meter without mislabeling retention as gameplay odds",()=>{
+    expect(page).toContain("retainedCount/7*100");
+    expect(page).toContain("nba-gm-dev__continuity-track");
+    expect(page).toContain("The meter measures retention, not an extra hidden team bonus");
+    expect(page).toContain("completed Year 1 stays unchanged");
+    expect(css).toContain(".nba-gm-dev__continuity-track > em");
+  });
+  it("keeps SHOP in the right-hand salary stack, not a second roster grid row",()=>{
+    expect(page).toContain("nba-gm-dev__inline-shop");
+    expect(page).not.toContain('className="nba-gm-dev__row-actions"');
+    expect(css).toContain(".nba-gm-dev__roster-panel .nba-gm-dev__inline-shop");
+    expect(page).toContain('aria-label={"Shop "+player.name}');
+  });
+  it("puts advance ahead of optional release, keeping cap crisis recovery accessible",()=>{
+    const section=page.slice(page.indexOf('run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"'));
+    const capRecovery=section.indexOf("{capCrisis&&releasePanel}");
+    const advance=section.indexOf('LOCK ROSTER · SIMULATE SEASONS 2 & 3');
+    const optionalRelease=section.indexOf("{!capCrisis&&releasePanel}");
+    expect(capRecovery).toBeGreaterThan(0);
+    expect(advance).toBeGreaterThan(capRecovery);
+    expect(optionalRelease).toBeGreaterThan(advance);
+    expect(page).toContain('<details className="nba-gm-dev__release"');
+    expect(page).toContain('Math.min(\n            run.caps[1]-spend[1]+nbaGmDevSalary(player,1),');
+    expect(page).toContain('run.caps[2]-spend[2]+nbaGmDevSalary(player,2)');
+    expect(page).toContain('window.confirm("Release "+player.name+');
+    expect(css).toContain('nba-gm-dev__release[open]');
+  });
+  it("uses the actual starting center for rim protection, not a blended average",()=>{
+    const fit=nbaGmDevFitSignals(picks,fixtures);
+    expect(fit.find(entry=>entry.label==="Rim protection")?.status).toBe("STRONG");
+    expect(fit.find(entry=>entry.label==="Rim protection")?.detail).toContain("starting center");
+    expect(model).not.toContain('label:"Interior presence"');
+  });
+  it("differentiates past development from scouting outlook and protects 3YR terms",()=>{
+    const report=renderToStaticMarkup(<NbaGmDevelopmentReport run={run} catalog={fixtures}/>);
+    expect(report).toContain("OFFSEASON DEVELOPMENT");
+    expect(report).toContain("IMPROVED / REGRESSED describes what just happened");
+    expect(report).toContain("future outlook");
+    expect(report).toContain("three-year salaries stay locked");
+    expect(report).toContain("3YR LOCKED");
+    expect(report).toContain("1YR REPRICE");
+    expect(page).toContain('OWNER ONLY · NOT PUBLIC');
+  });
+});
