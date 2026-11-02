@@ -216,8 +216,8 @@ export function nbaGmDevFitSignals(
       detail:"A second reliable ball handler beyond the primary creator"},
     {label:"Perimeter defense",status:state(mean(backcourt,"perimeterDefense"),82,73),
       detail:"Guard and wing resistance"},
-    {label:"Interior presence",status:state(mean(interior,"interiorDefense"),83,73),
-      detail:"Rim and frontcourt protection"},
+    {label:"Rim protection",status:state(starters.find((_,index)=>rotation.filter(entry=>entry.slot!=="GUARD"&&entry.slot!=="BIG")[index]?.slot==="C")?.skills.interiorDefense??0,90,77),
+      detail:"Your starting center's ability to protect the rim; frontcourt rebounding is scored separately"},
     {label:"Rebounding",status:state(mean(interior,"rebounding"),82,72),
       detail:"Big-man and frontcourt control of the glass"},
   ];
