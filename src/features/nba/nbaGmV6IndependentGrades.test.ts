@@ -26,7 +26,7 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
     expect(sql).toContain("v_off_grade:=greatest(60,least(99");
     expect(sql).toContain("v_def_grade:=greatest(60,least(99");
     expect(sql).toContain("'offense',v_off_grade,'defense',v_def_grade");
-    expect(tests).toContain("v_count<>480");
+    expect(tests).toContain("v_count<>600");
     expect(tests).toContain("v_result->>'offense'");
   });
 
