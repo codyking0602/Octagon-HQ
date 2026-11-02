@@ -22,7 +22,7 @@ Independent skill calculations (static year-one roster, before development): eli
 
 ## Regression and safeguards
 
-- Transactional backend test covers 480 deterministic V6 team-seasons over the owner roster and three calibrated peers, with 82-game totals, title variance and historical grades.
+- Transactional backend test covers 600 deterministic V6 team-seasons over the owner roster and three calibrated peers, with 82-game totals, title variance and historical grades.
 - Mutate Luka's *overall only* inside a rolled-back test transaction: Year 1 side metrics must not change. Lower his perimeter-defense skill alone: defense must drop, offense must not change.
 - Full saved-V5 direct/router equality and V6 opt-in gates. New franchises use `simulationModelVersion=6`. Old saves retain V5 and their recorded 66–16 championship.
 - Final screen and Year 1 screen use `OFFENSE GRADE / DEFENSE GRADE` and `GRD` only for V6; old saves keep legacy labels.
