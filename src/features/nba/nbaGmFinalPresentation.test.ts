@@ -10,9 +10,9 @@ describe("NBA GM Priority 4 — final presentation focused follow-up",()=>{
   expect(page).not.toContain('run.phase==="final")&&<FitReport');
  });
  it("keeps completed franchise recap ahead of caps and roster, and orders offseason controls like Football",()=>{
-  expect(page).toContain('run.phase!=="final"&&<section className={`football-gm__cap');
-  expect(page).toContain('run.phase!=="final"&&<section className="football-gm__roster');
-  expect(page.indexOf('<NbaGmDevelopmentReport run={run} catalog={catalog}/>')).toBeLessThan(page.indexOf('run.phase!=="final"&&<section className={`football-gm__cap'));
+  expect(page).toContain('run.phase!=="final"&&!isTradeStage&&<section className={`football-gm__cap');
+  expect(page).toContain('run.phase!=="final"&&!isTradeStage&&<section className="football-gm__roster');
+  expect(page.indexOf('<NbaGmDevelopmentReport run={run} catalog={catalog}/>')).toBeLessThan(page.indexOf('run.phase!=="final"&&!isTradeStage&&<section className={`football-gm__cap'));
   expect(page.indexOf('nba-gm-dev__continuity')).toBeLessThan(page.indexOf('football-gm__roster surface-card nba-gm-dev__roster-panel'));
   expect(page).toContain('ONE VOLUNTARY RELEASE');
   expect(page).toContain('window.confirm("Release "+player.name');
