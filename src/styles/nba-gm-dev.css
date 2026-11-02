@@ -683,7 +683,8 @@
 .nba-gm-dev .nba-gm-dev__release > summary > b,
 .nba-gm-dev .nba-gm-dev__release > summary::before,
 .nba-gm-dev .nba-gm-dev__outcome-odds summary,
-.nba-gm-dev .football-gm__development-report header > span {
+.nba-gm-dev .football-gm__development-report header > span,
+.nba-gm-dev .football-gm__development-player > b {
   color: var(--nba-gm-accent-soft);
 }
 .nba-gm-dev .nba-gm-dev__continuity-track { background: #383330; }
