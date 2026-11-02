@@ -9,20 +9,21 @@ begin
   -- helper behavior with source-verified players, keeping existing grades.
   select jsonb_agg(jsonb_build_object('slot',slots.slot,'playerId',p.id) order by slots.n)
     into v_picks from (values
-      (1,'PG','nba-gm-draft-shaigilgeousalexander'),
-      (2,'SG','nba-gm-draft-ausarthompson'),
-      (3,'SF','nba-gm-draft-cooperflagg'),
-      (4,'PF','nba-gm-draft-isaiahstewart'),
-      (5,'C','nba-gm-draft-joelembiid'),
-      (6,'GUARD','nba-gm-draft-jrueholiday'),
-      (7,'BIG','nba-gm-draft-kristapsporzingis')) slots(n,slot,id)
+      (1,'PG','nba-gm-draft-lukadoncic'),
+      (2,'SG','nba-gm-draft-konknueppel'),
+      (3,'SF','nba-gm-draft-acebailey'),
+      (4,'PF','nba-gm-draft-lebronjames'),
+      (5,'C','nba-gm-draft-victorwembanyama'),
+      (6,'GUARD','nba-gm-draft-jamalshead'),
+      (7,'BIG','nba-gm-draft-deniavdija')) slots(n,slot,id)
       join private.nba_gm_dev_players p on p.id=slots.id;
   if jsonb_array_length(v_picks)<>7 or private.nba_gm_v2_assign(v_picks) is null
     then raise exception 'Reference NBA roster is no longer legal';end if;
-  -- Same-grade positional exchange: Ausar Thompson (81.4) for Aaron Nesmith
-  -- (81.4) exercises a real offer rather than vacuously accepting [].
-  v_anchor:='nba-gm-draft-ausarthompson';
-  v_target:='nba-gm-draft-aaronnesmith'; v_partner:='IND';
+  -- Legal $155M owner rotation. Ace Bailey (~81) for Derrick Jones Jr. (~80.6)
+  -- is a source-backed, near-even exchange with cap room in Years 2 and 3.
+  -- Unlike a $230M reference superteam, this fixture can produce actual offers.
+  v_anchor:='nba-gm-draft-acebailey';
+  v_target:='nba-gm-draft-derrickjones'; v_partner:='LAC';
   if not exists(select 1 from private.nba_gm_dev_players
     where id=v_target and team_code=v_partner) then
     raise exception 'Grounded target fixture missing';end if;
