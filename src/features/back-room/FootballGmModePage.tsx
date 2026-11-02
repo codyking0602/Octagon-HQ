@@ -1631,6 +1631,12 @@ export default function FootballGmModePage({
   const filteredSoloQuarterbacks = FOOTBALL_GM_SOLO_QUARTERBACKS.filter((player) =>
     (player.name + " " + player.team).toLowerCase().includes(soloQbSearch.trim().toLowerCase()));
   const canChooseStartingQb = standalone && !weeklyRun && !profileMatch.code;
+  // A resumed trade returns to Moves rather than dropping the user into a report.
+  useEffect(() => {
+    if (run.phase === "offseason" && (run.tradeAnchorPlayerId || run.pendingTradeResolution)) {
+      setOffseasonView("moves");
+    }
+  }, [run.phase, run.tradeAnchorPlayerId, run.pendingTradeResolution]);
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone || Boolean(weeklyRun));
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
