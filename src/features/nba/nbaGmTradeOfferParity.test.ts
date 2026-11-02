@@ -40,7 +40,8 @@ describe("NBA GM NFL-style trade and free-agent parity",()=>{
     expect(migration).toContain("'activePicks',v_active");
     expect(migration).toContain("'displacedAssets',v_pool");
     expect(migration).toContain("raise exception 'Asking price is no longer available'");
-    expect(migration).toContain("jsonb_array_length(coalesce(v_state->'displacedAssets'");
+    expect(migration).toContain("jsonb_array_length(coalesce(p_state->'displacedAssets'");
+    expect(migration).toContain("jsonb_array_length(coalesce(v_state->''displacedAssets''");
     expect(page).toContain("PUT IN LINEUP");
     expect(page).toContain('act("release-displaced",id)');
   });
