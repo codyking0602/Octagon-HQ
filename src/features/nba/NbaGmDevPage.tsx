@@ -4,6 +4,7 @@ import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
 import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
+import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
@@ -153,15 +154,6 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
     </div>
     <button type="button" className="nba-gm-dev__primary" onClick={onReveal}>REVEAL GM SCORE</button>
   </section>;
-}
-function nbaGmPlayoffFinishText(finish:string) {
-  switch(finish){
-    case "First Round":return "Lost First Round";
-    case "Conference Semifinals":return "Lost Conference Semifinals";
-    case "Conference Finals":return "Lost Conference Finals";
-    case "Finals":return "Lost NBA Finals";
-    default:return finish;
-  }
 }
 export default function NbaGmDevPage(){
   const repo=useMemo(()=>createNbaGmDevRepository(),[]);
