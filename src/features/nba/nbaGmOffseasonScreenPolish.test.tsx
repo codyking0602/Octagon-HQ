@@ -41,7 +41,7 @@ describe("NBA GM private offseason compact parity",()=>{
   it("shows a full-core progress meter without mislabeling retention as gameplay odds",()=>{
     expect(page).toContain("retainedCount/7*100");
     expect(page).toContain("nba-gm-dev__continuity-track");
-    expect(page).toContain("The meter measures retention, not an extra hidden team bonus");
+    expect(page).toContain("No extra continuity bonus.");
     expect(page).toContain("completed Year 1 stays unchanged");
     expect(css).toContain(".nba-gm-dev__continuity-track > em");
   });
