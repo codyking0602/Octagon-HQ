@@ -110,7 +110,7 @@ export function NbaGmFinalExperience({
           {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
       </div>
-      <p className="gm-final__hint">{run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"Historical offense/defense grade; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
+      <p className="gm-final__hint">{run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"GRD compared with 150 NBA team-seasons; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
