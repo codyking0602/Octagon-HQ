@@ -19,17 +19,20 @@ begin
       join private.nba_gm_dev_players p on p.id=slots.id;
   if jsonb_array_length(v_picks)<>7 or private.nba_gm_v2_assign(v_picks) is null
     then raise exception 'Reference NBA roster is no longer legal';end if;
-  v_anchor:=v_picks->0->>'playerId';
-  select p.id,p.team_code into v_target,v_partner
-    from private.nba_gm_dev_players p where p.team_code<>'OKC'
-      and p.overall between 85 and 90 order by p.id limit 1;
-  if v_target is null then raise exception 'No partner test candidate';end if;
+  -- Same-grade positional exchange: Ausar Thompson (81.4) for Aaron Nesmith
+  -- (81.4) exercises a real offer rather than vacuously accepting [].
+  v_anchor:='nba-gm-draft-ausarthompson';
+  v_target:='nba-gm-draft-aaronnesmith'; v_partner:='IND';
+  if not exists(select 1 from private.nba_gm_dev_players
+    where id=v_target and team_code=v_partner) then
+    raise exception 'Grounded target fixture missing';end if;
   v_state:=jsonb_build_object('phase','offseason',
     'seed','nba-gm-test-offers','shopPlayerId',v_anchor,'tradeTeam',v_partner,
     'picks',v_picks,'releasedIds','[]'::jsonb,'displacedAssets','[]'::jsonb,
     'caps','[155000000,155000000,155000000]'::jsonb,
     'economyVersion',4,'developmentModelVersion',2);
   v_offers:=private.nba_gm_v8_trade_offers(v_state,v_target);
+  if jsonb_array_length(v_offers)=0 then raise exception 'Expected a legal same-grade NBA asking price';end if;
   if jsonb_typeof(v_offers)<>'array' or jsonb_array_length(v_offers)>5
     then raise exception 'Offers must be an array of at most 5';end if;
   for v_offer in select value from jsonb_array_elements(v_offers) loop
