@@ -646,7 +646,6 @@
   border-color: var(--nba-gm-border);
 }
 .nba-gm-dev .nba-gm-dev__summary span,
-.nba-gm-dev .nba-gm-dev__caps > div,
 .nba-gm-dev .nba-gm-dev__cap-forecast > span,
 .nba-gm-dev .nba-gm-dev__player,
 .nba-gm-dev .football-gm__picker .nba-gm-dev__player,
