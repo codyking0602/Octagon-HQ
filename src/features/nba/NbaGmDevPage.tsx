@@ -168,8 +168,8 @@ export default function NbaGmDevPage(){
   },[run?.shopPlayerId,run?.tradeTeam]);
   // Trade talks are a dedicated screen; do not leave the player halfway down the offseason.
   useEffect(()=>{
-    if(run?.shopPlayerId)window.scrollTo({top:0,behavior:"instant"});
-  },[run?.shopPlayerId,run?.tradeTeam,tradeTarget]);
+    if(run?.phase==="offseason")window.scrollTo({top:0,behavior:"instant"});
+  },[run?.phase,run?.shopPlayerId,run?.tradeTeam,tradeTarget]);
   useEffect(()=>{
     if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
     let mounted=true;
