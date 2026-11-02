@@ -485,6 +485,8 @@ export default function NbaGmDevPage(){
                   {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
               </select>
             </label>
+            <button type="button" className="nba-gm-dev__secondary" disabled={busy}
+              onClick={()=>void act("shop",id)}>SHOP HELD ASSET</button>
             <button type="button" className="nba-gm-dev__secondary" disabled={busy||!swapOut}
               onClick={()=>void act("promote-displaced",id,swapOut)}>PUT IN LINEUP</button>
             <button type="button" className="nba-gm-dev__secondary" disabled={busy}
