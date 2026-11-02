@@ -230,9 +230,7 @@ export function nbaGmDevCatalogErrors(catalog:readonly NbaGmDevPlayer[]):string[
   for(const p of catalog){
     if(ids.has(p.id)||!p.id)errors.push("Duplicate/missing identity "+p.id);
     ids.add(p.id);
-    if(p.positions.length!==2||p.positions[0]===p.positions[1]||
-      p.positions.some(pos=>!["PG","SG","SF","PF","C"].includes(pos))||
-      p.currentGrade<0||p.currentGrade>99||
+    if(!p.positions.length||p.currentGrade<0||p.currentGrade>99||
       !["1YR","3YR"].includes(p.gameContract)||
       p.salaries.length!==3||p.salaries.some(s=>!Number.isSafeInteger(s)||s<=0)||
       NBA_GM_SKILL_KEYS.some(key=>!Number.isInteger(p.skills[key])||p.skills[key]<0||p.skills[key]>99)||

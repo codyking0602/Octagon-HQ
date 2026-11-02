@@ -216,7 +216,7 @@ begin
     ('nba-gm-draft-lameloball',array['PG','SG']::text[]),
     ('nba-gm-draft-landryshamet',array['SG','SF']::text[]),
     ('nba-gm-draft-laurimarkkanen',array['PF','SF']::text[]),
-    ('nba-gm-draft-lebronjames',array['SF','PF']::text[]),
+    ('nba-gm-draft-lebronjames',array['PF','SF']::text[]),
     ('nba-gm-draft-leonardmiller',array['SF','PF']::text[]),
     ('nba-gm-draft-luguentzdort',array['SG','SF']::text[]),
     ('nba-gm-draft-lukadoncic',array['PG','SF']::text[]),
@@ -342,8 +342,8 @@ begin
   update private.nba_gm_dev_players p set positions=v.assigned
     from positions v where p.id=v.id and p.positions is distinct from v.assigned;
   get diagnostics v_affected = row_count;
-  if v_affected <> 238 then
-    raise exception 'NBA GM unexpected position corrections: % instead of 238',v_affected;
+  if v_affected <> 239 then
+    raise exception 'NBA GM unexpected position corrections: % instead of 239',v_affected;
   end if;
   if exists(select 1 from private.nba_gm_dev_players
     where cardinality(positions)<>2 or positions[1]=positions[2]

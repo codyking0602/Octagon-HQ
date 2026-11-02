@@ -8,7 +8,7 @@
   "supportingRoleReference": "https://www.basketball-reference.com/leagues/NBA_2026_play-by-play.html",
   "counts": {
     "players": 330,
-    "changed": 238,
+    "changed": 239,
     "onePositionBefore": 235,
     "twoPositionAfter": 330,
     "withDirectPlayerSource": 221,
@@ -3836,14 +3836,14 @@
         "PF"
       ],
       "after": [
-        "SF",
-        "PF"
+        "PF",
+        "SF"
       ],
       "officialRosterPosition": "F",
       "officialRosterSource": "https://www.nba.com/team/1610612755/sixers/roster",
       "officialPlayerSource": null,
-      "provenance": "retained-provisional-two-role",
-      "note": "Secondary is basketball-informed editorial eligibility; official broad NBA positions alone do not prove exact usage."
+      "provenance": "reviewed-role-combination-provisional",
+      "note": "PF primary reflects LeBron's mature frontcourt role; SF remains viable. This uses position familiarity, not a named optimizer exception."
     },
     {
       "id": "nba-gm-draft-leonardmiller",
