@@ -138,6 +138,31 @@ function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean
     </article>)}
   </div>;
 }
+/** Front-end-only season reveal: final outcomes are already fixed by the server. */
+function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
+  return <section className="nba-gm-dev__season-reveal surface-card" aria-label="NBA GM Years 2 and 3 results">
+    <header><small>THE WINDOW</small><h2>YEARS 2 &amp; 3</h2></header>
+    <div className="nba-gm-dev__reveal-grid">
+      {run.results.filter(season=>season.season>=2).map(season=><article key={season.season}>
+        <small>YEAR {season.season}</small>
+        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
+        <b>{season.wins}–{season.losses}</b>
+        <em>{nbaGmPlayoffFinishText(season.finish)}</em>
+        {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
+      </article>)}
+    </div>
+    <button type="button" className="nba-gm-dev__primary" onClick={onReveal}>REVEAL GM SCORE</button>
+  </section>;
+}
+function nbaGmPlayoffFinishText(finish:string) {
+  switch(finish){
+    case "First Round":return "Lost First Round";
+    case "Conference Semifinals":return "Lost Conference Semifinals";
+    case "Conference Finals":return "Lost Conference Finals";
+    case "Finals":return "Lost NBA Finals";
+    default:return finish;
+  }
+}
 export default function NbaGmDevPage(){
   const repo=useMemo(()=>createNbaGmDevRepository(),[]);
   const [run,setRun]=useState<NbaGmDevRun|null>(null);
@@ -153,6 +178,7 @@ export default function NbaGmDevPage(){
   useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
   const [offseasonView,setOffseasonView]=useState<"report"|"moves">("report");
+  const [showSeasonReveal,setShowSeasonReveal]=useState(false);
   const selectOffseasonView=(view:"report"|"moves")=>{
     setOffseasonView(view);
     window.scrollTo({top:0,behavior:"instant"});
@@ -193,6 +219,8 @@ export default function NbaGmDevPage(){
       }
       if(action==="pick")setPositionFilter(null);
       if(action==="offseason")setOffseasonView("report");
+      if(action==="advance"&&state?.phase==="final"){setShowSeasonReveal(true);window.scrollTo({top:0,behavior:"instant"});}
+      if(action==="start")setShowSeasonReveal(false);
       if(["shop","trade","cancel-trade","release","release-displaced","promote-displaced","sign","pass-fa","emergency-sign"].includes(action)){
         setOffseasonView("moves");
       }
@@ -596,8 +624,10 @@ export default function NbaGmDevPage(){
           </div>}
         {!capCrisis&&releasePanel}
       </section>}
-      {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
-        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
+      {run.phase==="final"&&(showSeasonReveal
+        ?<NbaGmSeasonReveal run={run} onReveal={()=>{setShowSeasonReveal(false);window.scrollTo({top:0,behavior:"instant"});}}/>
+        :<><NbaGmFinalExperience run={run} catalog={catalog}/>
+          <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW GM RUN</button></>)}
       <footer className="nba-gm-dev__disclaimer">Owner-only playtest · Fictional contracts</footer>
     </>}
   </main>;
