@@ -624,3 +624,162 @@
   }
   .nba-gm-dev .nba-gm-dev__roster-panel .nba-gm-dev__inline-shop { padding: 3px 9px; }
 }
+
+
+/* NBA-only basketball identity. Football's geometry is shared; Football's blue palette is not.
+   Scoped to the owner-only NBA GM root so NFL/CFB GM remain untouched. */
+.nba-gm-dev {
+  --nba-gm-accent: #f3a449;
+  --nba-gm-accent-soft: #ffd19a;
+  --nba-gm-surface: #191a1c;
+  --nba-gm-surface-raised: #252527;
+  --nba-gm-border: #403a33;
+}
+.nba-gm-dev .nba-gm-dev__panel,
+.nba-gm-dev .football-gm__roster,
+.nba-gm-dev .football-gm__picker,
+.nba-gm-dev .football-gm__development-report,
+.nba-gm-dev .nba-gm-dev__caps,
+.nba-gm-dev .nba-gm-dev__continuity,
+.nba-gm-dev .football-wheel {
+  background: var(--nba-gm-surface);
+  border-color: var(--nba-gm-border);
+}
+.nba-gm-dev .nba-gm-dev__summary span,
+.nba-gm-dev .nba-gm-dev__caps > div,
+.nba-gm-dev .nba-gm-dev__cap-forecast > span,
+.nba-gm-dev .nba-gm-dev__player,
+.nba-gm-dev .football-gm__picker .nba-gm-dev__player,
+.nba-gm-dev .nba-gm-dev__trade .nba-gm-dev__player,
+.nba-gm-dev .nba-gm-dev__skills > div,
+.nba-gm-dev .nba-gm-dev__fit-grid > div,
+.nba-gm-dev .nba-gm-dev__roster-row {
+  background: var(--nba-gm-surface-raised);
+  border-color: #484139;
+}
+.nba-gm-dev .nba-gm-dev__trade,
+.nba-gm-dev .nba-gm-dev__release {
+  background: #1b1c1e;
+  border-color: var(--nba-gm-border);
+}
+.nba-gm-dev .nba-gm-dev__portrait { background: linear-gradient(145deg,#3d342c,#201e1d); }
+.nba-gm-dev .nba-gm-dev__term { background: #37312b; color: #efe0ce; }
+.nba-gm-dev .nba-gm-dev__primary { background: var(--nba-gm-accent); color: #181310; }
+.nba-gm-dev .nba-gm-dev__primary:not(:disabled):hover { background: #ffc16d; }
+.nba-gm-dev .nba-gm-dev__secondary,
+.nba-gm-dev .nba-gm-dev__inline-shop {
+  background: #342a22;
+  border-color: #936a44;
+  color: #ffdbac;
+}
+.nba-gm-dev .nba-gm-dev__secondary:not(:disabled):hover,
+.nba-gm-dev .nba-gm-dev__inline-shop:not(:disabled):hover { background: #493324; }
+.nba-gm-dev .football-gm__roster > header b,
+.nba-gm-dev .football-gm__roster-grid > article > small,
+.nba-gm-dev .nba-gm-dev__continuity strong,
+.nba-gm-dev .nba-gm-dev__continuity > header > b,
+.nba-gm-dev .nba-gm-dev__caps > .nba-gm-dev__cap-main b,
+.nba-gm-dev .nba-gm-dev__header .nba-gm-dev__private,
+.nba-gm-dev .nba-gm-dev__header .nba-gm-dev__back,
+.nba-gm-dev .nba-gm-dev__release > summary > b,
+.nba-gm-dev .nba-gm-dev__release > summary::before,
+.nba-gm-dev .nba-gm-dev__outcome-odds summary,
+.nba-gm-dev .football-gm__development-report header > span {
+  color: var(--nba-gm-accent-soft);
+}
+.nba-gm-dev .nba-gm-dev__continuity-track { background: #383330; }
+.nba-gm-dev .nba-gm-dev__continuity-track > em { background: linear-gradient(90deg,#cb792c,var(--nba-gm-accent)); }
+.nba-gm-dev .nba-gm-dev__caps > i > em { background: linear-gradient(90deg,#cb792c,var(--nba-gm-accent)); }
+.nba-gm-dev .football-wheel__pointer { border-top-color: var(--nba-gm-accent); }
+.nba-gm-dev .football-wheel__disc {
+  border-color: rgba(243,164,73,.8);
+  box-shadow: 0 0 0 7px rgba(43,30,20,.92), 0 0 0 9px rgba(243,164,73,.19), 0 18px 50px rgba(0,0,0,.42);
+}
+.nba-gm-dev .football-wheel__center {
+  background: linear-gradient(145deg,#f4af51,#b96825);
+  border-color: #4c301c;
+  box-shadow: 0 0 0 2px rgba(255,190,107,.55), 0 10px 28px rgba(0,0,0,.48);
+  color: #17120e;
+}
+.nba-gm-dev .football-wheel__center span { color: #3f2a1b; }
+.nba-gm-dev .football-wheel__center.has-team { background: #f8eee1; color: #3d2b1b; }
+.nba-gm-dev .football-wheel-picker__slots button,
+.nba-gm-dev .nba-gm-dev__position-tabs button { background: #292626; border-color: #504138; color: #e7d6c4; }
+.nba-gm-dev .football-wheel-picker__slots button.is-active,
+.nba-gm-dev .nba-gm-dev__position-tabs button.is-selected {
+  background: #4d3221;
+  border-color: var(--nba-gm-accent);
+  box-shadow: inset 0 0 0 1px rgba(243,164,73,.28);
+  color: #ffe4c0;
+}
+.nba-gm-dev .football-wheel-picker__slots button.is-active strong { color: #ffe4c0; }
+.nba-gm-dev .football-gm__quality-pill.quality-elite,
+.nba-gm-dev .football-gm__quality-pill.quality-impact { border-color: rgba(243,164,73,.5); color: #ffd19a; }
+/* Leave improvement, regression, scouting quality and team-specific row colors meaningful. */
+.nba-gm-dev .nba-gm-dev__window-status {
+  background: #1d1e1f;
+  border: 1px solid var(--nba-gm-border);
+  border-radius: 15px;
+  padding: 17px 15px;
+  gap: 10px;
+}
+.nba-gm-dev .nba-gm-dev__window-status > .nba-gm-dev__window-eyebrow {
+  color: var(--nba-gm-accent);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+.nba-gm-dev .nba-gm-dev__window-status > strong {
+  color: #fff;
+  font-size: clamp(19px,5vw,27px);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+.nba-gm-dev .nba-gm-dev__window-status > p {
+  margin: 0;
+  color: #b8b6b2;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.nba-gm-dev .nba-gm-dev__window-status > .nba-gm-dev__primary {
+  width: 100%;
+  min-height: 46px;
+  font-size: clamp(12px,3.6vw,16px);
+  letter-spacing: .015em;
+}
+.nba-gm-dev .nba-gm-dev__window-status.is-crisis { border-color: #804f42; background: #301f1e; }
+.nba-gm-dev .nba-gm-dev__window-status.is-crisis > .nba-gm-dev__window-eyebrow { color: #ffa18e; }
+.nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-grid.nba-gm-dev__roster > article { min-height: 60px; padding-block: 6px; }
+.nba-gm-dev .nba-gm-dev__continuity > p { color: #b7b4af; }
+.nba-gm-dev .nba-gm-dev__fit { background: #1c1e20; border-color: var(--nba-gm-border); }
+
+/* Final experience shares Football components but never inherits its blue identity. */
+.nba-gm-dev .nba-gm-final > .surface-card,
+.nba-gm-dev .nba-gm-final .gm-final__bottom > .surface-card {
+  background: linear-gradient(145deg,#1d1e20,#151617 75%);
+  border-color: rgba(243,164,73,.19);
+}
+.nba-gm-dev .nba-gm-final .gm-final__season,
+.nba-gm-dev .nba-gm-final .gm-final__stats > div { background: #282522; border-color: #534231; }
+.nba-gm-dev .nba-gm-final .gm-final__eyebrow,
+.nba-gm-dev .nba-gm-final .gm-final__heading h2,
+.nba-gm-dev .nba-gm-final .gm-final__score span,
+.nba-gm-dev .nba-gm-final .gm-final__stats small,
+.nba-gm-dev .nba-gm-final .gm-final__season > small,
+.nba-gm-dev .nba-gm-final .gm-final__position,
+.nba-gm-dev .nba-gm-final .gm-final__transaction > b,
+.nba-gm-dev .nba-gm-final .gm-final__evolution > div > b,
+.nba-gm-dev .nba-gm-final .gm-final__disclosure summary > span,
+.nba-gm-dev .nba-gm-final .gm-final__verdict small { color: var(--nba-gm-accent-soft); }
+.nba-gm-dev .nba-gm-final .gm-final__season > em { color: #ffe0b4; border-color: rgba(243,164,73,.35); }
+.nba-gm-dev .nba-gm-final .gm-final__acquired.is-new { color: #ffd19a; border-color: rgba(243,164,73,.42); }
+.nba-gm-dev .nba-gm-final .gm-final__tier.is-elite,
+.nba-gm-dev .nba-gm-final .gm-final__tier.is-impact { color: #ffd19a; border-color: rgba(243,164,73,.42); }
+.nba-gm-dev .nba-gm-final .gm-final__math i { background: #40352b; }
+.nba-gm-dev .nba-gm-final .gm-final__math i > b { background: var(--nba-gm-accent); }
+.nba-gm-dev .nba-gm-final .gm-final__verdict { border-color: #584433; }
+.nba-gm-dev .nba-gm-final .gm-final__transaction > span small { color: var(--nba-gm-accent); }
+@media(max-width:600px) {
+  .nba-gm-dev .nba-gm-dev__roster-panel .football-gm__roster-grid.nba-gm-dev__roster > article { min-height: 58px; padding-block: 6px; }
+  .nba-gm-dev .nba-gm-dev__window-status { padding: 14px 12px; }
+}
