@@ -1,3 +1,4 @@
+import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import { useState } from "react";
 import { footballGmDevelopmentResult } from "../back-room/footballGmScouting";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
@@ -93,7 +94,7 @@ export function NbaGmFinalExperience({
           <span>{verdictDetail}</span></div>
       </div>
       <div className="gm-final__stats">
-        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>3-YR TALENT GRADE</small></div>
+        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>3-YR ROSTER GRADE</small></div>
         <div><b>{score?score.playoffs.toFixed(1):"—"}</b><small>PLAYOFF GRADE</small></div>
         <div><b>{retained}/7</b><small>CORE RETAINED</small></div>
         <div><b>{arrivals.length}</b><small>OFFSEASON CHANGES</small></div>
@@ -105,17 +106,17 @@ export function NbaGmFinalExperience({
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
           <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong><span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
-          <b>{season.wins}–{season.losses}</b><em>{season.finish}</em>
+          <b>{season.wins}–{season.losses}</b><em>{nbaGmPlayoffFinishText(season.finish)}</em>
           {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
       </div>
-      <p className="gm-final__hint">{run.simulationModelVersion===7?"OVR reflects team strength on Football GM’s 70–99 scale. Title odds use the same calibrated playoff-outcome curve; the NBA playoffs still play four best-of-seven series. OFF/DEF are separate historical team grades.":run.simulationModelVersion===6?"GRD averages offense and defense grades compared with 150 NBA team-seasons (2022–26); it is not the GM talent grade or a predicted efficiency rating. Wins and playoff results have seeded variance.":"SIM measures on-court offense/defense, not your three-year GM talent grade. Future seasons include bounded win variance."}</p>
+      <p className="gm-final__hint">{run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"GRD compared with 150 NBA team-seasons; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
       <div className="gm-final__highlights">
         {arrivals.length>0&&<article className="is-positive"><span aria-hidden="true">↗</span><div>
-          <small>{arrivals.length?"KEY MOVE":"CORE KEPT"}</small>
+          <small>KEY ROSTER MOVE</small>
           <strong>{arrivals[0]?.player.name??"Your opening seven"}</strong>
           <p>{arrivals.length?"Offseason trade or free agency":"No roster replacements"}</p>
         </div></article>}
@@ -134,7 +135,7 @@ export function NbaGmFinalExperience({
     </section>}
     <section className="gm-final__section gm-final__roster surface-card" aria-label="Final NBA roster development outcomes">
       <header className="gm-final__heading"><h2>YOUR FINAL ROSTER</h2><small>YEAR 1 → YEAR 3</small></header>
-      <p className="gm-final__hint">Movement is shown relative to Year 1; exact ratings stay private.</p>
+      <p className="gm-final__hint">Movement from Year 1 to Year 3. Exact ratings stay hidden.</p>
       <div className="gm-final__roster-list">
         {finalRows.map(row=><article className="gm-final__player" key={row.slot}>
           <div className="gm-final__player-identity">
@@ -170,7 +171,9 @@ export function NbaGmFinalExperience({
           <em>ACQUIRED</em>
         </div>)}
       </div>:<p className="gm-final__hint">You kept the entire original rotation.</p>}
-      <details className="gm-final__disclosure">
+      
+    </section>}
+    <details className="gm-final__disclosure gm-final__evolution-panel surface-card">
         <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y3</span></summary>
         <div className="gm-final__evolution">
           {finalRows.map(row=><div key={row.slot}>
@@ -181,7 +184,6 @@ export function NbaGmFinalExperience({
           </div>)}
         </div>
       </details>
-    </section>}
     <div className="gm-final__bottom">
       <section className="gm-final__section surface-card" aria-label="NBA GM score breakdown">
         <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
