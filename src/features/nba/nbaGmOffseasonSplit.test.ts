@@ -33,8 +33,11 @@ describe("NBA GM clean offseason report and moves separation",()=>{
     expect(page).toContain('void act("shop",player.id)');
     expect(page).toContain('void act("advance")');
     expect(page).toContain('run.picks.length<7&&!run.shopPlayerId');
-    expect(page).toContain("YEAR 2 CAP LEFT");
-    expect(page).toContain("YEAR 3 CAP LEFT");
+
+
+    expect(page).toContain("YEAR {year+1} CAP");
+    expect(page).toContain('remaining<0?"OVER":"LEFT"');
+    expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
     expect(page).toContain('setOffseasonView("moves")');
   });
   it("keeps trade wheel separate, owner-only and mobile navigation compact",()=>{
