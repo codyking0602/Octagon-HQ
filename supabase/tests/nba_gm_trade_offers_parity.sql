@@ -76,8 +76,8 @@ begin
     email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values(v_owner,'00000000-0000-0000-0000-000000000000',
     'authenticated','authenticated','nba-gm-asking-price-'||v_owner::text||'@test.octagon.invalid',
-    '',now(),now(),now(),jsonb_build_object('display_name','NBA OFFER TEST','historical_unclaimed',true));
-  perform public.register_unclaimed_pin_profile(v_owner,'NBA OFFER TEST','NO');
+    '',now(),now(),now(),jsonb_build_object('display_name','TEST','historical_unclaimed',true));
+  perform public.register_unclaimed_pin_profile(v_owner,'TEST','NO');
   insert into public.pick_control_owners(profile_id) values(v_owner);
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
