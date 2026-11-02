@@ -51,9 +51,9 @@ describe("Football and private NBA GM Year 1 parity", () => {
   });
 
   it("shows NBA rotation fit only at the start of the offseason before cap and roster decisions", () => {
-    expect(nba).toContain('run.phase==="offseason"&&!isTradeStage&&<>');
+    expect(nba).toContain('showOffseasonReport&&<>');
     const report = nba.indexOf("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
-    const cap = nba.indexOf('run.phase!=="final"&&!isTradeStage&&<section className={`football-gm__cap');
+    const cap = nba.indexOf('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section className={`football-gm__cap');
     expect(report).toBeGreaterThan(0);
     expect(report).toBeLessThan(cap);
     expect(nba.match(/<FitReport picks=\{run.yearOnePicks\} catalog=\{catalog\}\/>/g)).toHaveLength(1);
