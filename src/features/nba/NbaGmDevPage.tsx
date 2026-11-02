@@ -415,7 +415,7 @@ export default function NbaGmDevPage(){
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
-        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
+        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, review up to five accepted asking prices, or use one voluntary cut and the three-visit free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           {!run.tradeTeam?<div className="nba-gm-dev__trade-stage-heading">
             <small>SHOPPING {byId.get(run.shopPlayerId)?.name.toUpperCase()}</small>
@@ -467,8 +467,7 @@ export default function NbaGmDevPage(){
                     onClick={()=>void act("trade",tradeTarget,"offer:"+(index+1))}>ACCEPT ASKING PRICE {index+1}</button>
                 </article>)}
               </>}
-              <button type="button" className="nba-gm-dev__secondary" disabled={busy||offersBusy}
-                onClick={()=>{setTradeTarget(null);setTradeOffers([]);setTradeOfferError("");}}>BACK TO TARGETS</button>
+              <small className="nba-gm-dev__target-locked-note">TARGET LOCKED · End talks to shop another target.</small>
             </div>}
           </>}
           <button className="nba-gm-dev__secondary" disabled={busy||offersBusy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER · END TALKS</button>
