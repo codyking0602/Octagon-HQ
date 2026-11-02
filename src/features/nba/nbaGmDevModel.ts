@@ -102,7 +102,9 @@ export function nbaGmDevEligible(player: NbaGmDevPlayer, slot: NbaGmSlot) {
 export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: readonly NbaGmDevPlayer[]): NbaGmPick[] | null {
   if (playerIds.length > 7 || new Set(playerIds).size !== playerIds.length) return null;
   const byId=new Map(catalog.map(p=>[p.id,p]));
-  const players=playerIds.map(id=>byId.get(id));
+  // Player identity order is canonical; neither draft order nor trade history can
+  // determine tie-breaking or resulting starter/bench placement.
+  const players=[...playerIds].sort().map(id=>byId.get(id));
   if (players.some(p=>!p))return null;
   // Exhaustive matching like the server: minimize bench assignments globally
   // before off-primary roles, not merely the first successful DFS branch.
@@ -130,7 +132,9 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
     }
   }
   visit(0,new Set(),[],0,0,0);
-  return best ? (best as {picks:NbaGmPick[]}).picks : null;
+  return best ? (best as {picks:NbaGmPick[]}).picks.sort(
+    (a,b)=>NBA_GM_ROSTER_SLOTS.indexOf(a.slot)-NBA_GM_ROSTER_SLOTS.indexOf(b.slot)
+  ) : null;
 }
 
 /** Affordable matching with future-slot reserve. Does not claim certainty about
@@ -226,7 +230,9 @@ export function nbaGmDevCatalogErrors(catalog:readonly NbaGmDevPlayer[]):string[
   for(const p of catalog){
     if(ids.has(p.id)||!p.id)errors.push("Duplicate/missing identity "+p.id);
     ids.add(p.id);
-    if(!p.positions.length||p.currentGrade<0||p.currentGrade>99||
+    if(p.positions.length!==2||p.positions[0]===p.positions[1]||
+      p.positions.some(pos=>!["PG","SG","SF","PF","C"].includes(pos))||
+      p.currentGrade<0||p.currentGrade>99||
       !["1YR","3YR"].includes(p.gameContract)||
       p.salaries.length!==3||p.salaries.some(s=>!Number.isSafeInteger(s)||s<=0)||
       NBA_GM_SKILL_KEYS.some(key=>!Number.isInteger(p.skills[key])||p.skills[key]<0||p.skills[key]>99)||

@@ -32,7 +32,9 @@ const run=z.object({
 });
 const player=z.object({
   id:z.string().min(1),name:z.string().min(1),teamCode:z.string(),
-  positions:z.array(z.enum(["PG","SG","SF","PF","C"])).min(1),
+  positions:z.array(z.enum(["PG","SG","SF","PF","C"])).length(2).refine(
+    roles=>roles[0]!==roles[1],{message:"Distinct primary and secondary positions required"}
+  ),
   currentGrade:z.number().int(),salaries:z.tuple([z.number().int(),z.number().int(),z.number().int()]),
   skills:z.object({scoring:z.number().int(),shooting:z.number().int(),playmaking:z.number().int(),
     perimeterDefense:z.number().int(),interiorDefense:z.number().int(),rebounding:z.number().int()}),
