@@ -119,7 +119,8 @@ jobs:
             supabase/tests/nba_gm_owner_starter_score_release.sql \
             supabase/tests/nba_gm_v4_one_time_extension.sql \
             supabase/tests/nba_gm_v5_historical_competition.sql \
-            supabase/tests/nba_gm_v6_independent_skills_historical_grades.sql
+            supabase/tests/nba_gm_v6_independent_skills_historical_grades.sql \
+            supabase/tests/nba_gm_v7_nfl_playoff_odds.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
