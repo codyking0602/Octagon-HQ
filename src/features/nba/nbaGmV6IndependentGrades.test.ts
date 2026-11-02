@@ -44,7 +44,7 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
     expect(page).toContain("OFFENSE GRADE");
     expect(page).toContain("DEFENSE GRADE");
     expect(page).toContain("season.offense.toFixed(1)");
-    expect(finalPage).toContain('run.simulationModelVersion===6?"GRD":"SIM"');
+    expect(finalPage).toContain('run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"');
     expect(finalPage).toContain("compared with 150 NBA team-seasons");
   });
 });
