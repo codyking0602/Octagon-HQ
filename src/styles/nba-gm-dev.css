@@ -422,3 +422,56 @@
   .nba-gm-dev .nba-gm-dev__roster-contract > span { font-size: 8px; }
   .nba-gm-dev .nba-gm-dev__roster-contract > small { font-size: 7.5px; letter-spacing: .025em; }
 }
+
+/* V7 team strength and six-bucket outlook; compact and mobile-first. */
+.nba-gm-dev .nba-gm-dev__year-one-card > .nba-gm-dev__headline-odds {
+  color: #f5b962;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: .035em;
+  font-variant-numeric: tabular-nums;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds {
+  width: 100%;
+  margin-top: 8px;
+  border-top: 1px solid rgba(245,185,98,.20);
+  padding: 9px 6px 0;
+  color: #c3d0d8;
+  font-size: 11px;
+  text-align: left;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds summary {
+  cursor: pointer;
+  color: #f5b962;
+  font-weight: 900;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .07em;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds > div {
+  display: grid;
+  gap: 0;
+  padding: 9px 0 4px;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds > div > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 3px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  min-width: 0;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds > div > div > span { min-width: 0; }
+.nba-gm-dev .nba-gm-dev__outcome-odds > div > div > strong {
+  color: #fff;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.nba-gm-dev .nba-gm-dev__outcome-odds > small {
+  display: block;
+  color: #879ba8;
+  line-height: 1.45;
+  font-size: 10px;
+  margin: 7px 0 4px;
+}
