@@ -41,7 +41,7 @@ begin
   jsonb_build_object('slot','PF','playerId','nba-gm-draft-isaiahstewart'),
   jsonb_build_object('slot','C','playerId','nba-gm-draft-joelembiid'),
   jsonb_build_object('slot','GUARD','playerId','nba-gm-draft-jrueholiday'),
-  jsonb_build_object('slot','BIG','nba-gm-draft-kristapsporzingis'));
+  jsonb_build_object('slot','BIG','playerId','nba-gm-draft-kristapsporzingis'));
  v_weak:=jsonb_build_array(
   jsonb_build_object('slot','PG','playerId','nba-gm-draft-trejones'),
   jsonb_build_object('slot','SG','playerId','nba-gm-draft-isaiahjoe'),
@@ -49,7 +49,7 @@ begin
   jsonb_build_object('slot','PF','playerId','nba-gm-draft-leonardmiller'),
   jsonb_build_object('slot','C','playerId','nba-gm-draft-adembona'),
   jsonb_build_object('slot','GUARD','playerId','nba-gm-draft-ryanrollins'),
-  jsonb_build_object('slot','BIG','nba-gm-draft-jocklandale'));
+  jsonb_build_object('slot','BIG','playerId','nba-gm-draft-jocklandale'));
 
  if private.nba_gm_v2_assign(v_owner) is null then raise exception 'Owner roster invalid';end if;
 
