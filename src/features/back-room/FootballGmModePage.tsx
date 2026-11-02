@@ -1164,7 +1164,7 @@ export function SeasonCard({
   const result = footballGmSeasonResultV2({ seed, yearOneRoster, roster, year });
   return (
     <article className={"football-gm__season-card" + (yearOneRecap ? " is-year-one" : "")}>
-      <small>YEAR {year}</small>
+      {!yearOneRecap ? <small>YEAR {year}</small> : null}
       {yearOneRecap ? (
         <>
           <strong>{footballGmSeasonRecordLabel(result) ?? "—"}</strong>
