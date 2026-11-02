@@ -70,7 +70,7 @@ declare
   v_run_id uuid;v_state jsonb;v_roster jsonb;v_offers jsonb;
   v_target text:='nba-gm-draft-derrickjones';
   v_anchor text:='nba-gm-draft-acebailey';
-  v_year integer;v_spend bigint;
+  v_year integer;v_spend bigint;v_rejected boolean;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,
     email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -126,7 +126,24 @@ begin
   end loop;
   if public.nba_gm_dev_action('load')->'picks' is distinct from v_state->'picks' then
     raise exception 'Accepted trade was not saved';end if;
-  raise notice 'NBA accepted asking price persisted with owner-only permissions and legal cap';
+  -- A held trade asset is not an active roster player. The ordinary voluntary
+  -- release must reject it; cleanup uses its separate action and does not use
+  -- the player's one optional cut.
+  v_state:=jsonb_set(v_state,'{displacedAssets}',jsonb_build_array(v_anchor));
+  perform set_config('octagon.nba_gm_dev_authorized_write','yes',true);
+  update private.football_gm_runs set state=v_state,updated_at=now() where id=v_run_id;
+  perform set_config('octagon.nba_gm_dev_authorized_write','',true);
+  v_rejected:=false;
+  begin
+    perform public.nba_gm_dev_action('release',null,v_anchor);
+  exception when others then v_rejected:=true;end;
+  if not v_rejected then raise exception 'Voluntary release accepted a held asset';end if;
+  v_state:=public.nba_gm_dev_action('release-displaced',null,v_anchor);
+  if jsonb_array_length(v_state->'displacedAssets')<>0 or
+    jsonb_array_length(v_state->'displacedReleasedIds')<>1 or
+    jsonb_array_length(v_state->'releasedIds')<>1
+    then raise exception 'Held asset cleanup did not persist separately';end if;
+  raise notice 'NBA accepted asking price and separate displaced cleanup persisted';
 end;
 $nba_trade_acceptance$;
 
