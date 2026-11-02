@@ -244,12 +244,26 @@ export default function NbaGmDevPage(){
     run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
     run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
+  const draftStage=run?.phase==="draft"?<section className="nba-gm-dev__draft" aria-label="NBA GM draft wheel">
+    <div className="football-gm__draft-context nba-gm-dev__draft-context" aria-label="Draft round and positions">
+      <span>ROUND {run.picks.length+1} OF 7</span>
+      <strong>{run.pendingTeam?"CHOOSE YOUR PLAYER":"PG · SG · SF · PF · C · GUARD · BIG"}</strong>
+      {run.pendingTeam&&<TeamMark code={run.pendingTeam}/>}
+    </div>
+    <GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+      pendingTeam={wheelSpinning?null:wheelTeam} canSpin={wheelEnabled} onSpin={()=>void spin("spin")}/>
+    {run.pendingTeam&&!wheelSpinning&&<PlayerPicker players={visible} all={candidates} filter={positionFilter}
+      setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
+  </section>:null;
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
-    <header className="nba-gm-dev__header">
-      <Link to="/nba" className="nba-gm-dev__back">← Basketball HQ</Link>
-      <span>OWNER PLAYTEST · NOT PUBLIC</span>
-      <h1>NBA <em>GM</em></h1>
-      <p>Spin a team. Draft your seven-player rotation. Survive the offseason. Three seasons to build a winner.</p>
+    <header className="football-gm__header nba-gm-dev__header">
+      <Link to="/nba" className="nba-gm-dev__back">← BASKETBALL HQ</Link>
+      <span>
+        <small>NBA FRONT OFFICE</small>
+        <strong>THE GM</strong>
+        <em className="nba-gm-dev__private">OWNER ONLY · NOT PUBLIC</em>
+      </span>
+      <b>3 YEARS</b>
     </header>
     {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
     {notice&&<div className="nba-gm-dev__notice" role="status">{notice}</div>}
@@ -280,9 +294,9 @@ export default function NbaGmDevPage(){
         <span><small>ROSTER CONTINUITY</small><strong>{run.picks.filter(pick=>run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length}/7 RETAINED</strong></span>
         <p>Keep your opening core or make a move. Replacing players affects later seasons, not your completed Year 1.</p>
       </section>}
+      {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {run.phase!=="final"&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
-        <p className="nba-gm-dev__hint">The strongest eligible five start automatically. Guard and Big are backups with reduced minutes in the season simulation.</p>
         {benchAlert&&<p className="nba-gm-dev__notice" role="status">Older saved rotation: a higher-rated eligible player is on your bench. New franchises optimize starters. Your saved result is unchanged.</p>}
         <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
@@ -312,16 +326,7 @@ export default function NbaGmDevPage(){
           })}
         </div>
       </section>}
-      {run.phase==="draft"&&<section className="nba-gm-dev__panel nba-gm-dev__draft">
-        <div className="nba-gm-dev__section-title"><div><small>ROUND {run.picks.length+1} OF 7</small>
-          <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
-          {run.pendingTeam&&<TeamMark code={run.pendingTeam}/>}</div>
-        {!run.pendingTeam&&<p className="nba-gm-dev__hint">Spin first, then choose any eligible player. The lineup reflows automatically to keep valid positions.</p>}
-        {<GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
-          pendingTeam={wheelSpinning?null:wheelTeam} canSpin={wheelEnabled} onSpin={()=>void spin("spin")}/>}
-        {run.pendingTeam&&!wheelSpinning&&<PlayerPicker players={visible} all={candidates} filter={positionFilter}
-          setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
-      </section>}
+      {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="nba-gm-dev__panel nba-gm-dev__results">
         <small>YEAR 1 COMPLETE</small><h2>YOUR FIRST SEASON</h2>
         <Results seasons={run.results}/>
