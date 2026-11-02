@@ -48,7 +48,7 @@ describe("NBA GM orange basketball identity across every phase", () => {
     expect(page).toContain('disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}');
     expect(page).toContain('<details className="nba-gm-dev__release"');
     expect(page).not.toContain("LOCK ROSTER · SIMULATE SEASONS 2 & 3");
-    expect(page).toContain("The meter measures retention, not an extra hidden team bonus");
+    expect(page).toContain("No extra continuity bonus.");
     expect(page).toContain("completed Year 1 stays unchanged");
   });
 });
