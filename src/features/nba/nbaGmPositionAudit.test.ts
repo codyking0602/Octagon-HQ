@@ -3,7 +3,7 @@ import positionAudit from "../../../docs/nba-gm-330-position-audit-2026-11-02.js
 import { nbaGmDevAssignRoster, type NbaGmDevPlayer } from "./nbaGmDevModel";
 const mk=(p:typeof positionAudit.players[number])=>({
  id:p.id,currentGrade:p.overall,positions:p.after
-}) as NbaGmDevPlayer;
+}) as unknown as NbaGmDevPlayer;
 const catalog=positionAudit.players.map(mk);
 const names=(list:string[])=>list.map(name=>positionAudit.players.find(p=>p.name===name)!).map(mk);
 describe("NBA GM two-role editorial cohort and deterministic legal lineup",()=>{
