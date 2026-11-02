@@ -591,7 +591,7 @@ export default function NbaGmDevPage(){
       </section>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
-      <footer className="nba-gm-dev__disclaimer">Private owner playtest · Provisional ratings and fictional contracts · Not a public NBA forecast.</footer>
+      <footer className="nba-gm-dev__disclaimer">Owner-only playtest · Fictional contracts</footer>
     </>}
   </main>;
 }
