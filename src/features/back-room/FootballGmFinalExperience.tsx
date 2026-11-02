@@ -254,7 +254,7 @@ export function FootballGmFinalExperience({
           </>
         )}
         <div className="gm-final__stats">
-          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>AVG TEAM OVR</small></div>
+          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>3-YR ROSTER GRADE</small></div>
           <div><b>{result.playoffScore.toFixed(1)}</b><small>PLAYOFF GRADE</small></div>
           <div><b>{retained.length}/7</b><small>CORE RETAINED</small></div>
           <div><b>{changes.length}</b><small>OFFSEASON CHANGES</small></div>
@@ -311,7 +311,7 @@ export function FootballGmFinalExperience({
         <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
         <div className="gm-final__highlights">
           <article className="is-positive"><span aria-hidden="true">↗</span><div>
-            <small>{bestMove ? bestMoveImproved ? "BEST UPGRADE" : "KEY MOVE" : "CORE KEPT"}</small>
+            <small>{bestMove ? bestMoveImproved ? "BEST ROSTER MOVE" : "KEY ROSTER MOVE" : "CORE KEPT"}</small>
             <strong>{bestMove?.player.name ?? "The original core"}</strong>
             <p>{bestMove ? bestMove.entry.acquired === "trade" ? "Trade · " + footballGmSlotLabel(bestMove.slot) : "Free agency · " + footballGmSlotLabel(bestMove.slot) : "No offseason changes"}</p>
           </div></article>
@@ -321,7 +321,7 @@ export function FootballGmFinalExperience({
             <p>{greatLeap ? breakout?.band.label : "Helped hold the core together"}</p>
           </div></article>
           <article className="is-negative"><span aria-hidden="true">↘</span><div>
-            <small>{toughRegression ? "BIGGEST SETBACK" : "DEVELOPMENT CHECK"}</small>
+            <small>{toughRegression ? "BIGGEST REGRESSION" : "DEVELOPMENT CHECK"}</small>
             <strong>{regression?.player.name ?? "No major setbacks"}</strong>
             <p>{toughRegression ? regression?.band.label : "No notable regression"}</p>
           </div></article>
@@ -330,7 +330,7 @@ export function FootballGmFinalExperience({
 
       <section className="gm-final__section gm-final__roster surface-card" aria-label="Final roster development outcomes">
         <header className="gm-final__heading"><h2>{opponentResult ? selectedName.toUpperCase() + " · FINAL ROSTER" : "YOUR FINAL ROSTER"}</h2><small>YEAR 1 → YEAR 3</small></header>
-        <p className="gm-final__hint">The white tick always marks START in the center. The colored dot shows improvement or decline in five fixed categories. Exact grades stay hidden.</p>
+        <p className="gm-final__hint">Movement from Year 1 to Year 3. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
             const acquisition = retainedIds.has(row.player.id) ? "RETAINED"
@@ -356,16 +356,19 @@ export function FootballGmFinalExperience({
         </div>
       </section>
 
-      <section className="gm-final__section surface-card" aria-label="Offseason transactions">
-        <header className="gm-final__heading"><h2>OFFSEASON MOVES</h2><small>{changes.length} CHANGED · {trades} TRADES · {freeAgents} FA</small></header>
-        {changes.length ? <div className="gm-final__transactions">
-          {changes.map((row) => <div className="gm-final__transaction" key={row.slot}>
-            <b>{footballGmSlotLabel(row.slot)}</b>
-            <span><strong>{row.before?.name}</strong><small>→</small><strong>{row.player.name}</strong></span>
-            <em>{row.entry.acquired === "trade" ? "TRADE" : "FREE AGENT"}</em>
-          </div>)}
-        </div> : <p className="gm-final__hint">You kept the entire original roster.</p>}
-        <details className="gm-final__disclosure" id="gm-full-roster">
+      {changes.length > 0 ? (
+        <section className="gm-final__section surface-card" aria-label="Offseason transactions">
+          <header className="gm-final__heading"><h2>OFFSEASON MOVES</h2><small>{changes.length} CHANGED · {trades} TRADES · {freeAgents} FA</small></header>
+          <div className="gm-final__transactions">
+            {changes.map((row) => <div className="gm-final__transaction" key={row.slot}>
+              <b>{footballGmSlotLabel(row.slot)}</b>
+              <span><strong>{row.before?.name}</strong><small>→</small><strong>{row.player.name}</strong></span>
+              <em>{row.entry.acquired === "trade" ? "TRADE" : "FREE AGENT"}</em>
+            </div>)}
+          </div>
+        </section>
+      ) : null}
+      <details className="gm-final__disclosure gm-final__evolution-panel surface-card" id="gm-full-roster">
           <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y3</span></summary>
           <div className="gm-final__evolution">
             {rows.map((row) => <div key={row.slot}>
@@ -376,8 +379,6 @@ export function FootballGmFinalExperience({
             </div>)}
           </div>
         </details>
-      </section>
-
       <div className="gm-final__bottom">
         <section className="gm-final__section surface-card" aria-label="GM score breakdown">
           <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
