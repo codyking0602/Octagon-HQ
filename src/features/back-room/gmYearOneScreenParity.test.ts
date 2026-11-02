@@ -30,7 +30,10 @@ describe("Football and private NBA GM Year 1 parity", () => {
     expect(nba).toContain('football-gm__season-card nba-gm-dev__year-one-card is-year-one');
     expect(nba).toContain("<strong>{season.wins}–{season.losses}</strong>");
     expect(nba).toContain("<b>{season.finish}</b>");
-    expect(nba).toContain("OFFENSE {season.offense.toFixed(1)} · DEFENSE {season.defense.toFixed(1)}");
+    expect(nba).toContain("OFFENSE GRADE");
+    expect(nba).toContain("DEFENSE GRADE");
+    expect(nba).toContain("graded={run.simulationModelVersion===6}");
+    expect(nba).toContain("season.offense.toFixed(1)");
     expect(footballCss).toContain(".football-gm__season-card.is-year-one");
     expect(nbaCss).toContain(".nba-gm-dev .nba-gm-dev__year-one-card");
   });
