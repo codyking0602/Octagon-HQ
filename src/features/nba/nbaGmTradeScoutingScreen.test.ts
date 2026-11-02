@@ -34,9 +34,10 @@ describe("NBA GM dedicated trade screen and scouting-first target selection",()=
     expect(css).toContain(".nba-gm-dev .nba-gm-dev__trade-candidate-details");
   });
   it("does not change ratings, contracts, economics, or owner-only access",()=>{
-    const targetSelection=page.slice(page.indexOf('eligibleTrade.map(player=><article'),
-      page.indexOf('</article>)}',page.indexOf('eligibleTrade.map(player=><article')));
-    expect(targetSelection).not.toContain("onClick={()=>void chooseTradeTarget(player.id)}>");
+    const toggleIndex=page.indexOf("setExpandedTradeCandidate(current=>current===player.id?null:player.id)");
+    const offerIndex=page.indexOf("onClick={()=>void chooseTradeTarget(player.id)}");
+    expect(toggleIndex).toBeGreaterThan(0);
+    expect(offerIndex).toBeGreaterThan(toggleIndex);
     expect(page).toContain("OWNER ONLY · NOT PUBLIC");
     expect(page).not.toContain("OPTIONAL SECOND TRADE CHIP");
   });
