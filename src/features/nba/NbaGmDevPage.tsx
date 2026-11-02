@@ -111,12 +111,12 @@ function FitReport({picks,catalog}:{
     </div>
   </section>;
 }
-function Results({seasons}:{seasons:NbaGmDevRun["results"]}){
+function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
       <strong>{season.wins}–{season.losses}</strong>
       <b>{season.finish}</b>
-      <span>OFFENSE {season.offense.toFixed(1)} · DEFENSE {season.defense.toFixed(1)}</span>
+      <span>{graded?`OFFENSE GRADE ${Math.round(season.offense)} · DEFENSE GRADE ${Math.round(season.defense)}`:`OFFENSE ${season.offense.toFixed(1)} · DEFENSE ${season.defense.toFixed(1)}`}</span>
     </article>)}
   </div>;
 }
@@ -340,7 +340,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
-        <Results seasons={run.results}/>
+        <Results seasons={run.results} graded={run.simulationModelVersion===6}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>
