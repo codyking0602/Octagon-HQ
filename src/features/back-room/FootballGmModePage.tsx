@@ -1589,6 +1589,13 @@ export default function FootballGmModePage({
     return startImmediately ? { ...fresh, phase: "draft" } : fresh;
   });
   const [challengeStatus, setChallengeStatus] = useState("");
+  const [soloStartMode, setSoloStartMode] = useState<FootballGmSoloStartMode>("classic");
+  const [soloQbSearch, setSoloQbSearch] = useState("");
+  const [selectedSoloQbId, setSelectedSoloQbId] = useState<string | null>(null);
+  const selectedSoloQuarterback = FOOTBALL_GM_SOLO_QUARTERBACKS.find((player) => player.id === selectedSoloQbId) ?? null;
+  const filteredSoloQuarterbacks = FOOTBALL_GM_SOLO_QUARTERBACKS.filter((player) =>
+    (player.name + " " + player.team).toLowerCase().includes(soloQbSearch.trim().toLowerCase()));
+  const canChooseStartingQb = standalone && !weeklyRun && !profileMatch.code;
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone || Boolean(weeklyRun));
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
