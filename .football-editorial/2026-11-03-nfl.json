@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-03",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "joe-burrow",
+        "name": "Joe Burrow",
+        "team": "Cincinnati Bengals",
+        "position": "QB",
+        "summary": "Threw for 462 yards in Cincinnati's 43-36 overtime win over Tennessee on November 1."
+      },
+      {
+        "id": "jahmyr-gibbs",
+        "name": "Jahmyr Gibbs",
+        "team": "Detroit Lions",
+        "position": "RB",
+        "summary": "Rushed for 153 yards in Detroit's 19-15 victory over Minnesota on November 1."
+      },
+      {
+        "id": "bucky-irving",
+        "name": "Bucky Irving",
+        "team": "Tampa Bay Buccaneers",
+        "position": "RB",
+        "summary": "Rushed for 170 yards as Tampa Bay shut out Atlanta 16-0 on November 1."
+      },
+      {
+        "id": "jaylen-warren",
+        "name": "Jaylen Warren",
+        "team": "Pittsburgh Steelers",
+        "position": "RB",
+        "summary": "Rushed for 143 yards and a touchdown in Pittsburgh's 27-6 win over Cleveland on November 1."
+      },
+      {
+        "id": "kirk-cousins",
+        "name": "Kirk Cousins",
+        "team": "Las Vegas Raiders",
+        "position": "QB",
+        "summary": "Completed 19 of 26 passes for 247 yards and four total touchdowns in Las Vegas' 38-33 win over the Jets on November 1."
+      }
+    ],
+    "games": [
+      {
+        "id": "packers-at-patriots",
+        "away_team": "Green Bay Packers",
+        "home_team": "New England Patriots",
+        "kickoff_at": "2026-11-08T15:25:00-06:00",
+        "summary": "Interconference late-window matchup in Foxborough between Green Bay and New England."
+      },
+      {
+        "id": "bills-at-vikings",
+        "away_team": "Buffalo Bills",
+        "home_team": "Minnesota Vikings",
+        "kickoff_at": "2026-11-09T19:15:00-06:00",
+        "summary": "Monday Night Football features Buffalo visiting Minnesota."
+      },
+      {
+        "id": "buccaneers-at-bears",
+        "away_team": "Tampa Bay Buccaneers",
+        "home_team": "Chicago Bears",
+        "kickoff_at": "2026-11-08T19:20:00-06:00",
+        "summary": "Sunday Night Football in Chicago after Tampa Bay's November 1 shutout of Atlanta."
+      },
+      {
+        "id": "giants-at-eagles",
+        "away_team": "New York Giants",
+        "home_team": "Philadelphia Eagles",
+        "kickoff_at": "2026-11-08T12:00:00-06:00",
+        "summary": "NFC East rivalry at Lincoln Financial Field, with Philadelphia coming off a loss to Washington."
+      },
+      {
+        "id": "texans-at-chargers",
+        "away_team": "Houston Texans",
+        "home_team": "Los Angeles Chargers",
+        "kickoff_at": "2026-11-08T15:05:00-06:00",
+        "summary": "AFC matchup in Los Angeles in the Sunday late window."
+      }
+    ]
+  }
+}
