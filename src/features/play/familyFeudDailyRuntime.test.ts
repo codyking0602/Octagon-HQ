@@ -5,6 +5,7 @@ import {
 } from "./familyFeudDailyRuntime";
 import type { FamilyFeudPack } from "../games/familyFeudEngine";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
+import { buildNbaSportsFeudPack } from "../nba/nbaSportsFeudBank";
 
 const entities = [
   "Alpha One",
@@ -236,6 +237,32 @@ describe("Family Feud V2 Daily persistence contract", () => {
         found: true,
       });
     }
+  });
+
+  it("accepts Birdman in an archived NBA board without relying on the full NBA module", () => {
+    let selected: FamilyFeudPack | null = null;
+    for (let index = 0; index < 2000; index += 1) {
+      const candidate = buildNbaSportsFeudPack("archived-birdman-" + index);
+      if (candidate.mainBoards[0]?.id === "nba-feud-distinctive-looks") {
+        selected = candidate;
+        break;
+      }
+    }
+    expect(selected).not.toBeNull();
+    const archived = {
+      ...selected!,
+      entities: selected!.entities.map((entity) => entity.displayName === "Chris Andersen"
+        ? { ...entity, aliases: [] }
+        : entity),
+    };
+    const published = buildFamilyFeudDailySetup(archived, "2026-11-01", "nba-daily-regular-v3-oct30-public");
+    const result = advanceFamilyFeudDailyRuntime(context(published), { type: "answer", answer: "Birdman" });
+    expect(result.publicState.last_feedback).toMatchObject({ type: "correct", points: 2 });
+    const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
+    const guesses = boards[0]?.recorded_guesses as Array<Record<string, unknown>>;
+    expect(guesses[0]).toMatchObject({
+      submitted_answer: "Birdman", matched_answer: "Chris Andersen", accepted: true,
+    });
   });
 
   it("credits NBA broadcast Fast Money answers in an already-published immutable pack", () => {
