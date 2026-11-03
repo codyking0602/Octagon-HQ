@@ -982,54 +982,23 @@
 }
 
 
-/* NBA GM offseason: distinct read-only report and interactive front office. */
-.nba-gm-dev .nba-gm-dev__offseason-nav {
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:6px;padding:5px;border:1px solid var(--nba-gm-border,#403a33);
-  border-radius:12px;background:var(--nba-gm-surface,#191a1c);
-  min-width:0;
+/* NBA GM: one compact offseason with factual player development in the roster. */
+.nba-gm-dev .nba-gm-dev__roster-development { display:block;font-size:10px;font-weight:800;line-height:1.3;color:#a3b3bf; }
+.nba-gm-dev .nba-gm-dev__roster-development.is-improved,
+.nba-gm-dev .nba-gm-dev__roster-development.is-breakout { color:#7dd9b4; }
+.nba-gm-dev .nba-gm-dev__roster-development.is-decline { color:#f0a58d; }
+.nba-gm-dev .nba-gm-dev__window-status.is-ready { display:grid;gap:10px;padding:16px; }
+.nba-gm-dev .nba-gm-dev__window-status.is-ready > strong {
+  display:flex;align-items:center;gap:9px;font-size:clamp(17px,4.7vw,21px);line-height:1.2;letter-spacing:-.02em;
 }
-.nba-gm-dev .nba-gm-dev__offseason-nav button {
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  padding:11px 5px;min-width:0;min-height:42px;
-  border:1px solid transparent;border-radius:8px;
-  background:transparent;color:#b9b5b1;cursor:pointer;
-  font:inherit;font-weight:900;font-size:clamp(10px,2.7vw,12px);
-  letter-spacing:.03em;
+.nba-gm-dev .nba-gm-dev__window-status.is-ready > strong::before {
+  content:"✓";display:grid;place-items:center;width:23px;height:23px;flex:0 0 auto;
+  border:1px solid rgba(140,222,176,.55);border-radius:50%;color:#8cdeb0;font-size:14px;
 }
-.nba-gm-dev .nba-gm-dev__offseason-nav button small {
-  color:#8f8880;font-size:9px;
-}
-.nba-gm-dev .nba-gm-dev__offseason-nav button.is-active {
-  color:#1c1713;background:var(--nba-gm-accent,#f3a449);
-  border-color:var(--nba-gm-accent,#f3a449);
-}
-.nba-gm-dev .nba-gm-dev__offseason-nav button.is-active small {color:#47311c}
-.nba-gm-dev .nba-gm-dev__offseason-nav button:focus-visible {
-  outline:2px solid #ffd19a;outline-offset:2px;
-}
-.nba-gm-dev .nba-gm-dev__moves-cap {
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;min-width:0;
-}
-.nba-gm-dev .nba-gm-dev__moves-cap span {
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;
-  padding:10px 12px;min-width:0;
-  border:1px solid var(--nba-gm-border,#403a33);
-  border-radius:10px;background:var(--nba-gm-surface,#191a1c);
-}
-.nba-gm-dev .nba-gm-dev__moves-cap small {
-  color:#a9a5a1;font-size:10px;font-weight:800;letter-spacing:.06em;
-}
-.nba-gm-dev .nba-gm-dev__moves-cap strong {
-  color:var(--nba-gm-accent-soft,#ffd19a);
-  font-size:13px;font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-}
-@media(max-width:380px){
-  .nba-gm-dev .nba-gm-dev__moves-cap span {padding:8px;}
-  .nba-gm-dev .nba-gm-dev__moves-cap strong {font-size:11px;}
-}
+.nba-gm-dev .nba-gm-dev__window-status.is-ready > p { margin:0;font-size:12px;line-height:1.4; }
+.nba-gm-dev .nba-gm-dev__window-status.is-ready > .nba-gm-dev__primary { min-height:46px;margin-top:2px; }
+.nba-gm-dev .nba-gm-dev__release-warning { color:#928f8b;font-size:10px;line-height:1.4;font-weight:400; }
+.nba-gm-dev .nba-gm-dev__release > summary > span > strong { font-size:clamp(14px,3.7vw,17px); }
 
 /* Owner-only NBA season reveal, matching the compact NFL post-offseason beat. */
 .nba-gm-dev .nba-gm-dev__season-reveal {

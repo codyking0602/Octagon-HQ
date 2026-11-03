@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
-import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
+import { nbaGmDevelopmentOutcome } from "./NbaGmDevelopmentReport";
 import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
 import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
-  nbaGmDevAssignRoster, nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
+  nbaGmDevAssignRoster, nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook, nbaGmRepriceLabel } from "./nbaGmScouting";
@@ -100,25 +100,6 @@ function tradeYearTwoSkillLetter(player:NbaGmDevPlayer,run:NbaGmDevRun,key:keyof
   const delta=adjustedGrade===undefined?0:adjustedGrade-baseGrade;
   return nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))));
 }
-function FitReport({picks,catalog}:{
-  picks:NbaGmDevRun["picks"];catalog:NbaGmDevPlayer[];
-}){
-  const signals=nbaGmDevFitSignals(picks,catalog);
-  if(!signals.length)return null;
-  // Private diagnostic, not the unvalidated winning-percentage formula.
-  return <section className="nba-gm-dev__panel nba-gm-dev__fit" aria-label="Season 1 roster scouting report">
-    <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>How your rotation fits</h2></div></div>
-    <p className="nba-gm-dev__hint">Six rotation scouting signals, not extra ratings.</p>
-    <div className="nba-gm-dev__fit-grid">
-      {signals.map(signal=><div key={signal.label} title={signal.detail}>
-        <span>{signal.label}</span>
-        <strong className={signal.status==="STRONG"?"is-strong":signal.status==="FAIR"?"is-fair":"is-weak"}>
-          {signal.status}
-        </strong>
-      </div>)}
-    </div>
-  </section>;
-}
 function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
@@ -162,12 +143,7 @@ export default function NbaGmDevPage(){
   const wheelSequenceRef=useRef(0);
   useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
-  const [offseasonView,setOffseasonView]=useState<"report"|"moves">("report");
   const [showSeasonReveal,setShowSeasonReveal]=useState(false);
-  const selectOffseasonView=(view:"report"|"moves")=>{
-    setOffseasonView(view);
-    window.scrollTo({top:0,behavior:"instant"});
-  };
   const [tradeTarget,setTradeTarget]=useState<string|null>(null);
   const [expandedTradeCandidate,setExpandedTradeCandidate]=useState<string|null>(null);
   const [tradeOffers,setTradeOffers]=useState<NbaGmTradeOffer[]>([]);
@@ -209,12 +185,9 @@ export default function NbaGmDevPage(){
         setNotice("Offer declined. The partner wanted more value.");
       }
       if(action==="pick")setPositionFilter(null);
-      if(action==="offseason")setOffseasonView("report");
+      
       if(action==="advance"&&state?.phase==="final"){setShowSeasonReveal(true);window.scrollTo({top:0,behavior:"instant"});}
       if(action==="start")setShowSeasonReveal(false);
-      if(["shop","trade","cancel-trade","release","release-displaced","promote-displaced","sign","pass-fa","emergency-sign"].includes(action)){
-        setOffseasonView("moves");
-      }
       if(["shop","trade","cancel-trade"].includes(action)){
         setTradeTarget(null);setTradeOffers([]);setTradeOfferError("");
       }
@@ -321,10 +294,10 @@ export default function NbaGmDevPage(){
     &&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam
     ?<details className="nba-gm-dev__release" aria-label="Voluntary player release">
       <summary className="nba-gm-dev__release-heading">
-        <span><small>FREE AGENCY · OPTIONAL</small><strong>Create an FA opening</strong></span>
+        <span><small>ONE VOLUNTARY RELEASE</small><strong>CREATE ONE EXTRA FA OPENING</strong></span>
         <b>{run.releasedIds.filter(id=>!(run.displacedReleasedIds??[]).includes(id)).length===0?"AVAILABLE":"CAP RECOVERY"}</b>
       </summary>
-      <p className="nba-gm-dev__hint">Cut one player to open free agency. Budget uses the tighter Year 2 or 3 cap.</p>
+      
       <div className="nba-gm-dev__release-list">
         {run.picks.map(pick=>{
           const player=byId.get(pick.playerId);
@@ -364,8 +337,6 @@ export default function NbaGmDevPage(){
       setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
   </section>:null;
   const isTradeStage=run?.phase==="offseason"&&Boolean(run.shopPlayerId);
-  const showOffseasonReport=run?.phase==="offseason"&&!isTradeStage&&offseasonView==="report";
-  const showOffseasonMoves=run?.phase==="offseason"&&!isTradeStage&&offseasonView==="moves";
   const tradeStage=run?.phase==="offseason"&&run.shopPlayerId?<section className="nba-gm-dev__trade-screen" aria-label="NBA GM trade negotiation">
     <div className="nba-gm-dev__trade-screen-context"><small>OFFSEASON · SHOPPING {byId.get(run.shopPlayerId)?.name.toUpperCase()}</small>
       <strong>{run.tradeTeam?"TRADE TALKS":"FIND A TRADE PARTNER"}</strong></div>
@@ -474,21 +445,7 @@ export default function NbaGmDevPage(){
     </section>}
     {run&&<>
       {tradeStage}
-      {run.phase==="offseason"&&!isTradeStage&&<nav className="nba-gm-dev__offseason-nav" aria-label="Offseason screens">
-        <button type="button" className={offseasonView==="report"?"is-active":""}
-          aria-pressed={offseasonView==="report"} onClick={()=>selectOffseasonView("report")}>
-          <small>01</small> TEAM REPORT
-        </button>
-        <button type="button" className={offseasonView==="moves"?"is-active":""}
-          aria-pressed={offseasonView==="moves"} onClick={()=>selectOffseasonView("moves")}>
-          <small>02</small> OFFSEASON MOVES
-        </button>
-      </nav>}
-      {showOffseasonReport&&<>
-        <NbaGmDevelopmentReport run={run} catalog={catalog}/>
-        <FitReport picks={run.yearOnePicks} catalog={catalog}/>
-      </>}
-      {((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
+      {(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
         <div className="nba-gm-dev__cap-main">
           <span><small>YEAR {displaySalaryYear+1} CAP</small>
             <strong>{money(spend?.[displaySalaryYear]??0)} / {money(run.caps[displaySalaryYear]!)}</strong></span>
@@ -501,10 +458,8 @@ export default function NbaGmDevPage(){
             <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
         </div>
       </section>}
-      {showOffseasonReport&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__report-next"
-        onClick={()=>selectOffseasonView("moves")}>CONTINUE TO OFFSEASON MOVES</button>}
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
-      {((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonMoves)&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
+      {(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
         {benchAlert&&<p className="nba-gm-dev__notice" role="status">Older saved rotation: a higher-rated eligible player is on your bench. New franchises optimize starters. Your saved result is unchanged.</p>}
         <div className="football-gm__roster-grid nba-gm-dev__roster">
@@ -521,6 +476,13 @@ export default function NbaGmDevPage(){
                     <strong>{player.name}</strong>
                     <em>{player.teamCode} · {player.positions.join(" / ")}</em>
                     <span className="football-gm__roster-scouting"><ScoutBadges player={player} run={run} showContract={false}/></span>
+                    {run.phase==="offseason"&&run.development?.[player.id]&&(()=>{
+                      const change=run.development[player.id]!;
+                      const outcome=nbaGmDevelopmentOutcome(change.year2Grade-change.startingGrade);
+                      return <small className={"nba-gm-dev__roster-development is-"+outcome.tone}>
+                        {outcome.label==="STEADY"?"Held steady":outcome.label.toLowerCase()} in Year 1
+                      </small>;
+                    })()}
                   </span>
                 </div>
                 <div className="football-gm__roster-contract nba-gm-dev__roster-contract">
@@ -546,16 +508,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {showOffseasonMoves&&<div className="nba-gm-dev__moves-cap" role="status">
-        {[1,2].map(year=>{
-          const remaining=run.caps[year]!-(spend?.[year]??0);
-          return <span key={year} className={remaining<0?"is-over":""}>
-            <small>YEAR {year+1} CAP</small>
-            <strong>{money(Math.abs(remaining))} {remaining<0?"OVER":"LEFT"}</strong>
-          </span>;
-        })}
-      </div>}
-      {showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
+      {run.phase==="offseason"&&!isTradeStage&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
         <p className="nba-gm-dev__hint">Shop a player above, or open a free-agent spot below.</p>
@@ -611,18 +564,18 @@ export default function NbaGmDevPage(){
               salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
           </div>
         </div>}
-        {capCrisis&&releasePanel}
-        {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-          <div className={"nba-gm-dev__window-status"+(capCrisis?" is-crisis":"")} role="status">
-            <small className="nba-gm-dev__window-eyebrow">{capCrisis?"CAP CRISIS":heldPlayers.length>0?"ROSTER WORK REQUIRED":"WINDOW SET"}</small>
-            <strong>{capCrisis||heldPlayers.length>0?"YOU HAVE MOVES TO MAKE":"YOU CAN MOVE FORWARD"}</strong>
-            <p>{heldPlayers.length>0?"Resolve your held trade asset.":capCrisis?"Get both future seasons under the cap.":"Ready to simulate, or make a move."}</p>
-            <button type="button" className="nba-gm-dev__primary" disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}>
-              SIMULATE YEARS 2 & 3
-            </button>
-          </div>}
-        {!capCrisis&&releasePanel}
+        {releasePanel}
       </section>}
+      {run.phase==="offseason"&&!isTradeStage&&run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+        <section className={"nba-gm-dev__window-status surface-card"+(capCrisis||heldPlayers.length>0?" is-crisis":" is-ready")} role="status">
+          {(capCrisis||heldPlayers.length>0)&&
+            <small className="nba-gm-dev__window-eyebrow">{capCrisis?"CAP CRISIS":"ROSTER WORK REQUIRED"}</small>}
+          <strong>{capCrisis||heldPlayers.length>0?"YOU HAVE MOVES TO MAKE":"READY TO ADVANCE"}</strong>
+          <p>{heldPlayers.length>0?"Resolve your held trade asset.":capCrisis?"Get both future seasons under the cap.":"Roster fits both future salary caps."}</p>
+          <button type="button" className="nba-gm-dev__primary" disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}>
+            SIMULATE YEARS 2 & 3
+          </button>
+        </section>}
       {run.phase==="final"&&(showSeasonReveal
         ?<NbaGmSeasonReveal run={run} onReveal={()=>{setShowSeasonReveal(false);window.scrollTo({top:0,behavior:"instant"});}}/>
         :<><NbaGmFinalExperience run={run} catalog={catalog}/>

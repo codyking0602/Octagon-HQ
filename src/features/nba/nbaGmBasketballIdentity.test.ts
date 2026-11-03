@@ -39,11 +39,12 @@ describe("NBA GM orange basketball identity across every phase", () => {
     expect(page).toContain("primaryColor:nbaTeamColor(team.id)");
   });
 
-  it("preserves visible six-part scouting and a compact, cap-gated offseason advance", () => {
-    expect(page).toContain("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
-    expect(page).toContain("{signals.map(signal=><div");
-    expect(page).toContain('showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"');
-    expect(page).toContain("YOU CAN MOVE FORWARD");
+  it("preserves six-part trade scouting and a compact, cap-gated offseason advance", () => {
+    expect(page).not.toContain("<FitReport");
+    expect(page).toContain("labels.map(key=><div key={key}>");
+    expect(page).toContain("NBA_GM_DEV_SKILL_LABELS[key]");
+    expect(page).toContain('run.phase==="offseason"&&!isTradeStage&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"');
+    expect(page).toContain("READY TO ADVANCE");
     expect(page).toContain("SIMULATE YEARS 2 & 3");
     expect(page).toContain('disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}');
     expect(page).toContain('<details className="nba-gm-dev__release"');

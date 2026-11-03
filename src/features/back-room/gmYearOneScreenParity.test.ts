@@ -50,15 +50,15 @@ describe("Football and private NBA GM Year 1 parity", () => {
     expect(nbaCss).toContain(".nba-gm-dev .nba-gm-dev__year-reveal");
   });
 
-  it("shows NBA rotation fit only at the start of the offseason before cap and roster decisions", () => {
-    expect(nba).toContain('showOffseasonReport&&<>');
-    const report = nba.indexOf("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
-    const cap = nba.indexOf('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section className={`football-gm__cap');
-    expect(report).toBeGreaterThan(0);
-    expect(report).toBeLessThan(cap);
-    expect(nba.match(/<FitReport picks=\{run.yearOnePicks\} catalog=\{catalog\}\/>/g)).toHaveLength(1);
-    expect(nba).not.toContain('run.phase==="year1"&&<FitReport');
+  it("starts the NBA offseason with its full cap and actionable roster, not a duplicate fit report", () => {
+    expect(nba).not.toContain("showOffseasonReport");
+    expect(nba).not.toContain("<FitReport");
+    const cap = nba.indexOf('nba-gm-dev__caps');
+    const roster = nba.indexOf('nba-gm-dev__roster-panel');
+    expect(cap).toBeGreaterThan(0);
+    expect(roster).toBeGreaterThan(cap);
+    expect(nba).toContain('nba-gm-dev__roster-development');
+    expect(nba).toContain('run.development?.[player.id]');
     expect(nba).not.toContain('nba-gm-dev__fit-disclosure');
     expect(nba).toContain("ENTER THE OFFSEASON");
-  });
-});
+  });});

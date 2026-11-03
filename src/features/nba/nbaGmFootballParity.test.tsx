@@ -128,11 +128,11 @@ describe("NBA GM private Football parity boundary",()=>{
     expect(sql).toContain("elsif p_action='emergency-sign'");
     expect(sql).toContain("Trade target needs different outgoing assets or more cap room");
   });
-  it("shows roster fit inside offseason alongside real server development",()=>{
+  it("shows real server development inline without the redundant offseason fit grid",()=>{
     expect(nbaGmDevFitSignals(picks.slice(0,6),players)).toEqual([]);
-    expect(page).not.toContain('run.phase==="year1"&&<FitReport');
-    expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
-    expect(page).not.toContain('run.phase==="final")&&<FitReport');
+    expect(page).not.toContain("<FitReport");
+    expect(page).toContain("nba-gm-dev__roster-development");
+    expect(page).toContain("change.year2Grade-change.startingGrade");
     const markup=renderToStaticMarkup(<NbaGmDevelopmentReport run={{...run,phase:"offseason"}} catalog={players}/>);
     expect(markup).toContain("OFFSEASON DEVELOPMENT");
     expect(markup).toContain("1YR REPRICE");

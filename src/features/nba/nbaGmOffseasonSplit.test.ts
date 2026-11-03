@@ -3,50 +3,39 @@ import { describe, expect, it } from "vitest";
 
 const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
 const css=readFileSync("src/styles/nba-gm-dev.css","utf8");
-const development=readFileSync("src/features/nba/NbaGmDevelopmentReport.tsx","utf8");
+const dev=readFileSync("src/features/nba/NbaGmDevelopmentReport.tsx","utf8");
+const off=page.slice(page.indexOf("{run&&<>"),page.indexOf('{run.phase==="final"'));
 
-describe("NBA GM clean offseason report and moves separation",()=>{
-  it("keeps six scouting signals, development and full cap in the Team Report",()=>{
-    expect(page).toContain('const [offseasonView,setOffseasonView]=useState<"report"|"moves">("report")');
-    expect(page).toContain('aria-label="Offseason screens"');
-    expect(page).toContain("TEAM REPORT");
-    expect(page).toContain("OFFSEASON MOVES");
-    expect(page).toContain('aria-pressed={offseasonView==="report"}');
-    expect(page).toContain('aria-pressed={offseasonView==="moves"}');
-    expect(page).toContain('showOffseasonReport&&<>');
-    expect(page).toContain("<NbaGmDevelopmentReport run={run} catalog={catalog}/>");
-    expect(page).toContain("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
-    expect(page).toContain("nba-gm-dev__fit-grid");
-    expect(page).toContain("showOffseasonReport)&&<section className={\`football-gm__cap");
-    expect(page).not.toContain('showOffseasonReport&&<section className="nba-gm-dev__continuity');
-    expect(page).not.toContain("No extra continuity bonus");
-    expect(development).toContain("Three-year deals stay locked.");
-    expect(development).toContain("Exact ratings stay hidden.");
+describe("NBA GM single-screen offseason parity",()=>{
+  it("uses the full Year 2 cap first and keeps the compact seven-player roster",()=>{
+    expect(off).toContain("nba-gm-dev__caps");
+    expect(off).toContain("nba-gm-dev__cap-forecast");
+    expect(off.indexOf("nba-gm-dev__caps")).toBeLessThan(off.indexOf("nba-gm-dev__roster-panel"));
+    expect(off).toContain('run.phase==="offseason"');
+    expect(page).not.toContain("offseasonView");
+    expect(page).not.toContain("CONTINUE TO OFFSEASON MOVES");
+    expect(page).not.toContain("nba-gm-dev__moves-cap");
+    expect(page).not.toContain("<FitReport");
+    expect(page).not.toContain("<NbaGmDevelopmentReport");
   });
-  it("groups SHOP, roster, free agency, and simulation in the Moves screen",()=>{
-    expect(page).toContain("showOffseasonMoves");
-    expect(page).toContain('showOffseasonMoves)&&<section className="football-gm__roster');
-    expect(page).toContain('showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"');
-    expect(page).toContain('const releasePanel=run?.phase==="offseason"');
-    expect(page).toContain("FREE AGENCY · {run.freeAgencyVisits}/3 VISITS");
-    expect(page).toContain("FREE AGENCY · OPTIONAL");
+  it("shows authentic development on each roster player without changing grades or trades",()=>{
+    expect(dev).toContain("export function nbaGmDevelopmentOutcome");
+    expect(page).toContain("change.year2Grade-change.startingGrade");
+    expect(page).toContain("nba-gm-dev__roster-development");
     expect(page).toContain('void act("shop",player.id)');
-    expect(page).toContain('void act("advance")');
-    expect(page).toContain('run.picks.length<7&&!run.shopPlayerId');
-
-
-    expect(page).toContain("YEAR {year+1} CAP");
-    expect(page).toContain('remaining<0?"OVER":"LEFT"');
-    expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
-    expect(page).toContain('setOffseasonView("moves")');
+    expect(page).toContain("const tradeStage=");
+    expect(page).toContain("FREE AGENCY · {run.freeAgencyVisits}/3 VISITS");
+    expect(page).toContain("nbaGmDevCanAdd(");
+    expect(css).toContain("nba-gm-dev__roster-development.is-decline");
   });
-  it("keeps trade wheel separate, public and mobile navigation compact",()=>{
-    expect(page).toContain("{tradeStage}");
-    expect(page).toContain('!isTradeStage&&<nav className="nba-gm-dev__offseason-nav"');
-    expect(page).toContain('setOffseasonView("report")');
-    expect(page).toContain('window.scrollTo({top:0,behavior:"instant"})');
-    expect(page).not.toContain("OWNER ONLY · NOT PUBLIC");
-    expect(css).toContain(".nba-gm-dev .nba-gm-dev__offseason-nav");
-    expect(css).toContain("grid-template-columns:repeat(2,minmax(0,1fr))");
+  it("keeps collapsed voluntary release before the compact advance card",()=>{
+    expect(page).toContain('<details className="nba-gm-dev__release"');
+    expect(page).toContain("ONE VOLUNTARY RELEASE");
+    expect(page).not.toContain("Cut one player to open free agency.");
+    expect(off.indexOf("{releasePanel}")).toBeLessThan(off.indexOf("SIMULATE YEARS 2 & 3"));
+    expect(page).toContain('"Roster fits both future salary caps."');
+    expect(page).toContain('"READY TO ADVANCE"');
+    expect(page).toContain("disabled={busy||capCrisis||heldPlayers.length>0}");
+    expect(css).toContain(".nba-gm-dev__window-status.is-ready");
   });
 });

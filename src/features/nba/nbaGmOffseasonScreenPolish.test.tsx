@@ -38,11 +38,13 @@ const run:NbaGmDevRun={
 };
 
 describe("NBA GM public offseason compact parity",()=>{
-  it("keeps the Team Report focused on development, rotation fit and cap rather than automatic 7/7 retention",()=>{
-    expect(page).toContain('<NbaGmDevelopmentReport run={run} catalog={catalog}/>');
-    expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
+  it("keeps the full cap, and moves development into the interactive roster",()=>{
+    expect(page).not.toContain('<NbaGmDevelopmentReport run={run} catalog={catalog}/>');
+    expect(page).not.toContain("<FitReport");
     expect(page).toContain("nba-gm-dev__caps");
-    expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
+    expect(page).toContain("nba-gm-dev__roster-development");
+    expect(page).toContain("change.year2Grade-change.startingGrade");
+    expect(page).not.toContain("CONTINUE TO OFFSEASON MOVES");
     expect(page).not.toContain("retainedCount/7*100");
     expect(page).not.toContain("nba-gm-dev__continuity-track");
   });
@@ -52,19 +54,18 @@ describe("NBA GM public offseason compact parity",()=>{
     expect(css).toContain(".nba-gm-dev__roster-panel .nba-gm-dev__inline-shop");
     expect(page).toContain('aria-label={"Shop "+player.name}');
   });
-  it("puts advance ahead of optional release, keeping cap crisis recovery accessible",()=>{
-    const section=page.slice(page.indexOf('showOffseasonMoves&&<section className="nba-gm-dev__panel nba-gm-dev__offseason"'));
-    const capRecovery=section.indexOf("{capCrisis&&releasePanel}");
-    const advance=section.indexOf('SIMULATE YEARS 2 & 3');
-    const optionalRelease=section.indexOf("{!capCrisis&&releasePanel}");
-    expect(capRecovery).toBeGreaterThan(0);
-    expect(advance).toBeGreaterThan(capRecovery);
-    expect(optionalRelease).toBeGreaterThan(advance);
+  it("places the collapsed release before advance while preserving cap and confirmation",()=>{
+    const screen=page.slice(page.indexOf('{run&&<>'),page.indexOf('{run.phase==="final"'));
+    const release=screen.indexOf("{releasePanel}");
+    const advance=screen.indexOf("SIMULATE YEARS 2 & 3");
+    expect(release).toBeGreaterThan(0);
+    expect(advance).toBeGreaterThan(release);
     expect(page).toContain('<details className="nba-gm-dev__release"');
-    expect(page).toContain('Math.min(\n            run.caps[1]-spend[1]+nbaGmDevSalary(player,1),');
+    expect(page).toContain('run.caps[1]-spend[1]+nbaGmDevSalary(player,1)');
     expect(page).toContain('run.caps[2]-spend[2]+nbaGmDevSalary(player,2)');
     expect(page).toContain('window.confirm("Release "+player.name+');
     expect(css).toContain('nba-gm-dev__release[open]');
+    expect(page).toContain("Roster fits both future salary caps.");
   });
   it("uses the actual starting center for rim protection, not a blended average",()=>{
     const fit=nbaGmDevFitSignals(picks,fixtures);

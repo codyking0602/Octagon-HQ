@@ -4,7 +4,7 @@ import { NBA_GM_DEV_SLOT_LABELS, type NbaGmDevPlayer, type NbaGmDevRun } from ".
 
 const money = (value: number) => "$" + (value / 1_000_000).toFixed(1) + "M";
 
-function outcomeFor(delta: number) {
+export function nbaGmDevelopmentOutcome(delta: number) {
   const label = footballGmDevelopmentResult(delta);
   return {
     label: label === "HELD STEADY" ? "STEADY" : label,
@@ -32,7 +32,7 @@ export function NbaGmDevelopmentReport({
         const player = pick && byId.get(pick.playerId);
         const report = player && run.development?.[player.id];
         if (!player || !report) return null;
-        const outcome = outcomeFor(report.year2Grade - report.startingGrade);
+        const outcome = nbaGmDevelopmentOutcome(report.year2Grade - report.startingGrade);
         return <div className="football-gm__development-player" key={player.id}>
           <b>{NBA_GM_DEV_SLOT_LABELS[slot]}</b>
           <span className="football-gm__development-name">
