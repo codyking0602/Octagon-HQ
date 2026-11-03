@@ -1399,3 +1399,36 @@
 .nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid {
   padding: 3px 10px 9px;
 }
+
+/* The inherited wheel candidate list is capped at 410px and uses a 3-column
+   button grid. With seven NBA players the grid tracks shrink to ~55px and the
+   grades paint over the next card. NBA player cards must size to their content. */
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid.football-wheel-picker__candidates {
+  max-height: none;
+  overflow: visible;
+  grid-auto-rows: max-content;
+  align-content: start;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > button.nba-gm-dev__scout-card,
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > article.nba-gm-dev__scout-card {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  grid-template-rows: auto auto;
+  align-items: stretch;
+  align-content: start;
+  height: auto;
+  min-height: max-content;
+  overflow: visible;
+  row-gap: 7px;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > .nba-gm-dev__scout-card > .nba-gm-dev__player-head,
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > .nba-gm-dev__scout-card > .nba-gm-dev__quick-skills {
+  grid-column: 1;
+  min-height: 0;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > .nba-gm-dev__scout-card > .nba-gm-dev__player-head {
+  grid-row: 1;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid > .nba-gm-dev__scout-card > .nba-gm-dev__quick-skills {
+  grid-row: 2;
+}

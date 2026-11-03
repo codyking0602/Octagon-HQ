@@ -83,6 +83,16 @@ describe("NBA GM locked NFL-player-card parity", () => {
     expect(nflCss).toContain(".football-gm__candidate-tags .risk-high");
   });
 
+  it("lets all seven NBA cards grow instead of shrinking into the inherited 410px scroll area", () => {
+    expect(css).toContain(".nba-gm-dev__candidate-grid.football-wheel-picker__candidates");
+    expect(css).toContain("max-height: none;");
+    expect(css).toContain("overflow: visible;");
+    expect(css).toContain("grid-auto-rows: max-content;");
+    expect(css).toContain("grid-template-rows: auto auto;");
+    expect(css).toContain("min-height: max-content;");
+    expect(css).toContain("grid-row: 2;");
+  });
+
   it("stacks the six skill grades below the intact name/salary/SELECT row at every mobile width", () => {
     expect(cardCss).toContain("display: flex;");
     expect(cardCss).toContain("flex-direction: column;");
