@@ -109,6 +109,8 @@ export interface PersistedRun {
   tradePartnerTeam: string | null;
   tradeTargetPlayerId: string | null;
   shoppedPlayerIds: string[];
+  /** New franchises use the shared two-championship playoff reward. */
+  playoffScoringVersion?: 2;
   pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
@@ -165,6 +167,7 @@ export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRu
     tradePartnerTeam: null,
     tradeTargetPlayerId: null,
     shoppedPlayerIds: [],
+    playoffScoringVersion: 2,
     pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
@@ -373,7 +376,7 @@ function gmAuditSnapshot(
         : null,
     },
     finalResult: run.phase === "final" && run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
       : null,
   });
 }
@@ -1729,9 +1732,9 @@ export default function FootballGmModePage({
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
   const finalResult = useMemo(
     () => run.phase === "final"
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
       : null,
-    [finalRoster, run.phase, run.seed, run.resolvedSeasons, yearOneRoster],
+    [finalRoster, run.phase, run.seed, run.resolvedSeasons, run.playoffScoringVersion, yearOneRoster],
   );
 
   useEffect(() => {

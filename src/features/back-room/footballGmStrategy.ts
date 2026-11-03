@@ -103,6 +103,17 @@ export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlay
   return Math.round((finishes.reduce((sum, finish) => sum + footballGmSeasonResumeScore(finish), 0) / finishes.length) * 10) / 10;
 }
 
+/** Two championships establish a dynasty even if Year 1 ends early.
+ * Preserve differences in the third season by covering three-quarters
+ * of the distance from the raw three-year average to 100. Three titles
+ * remain the only automatic 100. V2 opt-in only; saved runs stay unchanged.
+ */
+export function footballGmDynastyResumeScore(finishes: readonly FootballGmPlayoffFinish[]) {
+  const base = footballGmThreeYearResumeScore(finishes);
+  if (finishes.length !== 3 || finishes.filter((finish) => finish === "Champion").length !== 2) return base;
+  return Math.round((base + (100 - base) * 0.75) * 10) / 10;
+}
+
 /** A full 17-game season is 60–100, so every simulated win has value. */
 export function footballGmSeasonRecordScore(wins: number) {
   return Math.round((60 + (40 * clamp(wins, 0, 17) / 17)) * 10) / 10;
@@ -1332,6 +1343,7 @@ export function footballGmFinalResultV2(input: {
   yearOneRoster: readonly FootballGmRosterEntry[];
   finalRoster: readonly FootballGmRosterEntry[];
   resolvedSeasons?: readonly FootballGmSeasonResultV2[];
+  playoffScoringVersion?: 2;
 }) : FootballGmFinalResultV2 {
   const seasons = input.resolvedSeasons?.length === 3
     ? input.resolvedSeasons
@@ -1351,7 +1363,10 @@ export function footballGmFinalResultV2(input: {
   const regularSeasonScore = knownRecords
     ? footballGmThreeYearRecordScore(seasons.map((season) => season.wins!))
     : rosterManagementScore;
-  const playoffScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
+  // Existing saved franchises default to V1; only newly started runs opt in.
+  const playoffScore = input.playoffScoringVersion === 2
+    ? footballGmDynastyResumeScore(seasons.map((season) => season.finish))
+    : footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
   // The Oct 13 and Oct 20 weekly championships were already finalized under
   // the original 90% roster / 10% playoff formula. Keep those archives exact.
   const scoreFormula = /^weekly-gm:2026-10-(?:13|20):/.test(input.seed) ? "legacy" : "current";
