@@ -10,7 +10,10 @@ describe("NBA GM player-picker NFL age parity", () => {
   it("shows POSITION · AGE N on the shared candidate card for draft, trade and free agency", () => {
     expect(page).toContain('import { nbaGmPickerAge } from "./nbaGmPickerAge"');
     expect(page).toContain("const age=nbaGmPickerAge(player);");
-    expect(page).toContain('player.positions.join(" / ")} · AGE {age??"—"} ·');
+    expect(page).toContain('player.positions.join(" / ")} · AGE {age??"—"}');
+    // Approved compact cards move salary to the right action, not the age line.
+    expect(page).toContain('className="nba-gm-dev__card-action"');
+    expect(page).toContain("money(nbaGmDevSalary(player,salaryYear))");
     expect(page).toContain("players.map(player=><PlayerCard");
     expect(page).toContain("candidates.map(player=><PlayerCard");
     expect(page).toContain("emergency.map(player=><PlayerCard");
