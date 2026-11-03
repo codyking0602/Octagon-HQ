@@ -438,6 +438,24 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
   return { ...pack, entities, fastMoney };
 }
 
+/** Restore the well-established nickname in already-published NBA Daily packs.
+ * The server's lean runtime intentionally does not load the full NBA alias bank. */
+function hydrateNbaBirdmanAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "nba" || !pack.mainBoards.some(
+    (board) => board.id === "nba-feud-distinctive-looks",
+  )) return pack;
+  const candidateIds = new Set(pack.mainBoards.find(
+    (board) => board.id === "nba-feud-distinctive-looks",
+  )?.candidateIds ?? []);
+  return {
+    ...pack,
+    entities: pack.entities.map((entity) =>
+      candidateIds.has(entity.id) && entity.displayName === "Chris Andersen"
+        ? { ...entity, aliases: [...new Set([...(entity.aliases ?? []), "Birdman", "The Birdman"])] }
+        : entity),
+  };
+}
+
 export type FamilyFeudEntityMetadataLookup = (
   id: string,
   displayName: string,
@@ -467,7 +485,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack));
+  const corrected = hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack)));
   assertFamilyFeudPack(corrected);
   return corrected;
 }
