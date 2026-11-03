@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-03",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "billy-edwards-jr",
+        "name": "Billy Edwards Jr.",
+        "team": "North Carolina",
+        "position": "QB",
+        "summary": "Completed 28 of 34 for 341 yards and four touchdowns in a 38-35 loss to No. 1 Miami on October 31."
+      },
+      {
+        "id": "devon-dampier",
+        "name": "Devon Dampier",
+        "team": "Utah",
+        "position": "QB",
+        "summary": "Completed 22 of 29 for 260 yards and three touchdowns in No. 6 Utah's 49-25 win at Cincinnati on October 31."
+      },
+      {
+        "id": "trent-mosley",
+        "name": "Trent Mosley",
+        "team": "USC",
+        "position": "WR",
+        "summary": "Caught five passes for 101 yards and a touchdown as USC upset No. 2 Ohio State 30-18 on October 31."
+      },
+      {
+        "id": "mark-fletcher-jr",
+        "name": "Mark Fletcher Jr.",
+        "team": "Miami",
+        "position": "RB",
+        "summary": "Scored three touchdowns (two rushing, one receiving) in Miami's 38-35 win at North Carolina on October 31."
+      },
+      {
+        "id": "tommy-carr",
+        "name": "Tommy Carr",
+        "team": "Michigan",
+        "position": "QB",
+        "summary": "Produced a career-high 320 total yards and two rushing touchdowns, including the decisive fourth-quarter score, in Michigan's 28-21 win over Rutgers on October 31."
+      }
+    ],
+    "games": [
+      {
+        "id": "miami-at-notre-dame",
+        "away_team": "Miami",
+        "home_team": "Notre Dame",
+        "kickoff_at": "2026-11-07T18:30:00-06:00",
+        "summary": "No. 1 Miami travels to No. 4 Notre Dame in a prime-time clash after narrowly surviving North Carolina."
+      },
+      {
+        "id": "georgia-at-ole-miss",
+        "away_team": "Georgia",
+        "home_team": "Ole Miss",
+        "kickoff_at": "2026-11-07T18:30:00-06:00",
+        "summary": "No. 2 Georgia meets No. 12 Ole Miss in a ranked SEC matchup after both won convincingly on October 31."
+      },
+      {
+        "id": "byu-at-utah",
+        "away_team": "BYU",
+        "home_team": "Utah",
+        "kickoff_at": "2026-11-07T11:00:00-06:00",
+        "summary": "No. 7 BYU visits No. 3 Utah in the Holy War; Utah is 8-0 after beating Cincinnati."
+      },
+      {
+        "id": "texas-at-missouri",
+        "away_team": "Texas",
+        "home_team": "Missouri",
+        "kickoff_at": "2026-11-07T11:00:00-06:00",
+        "summary": "No. 10 Texas visits No. 19 Missouri in a ranked SEC matchup."
+      },
+      {
+        "id": "michigan-state-at-michigan",
+        "away_team": "Michigan State",
+        "home_team": "Michigan",
+        "kickoff_at": "2026-11-07T18:30:00-06:00",
+        "summary": "Paul Bunyan Trophy rivalry at Michigan Stadium; Michigan won 28-21 against Rutgers while Michigan State comes off a bye."
+      }
+    ]
+  }
+}
