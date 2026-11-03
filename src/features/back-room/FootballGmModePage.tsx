@@ -2485,6 +2485,8 @@ export default function FootballGmModePage({
                   </section>
                 </>
               )}
+            </>
+          )}
         </>
       ) : null}
 
