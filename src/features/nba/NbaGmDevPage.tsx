@@ -75,7 +75,7 @@ function ScoutBadges({player,run,showContract=true}:{player:NbaGmDevPlayer;run?:
       </>)}
   </span>;
 }
-function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
+export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;salaryYear?:0|1|2;
   run?:NbaGmDevRun;
 }){
