@@ -196,30 +196,44 @@ test("Sports Reference season and player IDs remain correct across 2026-27",()=>
 });
 
 test("NBA spotlight season record and conference seed come from official ESPN conference standings",()=>{
-  const snapshot=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
-  const fake={
-    children:[{
-      name:"Western Conference",
-      standings:{entries:[
-        {team:{abbreviation:"MIN",displayName:"Minnesota Timberwolves"},
-          stats:[{name:"wins",value:3},{name:"losses",value:1},{name:"playoffSeed",value:7}]},
-        {team:{abbreviation:"LAL",displayName:"Los Angeles Lakers"},
-          stats:[{name:"wins",value:4},{name:"losses",value:0},{name:"playoffSeed",value:2}]},
-      ]},
-    }],
+  // Keep standings fixtures independent of the active weekly winners.
+  // An unattended rotation must not break CI simply because a new team wins.
+  const snapshot={
+    player:{name:"Sample Star",team:"New York Knicks",teamId:"NYK"},
+    team:{name:"Boston Celtics",teamId:"BOS",record:"2-1"},
   };
-  assert.deepEqual(verifiedConferenceStanding(fake,"MIN"),
-    {seasonRecord:"3-1",conference:"WEST",conferenceSeed:7});
+  const fake={
+    children:[
+      {name:"Eastern Conference",standings:{entries:[
+        {team:{abbreviation:"BOS",displayName:"Boston Celtics"},
+          stats:[{name:"wins",value:3},{name:"losses",value:1},{name:"playoffSeed",value:7}]},
+        {team:{abbreviation:"NYK",displayName:"New York Knicks"},
+          stats:[{name:"wins",value:4},{name:"losses",value:0},{name:"playoffSeed",value:2}]},
+      ]}},
+      {name:"Western Conference",standings:{entries:[
+        {team:{abbreviation:"DAL",displayName:"Dallas Mavericks"},
+          stats:[{name:"wins",value:2},{name:"losses",value:1},{name:"playoffSeed",value:4}]},
+      ]}},
+    ],
+  };
+  assert.deepEqual(verifiedConferenceStanding(fake,"BOS"),
+    {seasonRecord:"3-1",conference:"EAST",conferenceSeed:7});
+  assert.deepEqual(verifiedConferenceStanding(fake,"DAL"),
+    {seasonRecord:"2-1",conference:"WEST",conferenceSeed:4});
   const newData=addVerifiedStandings(snapshot,fake,"2026-10-28T13:00:00Z");
   assert.equal(newData.team.record,snapshot.team.record); // published week is immutable
   assert.equal(newData.team.seasonRecord,"3-1");
   assert.equal(newData.team.conferenceSeed,7);
-  assert.equal(newData.team.conference,"WEST");
-  assert.equal(newData.player.teamId,"LAL");
+  assert.equal(newData.team.conference,"EAST");
+  assert.equal(newData.player.teamId,"NYK");
   assert.equal(newData.team.standingsAsOf,"2026-10-28T13:00:00Z");
+  // Also cover the verified player-team fallback when teamId isn't populated.
+  assert.equal(addVerifiedStandings({...snapshot,player:{name:"Sample Star",team:"New York Knicks"}},
+    fake,"2026-10-28T13:00:00Z").player.teamId,"NYK");
+  assert.throws(()=>verifiedConferenceStanding(fake,"SA"),/No verified ESPN conference standing/);
   assert.throws(()=>verifiedConferenceStanding({
     children:[{name:"Western Conference",standings:{entries:[
-      {team:{abbreviation:"MIN"},stats:[{name:"wins",value:3},{name:"losses",value:1}]},
+      {team:{abbreviation:"DAL"},stats:[{name:"wins",value:3},{name:"losses",value:1}]},
     ]}}],
-  },"MIN"),/Incomplete official/);
+  },"DAL"),/Incomplete official/);
 });

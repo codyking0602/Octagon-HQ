@@ -1,51 +1,51 @@
 {
-  "weekStart": "2026-10-19",
-  "weekEnd": "2026-10-25",
-  "publishedAt": "2026-10-28T11:35:59.873Z",
+  "weekStart": "2026-10-26",
+  "weekEnd": "2026-11-01",
+  "publishedAt": "2026-11-02T22:05:35.943Z",
   "player": {
-    "name": "Luka Doncic",
-    "team": "Los Angeles Lakers",
-    "position": "G",
+    "name": "Victor Wembanyama",
+    "team": "San Antonio Spurs",
+    "teamId": "SA",
+    "position": "F",
     "gamesPlayed": 3,
-    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/3945274.png",
-    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Luka%20Doncic",
-    "highlightUrl": "https://www.youtube.com/watch?v=p-YrUdvrG5E",
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/5104157.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Victor%20Wembanyama",
+    "highlightUrl": "https://www.youtube.com/watch?v=E6RrU7EvfGI",
     "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
     "channelUrl": "https://www.youtube.com/@NBA",
     "stats": [
       {
         "label": "PPG",
-        "value": "34.3"
+        "value": "36.0"
       },
       {
         "label": "APG",
-        "value": "8.0"
+        "value": "3.7"
       },
       {
         "label": "RPG",
-        "value": "7.3"
+        "value": "10.3"
       },
       {
         "label": "FG%",
-        "value": "46.4"
+        "value": "56.3"
       }
-    ],
-    "teamId": "LAL"
+    ]
   },
   "team": {
-    "name": "Minnesota Timberwolves",
-    "teamId": "MIN",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/min.png",
-    "profileUrl": "https://www.basketball-reference.com/teams/MIN/2027.html",
+    "name": "Dallas Mavericks",
+    "teamId": "DAL",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/dal.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/DAL/2027.html",
     "record": "3-0",
-    "ppg": "121.0",
-    "oppPpg": "97.7",
-    "netMargin": "+23.3",
-    "fgPct": "48.0",
-    "threePct": "42.4",
-    "seasonRecord": "3-1",
+    "ppg": "116.3",
+    "oppPpg": "105.3",
+    "netMargin": "+11.0",
+    "fgPct": "48.2",
+    "threePct": "33.9",
+    "seasonRecord": "4-2",
     "conference": "WEST",
-    "conferenceSeed": 6,
-    "standingsAsOf": "2026-10-28T12:27:16.791Z"
+    "conferenceSeed": 7,
+    "standingsAsOf": "2026-11-02T22:05:36.007Z"
   }
 }
