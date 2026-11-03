@@ -367,6 +367,7 @@ export function buildSportsFeudFastMoneyRows(
   const state = record(projection.publicState.fast_money);
   // Reflect the audited +1 correction in the result detail without changing the
   // immutable recorded answer or original saved engine state.
+  const editorialFast = records(record(projection.officialAttempt?.publicResult.editorial_correction_details).feud_fast);
   const correctedNov1NbaBroadcast = projection.sport === "nba"
     && projection.centralDay === "2026-11-01"
     && projection.scheduleVersion === "nba-daily-regular-v3-oct30-public"
@@ -382,14 +383,17 @@ export function buildSportsFeudFastMoneyRows(
     const questionId = String(row.question_id ?? "");
     const matchedAnswer = String(row.submitted_answer ?? "");
     const rawAnswer = rawByQuestion.get(questionId) || matchedAnswer;
+    const review = editorialFast.find((entry) =>
+      entry.question_id === questionId && entry.answer === rawAnswer);
     return {
       questionId,
       prompt: String(row.prompt ?? ""),
       rawAnswer,
       matchedAnswer,
       rank: Number(row.board_rank ?? 0),
-      points: correctedNov1NbaBroadcast && questionId === "nba-feud-nba-tv-broadcast"
-        && Number(row.points ?? 0) === 0 ? 1 : Number(row.points ?? 0),
+      points: review ? Number(review.points ?? 0)
+        : correctedNov1NbaBroadcast && questionId === "nba-feud-nba-tv-broadcast"
+          && Number(row.points ?? 0) === 0 ? 1 : Number(row.points ?? 0),
     };
   });
 }
@@ -574,6 +578,7 @@ export function buildAverageFanLeaderboardQuestions(
   );
   const detailResolved = records(resultDetail.resolved);
   const resolved = detailResolved.length ? detailResolved : records(projection.publicState.resolved);
+  const editorialQuestions = records(record(projection.officialAttempt?.publicResult.editorial_correction_details).average_fan);
 
   return resolved.map((row, index) => {
     const publicQuestion = record(row.question);
@@ -589,7 +594,8 @@ export function buildAverageFanLeaderboardQuestions(
       fanAnswer: String(row.fan_answer ?? ""),
       correctAnswer: String(row.correct_answer ?? reveal.answer ?? ""),
       explanation: String(row.explanation ?? reveal.explanation ?? ""),
-      correct: row.correct === true,
+      correct: row.correct === true || editorialQuestions.some((review) =>
+        review.question_id === id && review.answer === row.player_answer && review.correct === true),
       copied: row.copied === true,
       peekUsed: row.peek_used === true,
       saveConsumed: row.save_consumed === true,
@@ -708,7 +714,8 @@ function SportsFeudLeaderboardResult({
   const state = record(projection.publicState);
   const fast = record(state.fast_money);
   const boards = records(state.main_boards);
-  const mainPoints = Number(state.main_points ?? projection.officialAttempt?.publicResult.main_points ?? 0);
+  const editorialMain = records(record(projection.officialAttempt?.publicResult.editorial_correction_details).feud_main);
+  const mainPoints = Number(projection.officialAttempt?.publicResult.main_points ?? state.main_points ?? 0);
   const fastPoints = Number(projection.officialAttempt?.publicResult.fast_money_points ?? fast.points ?? 0);
   const fastRows = buildSportsFeudFastMoneyRows(projection, resultDetail);
   const timeRemainingMs = Number(
@@ -734,13 +741,45 @@ function SportsFeudLeaderboardResult({
 
       <div className="leaderboard-game-result__boards">
         {boards.map((board, boardIndex) => {
-          const answers = feudAnswerRows(board);
+          const boardReviews = editorialMain.filter((review) => review.board_id === board.id);
           const recordedGuesses = records(board.recorded_guesses);
-          // Old runs cannot reconstruct raw chronological attempts. Keep
-          // independently reviewed answers distinct from the recorded ledger.
+          // Preserve the immutable recorded ledger, but show separately audited
+          // acceptance changes in the completed-game review.
           const reviewedGuesses = records(board.reviewed_guesses);
-          const displayGuesses = [...recordedGuesses, ...reviewedGuesses];
+          const displayGuesses = [...recordedGuesses, ...reviewedGuesses].map((guess) => {
+            const review = boardReviews.find((entry) => entry.answer === guess.submitted_answer);
+            return review ? {
+              ...guess,
+              accepted: review.accepted === true,
+              matched_answer: review.matched ?? null,
+              points: Number(review.points ?? 0),
+              reviewed: review.accepted === true,
+              editorial_invalid: review.accepted === false,
+              editorial_excluded: review.excluded === true,
+            } : guess;
+          });
+          const answers = feudAnswerRows(board).map((answer) => {
+            const originalGuess = recordedGuesses.find((guess) => guess.matched_answer === answer.displayName);
+            const review = boardReviews.find((entry) => entry.answer === originalGuess?.submitted_answer);
+            return review && (review.accepted === false || review.excluded === true)
+              ? { ...answer, found: false } : answer;
+          });
+          for (const review of boardReviews) {
+            if (review.accepted !== true) continue;
+            const name = String(review.matched ?? "");
+            if (name && !answers.some((answer) => answer.displayName === name)) {
+              answers.push({ id: "editorial-" + name, displayName: name,
+                points: Number(review.points ?? 0), found: true, rank: null, acceptedVariant: true });
+            }
+          }
           const foundPoints = answers.filter((answer) => answer.found).reduce((sum, answer) => sum + answer.points, 0);
+          const strikes = Math.max(0, Math.min(3, boardReviews.reduce((total, review) => {
+            const original = recordedGuesses.find((guess) => guess.submitted_answer === review.answer);
+            if (!original || review.excluded === true) return total;
+            if (original.accepted === false && review.accepted === true) return total - 1;
+            if (original.accepted === true && review.accepted === false) return total + 1;
+            return total;
+          }, Number(board.strikes ?? 0))));
           return (
             <section className="leaderboard-feud-board" key={String(board.id ?? boardIndex)}>
               <header>
@@ -750,7 +789,7 @@ function SportsFeudLeaderboardResult({
                 </div>
                 <div>
                   <strong>{foundPoints}/{Number(board.max_points ?? 30)}</strong>
-                  <small>{Number(board.strikes ?? 0)} STRIKES</small>
+                  <small>{strikes} STRIKES</small>
                 </div>
               </header>
               <div className="leaderboard-feud-board__answers">
@@ -784,7 +823,10 @@ function SportsFeudLeaderboardResult({
                               ? <small>Matched: {matched}</small>
                               : null}
                           </span>
-                          <em>{guess.reviewed === true ? "VALID · REVIEWED" : accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
+                          <em>{guess.editorial_excluded === true ? "NOT COUNTED · BOARD FILLED"
+                            : guess.editorial_invalid === true ? "INVALID MATCH · CORRECTED"
+                            : guess.reviewed === true ? "VALID · REVIEWED"
+                            : accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
                         </div>
                       );
                     })}

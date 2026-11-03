@@ -154,6 +154,27 @@ describe("Average Fan selected content long-range board audit", () => {
 });
 
 describe("Average Fan canonical Daily runtime", () => {
+  it("credits Volunteers in the already-published Tennessee sailgating question", () => {
+    const canonical = AVERAGE_FAN_CONTENT_BANKS.cfb.find((row) =>
+      row.id === "average-fan:cfb:tradition:sailgating:short");
+    expect(canonical).toBeTruthy();
+    expect(canonical!.aliases).toContain("Volunteers");
+    const publication = buildAverageFanDailySetup("football", "2026-11-02", "test-shane");
+    const archived = { ...canonical!, aliases: [] };
+    const questions = [...(publication.privateSetupEvidence.questions as AverageFanQuestion[])];
+    questions[0] = archived;
+    const saved = { ...publication,
+      privateSetupEvidence: { ...publication.privateSetupEvidence, questions },
+    };
+    let step = advanceAverageFanDailyRuntime(contextFrom(saved), { fan: "shane" });
+    step = advanceAverageFanDailyRuntime(contextFrom(saved, step), { question_id: archived.id });
+    step = advanceAverageFanDailyRuntime(contextFrom(saved, step), { answer: "Volunteers" });
+    expect(step.publicState.last_resolution).toMatchObject({
+      player_answer: "Volunteers", correct: true, saved: false,
+    });
+  });
+
+
   it("builds two questions per grade without leaking answers", () => {
     const publication = buildAverageFanDailySetup("ufc", "2026-10-01", "test-v1");
     const board = publication.publicSetup.board as Array<Record<string, unknown>>;

@@ -417,7 +417,7 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
     if (question.id !== id) return question;
     const candidateIds = [...question.candidateIds];
     const alsoAcceptedEntityIds = [...(question.alsoAcceptedEntityIds ?? [])];
-    const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
+    const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot","Three"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
     for (const [name, aliases] of additions) {
       const existingIndex = entities.findIndex((entity) =>
         candidateIds.includes(entity.id) && entity.displayName.toLowerCase() === name.toLowerCase());
@@ -436,6 +436,24 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
     return { ...question, candidateIds, alsoAcceptedEntityIds };
   });
   return { ...pack, entities, fastMoney };
+}
+
+/** Restore the well-established nickname in already-published NBA Daily packs.
+ * The server's lean runtime intentionally does not load the full NBA alias bank. */
+function hydrateNbaBirdmanAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "nba" || !pack.mainBoards.some(
+    (board) => board.id === "nba-feud-distinctive-looks",
+  )) return pack;
+  const candidateIds = new Set(pack.mainBoards.find(
+    (board) => board.id === "nba-feud-distinctive-looks",
+  )?.candidateIds ?? []);
+  return {
+    ...pack,
+    entities: pack.entities.map((entity) =>
+      candidateIds.has(entity.id) && entity.displayName === "Chris Andersen"
+        ? { ...entity, aliases: [...new Set([...(entity.aliases ?? []), "Birdman", "The Birdman"])] }
+        : entity),
+  };
 }
 
 export type FamilyFeudEntityMetadataLookup = (
@@ -467,7 +485,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack));
+  const corrected = hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack)));
   assertFamilyFeudPack(corrected);
   return corrected;
 }

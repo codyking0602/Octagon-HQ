@@ -548,6 +548,48 @@ describe("Daily leaderboard game result reconstruction", () => {
     expect(buildSportsFeudFastMoneyRows(original, detail)[0]?.points).toBe(0);
   });
 
+  it("projects the audited November 1 NBA and November 2 CFB answers", () => {
+    const nba = baseProjection({
+      sport: "nba", centralDay: "2026-11-01",
+      scheduleVersion: "nba-daily-regular-v3-oct30-public",
+      gameType: "sports_feud",
+      publicState: { fast_money: { results: [{
+        question_id: "nba-feud-nba-tv-broadcast", submitted_answer: "Three", points: 0,
+      }] } },
+      officialAttempt: {
+        nativeScore: 62, normalizedScore: 62, completedAt: "2026-11-03T01:02:29Z",
+        publicResult: {
+          score: 62, main_points: 31, fast_money_points: 31, editorial_correction_points: -1,
+          editorial_correction_details: { feud_fast: [{
+            question_id: "nba-feud-nba-tv-broadcast", answer: "Three", points: 1,
+          }] },
+        },
+      },
+    });
+    expect(buildSportsFeudFastMoneyRows(nba, { fast_money_results: [{
+      question_id: "nba-feud-nba-tv-broadcast", submitted_text: "Three",
+    }] })[0]?.points).toBe(1);
+    const football = baseProjection({
+      sport: "football", centralDay: "2026-11-02",
+      gameType: "average_fan",
+      publicState: { resolved: [{
+        question: { id: "average-fan:cfb:tradition:sailgating:short", prompt: "Which program?", grade: 5, subject: "Traditions" },
+        player_answer: "Volunteers", correct_answer: "Tennessee", correct: false, saved: false,
+      }] },
+      officialAttempt: {
+        nativeScore: 80, normalizedScore: 80, completedAt: "2026-11-03T00:39:11Z",
+        publicResult: { score: 80, board_score: 80, editorial_correction_points: 5,
+          editorial_correction_details: { average_fan: [{
+            question_id: "average-fan:cfb:tradition:sailgating:short", answer: "Volunteers", correct: true,
+          }] },
+        },
+      },
+    });
+    expect(buildAverageFanLeaderboardQuestions(football, {})[0]).toMatchObject({
+      playerAnswer: "Volunteers", correct: true,
+    });
+  });
+
   it("keeps the player's raw Fast Money text while showing the canonical match", () => {
     const projection = baseProjection({
       sport: "ufc",

@@ -5,6 +5,7 @@ import {
 } from "./familyFeudDailyRuntime";
 import type { FamilyFeudPack } from "../games/familyFeudEngine";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
+import { buildNbaSportsFeudPack } from "../nba/nbaSportsFeudBank";
 
 const entities = [
   "Alpha One",
@@ -238,10 +239,42 @@ describe("Family Feud V2 Daily persistence contract", () => {
     }
   });
 
+  it("accepts Birdman in an archived NBA board without relying on the full NBA module", () => {
+    let selected: FamilyFeudPack | null = null;
+    for (let index = 0; index < 2000; index += 1) {
+      const candidate = buildNbaSportsFeudPack("archived-birdman-" + index);
+      if (candidate.mainBoards[0]?.id === "nba-feud-distinctive-looks") {
+        selected = candidate;
+        break;
+      }
+    }
+    expect(selected).not.toBeNull();
+    const archived = {
+      ...selected!,
+      entities: selected!.entities.map((entity) => entity.displayName === "Chris Andersen"
+        ? { ...entity, aliases: [] }
+        : entity),
+    };
+    const published = buildFamilyFeudDailySetup(archived, "2026-11-01", "nba-daily-regular-v3-oct30-public");
+    const result = advanceFamilyFeudDailyRuntime(context(published), { type: "answer", answer: "Birdman" });
+    expect(result.publicState.last_feedback).toMatchObject({ type: "correct", points: 2 });
+    const engine = result.submissionState.engine_state as {
+      mainBoards: Array<{ attempts: Array<{ submittedText: string; entityId: string; points: number; status: string }> }>;
+    };
+    expect(engine.mainBoards[0]?.attempts[0]).toMatchObject({
+      submittedText: "Birdman", points: 2, status: "accepted",
+    });
+  });
+
   it("credits NBA broadcast Fast Money answers in an already-published immutable pack", () => {
     const persistedPack: FamilyFeudPack = {
       ...pack,
       sport: "nba",
+      // The synthetic fixture has a person called "Charlie Three", whose
+      // surname otherwise conflicts with the basketball call "Three".
+      // The real NBA broadcast board is non-person entities.
+      entities: pack.entities.map((entity) => entity.displayName === "Charlie Three"
+        ? { ...entity, kind: "other" as const } : entity),
       fastMoney: pack.fastMoney.map((question, index) => index === 0
         ? { ...question, id: "nba-feud-nba-tv-broadcast",
             prompt: "Name something you might see or hear during an NBA TV broadcast." }
@@ -250,7 +283,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     const publication = buildFamilyFeudDailySetup(
       persistedPack, "2026-11-01", "nba-daily-regular-v3-oct30-public",
     );
-    for (const answer of ["3 Pointer", "Three point shot", "Slam dunk", "Free throw", "Buzzer-beater", "Referee whistle"]) {
+    for (const answer of ["3 Pointer", "Three", "Three point shot", "Slam dunk", "Free throw", "Buzzer-beater", "Referee whistle"]) {
       const { submission } = strikeOutBothBoards(publication);
       const result = advanceFamilyFeudDailyRuntime(context(publication, submission), {
         type: "answer", answer, question_id: "nba-feud-nba-tv-broadcast",

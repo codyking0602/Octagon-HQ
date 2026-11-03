@@ -216,6 +216,20 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     expect(familyFeudScore(pack, state).hq).toBe(0);
   });
 
+  it("keeps NBA identities distinct and recognizes Birdman and Three", () => {
+    const looks = findSeed("distinctive-looks", "main");
+    expect(matchedEntity(looks, "distinctive-looks", "Birdman")).toBe("Chris Andersen");
+    expect(matchedEntity(looks, "distinctive-looks", "Allen Iverso")).toBe("Allen Iverson");
+
+    const college = findSeed("ncaa-nba-winners", "main");
+    expect(matchedEntity(college, "ncaa-nba-winners", "Jalen Rose")).toBe("unrecognized");
+    expect(matchedEntity(college, "ncaa-nba-winners", "Glen Rice")).toBe("Glen Rice");
+    expect(matchedEntity(college, "ncaa-nba-winners", "Kareem Abdul Jabbar")).toBe("Kareem Abdul-Jabbar");
+
+    const broadcast = findSeed("nba-tv-broadcast", "fast");
+    expect(matchedEntity(broadcast, "nba-tv-broadcast", "Three")).toBe("Three-pointer");
+  });
+
   it("accepts 3 Pointer as an off-board NBA broadcast Fast Money answer", () => {
     const pack = findSeed("nba-tv-broadcast", "fast");
     const question = pack.fastMoney.find((row) => row.id === "nba-feud-nba-tv-broadcast")!;
