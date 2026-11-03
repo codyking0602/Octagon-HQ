@@ -1300,10 +1300,34 @@
   }
 }
 @media (max-width: 355px) {
-  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__player-head { gap: 6px; }
+  /* Preserve readable one-line pills on 320px screens without clipping
+     or moving them to the left of the NFL-style name column. */
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__player-head {
+    grid-template-rows: 44px auto;
+    gap: 6px;
+  }
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__identity {
+    display: contents;
+  }
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__identity > strong {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__identity > small {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    margin-top: 14px;
+  }
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__scout-pills {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    margin-top: 0;
+  }
   .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__scout-pills > span {
-    font-size: 6px;
-    padding: 3px 3px;
+    font-size: 6.5px;
+    padding: 3px 4px;
   }
   .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__quick-skills small {
     font-size: 6.7px;
