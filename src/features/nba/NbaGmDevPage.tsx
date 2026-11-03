@@ -118,9 +118,6 @@ function FitReport({picks,catalog}:{
     </div>
   </section>;
 }
-const NBA_GM_PLAYOFF_FINISHES = [
-  "Champion","Finals","Conference Finals","Conference Semifinals","First Round","Missed Playoffs",
-] as const;
 function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
@@ -129,13 +126,6 @@ function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean
       {season.teamOverall!=null&&season.titleOdds!=null&&
         <span className="nba-gm-dev__headline-odds">{season.teamOverall} OVR · {season.titleOdds.toFixed(1)}% TITLE ODDS</span>}
       <span>{graded?`OFFENSE GRADE ${Math.round(season.offense)} · DEFENSE GRADE ${Math.round(season.defense)}`:`OFFENSE ${season.offense.toFixed(1)} · DEFENSE ${season.defense.toFixed(1)}`}</span>
-      {season.outcomeOdds&&<details className="nba-gm-dev__outcome-odds">
-        <summary>VIEW PLAYOFF OUTCOME ODDS</summary>
-        <div>{NBA_GM_PLAYOFF_FINISHES.map(finish=>
-          <div key={finish}><span>{finish==="Finals"?"Finals Loss":finish}</span>
-          <strong>{((season.outcomeOdds?.[finish]??0)*100).toFixed(1)}%</strong></div>)}</div>
-        <small>Projected outcomes, not guaranteed results. Playoffs are simulated game by game.</small>
-      </details>}
     </article>)}
   </div>;
 }
@@ -146,7 +136,7 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
     <div className="nba-gm-dev__reveal-grid">
       {run.results.filter(season=>season.season>=2).map(season=><article key={season.season}>
         <small className="nba-gm-dev__reveal-year">YEAR {season.season}</small>
-        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
+        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{(run.simulationModelVersion===7||run.simulationModelVersion===8)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
         <b>{season.wins}–{season.losses}</b>
         <em>{nbaGmPlayoffFinishText(season.finish)}</em>
         {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
@@ -189,7 +179,7 @@ export default function NbaGmDevPage(){
     if(run?.phase==="offseason")window.scrollTo({top:0,behavior:"instant"});
   },[run?.phase,run?.shopPlayerId,run?.tradeTeam,tradeTarget]);
   useEffect(()=>{
-    if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
+    if(!repo){setError("NBA GM is temporarily unavailable.");setLoading(false);return;}
     let mounted=true;
     Promise.all([repo.catalog(),repo.action("load")]).then(([players,saved])=>{
       if(!mounted)return;
@@ -315,8 +305,6 @@ export default function NbaGmDevPage(){
       &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
       .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
     :[];
-  const retainedCount=run?.picks.filter(pick=>
-    run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length??0;
   // A release budget is constrained by BOTH remaining seasons, exactly as the
   // server's two-year cap gate. This is a ceiling, not guaranteed FA inventory.
   const releasePanel=run?.phase==="offseason"&&spend&&run.picks.length===7
@@ -449,13 +437,13 @@ export default function NbaGmDevPage(){
       <span>
         <small>NBA FRONT OFFICE</small>
         <strong>THE GM</strong>
-        <em className="nba-gm-dev__private">OWNER ONLY · NOT PUBLIC</em>
+        
       </span>
       <b>3 YEARS</b>
     </header>
     {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
     {notice&&<div className="nba-gm-dev__notice" role="status">{notice}</div>}
-    {loading&&<p className="nba-gm-dev__status">Loading your private franchise…</p>}
+    {loading&&<p className="nba-gm-dev__status">Loading your franchise…</p>}
     {!loading&&!run&&<section className="nba-gm-dev__panel nba-gm-dev__intro">
       <strong>NBA FRONT OFFICE CHALLENGE</strong><h2>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h2>
       <p>Seven team-wheel picks. The game automatically assigns eligible NBA positions, including a backup guard and a backup big. Ratings stay hidden; scouting is letter grades.</p>
@@ -491,12 +479,6 @@ export default function NbaGmDevPage(){
           {[0,1,2].filter(index=>index!==displaySalaryYear).map(index=>
             <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
         </div>
-      </section>}
-      {showOffseasonReport&&<section className="nba-gm-dev__continuity surface-card" aria-label="Roster continuity">
-        <header><span><small>ROSTER CONTINUITY</small><strong>{retainedCount===7?"FULL CORE":retainedCount>=5?"MOSTLY INTACT":"REBUILT CORE"}</strong></span>
-          <b>{Math.round(retainedCount/7*100)}/100</b></header>
-        <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
-        <p>{retainedCount}/7 Year 1 players retained. Year 1 results are locked. No extra continuity bonus.</p>
       </section>}
       {showOffseasonReport&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__report-next"
         onClick={()=>selectOffseasonView("moves")}>CONTINUE TO OFFSEASON MOVES</button>}
@@ -538,7 +520,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
-        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7}/>
+        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>
@@ -620,7 +602,7 @@ export default function NbaGmDevPage(){
         ?<NbaGmSeasonReveal run={run} onReveal={()=>{setShowSeasonReveal(false);window.scrollTo({top:0,behavior:"instant"});}}/>
         :<><NbaGmFinalExperience run={run} catalog={catalog}/>
           <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW GM RUN</button></>)}
-      <footer className="nba-gm-dev__disclaimer">Owner-only playtest · Fictional contracts</footer>
+      <footer className="nba-gm-dev__disclaimer">Three seasons · Signed NBA salary windows</footer>
     </>}
   </main>;
 }
