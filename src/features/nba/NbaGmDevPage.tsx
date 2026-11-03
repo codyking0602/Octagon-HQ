@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
@@ -146,6 +147,8 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
   </section>;
 }
 export default function NbaGmDevPage(){
+  const identity=useIdentity();
+  const signedIn=Boolean(identity.profile?.id);
   const repo=useMemo(()=>createNbaGmDevRepository(),[]);
   const [run,setRun]=useState<NbaGmDevRun|null>(null);
   const [catalog,setCatalog]=useState<NbaGmDevPlayer[]>([]);
@@ -179,8 +182,14 @@ export default function NbaGmDevPage(){
     if(run?.phase==="offseason")window.scrollTo({top:0,behavior:"instant"});
   },[run?.phase,run?.shopPlayerId,run?.tradeTeam,tradeTarget]);
   useEffect(()=>{
+    if(!identity.ready)return;
+    if(!signedIn){
+      setRun(null);setCatalog([]);setError("");setLoading(false);
+      return;
+    }
     if(!repo){setError("NBA GM is temporarily unavailable.");setLoading(false);return;}
     let mounted=true;
+    setLoading(true);
     Promise.all([repo.catalog(),repo.action("load")]).then(([players,saved])=>{
       if(!mounted)return;
       const issues=nbaGmDevCatalogErrors(players);
@@ -189,7 +198,7 @@ export default function NbaGmDevPage(){
     }).catch(failure=>{if(mounted)setError(failure instanceof Error?failure.message:String(failure));})
       .finally(()=>{if(mounted)setLoading(false);});
     return()=>{mounted=false;};
-  },[repo]);
+  },[repo,identity.ready,signedIn,identity.profile?.id]);
 
   async function act(action:NbaGmDevOperation,playerId?:string,extraTradeChip?:string){
     if(!repo||busy)return;
@@ -444,7 +453,13 @@ export default function NbaGmDevPage(){
     {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
     {notice&&<div className="nba-gm-dev__notice" role="status">{notice}</div>}
     {loading&&<p className="nba-gm-dev__status">Loading your franchise…</p>}
-    {!loading&&!run&&<section className="nba-gm-dev__panel nba-gm-dev__intro">
+    {!loading&&!signedIn&&<section className="nba-gm-dev__panel nba-gm-dev__intro" aria-label="Sign in to NBA GM">
+      <strong>NBA FRONT OFFICE CHALLENGE</strong>
+      <h2>BUILD YOUR FRANCHISE.</h2>
+      <p>Seven players. Three seasons. One offseason. Sign in to save your draft and compete.</p>
+      <button type="button" className="nba-gm-dev__primary" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+    </section>}
+    {!loading&&signedIn&&!run&&<section className="nba-gm-dev__panel nba-gm-dev__intro">
       <strong>NBA FRONT OFFICE CHALLENGE</strong><h2>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h2>
       <p>Seven team-wheel picks. The game automatically assigns eligible NBA positions, including a backup guard and a backup big. Ratings stay hidden; scouting is letter grades.</p>
       <div className="nba-gm-dev__summary"><span>1YR / 3YR DEALS</span><span>THREE SEASONS</span><span>ONE OFFSEASON</span></div>
