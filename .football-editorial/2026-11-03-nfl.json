@@ -80,5 +80,71 @@
   "selection": {
     "player_id": "joe-burrow",
     "game_id": "packers-at-patriots"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Joe Burrow",
+      "team": "Cincinnati Bengals",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "462"
+        },
+        {
+          "label": "PASS TD",
+          "value": "5"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "38/48"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "1"
+        }
+      ],
+      "result": "W 43–36 (OT) vs Tennessee",
+      "measurements": "6 ft 4 in · 215 lbs",
+      "team_color": "#FB4F14",
+      "highlight_url": "https://youtu.be/sxJODPlYFmo?is=kOVidLVm2ZuX4K19",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/3915511.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-03/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Green Bay Packers",
+      "home_team": "New England Patriots",
+      "kickoff_at": "2026-11-08T15:25:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.nfl.com/games/packers-at-patriots-2026-reg-9",
+        "https://www.packers.com/news/game-recap-5-takeaways-from-packers-victory-over-panthers-week-8-2026",
+        "https://www.patriots.com/news/after-further-review-drake-maye-film-breakdown-defense-review-quick-hit-film-notes-from-win-over-dolphins",
+        "https://www.bengals.com/news/bengals-titans-recap-postgame-notes-quotes-stats-week-8-2026",
+        "https://www.packers.com/schedule/2026/"
+      ],
+      "breakdown": {
+        "setup": [
+          "Green Bay (5–3) travels to New England (5–3) with both teams fresh off wins. Jordan Love threw three touchdowns in the Packers' 27–19 win over Carolina, while Drake Maye powered a second-half Patriots comeback at Miami. The central question is which quarterback can sustain drives against an aggressive opposing front without giving away the ball."
+        ],
+        "things": [
+          {
+            "title": "Love's protection and downfield targets",
+            "body": "Love threw for 288 yards and three scores against Carolina without taking a sack, and Christian Watson had 113 receiving yards. New England must compress passing windows and disrupt timing rather than let Green Bay's receivers run free."
+          },
+          {
+            "title": "Can Maye handle Green Bay's pressure?",
+            "body": "The Packers sacked Bryce Young six times last week. Maye completed 16 of 20 passes for 199 yards in the Patriots' win at Miami, with his best work coming after halftime. Protection and quick answers to pressure will shape New England's attack."
+          },
+          {
+            "title": "Who creates reliable early-down gains?",
+            "body": "Green Bay managed only 48 rushing yards on 25 carries against Carolina, leaving Love to carry the offense. New England got 82 rushing yards from Rhamondre Stevenson against Miami. The team that stays ahead of the chains can protect its quarterback from obvious passing downs."
+          }
+        ],
+        "bottom_line": "Both quarterbacks have enough playmaking ability to swing the game, but their protection and the ground-game support around them differ. Green Bay's pass rush, New England's response under pressure, and limiting turnovers are the key levers at Gillette Stadium."
+      }
+    }
   }
 }
