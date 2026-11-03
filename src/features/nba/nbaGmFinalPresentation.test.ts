@@ -4,21 +4,23 @@ const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
 const final=readFileSync("src/features/nba/NbaGmFinalExperience.tsx","utf8");
 const css=readFileSync("src/styles/nba-gm-dev.css","utf8");
 describe("NBA GM Priority 4 — final presentation focused follow-up",()=>{
- it("keeps rotation fit actionable in offseason only, not after the Year 1 CTA or final recap",()=>{
-  expect(page).not.toContain('run.phase==="year1"&&<FitReport');
-  expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
-  expect(page).not.toContain('run.phase==="final")&&<FitReport');
+ it("keeps development visible in the offseason roster rather than another report",()=>{
+  expect(page).not.toContain('<FitReport');
+  expect(page).toContain('run.phase==="offseason"&&run.development?.[player.id]');
+  expect(page).toContain('nba-gm-dev__roster-development');
  });
- it("keeps completed franchise recap ahead of caps and roster, and orders offseason controls like Football",()=>{
-  expect(page).toContain('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section className={`football-gm__cap');
-  expect(page).toContain('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonMoves)&&<section className="football-gm__roster');
-  expect(page.indexOf('<NbaGmDevelopmentReport run={run} catalog={catalog}/>')).toBeLessThan(page.indexOf('((run.phase==="draft"||run.phase==="year1")&&!isTradeStage||showOffseasonReport)&&<section className={`football-gm__cap'));
-  expect(page).not.toContain('showOffseasonReport&&<section className="nba-gm-dev__continuity');
-  expect(page).toContain('FREE AGENCY · OPTIONAL');
+ it("leads the offseason with the full cap and roster, then optional release and advance",()=>{
+  const offseason=page.slice(page.indexOf("{run&&<>"),page.indexOf('{run.phase==="final"'));
+  expect(page).toContain('(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className={`football-gm__cap');
+  expect(page).toContain('(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className="football-gm__roster');
+  expect(offseason.indexOf("nba-gm-dev__caps")).toBeLessThan(offseason.indexOf("nba-gm-dev__roster-panel"));
+  expect(offseason.indexOf("{releasePanel}")).toBeLessThan(offseason.indexOf("SIMULATE YEARS 2 & 3"));
+  expect(page).not.toContain('<NbaGmDevelopmentReport');
+  expect(page).not.toContain("showOffseasonReport");
+  expect(page).toContain("ONE VOLUNTARY RELEASE");
   expect(page).toContain('window.confirm("Release "+player.name');
   expect(page).not.toContain('>CUT</button>');
-  expect(page).not.toContain('<Results seasons={run.results}/>\n        {capCrisis');
-  expect(css).toContain('.nba-gm-dev__release-row');
+  expect(css).toContain(".nba-gm-dev__release-row");
  });
  it("presents the three-season result before optional highlights and transactions",()=>{
   expect(final.indexOf('aria-label="Three-year NBA GM final result"')).toBeGreaterThan(0);
