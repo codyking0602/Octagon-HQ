@@ -157,12 +157,16 @@ export function FootballGmFinalExperience({
     yearOneRoster: run.roster,
     finalRoster: run.finalRoster.length ? run.finalRoster : run.roster,
     resolvedSeasons: run.resolvedSeasons,
+    playoffScoringVersion: run.playoffScoringVersion,
+    ratingScaleVersion: run.ratingScaleVersion,
   });
   const opponentResult = opponentRun ? footballGmFinalResultV2({
     seed: opponentRun.seed,
     yearOneRoster: opponentRun.roster,
     finalRoster: opponentRun.finalRoster.length ? opponentRun.finalRoster : opponentRun.roster,
     resolvedSeasons: opponentRun.resolvedSeasons,
+    playoffScoringVersion: opponentRun.playoffScoringVersion,
+    ratingScaleVersion: opponentRun.ratingScaleVersion,
   }) : null;
   const selectedRun = selected === "opponent" && opponentRun ? opponentRun : run;
   const selectedName = selected === "opponent" && opponentRun ? opponentName ?? "Opponent" : name;
@@ -175,6 +179,8 @@ export function FootballGmFinalExperience({
     yearOneRoster: selectedRun.roster,
     finalRoster: end,
     resolvedSeasons: selectedRun.resolvedSeasons,
+    playoffScoringVersion: selectedRun.playoffScoringVersion,
+    ratingScaleVersion: selectedRun.ratingScaleVersion,
   });
   const rows: RosterRow[] = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
     const entry = slotEntry(end, slot);
