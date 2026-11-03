@@ -94,6 +94,42 @@ function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
     </button>}
   </article>;
 }
+function TradeOfferPlayer({id,run,byId}:{id:string;run:NbaGmDevRun;byId:Map<string,NbaGmDevPlayer>}) {
+  const player=byId.get(id);
+  if(!player)return <div className="nba-gm-dev__offer-unknown">Unavailable player · {id}</div>;
+  const development=run.development?.[player.id];
+  const outcome=development?nbaGmDevelopmentOutcome(development.year2Grade-development.startingGrade):null;
+  return <details className="nba-gm-dev__offer-player" style={{borderLeftColor:nbaTeamColor(player.teamCode)}}>
+    <summary>
+      <span className="nba-gm-dev__offer-identity">
+        <PlayerPortrait player={player}/>
+        <span className="nba-gm-dev__offer-copy">
+          <small>{player.teamCode} · {player.positions.join(" / ")} · AGE {nbaGmPickerAge(player)??"—"}</small>
+          <strong>{player.name}</strong>
+          <ScoutBadges player={player} run={run}/>
+          {outcome&&<small className={"nba-gm-dev__roster-development is-"+outcome.tone}>
+            {outcome.label==="STEADY"?"Held steady":outcome.label.toLowerCase()} in Year 1
+          </small>}
+        </span>
+      </span>
+      <span className="nba-gm-dev__offer-price">
+        <b>{money(nbaGmDevSalary(player,1))}</b>
+        <small>Y2/Y3 · {player.gameContract}</small>
+        <span aria-hidden="true">⌄</span>
+      </span>
+    </summary>
+    <div className="nba-gm-dev__offer-scout">
+      <small>YEAR 2 SCOUTING · SIX SKILLS</small>
+      <div className="nba-gm-dev__skills" aria-label={"Scouting grades for "+player.name}>
+        {labels.map(key=><div key={key}>
+          <small>{NBA_GM_DEV_SKILL_LABELS[key]}</small>
+          <strong>{tradeYearTwoSkillLetter(player,run,key)}</strong>
+        </div>)}
+      </div>
+    </div>
+  </details>;
+}
+
 function tradeYearTwoSkillLetter(player:NbaGmDevPlayer,run:NbaGmDevRun,key:keyof typeof NBA_GM_DEV_SKILL_LABELS){
   const {currentGrade:baseGrade}=player;
   const adjustedGrade=run.development?.[player.id]?.year2Grade;
@@ -397,8 +433,16 @@ export default function NbaGmDevPage(){
                 <p className="nba-gm-dev__hint">{tradeOffers.length} accepted asking {tradeOffers.length===1?"price":"prices"}. All are legal; none is automatically the best choice.</p>
                 {tradeOffers.map((offer,index)=><article key={index} className="nba-gm-dev__asking-price">
                   <header><small>ASKING PRICE {index+1}</small><strong>{offer.shape}</strong></header>
-                  <div><small>YOU SEND</small>{offer.outgoingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
-                  <div><small>YOU GET</small>{offer.incomingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
+                  <div className="nba-gm-dev__trade-columns">
+                    <div className="nba-gm-dev__trade-column">
+                      <small>YOU SEND</small>
+                      {offer.outgoingPlayerIds.map(id=><TradeOfferPlayer key={id} id={id} byId={byId} run={run}/>)}
+                    </div>
+                    <div className="nba-gm-dev__trade-column">
+                      <small>YOU GET</small>
+                      {offer.incomingPlayerIds.map(id=><TradeOfferPlayer key={id} id={id} byId={byId} run={run}/>)}
+                    </div>
+                  </div>
                   {offer.requiresFreeAgency?<p>Leaves an open slot for your three-visit free-agent market.</p>:null}
                   {offer.requiresRosterMove?<p>One acquired asset will be held outside your seven-player rotation until you resolve it.</p>:null}
                   {((offer.capOverYear2??0)>0||(offer.capOverYear3??0)>0)&&<p className="nba-gm-dev__cap-crisis" role="status">
@@ -493,7 +537,11 @@ export default function NbaGmDevPage(){
                   </small>
                   {run.phase==="offseason"&&heldPlayers.length===0&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                     <button className="nba-gm-dev__secondary nba-gm-dev__inline-shop" type="button"
-                      aria-label={"Shop "+player.name} disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
+                      aria-label={(run.shoppedPlayerIds?.includes(player.id)?"Already shopped ":"Shop ")+player.name}
+                      disabled={busy||Boolean(run.shoppedPlayerIds?.includes(player.id))}
+                      onClick={()=>void act("shop",player.id)}>
+                      {run.shoppedPlayerIds?.includes(player.id)?"SHOPPED":"SHOP"}
+                    </button>}
                 </div>
               </>:<span className="football-gm__open">OPEN</span>}
             </article>;
@@ -533,8 +581,11 @@ export default function NbaGmDevPage(){
                   {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
               </select>
             </label>
-            <button type="button" className="nba-gm-dev__secondary" disabled={busy}
-              onClick={()=>void act("shop",id)}>SHOP HELD ASSET</button>
+            <button type="button" className="nba-gm-dev__secondary"
+              disabled={busy||Boolean(run.shoppedPlayerIds?.includes(id))}
+              onClick={()=>void act("shop",id)}>
+              {run.shoppedPlayerIds?.includes(id)?"SHOPPED":"SHOP HELD ASSET"}
+            </button>
             <button type="button" className="nba-gm-dev__secondary" disabled={busy||!swapOut}
               onClick={()=>void act("promote-displaced",id,swapOut)}>PUT IN LINEUP</button>
             <button type="button" className="nba-gm-dev__secondary" disabled={busy}
