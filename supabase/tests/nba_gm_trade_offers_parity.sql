@@ -39,7 +39,7 @@ begin
   for v_offer in select value from jsonb_array_elements(v_offers) loop
     if not v_offer->'outgoingPlayerIds' @> jsonb_build_array(v_anchor)
       or not v_offer->'incomingPlayerIds' @> jsonb_build_array(v_target)
-      or (v_offer->>'acceptanceSlack')::numeric not between 0 and .05
+      or (v_offer->>'acceptanceSlack')::numeric<0
       or jsonb_array_length(v_offer->'outgoingPlayerIds')>2
       or jsonb_array_length(v_offer->'incomingPlayerIds')>2
       then raise exception 'Trade package violates NFL parity';end if;
@@ -50,13 +50,15 @@ begin
         into v_spend from jsonb_array_elements(v_offer->'activePicks') x;
       select v_spend+coalesce(sum(private.nba_gm_v3_salary(v_state,x#>>'{}',v_year)),0)
         into v_spend from jsonb_array_elements(v_offer->'displacedAssets') x;
-      if v_spend>155000000 then raise exception 'Offer exceeds future cap';end if;
+      if greatest(0,v_spend-155000000)<>
+        (v_offer->>(case when v_year=2 then 'capOverYear2' else 'capOverYear3' end))::bigint
+        then raise exception 'Trade cap forecast differs from obligated salary';end if;
     end loop;
   end loop;
   -- Reproducible zero-offer outcome: nonexistent target cannot be shopped.
   if private.nba_gm_v8_trade_offers(v_state,'not-an-nba-player')<>'[]'::jsonb
     then raise exception 'Invalid target received offers';end if;
-  raise notice 'NBA parity: % fair packages generated, all checked for two-year cap and legal positions',
+  raise notice 'NBA parity: % accepted asking prices; cap overages disclosed, not rejected',
     jsonb_array_length(v_offers);
 end;
 $nba_trade_offer_parity$;

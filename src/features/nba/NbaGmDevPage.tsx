@@ -8,7 +8,7 @@ import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
 import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
-  nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
+  nbaGmDevAssignRoster, nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook, nbaGmRepriceLabel } from "./nbaGmScouting";
@@ -420,7 +420,7 @@ export default function NbaGmDevPage(){
               {tradeOfferError?<p className="nba-gm-dev__trade-warning" role="alert">{tradeOfferError}</p>:null}
               {!offersBusy&&!tradeOfferError&&tradeOffers.length===0?<div className="nba-gm-dev__no-offer">
                 <strong>NO LEGAL DEAL AVAILABLE</strong>
-                <p>There is no fair package for this target within the Year 2 and Year 3 cap and legal rotation. You can end these talks without making a trade.</p>
+                <p>No mutually acceptable value-and-position package exists for this target. As in NFL GM, a temporary salary-cap crisis alone does not reject a trade. End talks to choose a different trade partner.</p>
               </div>:null}
               {tradeOffers.length>0&&<>
                 <p className="nba-gm-dev__hint">{tradeOffers.length} accepted asking {tradeOffers.length===1?"price":"prices"}. All are legal; none is automatically the best choice.</p>
@@ -430,6 +430,12 @@ export default function NbaGmDevPage(){
                   <div><small>YOU GET</small>{offer.incomingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
                   {offer.requiresFreeAgency?<p>Leaves an open slot for your three-visit free-agent market.</p>:null}
                   {offer.requiresRosterMove?<p>One acquired asset will be held outside your seven-player rotation until you resolve it.</p>:null}
+                  {((offer.capOverYear2??0)>0||(offer.capOverYear3??0)>0)&&<p className="nba-gm-dev__cap-crisis" role="status">
+                    CAP CRISIS IF ACCEPTED · {[
+                      (offer.capOverYear2??0)>0?"Year 2 "+money(offer.capOverYear2! )+" over":null,
+                      (offer.capOverYear3??0)>0?"Year 3 "+money(offer.capOverYear3! )+" over":null,
+                    ].filter(Boolean).join(" · ")}. You must clear the excess before simulating.
+                  </p>}
                   <button type="button" className="nba-gm-dev__primary" disabled={busy}
                     onClick={()=>void act("trade",tradeTarget,"offer:"+(index+1))}>ACCEPT ASKING PRICE {index+1}</button>
                 </article>)}
@@ -564,8 +570,12 @@ export default function NbaGmDevPage(){
                 <option value="">Choose active player</option>
                 {run.picks.filter(pick=>{
                   const player=byId.get(id);
-                  return player&&nbaGmDevCanAdd(run.picks.filter(row=>row.playerId!==pick.playerId),
-                    player,catalog,run.caps,"offseason");
+                  // Swapping a held asset does not change total salary. NFL GM
+                  // permits the swap even during a temporary cap crisis.
+                  return player&&nbaGmDevAssignRoster([
+                    ...run.picks.filter(row=>row.playerId!==pick.playerId).map(row=>row.playerId),
+                    player.id,
+                  ],catalog)!==null;
                 }).map(pick=><option key={pick.playerId} value={pick.playerId}>
                   {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
               </select>
