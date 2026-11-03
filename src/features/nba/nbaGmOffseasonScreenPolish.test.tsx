@@ -37,13 +37,14 @@ const run:NbaGmDevRun={
   }])),
 };
 
-describe("NBA GM private offseason compact parity",()=>{
-  it("shows a full-core progress meter without mislabeling retention as gameplay odds",()=>{
-    expect(page).toContain("retainedCount/7*100");
-    expect(page).toContain("nba-gm-dev__continuity-track");
-    expect(page).toContain("No extra continuity bonus.");
-    expect(page).toContain("Year 1 results are locked.");
-    expect(css).toContain(".nba-gm-dev__continuity-track > em");
+describe("NBA GM public offseason compact parity",()=>{
+  it("keeps the Team Report focused on development, rotation fit and cap rather than automatic 7/7 retention",()=>{
+    expect(page).toContain('<NbaGmDevelopmentReport run={run} catalog={catalog}/>');
+    expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
+    expect(page).toContain("nba-gm-dev__caps");
+    expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
+    expect(page).not.toContain("retainedCount/7*100");
+    expect(page).not.toContain("nba-gm-dev__continuity-track");
   });
   it("keeps SHOP in the right-hand salary stack, not a second roster grid row",()=>{
     expect(page).toContain("nba-gm-dev__inline-shop");
@@ -79,6 +80,7 @@ describe("NBA GM private offseason compact parity",()=>{
     expect(report).toContain("Three-year deals stay locked");
     expect(report).toContain("3YR LOCKED");
     expect(report).toContain("1YR REPRICE");
-    expect(page).toContain('OWNER ONLY · NOT PUBLIC');
+    expect(page).not.toContain('OWNER ONLY · NOT PUBLIC');
+    expect(page).toContain("SIGN IN TO PLAY");
   });
 });
