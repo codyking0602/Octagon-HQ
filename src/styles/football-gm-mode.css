@@ -4503,138 +4503,6 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
 }
 
 
-/* Football GM: separate the read-only offseason team report from roster moves. */
-.football-gm-page .football-gm__offseason-nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  padding: 5px;
-  min-width: 0;
-  border: 1px solid rgba(117, 191, 244, .22);
-  border-radius: 12px;
-  background: #111b24;
-}
-.football-gm-page .football-gm__offseason-nav button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-width: 0;
-  min-height: 42px;
-  padding: 10px 5px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: #afbfce;
-  font: inherit;
-  font-size: clamp(10px, 2.7vw, 12px);
-  font-weight: 900;
-  letter-spacing: .03em;
-  cursor: pointer;
-}
-.football-gm-page .football-gm__offseason-nav button small {
-  color: #8094a6;
-  font-size: 9px;
-}
-.football-gm-page .football-gm__offseason-nav button.is-active {
-  color: #07131d;
-  border-color: var(--gm-blue);
-  background: var(--gm-blue);
-}
-.football-gm-page .football-gm__offseason-nav button.is-active small { color: #173c58; }
-.football-gm-page .football-gm__offseason-nav button:focus-visible {
-  outline: 2px solid #b5e0fa;
-  outline-offset: 2px;
-}
-.football-gm-page .football-gm__fit-report {
-  display: grid;
-  gap: 11px;
-  padding: 15px;
-  min-width: 0;
-}
-.football-gm-page .football-gm__fit-report > header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.football-gm-page .football-gm__fit-report > header span { display: grid; gap: 3px; min-width: 0; }
-.football-gm-page .football-gm__fit-report > header small {
-  color: #8098ac;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .08em;
-}
-.football-gm-page .football-gm__fit-report > header strong { color: white; font-size: 15px; }
-.football-gm-page .football-gm__fit-report > header b {
-  color: #99cbee;
-  font-size: 10px;
-  white-space: nowrap;
-}
-.football-gm-page .football-gm__fit-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-  min-width: 0;
-}
-.football-gm-page .football-gm__fit-grid > div {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-  padding: 10px;
-  background: #111b24;
-  border: 1px solid rgba(117, 191, 244, .15);
-  border-radius: 9px;
-}
-.football-gm-page .football-gm__fit-grid > div.is-open { border-style: dashed; }
-.football-gm-page .football-gm__fit-grid b {
-  color: #8fc8f2;
-  font-size: 10px;
-  font-weight: 900;
-}
-.football-gm-page .football-gm__fit-grid span {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
-.football-gm-page .football-gm__fit-grid small { color: #8da4b7; font-size: 10px; }
-.football-gm-page .football-gm__fit-note { color: #8198ab; font-size: 10px; }
-.football-gm-page .football-gm__report-next {
-  width: 100%;
-  min-height: 44px;
-}
-.football-gm-page .football-gm__moves-cap {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  min-width: 0;
-}
-.football-gm-page .football-gm__moves-cap span {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  min-width: 0;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(117, 191, 244, .2);
-  background: #111b24;
-}
-.football-gm-page .football-gm__moves-cap small {
-  color: #98adbf;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .06em;
-}
-.football-gm-page .football-gm__moves-cap strong {
-  color: #a0d7ff;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.football-gm-page .football-gm__moves-cap .is-over strong { color: #ffb18f; }
 .football-gm-page .football-gm__trade-context {
   padding: 8px 2px;
   color: #a0d7ff;
@@ -4642,11 +4510,28 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   font-weight: 900;
   letter-spacing: .12em;
 }
-@media (max-width: 380px) {
-  .football-gm-page .football-gm__moves-cap span { padding: 8px; }
-  .football-gm-page .football-gm__moves-cap strong { font-size: 11px; }
-  .football-gm-page .football-gm__fit-grid > div { padding: 8px; }
+/* Single-screen offseason: optional release stays collapsed until requested. */
+.football-gm-page .football-gm__release-disclosure { padding: 14px 16px; }
+.football-gm-page .football-gm__release-disclosure > summary {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; cursor: pointer; list-style: none;
 }
+.football-gm-page .football-gm__release-disclosure > summary::-webkit-details-marker { display: none; }
+.football-gm-page .football-gm__release-disclosure > summary > span { display: grid; gap: 4px; min-width: 0; }
+.football-gm-page .football-gm__release-disclosure > summary strong {
+  color: #fff; font-size: 14px; font-weight: 900; letter-spacing: .025em;
+}
+.football-gm-page .football-gm__release-disclosure > summary small {
+  color: #92aabc; font-size: 11px; line-height: 1.4;
+}
+.football-gm-page .football-gm__release-disclosure > summary::after {
+  content: "+"; color: #9fd3f7; font-size: 24px; font-weight: 400;
+}
+.football-gm-page .football-gm__release-disclosure[open] > summary::after { content: "−"; }
+.football-gm-page .football-gm__release-disclosure > summary:focus-visible {
+  outline: 2px solid #b5e0fa; outline-offset: 5px; border-radius: 4px;
+}
+.football-gm-page .football-gm__release-details { display: grid; gap: 12px; margin-top: 14px; }
 
 /* Shared GM endgame: compact season reveal without repeating the team report. */
 .football-gm-page .football-gm__years23 { display:grid;gap:12px;padding:16px; }
