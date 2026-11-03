@@ -1333,3 +1333,69 @@
     font-size: 6.7px;
   }
 }
+
+/* NBA candidate regression: the shared wheel defaults its direct button children
+   to a three-column grid. Keep the NFL identity/action row unchanged, but make
+   the six NBA grades a real second row INSIDE each card on narrow screens. */
+.nba-gm-dev .nba-gm-dev__scout-card.nba-gm-dev__player {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  row-gap: 7px;
+  min-height: 0;
+}
+.nba-gm-dev .nba-gm-dev__scout-card > .nba-gm-dev__player-head,
+.nba-gm-dev .nba-gm-dev__scout-card > .nba-gm-dev__quick-skills {
+  position: static;
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+.nba-gm-dev .nba-gm-dev__scout-card > .nba-gm-dev__quick-skills {
+  display: grid;
+  grid-template-columns: repeat(6,minmax(0,1fr));
+  padding-top: 7px;
+  margin: 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+
+/* After the wheel resolves, prioritize readable player choices over empty
+   wheel space; keep full-size geometry throughout the actual spin. */
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel {
+  min-height: 254px;
+  padding: 10px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__disc {
+  width: 224px;
+  height: 224px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__label {
+  --radius: 95px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__rings {
+  inset: 36px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__pointer {
+  top: 6px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__center.has-team {
+  width: 82px;
+  height: 82px;
+}
+.nba-gm-dev .nba-gm-dev__draft.is-team-picked .football-wheel__center.has-team .football-wheel-team-logo {
+  width: 48px;
+  height: 48px;
+}
+
+/* Close the unused vertical band between team identity, filters and cards. */
+.nba-gm-dev .football-gm__picker > header {
+  margin-bottom: 0;
+  padding: 10px 12px 2px;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__position-tabs {
+  padding: 4px 12px 2px;
+}
+.nba-gm-dev .football-gm__picker .nba-gm-dev__candidate-grid {
+  padding: 3px 10px 9px;
+}
