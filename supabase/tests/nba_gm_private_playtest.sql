@@ -192,7 +192,7 @@ begin
   if jsonb_array_length(public.nba_gm_dev_catalog())<>330
      then raise exception 'NBA GM public member board unavailable'; end if;
   if public.nba_gm_dev_action('load') is not null
-     then raise exception 'Public member could read someone else\'s saved franchise'; end if;
+     then raise exception 'Public member could read another members saved franchise'; end if;
   v_state:=public.nba_gm_dev_action('start');
   if v_state->>'simulationModelVersion'<>'8'
      then raise exception 'NBA GM public members must start on calibrated V8'; end if;
