@@ -119,7 +119,15 @@ export function OfficialAverageFanDailyView({
   const sport = sportFromProjection(projection);
   const fan = typeof state.fan === "string" ? state.fan as AverageFanFan : null;
   const phase = String(state.phase ?? "fan-select");
-  const resolved = useMemo(() => resolvedQuestions(state.resolved, sport), [sport, state.resolved]);
+  const editorialDetails = projection.officialAttempt?.publicResult.editorial_correction_details;
+  const resolved = useMemo(() => {
+    const reviews = records(record(editorialDetails).average_fan);
+    return resolvedQuestions(state.resolved, sport).map((row) => {
+      const correction = reviews.find((review) =>
+        review.question_id === row.question.id && review.answer === row.playerAnswer);
+      return correction ? { ...row, correct: correction.correct === true } : row;
+    });
+  }, [sport, state.resolved, editorialDetails]);
   const board = useMemo(
     () => records(projection.publicSetup.board)
       .map((row) => question(row, sport))
@@ -130,13 +138,13 @@ export function OfficialAverageFanDailyView({
   const finalQuestion = question(state.final_question, sport);
   const lastResolution = record(state.last_resolution);
   const completed = resolved.length;
-  const boardScore = Number(state.board_score ?? projection.officialAttempt?.publicResult.board_score ?? 90);
+  const boardScore = Number(projection.officialAttempt?.publicResult.board_score ?? state.board_score ?? 90);
   const finalOutcome = typeof state.final_outcome === "string"
     ? state.final_outcome as "walk-away" | "correct" | "wrong"
     : null;
   const finalScore = Number(
-    state.final_score
-    ?? projection.officialAttempt?.normalizedScore
+    projection.officialAttempt?.normalizedScore
+    ?? state.final_score
     ?? boardScore,
   );
   const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
