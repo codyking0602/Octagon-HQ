@@ -32,7 +32,7 @@ describe("NFL and NBA GM endgame parity", () => {
     expect(nba).toContain("nbaGmPlayoffFinishText(season.finish)");
   });
   it("retains legacy SIM display while treating V7 as current", () => {
-    expect(nba).toContain('run.simulationModelVersion===7?"OVR"');
+    expect(nba).toContain('(run.simulationModelVersion===7||run.simulationModelVersion===8)?"OVR"');
     expect(nbaFinal).toContain("Legacy SIM grade; new franchises use the updated team OVR model.");
     expect(nbaFinal).toContain("3-YR ROSTER GRADE");
     expect(nflFinal).toContain("3-YR ROSTER GRADE");
