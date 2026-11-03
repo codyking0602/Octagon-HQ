@@ -1017,7 +1017,6 @@ export function FreeAgencyReleasePanel({
         <span><small>ONE VOLUNTARY RELEASE</small><strong>CREATE ONE EXTRA FA OPENING</strong></span>
       </summary>
       <div className="football-gm__release-content">
-        <p>Release one starter to create an extra free-agent opportunity and increase your available budget.</p>
       <div className="football-gm__cut-list">
         {rows.map(({ entry, player, budget, eligibleTeams }) => {
           const selectedRow = player.id === selectedPlayerId;
@@ -2469,13 +2468,9 @@ export default function FootballGmModePage({
                     />
                   ) : null}
                   <section className={`football-gm__offseason-status surface-card${offseasonReady ? " is-ready" : " is-crisis"}`}>
-                    <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "CAP CRISIS"}</p>
+                    {!offseasonReady && <p className="eyebrow">CAP CRISIS</p>}
                     <h2>{offseasonReady ? "READY TO ADVANCE" : "YOU HAVE MOVES TO MAKE"}</h2>
-                    <p>
-                      {offseasonReady
-                        ? "Your roster fits under the cap for Years 2 and 3. Advance when ready."
-                        : "Get under the cap for both Years 2 and 3 before advancing."}
-                    </p>
+                    <p>{offseasonReady ? "Roster fits both future salary caps." : "Get under the cap for both Years 2 and 3 before advancing."}</p>
                     <button
                       className="primary-action"
                       type="button"

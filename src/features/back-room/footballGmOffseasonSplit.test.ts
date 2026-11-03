@@ -37,9 +37,13 @@ describe("Football GM single-screen offseason", () => {
     expect(voluntaryRelease).toContain('<details className="football-gm__trade-cuts football-gm__release-details surface-card">');
     expect(voluntaryRelease).toContain('<summary className="football-gm__release-summary">');
     expect(voluntaryRelease).not.toContain("<details open");
-    expect(voluntaryRelease).toContain("Release one starter to create an extra free-agent opportunity and increase your available budget.");
+    expect(voluntaryRelease).not.toContain("Release one starter to create an extra free-agent opportunity and increase your available budget.");
+    expect(voluntaryRelease).toContain("The release is final.");
     expect(offseasonScreen.indexOf("<FreeAgencyReleasePanel")).toBeLessThan(offseasonScreen.indexOf("SIMULATE YEARS 2 & 3"));
-    expect(offseasonScreen).toContain("Your roster fits under the cap for Years 2 and 3. Advance when ready.");
+    expect(offseasonScreen).toContain("Roster fits both future salary caps.");
+    expect(offseasonScreen).not.toContain("WINDOW SET");
+    expect(css).toContain(".football-gm__offseason-status.is-ready");
+    expect(css).toContain(".football-gm__release-details .football-gm__trade-warning");
     expect(offseasonScreen).toContain("Get under the cap for both Years 2 and 3 before advancing.");
     expect(offseasonScreen).toContain('disabled={!offseasonReady}');
     expect(css).toContain(".football-gm__release-details[open]");
