@@ -180,7 +180,7 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(nbaGmScoutTier(wemby)).toBe("ELITE");
   expect(nbaGmScoutTier(kennard)).toBe("DEPTH");
   // Team OVR now belongs in season results, never on player scouting cards.
-  const picker=page.slice(page.indexOf("function PlayerCard("),page.indexOf("function FitReport("));
+  const picker=page.slice(page.indexOf("function PlayerCard("),page.indexOf("function Results("));
   expect(picker).not.toContain("OVR");
   expect(page).not.toContain("player.currentGrade");
   expect(page).toContain("nbaGmScoutLetter");
@@ -190,7 +190,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(page).toContain("run.phase===\"year1\"");
   expect(page).toContain('act("offseason")');
   expect(page).not.toContain('run.phase==="year1"&&<FitReport');
-  expect(page).toContain('<FitReport picks={run.yearOnePicks} catalog={catalog}/>');
+  expect(page).not.toContain('<FitReport');
+  expect(page).toContain('nba-gm-dev__roster-development');
   expect(page).not.toContain("Free-agent market exhausted.");
   expect(css).toContain("@media(max-width:700px)");
   expect(css).toContain("overflow-wrap:anywhere");
