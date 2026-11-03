@@ -1,6 +1,7 @@
 import {
   BLIND_RESUME_ROUNDS,
   createBlindResumeRounds,
+  createEvidenceSafeBlindResumeRounds,
   type BlindResumeRoundSet,
   type BlindResumeStat,
 } from "./blindResumeEngine";
@@ -14,6 +15,7 @@ export { blindResumeV3RoundPoints };
 export const BLIND_RESUME_V3_GAME_VERSION = BLIND_RESUME_V3_CONTENT_VERSION;
 
 const CASUAL_V3_DAY = "2000-01-01";
+const CASUAL_STAGE3_DAY = "2099-01-01";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -24,6 +26,7 @@ export interface BlindResumeV3Card {
   revealCounts: number[];
   statsByRound: BlindResumeStat[][];
   difficulties: string[];
+  selectionVersion?: string;
 }
 
 function record(value: unknown): JsonRecord | null {
@@ -52,8 +55,8 @@ function statsForRound(value: unknown): BlindResumeStat[] {
   }));
 }
 
-export function createBlindResumeV3Card(seed: string): BlindResumeV3Card {
-  const publication = buildOfficialDailySetup("blind_resume", CASUAL_V3_DAY, seed);
+function createCardForDay(seed: string, day: string): BlindResumeV3Card {
+  const publication = buildOfficialDailySetup("blind_resume", day, seed);
   if (publication.contentVersion !== BLIND_RESUME_V3_CONTENT_VERSION) {
     throw new Error("Blind Resume V3 publication owner returned an unexpected content version.");
   }
@@ -66,7 +69,10 @@ export function createBlindResumeV3Card(seed: string): BlindResumeV3Card {
     throw new Error("Blind Resume V3 publication owner returned an incomplete card.");
   }
 
-  const generatedRoundSet = createBlindResumeRounds(generatedSeed);
+  const selectionVersion = String(privateEvidence?.selection_version ?? "legacy");
+  const generatedRoundSet = selectionVersion === "evidence-safe-stage3-v1"
+    ? createEvidenceSafeBlindResumeRounds(generatedSeed)
+    : createBlindResumeRounds(generatedSeed);
   const statsByRound = privateRounds.map((round, index) => {
     const pair = generatedRoundSet.pairs[index];
     if (
@@ -91,7 +97,16 @@ export function createBlindResumeV3Card(seed: string): BlindResumeV3Card {
     revealCounts,
     statsByRound,
     difficulties: privateRounds.map((round) => String(round.difficulty ?? "competitive")),
+    selectionVersion,
   };
+}
+
+export function createBlindResumeV3Card(seed: string): BlindResumeV3Card {
+  return createCardForDay(seed, CASUAL_V3_DAY);
+}
+
+export function createEvidenceSafeBlindResumeV3Card(seed: string): BlindResumeV3Card {
+  return createCardForDay(seed, CASUAL_STAGE3_DAY);
 }
 
 export function storedBlindResumeV3Card(value: unknown): BlindResumeV3Card | null {
@@ -126,9 +141,10 @@ export function blindResumeV3NextRevealCount(card: BlindResumeV3Card, revealedCo
   return index >= 0 ? card.revealCounts[index + 1] ?? null : null;
 }
 
-export function blindResumeV3ChallengeUrl(seed: string) {
+export function blindResumeV3ChallengeUrl(seed: string, evidenceSafe = false) {
   const url = new URL("/play/blind-resume", window.location.origin);
   url.searchParams.set("challenge", seed);
   url.searchParams.set("v", "3");
+  if (evidenceSafe) url.searchParams.set("q", "1");
   return url.toString();
 }
