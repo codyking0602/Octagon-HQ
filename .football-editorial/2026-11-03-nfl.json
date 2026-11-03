@@ -76,5 +76,9 @@
         "summary": "AFC matchup in Los Angeles in the Sunday late window."
       }
     ]
+  },
+  "selection": {
+    "player_id": "joe-burrow",
+    "game_id": "packers-at-patriots"
   }
 }
