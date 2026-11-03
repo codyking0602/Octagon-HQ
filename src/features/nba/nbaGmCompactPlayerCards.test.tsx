@@ -4,61 +4,99 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { PlayerCard } from "./NbaGmDevPage";
 import type { NbaGmDevPlayer } from "./nbaGmDevModel";
 
-const css=readFileSync("src/styles/nba-gm-dev.css","utf8");
-const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
-const base:NbaGmDevPlayer={
-  id:"nba-gm-compact-scouter",name:"Anthony Davis",teamCode:"LAC",
-  positions:["C","PF"],currentGrade:90,ageAtStart:33,
-  skills:{scoring:87,shooting:65,playmaking:65,perimeterDefense:82,interiorDefense:96,rebounding:89},
-  salaries:[60_600_000,62_000_000,64_000_000],
-  gameContract:"1YR",repriceRisk:"HIGH",developmentOdds:null,
-  pricingKind:"SIGNED_REAL_SALARY_WINDOW",eligibilityKind:"PROVISIONAL_EDITORIAL",
-  officialNbaPlayerId:null,officialRosterPosition:"C",positionReview:"unverified",
+const css = readFileSync("src/styles/nba-gm-dev.css", "utf8");
+const nflCss = readFileSync("src/styles/football-gm-mode.css", "utf8");
+const page = readFileSync("src/features/nba/NbaGmDevPage.tsx", "utf8");
+const cardCss = css.slice(css.indexOf("/* Locked GM player-card parity"));
+const base: NbaGmDevPlayer = {
+  id:"nba-gm-compact-scouter", name:"Anthony Davis", teamCode:"LAC",
+  positions:["C","PF"], currentGrade:90, ageAtStart:33,
+  skills:{scoring:87, shooting:65, playmaking:65, perimeterDefense:82, interiorDefense:96, rebounding:89},
+  salaries:[60_600_000, 62_000_000, 64_000_000],
+  gameContract:"1YR", repriceRisk:"HIGH", developmentOdds:null,
+  pricingKind:"SIGNED_REAL_SALARY_WINDOW", eligibilityKind:"PROVISIONAL_EDITORIAL",
+  officialNbaPlayerId:null, officialRosterPosition:"C", positionReview:"unverified",
   reviewFlags:["availability-separate"],
 };
 
-describe("NBA GM approved compact NFL-style scouting cards",()=>{
-  it("shows salary + one small SELECT next to name while retaining all six letters",()=>{
-    const html=renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}} action="DRAFT"/>);
+describe("NBA GM locked NFL-player-card parity", () => {
+  it("uses the NFL identity, badge and salary arrangement with a whole-card SELECT target", () => {
+    const html = renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}}/>);
+    expect(html).toContain("<button");
     expect(html).toContain("nba-gm-dev__scout-card");
-    expect(html).toContain("nba-gm-dev__card-action");
+    expect(html).toContain('aria-label="DRAFT Anthony Davis"');
+    expect(html).toContain("football-gm__picker-player-copy");
+    expect(html).toContain("football-gm__picker-action");
+    expect(html).toContain("football-gm__candidate-tags");
     expect(html).toContain("nba-gm-dev__select-inline");
     expect(html).toContain("SELECT");
     expect(html).toContain("$60.6M");
-    expect(html).not.toContain("DRAFT Anthony Davis</button>");
-    expect(html).toContain("HIGH REPRICE");
     expect(html).toContain("BOOM/BUST");
-    expect(html).toContain("nba-gm-dev__quick-skills");
-    for(const short of ["SCOR","SHOOT","PLAY","PER D","INT D","REB"]) {
-      expect(html).toContain(short);
-    }
-    expect((html.match(/nba-gm-dev__quick-skills/g)||[]).length).toBe(1);
-    expect((html.match(/<small aria-label=/g)||[]).length).toBe(6);
+    expect(html).toContain("risk-high");
+    expect(html).toContain("HIGH REPRICE");
+    expect(html).not.toContain("style=\"border-top-color:");
+    expect(html).not.toContain('class="nba-gm-dev__primary"');
+    expect(html).not.toContain("DRAFT Anthony Davis</button>");
+    expect((html.match(/<button/g)||[]).length).toBe(1);
   });
 
-  it("combines 3YR plus SALARY LOCKED in a single pill: no duplicate or wrapping",()=>{
-    const player={...base,gameContract:"3YR" as const,repriceRisk:"LOCKED" as const};
-    const html=renderToStaticMarkup(<PlayerCard player={player} onPick={()=>{}} action="DRAFT"/>);
+  it("keeps every one of the six letter grades visible in ONE horizontal mobile row", () => {
+    const html = renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}}/>);
+    expect(html).toContain("nba-gm-dev__quick-skills");
+    expect((html.match(/<small aria-label=/g)||[]).length).toBe(6);
+    for (const label of ["SCOR","SHOOT","PLAY","PER D","INT D","REB"]) {
+      expect(html).toContain(label);
+    }
+    expect(cardCss).toContain("grid-template-columns: repeat(6,minmax(0,1fr));");
+    expect(cardCss.slice(cardCss.indexOf("@media (max-width: 680px)")))
+      .toContain("grid-template-columns: repeat(6,minmax(0,1fr));");
+    expect(cardCss).not.toContain("grid-template-columns: repeat(3,minmax(0,1fr))");
+    expect(cardCss).toContain("flex-direction: column;");
+    expect(cardCss).toContain("@media (max-width: 355px)");
+  });
+
+  it("matches NFL's actual headshot box, quiet border and text-only action", () => {
+    expect(cardCss).toContain("grid-template-columns: 46px minmax(0,1fr) auto;");
+    expect(cardCss).toContain("grid-template-columns: 44px minmax(0,1fr) auto;");
+    expect(cardCss).toContain("background: rgba(255,255,255,.92);");
+    expect(cardCss).toContain("border: 1px solid rgba(255,255,255,.07);");
+    expect(cardCss).toContain("background: rgba(255,255,255,.025);");
+    expect(cardCss).toContain("background: transparent;");
+    expect(cardCss).not.toContain("border-top: 2px solid #a87843;");
+    expect(nflCss).toContain('margin-bottom: 4px;');
+    expect(css).toContain('padding: 4px 10px 10px;');
+  });
+
+  it("uses the same NFL tier, outlook, and risk colors, including green ELITE", () => {
+    expect(css).not.toContain(".nba-gm-dev .football-gm__quality-pill.quality-impact { border-color: rgba(243,164,73,.5)");
+    expect(nflCss).toContain(".football-gm__quality-pill.quality-elite {");
+    expect(nflCss).toContain("color: #9bd9b7;");
+    for (const [risk,expected] of [["LOW","risk-low"],["MEDIUM","risk-medium"],["HIGH","risk-high"]] as const) {
+      const html = renderToStaticMarkup(<PlayerCard player={{...base,repriceRisk:risk}} onPick={()=>{}}/>);
+      expect(html).toContain(expected);
+    }
+    const html = renderToStaticMarkup(<PlayerCard player={{...base,currentGrade:94}} onPick={()=>{}}/>);
+    expect(html).toContain("quality-elite");
+    expect(html).toContain("ELITE");
+    expect(html).toContain("outlook-volatile");
+    expect(nflCss).toContain(".football-gm__outlook-pill.outlook-decline");
+    expect(nflCss).toContain(".football-gm__candidate-tags .risk-high");
+  });
+
+  it("keeps 3YR · LOCKED on one line and preserves free-agency actions", () => {
+    const player = {...base,gameContract:"3YR" as const,repriceRisk:"LOCKED" as const};
+    const html = renderToStaticMarkup(<PlayerCard player={player} onPick={()=>{}}/>);
     expect(html).toContain("3YR · LOCKED");
+    expect(html).toContain("risk-locked");
     expect(html).toContain('aria-label="Three-year contract, salary locked"');
     expect(html).not.toContain(">SALARY LOCKED<");
     expect(html).not.toContain(">3YR</span>");
-    expect(html).not.toContain("REPRICE RISK");
-    expect(css).toContain("flex-wrap: nowrap;");
-    expect(css).toContain(".nba-gm-dev__scout-card .nba-gm-dev__scout-pills");
-    expect(css).toContain("grid-column: 2 / -1");
-    expect(css).toContain("@media (max-width: 355px)");
-  });
-
-  it("applies the same compact card to signed free agents and keeps actual contract outlook",()=>{
-    const html=renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}} action="SIGN" salaryYear={1}/>);
-    expect(html).toContain("SIGN");
-    expect(html).toContain("YEAR 2");
-    expect(html).toContain("$62.0M");
-    expect(html).toContain("HIGH REPRICE");
+    expect(cardCss).toContain("flex-wrap: nowrap;");
+    const fa = renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}} action="SIGN" salaryYear={1}/>);
+    expect(fa).toContain('aria-label="SIGN Anthony Davis"');
+    expect(fa).toContain("YEAR 2");
+    expect(fa).toContain("$62.0M");
     expect(page).toContain('action="SIGN" salaryYear={1}');
     expect(page).toContain('action="SIGN DEPTH"');
-    expect(css).toContain("grid-template-columns: repeat(6,minmax(0,1fr))");
-    expect(css).toContain("grid-template-columns: repeat(3,minmax(0,1fr))");
   });
 });
