@@ -124,7 +124,7 @@ begin
     end if;
   end if;
   if v_spin < v_previous_spin
-     or v_spin < case when v_attempt.week_start >= date '2026-11-03' then 0 else 1 end
+     or v_spin < (case when v_attempt.week_start >= date '2026-11-03' then 0 else 1 end)
      or v_spin > 7 then raise exception 'Official wheel progress cannot rewind'; end if;
   if p_completed then
     if p_state->>'phase'<>'final' or v_spin<>7
