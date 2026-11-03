@@ -122,6 +122,13 @@ function formatNumber(value: number, digits = 0) {
   return value.toFixed(digits).replace(/\.0$/, "");
 }
 
+function auditedRoundWinRate(pct: number, auditedRounds: number) {
+  // A missing round-by-round source is not evidence that a fighter won 0% of rounds.
+  return auditedRounds > 0
+    ? `${formatNumber(pct, 1)}% (${auditedRounds} audited)`
+    : "N/A";
+}
+
 function apexRating(fighter: RankedPlayFighter) {
   return Math.max(55, Math.min(99, Math.round(55 + (fighter.model.apexPeak / 6) * 44)));
 }
@@ -135,7 +142,7 @@ export function blindResumeStats(pair: BlindResumePair): BlindResumeStat[] {
     { label: "Prime UFC record", valueA: a.primeRecord, valueB: b.primeRecord },
     { label: "Main UFC era", valueA: pair.fighterA.mainEra, valueB: pair.fighterB.mainEra },
     { label: "Apex rating", valueA: String(apexRating(pair.fighterA)), valueB: String(apexRating(pair.fighterB)) },
-    { label: "Rounds won", valueA: `${formatNumber(a.roundsWonPct, 1)}%`, valueB: `${formatNumber(b.roundsWonPct, 1)}%` },
+    { label: "Rounds won", valueA: auditedRoundWinRate(a.roundsWonPct, a.auditedPrimeRoundCount), valueB: auditedRoundWinRate(b.roundsWonPct, b.auditedPrimeRoundCount) },
     { label: "Finish rate", valueA: `${formatNumber(a.finishRatePct, 1)}%`, valueB: `${formatNumber(b.finishRatePct, 1)}%` },
     { label: "Active elite years", valueA: formatNumber(a.activeEliteYears, 1), valueB: formatNumber(b.activeEliteYears, 1) },
   ];
