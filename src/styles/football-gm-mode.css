@@ -4613,3 +4613,75 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   color:#83bfe9;font-size:9px;letter-spacing:.04em;
 }
 .football-gm-page .football-gm__years23 > .primary-action { width:100%;min-height:48px; }
+
+/* NFL GM draft: full-width single-line scouting rail beneath the identity.
+   A 3YR deal consolidates its term and salary-lock state into one pill.
+   This fixes narrow phone rows without hiding player names, salary or SELECT. */
+.football-gm__picker-candidates > button.football-gm__draft-choice {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 9px;
+  row-gap: 6px;
+  align-items: center;
+  min-height: 94px;
+  padding: 9px 10px;
+}
+.football-gm__draft-choice > .football-wheel-picker__headshot {
+  grid-column: 1;
+  grid-row: 1;
+}
+.football-gm__draft-choice > .football-gm__picker-player-copy {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.football-gm__draft-choice > .football-gm__picker-action {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+.football-gm__draft-choice > .football-gm__draft-choice-tags {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  gap: 4px;
+  white-space: nowrap;
+}
+.football-gm__picker-candidates .football-gm__draft-choice-tags > span {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  font-size: 7px;
+  line-height: 1.1;
+  letter-spacing: .025em;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+@media (max-width: 390px) {
+  .football-gm__picker-candidates > button.football-gm__draft-choice {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    row-gap: 5px;
+    padding: 8px;
+  }
+  .football-gm__draft-choice > .football-gm__picker-action {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    justify-self: stretch;
+    justify-content: space-between;
+  }
+  .football-gm__draft-choice > .football-gm__draft-choice-tags {
+    grid-row: 3;
+    gap: 3px;
+  }
+  .football-gm__picker-candidates .football-gm__draft-choice-tags > span {
+    font-size: 6.5px;
+    padding: 3px 4px;
+    letter-spacing: .015em;
+  }
+}
