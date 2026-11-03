@@ -5,6 +5,7 @@ import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import { nbaGmDevelopmentOutcome } from "./NbaGmDevelopmentReport";
 import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
+import { NbaGmTeamFit } from "./NbaGmTeamFit";
 import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
@@ -571,6 +572,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
+      {run.phase==="offseason"&&!isTradeStage&&<NbaGmTeamFit run={run} catalog={catalog} season={1}/>}
       {run.phase==="offseason"&&!isTradeStage&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
