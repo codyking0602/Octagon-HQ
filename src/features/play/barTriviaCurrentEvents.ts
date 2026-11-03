@@ -1,6 +1,42 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  // November 3 editorial: landmark performance and major coaching news.
+  barTriviaQuestion({
+    id: "nfl-current-2026-w8-bucs-zero-completions",
+    league: "nfl",
+    round: "round1",
+    difficulty: "easy",
+    category: "Historic NFL Firsts",
+    prompt: "Which NFL team won a 2026 game without completing a single pass, becoming just the second team to do so in the Super Bowl era?",
+    choices: ["Tampa Bay Buccaneers", "Atlanta Falcons", "Buffalo Bills", "Carolina Panthers"],
+    answer: "Tampa Bay Buccaneers",
+    explanation: "In heavy rain on November 1, Tampa Bay beat Atlanta 16–0 despite Baker Mayfield completing none of his three passes; the 1974 Bills were the only previous Super Bowl-era team to win with zero completions.",
+    contentType: "current-event",
+    activeFrom: "2026-11-03T00:00:00-06:00",
+    expiresAt: "2026-11-17T23:59:59-06:00",
+    sourceId: "nfl-2026-11-01-buccaneers-zero-completions",
+    sourceUrl: "https://www.nfl.com/news/buccaneers-todd-bowles-on-zero-completion-win-over-falcons-there-s-a-first-time-for-everything",
+    verifiedAt: "2026-11-03",
+  }),
+  barTriviaQuestion({
+    id: "cfb-current-2026-11-02-oklahoma-witten-oc",
+    league: "cfb",
+    round: "round2",
+    difficulty: "medium",
+    category: "Coaching Headlines",
+    prompt: "Which former Dallas Cowboys tight end was named Oklahoma's interim offensive coordinator in November 2026?",
+    choices: ["Jason Witten", "Martellus Bennett", "Blake Jarwin", "Dalton Schultz"],
+    answer: "Jason Witten",
+    explanation: "Oklahoma announced November 2 that Jason Witten, its tight ends coach and longtime Cowboys Pro Bowler, would replace Ben Arbuckle as interim offensive coordinator and play-caller.",
+    contentType: "current-event",
+    activeFrom: "2026-11-03T00:00:00-06:00",
+    expiresAt: "2026-11-17T23:59:59-06:00",
+    sourceId: "oklahoma-2026-11-02-witten-interim-oc",
+    sourceUrl: "https://soonersports.com/news/2026/11/2/football-venables-announces-offensive-staff-change",
+    verifiedAt: "2026-11-03",
+  }),
+
   barTriviaQuestion({
     id: "cfb-current-2026-10-26-dante-moore-season",
     league: "cfb",
