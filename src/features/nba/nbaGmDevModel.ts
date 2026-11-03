@@ -3,7 +3,7 @@ import {
   type NbaGmPick, type NbaGmPlayer, type NbaGmSalaryWindow, type NbaGmSlot,
 } from "./nbaGmFoundation";
 
-/** Owner-only game: V3 fictional fixtures persist; V4 is real signed-salary-window pricing. */
+/** Public signed-in NBA GM game; older V3 fixtures persist, V4 uses signed salary windows. */
 export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   gameContract: "1YR" | "3YR";
   pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT" | "SIGNED_REAL_SALARY_WINDOW";
@@ -35,7 +35,7 @@ export interface NbaGmDevRun {
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
-  simulationModelVersion?: 5 | 6 | 7;
+  simulationModelVersion?: 5 | 6 | 7 | 8;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
@@ -227,7 +227,7 @@ export function nbaGmDevFitSignals(
 
 export function nbaGmDevCatalogErrors(catalog:readonly NbaGmDevPlayer[]):string[]{
   const errors:string[]=[];
-  if(catalog.length!==330)errors.push("Expected 330 privately held NBA GM candidates.");
+  if(catalog.length!==330)errors.push("Expected 330 NBA GM candidates.");
   const ids=new Set<string>();
   for(const p of catalog){
     if(ids.has(p.id)||!p.id)errors.push("Duplicate/missing identity "+p.id);

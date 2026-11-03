@@ -15,7 +15,7 @@ describe("NBA GM orange basketball identity across every phase", () => {
     expect(scoped).not.toMatch(/^\s*\.football-wheel__/m);
     expect(nflTheme).toContain(".football-gm__header");
     expect(nflWheel).toContain(".football-wheel__center");
-    expect(page).toContain("OWNER ONLY · NOT PUBLIC");
+    expect(page).not.toContain("OWNER ONLY · NOT PUBLIC");
   });
 
   it("brands the wheel, candidate selection, cap, scouting, roster and final recap", () => {
@@ -48,7 +48,7 @@ describe("NBA GM orange basketball identity across every phase", () => {
     expect(page).toContain('disabled={busy||capCrisis||heldPlayers.length>0} onClick={()=>void act("advance")}');
     expect(page).toContain('<details className="nba-gm-dev__release"');
     expect(page).not.toContain("LOCK ROSTER · SIMULATE SEASONS 2 & 3");
-    expect(page).toContain("No extra continuity bonus.");
-    expect(page).toContain("Year 1 results are locked.");
+    expect(page).not.toContain("No extra continuity bonus.");
+    expect(page).not.toContain("Year 1 results are locked.");
   });
 });

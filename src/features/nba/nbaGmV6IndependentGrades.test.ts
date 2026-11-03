@@ -36,15 +36,15 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
     expect(sql).toContain("''simulationModelVersion''=''5'' then");
     expect(sql).toContain("''simulationModelVersion'',6");
     expect(tests).toContain("V5 saved run changed under V6 router");
-    expect(repo).toContain("simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7)]).optional()");
+    expect(repo).toContain("simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8)]).optional()");
   });
 
   it("labels V6 percentage-relative grades without relabeling legacy 86.8 / 82.7 as grades", () => {
-    expect(page).toContain('graded={run.simulationModelVersion===6||run.simulationModelVersion===7}');
+    expect(page).toContain('graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8}');
     expect(page).toContain("OFFENSE GRADE");
     expect(page).toContain("DEFENSE GRADE");
     expect(page).toContain("season.offense.toFixed(1)");
-    expect(finalPage).toContain('run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"');
+    expect(finalPage).toContain('(run.simulationModelVersion===7||run.simulationModelVersion===8)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"');
     expect(finalPage).toContain("compared with 150 NBA team-seasons");
   });
 });

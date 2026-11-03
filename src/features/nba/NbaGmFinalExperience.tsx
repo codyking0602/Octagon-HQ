@@ -101,16 +101,16 @@ export function NbaGmFinalExperience({
       </div>
     </section>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
-      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{(run.simulationModelVersion===6||run.simulationModelVersion===7)?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
+      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{(run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8)?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
       <div className="gm-final__seasons">
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
-          <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong><span>{run.simulationModelVersion===7?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
+          <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong><span>{(run.simulationModelVersion===7||run.simulationModelVersion===8)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
           <b>{season.wins}–{season.losses}</b><em>{nbaGmPlayoffFinishText(season.finish)}</em>
           {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
       </div>
-      <p className="gm-final__hint">{run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"GRD compared with 150 NBA team-seasons; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
+      <p className="gm-final__hint">{run.simulationModelVersion===8?"Calibrated team strength and offense/defense grades use 150 real NBA team-seasons. NBA playoff series remain best-of-seven.":run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"GRD compared with 150 NBA team-seasons; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>

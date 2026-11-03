@@ -18,8 +18,8 @@ describe("NBA GM clean offseason report and moves separation",()=>{
     expect(page).toContain("<FitReport picks={run.yearOnePicks} catalog={catalog}/>");
     expect(page).toContain("nba-gm-dev__fit-grid");
     expect(page).toContain("showOffseasonReport)&&<section className={\`football-gm__cap");
-    expect(page).toContain('showOffseasonReport&&<section className="nba-gm-dev__continuity');
-    expect(page).toContain("No extra continuity bonus");
+    expect(page).not.toContain('showOffseasonReport&&<section className="nba-gm-dev__continuity');
+    expect(page).not.toContain("No extra continuity bonus");
     expect(development).toContain("Three-year deals stay locked.");
     expect(development).toContain("Exact ratings stay hidden.");
   });
@@ -40,12 +40,12 @@ describe("NBA GM clean offseason report and moves separation",()=>{
     expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
     expect(page).toContain('setOffseasonView("moves")');
   });
-  it("keeps trade wheel separate, owner-only and mobile navigation compact",()=>{
+  it("keeps trade wheel separate, public and mobile navigation compact",()=>{
     expect(page).toContain("{tradeStage}");
     expect(page).toContain('!isTradeStage&&<nav className="nba-gm-dev__offseason-nav"');
     expect(page).toContain('setOffseasonView("report")');
     expect(page).toContain('window.scrollTo({top:0,behavior:"instant"})');
-    expect(page).toContain("OWNER ONLY · NOT PUBLIC");
+    expect(page).not.toContain("OWNER ONLY · NOT PUBLIC");
     expect(css).toContain(".nba-gm-dev .nba-gm-dev__offseason-nav");
     expect(css).toContain("grid-template-columns:repeat(2,minmax(0,1fr))");
   });

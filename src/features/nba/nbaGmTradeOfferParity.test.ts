@@ -52,6 +52,6 @@ describe("NBA GM NFL-style trade and free-agent parity",()=>{
     expect(migration).toContain("private.nba_gm_v2_can_add");
     expect(migration).toContain("private.nba_gm_v3_salary");
     expect(migration).toContain("private.nba_gm_v3_contract_for_state");
-    expect(page).toContain("OWNER ONLY · NOT PUBLIC");
+    expect(page).not.toContain("OWNER ONLY · NOT PUBLIC");
   });
 });
