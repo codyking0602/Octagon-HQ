@@ -357,7 +357,14 @@ export function buildAverageFanDailySetup(
 function fullQuestions(value: unknown) {
   const rows = records(value);
   if (rows.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT) throw new Error("Average Fan official board evidence must contain eight questions.");
-  return rows as unknown as AverageFanQuestion[];
+  // Published question evidence predates the team's established nickname aliases.
+  // Hydrate only this exact Tennessee tradition question without editing its proof.
+  return (rows as unknown as AverageFanQuestion[]).map((question) =>
+    question.id === "average-fan:cfb:tradition:sailgating:short"
+      ? { ...question, aliases: [...new Set([...(question.aliases ?? []),
+          "Volunteers", "Tennessee Volunteers", "UT Vols", "Vols"])] }
+      : question
+  );
 }
 
 function finalQuestion(value: unknown) {
