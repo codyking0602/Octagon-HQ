@@ -83,6 +83,31 @@ describe("NBA GM locked NFL-player-card parity", () => {
     expect(nflCss).toContain(".football-gm__candidate-tags .risk-high");
   });
 
+  it("stacks the six skill grades below the intact name/salary/SELECT row at every mobile width", () => {
+    expect(cardCss).toContain("display: flex;");
+    expect(cardCss).toContain("flex-direction: column;");
+    expect(cardCss).toContain("align-items: stretch;");
+    expect(cardCss).toContain("row-gap: 7px;");
+    expect(cardCss).toContain(".nba-gm-dev__scout-card > .nba-gm-dev__quick-skills");
+    expect(cardCss).toContain("flex: 0 0 auto;");
+    expect(cardCss).toContain("position: static;");
+    expect(cardCss).toContain("padding-top: 7px;");
+    expect(cardCss).toContain("grid-template-columns: repeat(6,minmax(0,1fr));");
+    const html = renderToStaticMarkup(<PlayerCard player={base} onPick={()=>{}}/>);
+    expect(html.indexOf("nba-gm-dev__player-head")).toBeLessThan(html.indexOf("nba-gm-dev__quick-skills"));
+    expect(html).toContain("$60.6M");
+    expect(html).toContain("SELECT");
+  });
+
+  it("compacts only the settled draft wheel and removes the picker-header dead band", () => {
+    expect(page).toContain('run.pendingTeam&&!wheelSpinning?" is-team-picked":""');
+    expect(css).toContain(".nba-gm-dev__draft.is-team-picked .football-wheel");
+    expect(css).toContain("min-height: 254px;");
+    expect(css).toContain("width: 224px;");
+    expect(css).toContain("padding: 10px 12px 2px;");
+    expect(css).toContain("padding: 4px 12px 2px;");
+  });
+
   it("keeps 3YR · LOCKED on one line and preserves free-agency actions", () => {
     const player = {...base,gameContract:"3YR" as const,repriceRisk:"LOCKED" as const};
     const html = renderToStaticMarkup(<PlayerCard player={player} onPick={()=>{}}/>);
