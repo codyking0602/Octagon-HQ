@@ -49,7 +49,7 @@ const player=z.object({
 });
 type RpcClient={rpc:(name:string,args?:Record<string,unknown>)=>
   PromiseLike<{data:unknown,error:{message?:string}|null}>};
-export interface NbaGmTradeOffer { outgoingPlayerIds: string[]; incomingPlayerIds: string[]; shape: string; requiresFreeAgency: boolean; requiresRosterMove: boolean; }
+export interface NbaGmTradeOffer { outgoingPlayerIds: string[]; incomingPlayerIds: string[]; shape: string; requiresFreeAgency: boolean; requiresRosterMove: boolean; capOverYear2?: number; capOverYear3?: number; }
 export type NbaGmDevOperation="load"|"start"|"spin"|"pick"|"offseason"|
  "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"emergency-sign"|"advance"|"promote-displaced"|"release-displaced";
 export function createNbaGmDevRepository(supplied?:RpcClient|null){
@@ -65,6 +65,10 @@ export function createNbaGmDevRepository(supplied?:RpcClient|null){
         shape:z.string(),
         requiresFreeAgency:z.boolean(),
         requiresRosterMove:z.boolean(),
+        // Optional while the newly deployed backend propagates; the server
+        // owns future-year cap overages, including displaced assets.
+        capOverYear2:z.number().int().nonnegative().optional(),
+        capOverYear3:z.number().int().nonnegative().optional(),
       })).max(5).parse(data);
     },
     async catalog():Promise<NbaGmDevPlayer[]>{
