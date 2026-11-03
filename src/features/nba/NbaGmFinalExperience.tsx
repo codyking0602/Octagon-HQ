@@ -4,7 +4,7 @@ import { useState } from "react";
 import { footballGmDevelopmentResult } from "../back-room/footballGmScouting";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import {
-  NBA_GM_DEV_SLOT_LABELS, nbaGmDevSpend,
+  NBA_GM_DEV_SLOT_LABELS,
   type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutTier } from "./nbaGmScouting";
@@ -73,7 +73,6 @@ export function NbaGmFinalExperience({
   });
   const arrivals=finalRows.filter(row=>!row.retained);
   const retained=finalRows.length-arrivals.length;
-  const payroll=nbaGmDevSpend(run.picks,catalog)[2];
   const biggestJump=[...finalRows].sort((a,b)=>b.delta-a.delta)[0];
   const biggestDrop=[...finalRows].sort((a,b)=>a.delta-b.delta)[0];
   const missedEveryPlayoff=results.length===3&&results.every(season=>season.finish==="Missed Playoffs");
@@ -101,9 +100,8 @@ export function NbaGmFinalExperience({
         <div><b>{arrivals.length}</b><small>OFFSEASON CHANGES</small></div>
       </div>
     </section>
-    <NbaGmTeamFit run={run} catalog={catalog} season={3}/>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
-      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{(run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
+      <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>RECORD · PLAYOFF FINISH</small></header>
       <div className="gm-final__seasons">
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
@@ -112,7 +110,6 @@ export function NbaGmFinalExperience({
           {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
       </div>
-      <p className="gm-final__hint">{(run.simulationModelVersion===8||run.simulationModelVersion===9)?"Calibrated team strength and offense/defense grades use 150 real NBA team-seasons. NBA playoff series remain best-of-seven.":run.simulationModelVersion===7?"Team OVR uses the NFL GM scale. NBA playoffs use four best-of-seven series.":run.simulationModelVersion===6?"GRD compared with 150 NBA team-seasons; this saved run predates the OVR model.":"Legacy SIM grade; new franchises use the updated team OVR model."}</p>
     </section>
     {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
@@ -137,7 +134,7 @@ export function NbaGmFinalExperience({
     </section>}
     <section className="gm-final__section gm-final__roster surface-card" aria-label="Final NBA roster development outcomes">
       <header className="gm-final__heading"><h2>YOUR FINAL ROSTER</h2><small>YEAR 1 → YEAR 3</small></header>
-      <p className="gm-final__hint">Movement from Year 1 to Year 3. Exact ratings stay hidden.</p>
+
       <div className="gm-final__roster-list">
         {finalRows.map(row=><article className="gm-final__player" key={row.slot}>
           <div className="gm-final__player-identity">
@@ -186,6 +183,7 @@ export function NbaGmFinalExperience({
           </div>)}
         </div>
       </details>
+    <NbaGmTeamFit run={run} catalog={catalog} season={3}/>
     <div className="gm-final__bottom">
       <section className="gm-final__section surface-card" aria-label="NBA GM score breakdown">
         <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
@@ -197,12 +195,6 @@ export function NbaGmFinalExperience({
           <span>{label}</span><i><b style={{width:(typeof value==="number"?value:0)+"%"}}/></i>
           <strong>{typeof value==="number"?value.toFixed(1):"—"}</strong>
         </div>)}
-      </section>
-      <section className="gm-final__section surface-card" aria-label="NBA Year 3 finances">
-        <header className="gm-final__heading"><h2>FINANCIALS · YEAR 3</h2></header>
-        <div className="gm-final__money"><span>Payroll</span><strong>{money(payroll)}</strong></div>
-        <div className="gm-final__money"><span>Salary cap remaining</span>
-          <strong>{money(run.caps[2]-payroll)}</strong></div>
       </section>
     </div>
   </div>;
