@@ -28,6 +28,11 @@ const wheelTeams=NBA_TEAMS.map(team=>({
   primaryColor:nbaTeamColor(team.id),secondaryColor:"#0d1624",
 }));
 const labels=Object.keys(NBA_GM_DEV_SKILL_LABELS) as Array<keyof typeof NBA_GM_DEV_SKILL_LABELS>;
+/** Only card captions are abbreviated: all six underlying scouting grades remain visible. */
+const NBA_GM_DEV_SHORT_SKILL_LABELS: Record<keyof typeof NBA_GM_DEV_SKILL_LABELS,string> = {
+  scoring:"SCOR", shooting:"SHOOT", playmaking:"PLAY",
+  perimeterDefense:"PER D", interiorDefense:"INT D", rebounding:"REB",
+};
 function TeamMark({code}:{code:string}){
   const [failed,setFailed]=useState(false);
   useEffect(()=>setFailed(false),[code]);
@@ -60,11 +65,14 @@ function ScoutBadges({player,run,showContract=true}:{player:NbaGmDevPlayer;run?:
   return <span className="nba-gm-dev__scout-pills">
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
     {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
-    {showContract&&<>
-      <span className="nba-gm-dev__term">{player.gameContract}</span>
-      <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
-        {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
-    </>}
+    {showContract&&(player.gameContract==="3YR"
+      ?<span className="nba-gm-dev__term nba-gm-dev__reprice is-locked"
+          aria-label="Three-year contract, salary locked">3YR · LOCKED</span>
+      :<>
+        <span className="nba-gm-dev__term">{player.gameContract}</span>
+        <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
+          {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
+      </>)}
   </span>;
 }
 function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
@@ -75,23 +83,28 @@ function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   const delta=salaryYear===1&&run?.development?.[player.id]
     ?run.development[player.id]!.year2Grade-originalGrade:0;
   const age=nbaGmPickerAge(player);
-  return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
+  return <article className="nba-gm-dev__player nba-gm-dev__scout-card" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
-        <strong>{player.name}</strong><small>{player.positions.join(" / ")} · AGE {age??"—"} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
-        <ScoutBadges player={player} run={run}/>
+        <strong>{player.name}</strong>
+        <small>{player.positions.join(" / ")} · AGE {age??"—"}{salaryYear!==0?` · YEAR ${salaryYear+1}`:""}</small>
       </div>
+      <div className="nba-gm-dev__card-action">
+        <b>{money(nbaGmDevSalary(player,salaryYear))}</b>
+        {onPick&&<button type="button" className="nba-gm-dev__select-inline"
+          aria-label={action+" "+player.name} disabled={disabled} onClick={onPick}>
+          {action==="SIGN DEPTH"?"SIGN":action==="DRAFT"?"SELECT":action}<span aria-hidden="true"> →</span>
+        </button>}
+      </div>
+      <ScoutBadges player={player} run={run}/>
     </div>
-    <div className="nba-gm-dev__skills" aria-label={"Scouting grades for "+player.name}>
+    <div className="nba-gm-dev__skills nba-gm-dev__quick-skills" aria-label={"Scouting grades for "+player.name}>
       {labels.map(key=><div key={key}>
-        <small>{NBA_GM_DEV_SKILL_LABELS[key]}</small>
+        <small aria-label={NBA_GM_DEV_SKILL_LABELS[key]}>{NBA_GM_DEV_SHORT_SKILL_LABELS[key]}</small>
         <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))))}</strong>
       </div>)}
     </div>
-    {onPick&&<button type="button" className="nba-gm-dev__primary" disabled={disabled} onClick={onPick}>
-      {action} {player.name}
-    </button>}
   </article>;
 }
 function TradeOfferPlayer({id,run,byId}:{id:string;run:NbaGmDevRun;byId:Map<string,NbaGmDevPlayer>}) {
