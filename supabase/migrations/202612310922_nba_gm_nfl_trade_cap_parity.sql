@@ -132,8 +132,8 @@ begin
     from jsonb_array_elements(v_candidates) x
     where not exists(
       select 1 from jsonb_array_elements(v_candidates) y
-      where x.value->'outgoingPlayerIds' @> y.value->'outgoingPlayerIds'
-        and y.value->'incomingPlayerIds' @> x.value->'incomingPlayerIds'
+      where (x.value->'outgoingPlayerIds') @> (y.value->'outgoingPlayerIds')
+        and (y.value->'incomingPlayerIds') @> (x.value->'incomingPlayerIds')
         and (jsonb_array_length(y.value->'outgoingPlayerIds') <
              jsonb_array_length(x.value->'outgoingPlayerIds')
           or jsonb_array_length(y.value->'incomingPlayerIds') >
