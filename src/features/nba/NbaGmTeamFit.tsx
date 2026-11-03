@@ -1,5 +1,4 @@
 import { nbaGmDevFitSignals, type NbaGmDevPlayer, type NbaGmDevRun } from "./nbaGmDevModel";
-import type { NbaGmPick } from "./nbaGmFoundation";
 
 /** Six roster-composition signals, not additional simulation points. */
 const labels = ["Shot creation", "Floor spacing", "Secondary playmaking", "Perimeter defense", "Rim protection", "Rebounding"] as const;
