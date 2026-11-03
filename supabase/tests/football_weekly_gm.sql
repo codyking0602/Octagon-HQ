@@ -22,7 +22,7 @@ begin
   -- This historical Oct 20 proof must remain valid after the new Oct 27 event opens.
   update private.football_weekly_gm_events
     set opens_at=now()+interval '10 days',closes_at=now()+interval '17 days'
-    where week_start=date '2026-10-27';
+    where week_start in (date '2026-10-27', date '2026-11-03');
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_player::text,true);
   v_started:=public.start_my_football_weekly_gm('elite');
