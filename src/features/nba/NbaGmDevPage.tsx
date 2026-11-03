@@ -62,15 +62,14 @@ function ScoutBadges({player,run,showContract=true}:{player:NbaGmDevPlayer;run?:
   const outlook=nbaGmScoutOutlook(display,year);
   const tone=outlook==="HIGH UPSIDE"?"upside":outlook==="RISING"?"rising"
     :outlook==="BOOM/BUST"?"volatile":outlook==="DECLINE RISK"?"decline":"stable";
-  return <span className="nba-gm-dev__scout-pills">
+  return <span className="nba-gm-dev__scout-pills football-gm__candidate-tags">
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
     {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
     {showContract&&(player.gameContract==="3YR"
-      ?<span className="nba-gm-dev__term nba-gm-dev__reprice is-locked"
-          aria-label="Three-year contract, salary locked">3YR · LOCKED</span>
+      ?<span className="risk-locked" aria-label="Three-year contract, salary locked">3YR · LOCKED</span>
       :<>
-        <span className="nba-gm-dev__term">{player.gameContract}</span>
-        <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
+        <span>{player.gameContract}</span>
+        <span className={`risk-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone === "med" ? "medium" : nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
           {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
       </>)}
   </span>;
@@ -83,21 +82,20 @@ export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,r
   const delta=salaryYear===1&&run?.development?.[player.id]
     ?run.development[player.id]!.year2Grade-originalGrade:0;
   const age=nbaGmPickerAge(player);
-  return <article className="nba-gm-dev__player nba-gm-dev__scout-card" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
+  const cardContent = <>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
-      <div className="nba-gm-dev__identity">
+      <div className="nba-gm-dev__identity football-gm__picker-player-copy">
         <strong>{player.name}</strong>
         <small>{player.positions.join(" / ")} · AGE {age??"—"}{salaryYear!==0?` · YEAR ${salaryYear+1}`:""}</small>
+        <ScoutBadges player={player} run={run}/>
       </div>
-      <div className="nba-gm-dev__card-action">
+      <div className="nba-gm-dev__card-action football-gm__picker-action">
         <b>{money(nbaGmDevSalary(player,salaryYear))}</b>
-        {onPick&&<button type="button" className="nba-gm-dev__select-inline"
-          aria-label={action+" "+player.name} disabled={disabled} onClick={onPick}>
+        {onPick&&<span className="nba-gm-dev__select-inline">
           {action==="SIGN DEPTH"?"SIGN":action==="DRAFT"?"SELECT":action}<span aria-hidden="true"> →</span>
-        </button>}
+        </span>}
       </div>
-      <ScoutBadges player={player} run={run}/>
     </div>
     <div className="nba-gm-dev__skills nba-gm-dev__quick-skills" aria-label={"Scouting grades for "+player.name}>
       {labels.map(key=><div key={key}>
@@ -105,7 +103,11 @@ export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,r
         <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))))}</strong>
       </div>)}
     </div>
-  </article>;
+  </>;
+  return onPick
+    ? <button type="button" className="nba-gm-dev__player nba-gm-dev__scout-card"
+        aria-label={action+" "+player.name} disabled={disabled} onClick={onPick}>{cardContent}</button>
+    : <article className="nba-gm-dev__player nba-gm-dev__scout-card">{cardContent}</article>;
 }
 function TradeOfferPlayer({id,run,byId}:{id:string;run:NbaGmDevRun;byId:Map<string,NbaGmDevPlayer>}) {
   const player=byId.get(id);

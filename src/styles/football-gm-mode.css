@@ -1520,8 +1520,8 @@
 }
 
 .football-gm__quality-pill.quality-elite {
-  border-color: rgba(134, 204, 251, .35);
-  color: #a8dcff;
+  border-color: rgba(108, 204, 151, .35);
+  color: #9bd9b7;
 }
 
 .football-gm__quality-pill.quality-impact {
@@ -4613,3 +4613,9 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   color:#83bfe9;font-size:9px;letter-spacing:.04em;
 }
 .football-gm-page .football-gm__years23 > .primary-action { width:100%;min-height:48px; }
+
+/* Shared player-picker rhythm: do not alter the approved NFL card/pill layout.
+   Only reduce the blank space after the chosen position. */
+.football-gm-page:not([data-cfb-gm="true"]) .football-gm__picker .football-gm__position-tabs {
+  margin-bottom: 4px;
+}
