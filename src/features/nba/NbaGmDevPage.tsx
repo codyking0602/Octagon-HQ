@@ -82,7 +82,7 @@ export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,r
   const delta=salaryYear===1&&run?.development?.[player.id]
     ?run.development[player.id]!.year2Grade-originalGrade:0;
   const age=nbaGmPickerAge(player);
-  return <article className="nba-gm-dev__player nba-gm-dev__scout-card">
+  const cardContent = <>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity football-gm__picker-player-copy">
@@ -92,10 +92,9 @@ export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,r
       </div>
       <div className="nba-gm-dev__card-action football-gm__picker-action">
         <b>{money(nbaGmDevSalary(player,salaryYear))}</b>
-        {onPick&&<button type="button" className="nba-gm-dev__select-inline"
-          aria-label={action+" "+player.name} disabled={disabled} onClick={onPick}>
+        {onPick&&<span className="nba-gm-dev__select-inline">
           {action==="SIGN DEPTH"?"SIGN":action==="DRAFT"?"SELECT":action}<span aria-hidden="true"> →</span>
-        </button>}
+        </span>}
       </div>
     </div>
     <div className="nba-gm-dev__skills nba-gm-dev__quick-skills" aria-label={"Scouting grades for "+player.name}>
@@ -104,7 +103,11 @@ export function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,r
         <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))))}</strong>
       </div>)}
     </div>
-  </article>;
+  </>;
+  return onPick
+    ? <button type="button" className="nba-gm-dev__player nba-gm-dev__scout-card"
+        aria-label={action+" "+player.name} disabled={disabled} onClick={onPick}>{cardContent}</button>
+    : <article className="nba-gm-dev__player nba-gm-dev__scout-card">{cardContent}</article>;
 }
 function TradeOfferPlayer({id,run,byId}:{id:string;run:NbaGmDevRun;byId:Map<string,NbaGmDevPlayer>}) {
   const player=byId.get(id);
