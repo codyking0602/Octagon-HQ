@@ -417,7 +417,7 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
     if (question.id !== id) return question;
     const candidateIds = [...question.candidateIds];
     const alsoAcceptedEntityIds = [...(question.alsoAcceptedEntityIds ?? [])];
-    const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
+    const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot","Three"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
     for (const [name, aliases] of additions) {
       const existingIndex = entities.findIndex((entity) =>
         candidateIds.includes(entity.id) && entity.displayName.toLowerCase() === name.toLowerCase());
