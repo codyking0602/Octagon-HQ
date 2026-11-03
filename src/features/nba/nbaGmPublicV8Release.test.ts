@@ -46,10 +46,11 @@ describe("NBA GM public V8 launch boundaries",()=>{
     expect(page).toContain("run.simulationModelVersion===8");
     expect(final).toContain("run.simulationModelVersion===8");
   });
-  it("keeps the first offseason report concise and final recap continuity",()=>{
+  it("keeps the one-screen offseason compact and final recap continuity",()=>{
     expect(page).not.toContain("VIEW PLAYOFF OUTCOME ODDS");
-    expect(page).not.toContain('showOffseasonReport&&<section className="nba-gm-dev__continuity');
-    expect(page).toContain("CONTINUE TO OFFSEASON MOVES");
+    expect(page).not.toContain("showOffseasonReport");
+    expect(page).not.toContain("CONTINUE TO OFFSEASON MOVES");
+    expect(page).toContain("READY TO ADVANCE");
     expect(final).toContain("CORE RETAINED");
   });
 });
