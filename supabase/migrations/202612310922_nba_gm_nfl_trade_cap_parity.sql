@@ -170,7 +170,7 @@ begin
   end loop;
   return v_offers;
 end;
-$function$
+$function$;
 
 revoke all on function private.nba_gm_v8_trade_offers(jsonb,text)
   from public,anon,authenticated;
