@@ -76,5 +76,9 @@
         "summary": "Paul Bunyan Trophy rivalry at Michigan Stadium; Michigan won 28-21 against Rutgers while Michigan State comes off a bye."
       }
     ]
+  },
+  "selection": {
+    "player_id": "devon-dampier",
+    "game_id": "miami-at-notre-dame"
   }
 }
