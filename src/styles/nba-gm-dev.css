@@ -1295,6 +1295,12 @@
   }
 }
 @media (max-width: 355px) {
+  /* Preserve every badge on one line on 320px phones: use the full card width
+     only at this narrow breakpoint, not the ordinary approved layout. */
+  .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__scout-pills {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
   .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__scout-pills > span {
     font-size: 7px;
     padding-inline: 4px;
