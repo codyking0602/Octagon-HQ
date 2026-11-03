@@ -112,6 +112,8 @@ export interface PersistedRun {
   pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
+  /** Only freshly started franchises use the two-championship scoring treatment. */
+  playoffScoringVersion?: 2;
   /** Immutable solo results once the franchise is completed. */
   resolvedSeasons?: FootballGmSeasonResultV2[];
 }
@@ -143,6 +145,7 @@ export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRu
     version: FOOTBALL_GM_VERSION,
     seed,
     phase: "intro",
+    playoffScoringVersion: 2,
     startMode: "classic",
     roster: [],
     finalRoster: [],
@@ -200,6 +203,7 @@ function parsePersistedRun(value: unknown) {
   return {
     ...parsed,
     version: FOOTBALL_GM_VERSION,
+    playoffScoringVersion: parsed.playoffScoringVersion === 2 ? 2 : undefined,
     startMode: parsed.startMode === "choose-qb" ? "choose-qb" : "classic",
     freeAgencyVisitsUsed: footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0),
     freeAgencyRules: parsed.freeAgencyRules === "three-plus-one" ? "three-plus-one" : "legacy",
@@ -373,7 +377,7 @@ function gmAuditSnapshot(
         : null,
     },
     finalResult: run.phase === "final" && run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
       : null,
   });
 }
@@ -1729,7 +1733,7 @@ export default function FootballGmModePage({
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
   const finalResult = useMemo(
     () => run.phase === "final"
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
       : null,
     [finalRoster, run.phase, run.seed, run.resolvedSeasons, yearOneRoster],
   );
