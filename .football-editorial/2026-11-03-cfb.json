@@ -80,5 +80,76 @@
   "selection": {
     "player_id": "devon-dampier",
     "game_id": "miami-at-notre-dame"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Devon Dampier",
+      "team": "Utah",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "260"
+        },
+        {
+          "label": "PASS TD",
+          "value": "3"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "22/29"
+        },
+        {
+          "label": "RUSH YDS",
+          "value": "45"
+        }
+      ],
+      "result": "W 49–25 at Cincinnati",
+      "measurements": "5 ft 11 in · 210 lbs",
+      "team_color": "#CC0000",
+      "highlight_url": "https://youtu.be/R931V63SXyo?is=BU45sXoi5gBK-ZdJ",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/5105849.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-03/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Miami",
+      "home_team": "Notre Dame",
+      "kickoff_at": "2026-11-07T18:30:00-06:00",
+      "ranking_source": "AP",
+      "away_rank": 1,
+      "home_rank": 4,
+      "away_record": "8-0",
+      "home_record": "7-1"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.ncaa.com/rankings/football/fbs/associated-press",
+        "https://www.wvnews.com/sports/pro/top-5-matchup-features-notre-dame-hosting-miami-fl/article_d0c4995b-bcd2-557a-b668-fd7140bb405e.html",
+        "https://www.cbssports.com/college-football/players/29123277/darian-mensah/",
+        "https://utahutes.com/sports/football/stats/2026/cincinnati/boxscore/24550",
+        "https://www.cbssports.com/college-football/news/ap-top-25-poll-rankings-georgia-ohio-state-miami/"
+      ],
+      "breakdown": {
+        "setup": [
+          "No. 1 Miami visits No. 4 Notre Dame in a clash of 8–0 and 7–1 contenders. The Hurricanes lead the nation in scoring at 47.6 points per game but escaped North Carolina 38–35; the Irish allow just 13.4 points per game and bring one of the country's stingiest defenses after defeating Navy 35–13. Miami's explosive, efficient offense faces its sharpest test yet."
+        ],
+        "things": [
+          {
+            "title": "Can the Irish contain Darian Mensah?",
+            "body": "Miami averages 332.4 passing yards per game, while Notre Dame's defense allows just 150.8. The Irish need pressure and tight coverage to prevent Mensah from controlling the game with efficient early-down throws."
+          },
+          {
+            "title": "Notre Dame's run game meets Miami's wall",
+            "body": "The Irish average 186 rushing yards per game, but Miami leads the country by allowing only 60.8. Finding manageable second and third downs without becoming one-dimensional is vital for Notre Dame."
+          },
+          {
+            "title": "Third downs and counterpunches",
+            "body": "Miami converts 54.5% of third downs, second nationally, against an Irish defense allowing 38.4%. Notre Dame also scores 40.4 points per game and can challenge a Miami pass defense permitting 251.9 yards per contest."
+          }
+        ],
+        "bottom_line": "Miami's passing efficiency meets Notre Dame's disciplined defense, while the Irish must create offense against the country's toughest run defense. Third-down execution and explosive-play prevention will determine whether this stays a possession-by-possession battle or becomes a shootout."
+      }
+    }
   }
 }
