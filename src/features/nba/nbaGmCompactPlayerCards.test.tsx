@@ -13,8 +13,8 @@ const base:NbaGmDevPlayer={
   salaries:[60_600_000,62_000_000,64_000_000],
   gameContract:"1YR",repriceRisk:"HIGH",developmentOdds:null,
   pricingKind:"SIGNED_REAL_SALARY_WINDOW",eligibilityKind:"PROVISIONAL_EDITORIAL",
-  officialNbaPlayerId:null,officialRosterPosition:"C",positionReview:"verified",
-  reviewFlags:[],
+  officialNbaPlayerId:null,officialRosterPosition:"C",positionReview:"unverified",
+  reviewFlags:["availability-separate"],
 };
 
 describe("NBA GM approved compact NFL-style scouting cards",()=>{
