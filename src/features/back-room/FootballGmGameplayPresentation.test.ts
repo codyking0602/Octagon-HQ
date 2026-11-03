@@ -85,7 +85,8 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("if (run.voluntaryFreeAgencyUsed || run.tradeChipPlayerIds.length || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;");
     expect(page).toContain("footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)");
     expect(page).toContain("ONE VOLUNTARY RELEASE");
-    expect(page).toContain("vacancies can use any remaining wheel visits");
+    expect(page).toContain("if (run.pendingFreeAgentTeam || run.freeAgencyVisitsUsed >= freeAgencyVisitLimit) return;");
+    expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
     expect(page).toContain("that player cannot be re-signed this offseason");
   });
   it("offers a mobile-safe choice of the starter displaced by a held asset", () => {
