@@ -148,7 +148,9 @@ describe("NBA GM private Football parity boundary",()=>{
     expect(markup).toContain("Playoffs (7%)");
     expect(markup).toContain("THREE-YEAR RESULTS");
     expect(markup).toContain("49–33");
-    expect(markup).toContain("FINANCIALS · YEAR 3");
+    expect(markup).not.toContain("FINANCIALS · YEAR 3");
+    expect(markup.indexOf("YOUR FINAL ROSTER")).toBeLessThan(markup.indexOf("TEAM FIT"));
+    expect(markup).toContain("OVERALL TEAM FIT");
     expect(css).toContain("nba-gm-final__team-logo");
     expect(css).toContain("@media(max-width:700px)");
   });

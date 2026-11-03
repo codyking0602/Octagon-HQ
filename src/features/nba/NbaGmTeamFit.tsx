@@ -3,7 +3,7 @@ import { nbaGmDevFitSignals, type NbaGmDevPlayer, type NbaGmDevRun } from "./nba
 /** Six roster-composition signals, not additional simulation points. */
 const labels = ["Shot creation", "Floor spacing", "Secondary playmaking", "Perimeter defense", "Rim protection", "Rebounding"] as const;
 type Tier = "ELITE" | "GREAT" | "GOOD" | "NEUTRAL" | "POOR" | "DYSFUNCTIONAL";
-const tierOrder: Tier[] = ["DYSFUNCTIONAL", "POOR", "NEUTRAL", "GOOD", "GREAT", "ELITE"];
+const tierFromIndex = (score: number): Tier => score >= 90 ? "ELITE" : score >= 80 ? "GREAT" : score >= 70 ? "GOOD" : score >= 60 ? "NEUTRAL" : score >= 45 ? "POOR" : "DYSFUNCTIONAL";
 const tierClass = (tier: Tier) => tier.toLowerCase();
 function tierForSignal(status: "STRONG" | "FAIR" | "NEEDS WORK", strength: number): Tier {
   if (status === "STRONG") return strength >= 90 ? "ELITE" : "GREAT";
@@ -45,9 +45,9 @@ function fitForSeason(run: NbaGmDevRun, catalog: readonly NbaGmDevPlayer[], year
     mean(rotation.filter(row => ["PF", "C", "BIG"].includes(row.slot)).map(row => row.player), "rebounding"),
   ];
   const tiers = signals.map((signal, index) => tierForSignal(signal.status, scores[index]!));
-  const average = tiers.reduce((sum, tier) => sum + tierOrder.indexOf(tier), 0) / 6;
-  const overall = tierOrder[Math.max(0, Math.min(5, Math.round(average)))]!;
-  return { tiers, overall, signals };
+  const index = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+  const overall = tierFromIndex(index);
+  return { tiers, overall, index };
 }
 
 export function NbaGmTeamFit({ run, catalog, season }: {
@@ -59,9 +59,23 @@ export function NbaGmTeamFit({ run, catalog, season }: {
   return <section className="nba-gm-team-fit surface-card" aria-label="NBA GM team fit by season">
     <header className="nba-gm-team-fit__header">
       <div><small>{season === 1 ? "AFTER SEASON 1" : "THREE-SEASON RECAP"}</small><h2>TEAM FIT</h2></div>
-      {season === 1 && <strong className={`nba-gm-team-fit__tier is-${tierClass(data[0]!.fit!.overall)}`}>{data[0]!.fit!.overall}</strong>}
     </header>
-    <p className="nba-gm-team-fit__note">Six roster-composition categories · scouting tiers, not extra simulation points</p>
+    <div className="nba-gm-team-fit__summary">
+      {data.map(item => <div className="nba-gm-team-fit__year" key={item.year}>
+        <small>YEAR {item.year}</small>
+        <strong>{item.fit!.index}</strong>
+        <b className={`nba-gm-team-fit__tier is-${tierClass(item.fit!.overall)}`}>{item.fit!.overall}</b>
+      </div>)}
+    </div>
+    <div className="nba-gm-team-fit__meter" aria-label="Overall roster composition index">
+      <div className="nba-gm-team-fit__meter-label"><strong>OVERALL TEAM FIT</strong><span>Roster composition index</span></div>
+      <div className="nba-gm-team-fit__meter-track">
+        {data.map(item => <span key={item.year} className="nba-gm-team-fit__marker" style={{left: `${item.fit!.index}%`}} title={`Year ${item.year}: ${item.fit!.index}`}>
+          <i/>{season === 3 && <b>Y{item.year}</b>}
+        </span>)}
+      </div>
+      <div className="nba-gm-team-fit__meter-ends"><span>DYSFUNCTIONAL</span><span>ELITE</span></div>
+    </div>
     <div className="nba-gm-team-fit__table" role="table" aria-label="Six basketball fit categories">
       <div className="nba-gm-team-fit__row nba-gm-team-fit__column-head" role="row">
         <span role="columnheader">CATEGORY</span>
@@ -74,10 +88,6 @@ export function NbaGmTeamFit({ run, catalog, season }: {
           return <strong role="cell" key={item.year} className={`nba-gm-team-fit__tier is-${tierClass(tier)}`}>{tier}</strong>;
         })}
       </div>)}
-      <div className="nba-gm-team-fit__row nba-gm-team-fit__overall" role="row">
-        <span role="rowheader">OVERALL FIT</span>
-        {data.map(item => <strong role="cell" key={item.year} className={`nba-gm-team-fit__tier is-${tierClass(item.fit!.overall)}`}>{item.fit!.overall}</strong>)}
-      </div>
     </div>
   </section>;
 }
