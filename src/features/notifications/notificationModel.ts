@@ -31,6 +31,7 @@ export const notificationKinds = [
   "daily_challenge_available",
   "achievement_unlocked",
   "new_game_available",
+  "nba_gm_launch_available",
   "ranking_refresh_available",
   "fighter_watchlist_added",
   "card_change_detected",

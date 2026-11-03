@@ -137,7 +137,7 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
     <div className="nba-gm-dev__reveal-grid">
       {run.results.filter(season=>season.season>=2).map(season=><article key={season.season}>
         <small className="nba-gm-dev__reveal-year">YEAR {season.season}</small>
-        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{(run.simulationModelVersion===7||run.simulationModelVersion===8)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
+        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{(run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
         <b>{season.wins}–{season.losses}</b>
         <em>{nbaGmPlayoffFinishText(season.finish)}</em>
         {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
@@ -535,7 +535,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
-        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8}/>
+        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>

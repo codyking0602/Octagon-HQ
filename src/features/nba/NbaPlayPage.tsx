@@ -183,6 +183,13 @@ export default function NbaPlayPage() {
         <span>5 GAMES</span>
       </div>
       <div className="play-v2__room-grid">
+        <button type="button" className="play-v2__game"
+          onClick={() => navigate("/nba/gm")}>
+          <span className="play-v2__game-mark" aria-hidden="true">GM</span>
+          <strong>NBA GM</strong>
+          <small>Build your seven-player franchise · 3 seasons</small>
+          <span className="play-v2__game-arrow" aria-hidden="true">↗</span>
+        </button>
         {NBA_CASUAL_GAME_TYPES.map(game => {
           const meta = NBA_CASUAL_GAME_META[game];
           return <button key={game} type="button" className="play-v2__game"
@@ -193,13 +200,7 @@ export default function NbaPlayPage() {
             <span className="play-v2__game-arrow" aria-hidden="true">↗</span>
           </button>;
         })}
-        <button type="button" className="play-v2__game"
-          onClick={() => navigate("/nba/gm")}>
-          <span className="play-v2__game-mark" aria-hidden="true">GM</span>
-          <strong>NBA GM</strong>
-          <small>Build your seven-player franchise · 3 seasons</small>
-          <span className="play-v2__game-arrow" aria-hidden="true">↗</span>
-        </button>
+
       </div>
     </section>
 

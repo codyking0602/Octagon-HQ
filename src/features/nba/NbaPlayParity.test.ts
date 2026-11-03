@@ -21,6 +21,8 @@ describe("NBA Play mirrors UFC Play layout", () => {
       lastIndex = at;
     }
     expect(page).toContain('className="play-v2__room-grid"');
+    expect(page.indexOf('navigate("/nba/gm")')).toBeLessThan(page.indexOf('NBA_CASUAL_GAME_TYPES.map(game =>'));
+    expect(page).toContain("<span>5 GAMES</span>");
     expect(page).toContain('className="play-v2__game"');
     expect(page).toContain('className="play-v2__metrics"');
     expect(page).toContain('className="play-v2__daily-row"');
