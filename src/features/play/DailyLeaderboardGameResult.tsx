@@ -753,7 +753,8 @@ function SportsFeudLeaderboardResult({
               accepted: review.accepted === true,
               matched_answer: review.matched ?? null,
               points: Number(review.points ?? 0),
-              reviewed: true,
+              reviewed: review.accepted === true,
+              editorial_invalid: review.accepted === false,
               editorial_excluded: review.excluded === true,
             } : guess;
           });
@@ -823,7 +824,8 @@ function SportsFeudLeaderboardResult({
                               : null}
                           </span>
                           <em>{guess.editorial_excluded === true ? "NOT COUNTED · BOARD FILLED"
-                            : guess.reviewed === true ? (accepted ? "VALID · REVIEWED" : "INVALID MATCH · CORRECTED")
+                            : guess.editorial_invalid === true ? "INVALID MATCH · CORRECTED"
+                            : guess.reviewed === true ? "VALID · REVIEWED"
                             : accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
                         </div>
                       );
