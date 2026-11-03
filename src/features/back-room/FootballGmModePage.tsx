@@ -786,6 +786,7 @@ export function CandidateBoard({
           {visibleCandidates.map(({ player, salary }) => (
             <button
               type="button"
+              className="football-gm__draft-choice"
               onClick={() => onPick(player.id)}
               key={player.id}
             >
@@ -793,14 +794,20 @@ export function CandidateBoard({
               <span className="football-gm__picker-player-copy">
                 <strong>{player.name}</strong>
                 <small>{player.position} · AGE {player.age}</small>
-                <span className="football-gm__candidate-tags">
-                  <PlayerQualityPill player={player} />
-                  <PlayerOutlookPill player={player} />
-                  <span>{player.gameContract}</span>
-                  <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                    {footballGmRepriceLabel(player.extensionRisk)}
-                  </span>
-                </span>
+              </span>
+              <span className="football-gm__candidate-tags football-gm__draft-choice-tags">
+                <PlayerQualityPill player={player} />
+                <PlayerOutlookPill player={player} />
+                {player.gameContract === "3YR" ? (
+                  <span className="risk-locked" aria-label="Three-year contract, salary locked">3YR · LOCKED</span>
+                ) : (
+                  <>
+                    <span>{player.gameContract}</span>
+                    <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
+                      {footballGmRepriceLabel(player.extensionRisk)}
+                    </span>
+                  </>
+                )}
               </span>
               <span className="football-gm__picker-action">
                 <b>{footballGmMoney(salary)}</b>
