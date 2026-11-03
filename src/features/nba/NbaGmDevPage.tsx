@@ -376,7 +376,7 @@ export default function NbaGmDevPage(){
     run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam||
     run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
-  const draftStage=run?.phase==="draft"?<section className="nba-gm-dev__draft" aria-label="NBA GM draft wheel">
+  const draftStage=run?.phase==="draft"?<section className={`nba-gm-dev__draft${run.pendingTeam&&!wheelSpinning?" is-team-picked":""}`} aria-label="NBA GM draft wheel">
     <div className="football-gm__draft-context nba-gm-dev__draft-context" aria-label="Draft round and positions">
       <span>ROUND {run.picks.length+1} OF 7</span>
       <strong>{run.pendingTeam?"CHOOSE YOUR PLAYER":"PG · SG · SF · PF · C · GUARD · BIG"}</strong>
