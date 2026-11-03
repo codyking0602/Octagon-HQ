@@ -70,6 +70,13 @@ describe("NFL GM / NBA GM comparable OVR meaning", () => {
   it("versions new runs and routes both season reveals and final experience to same rating", () => {
     expect(initialRun("nba-parity-solo").ratingScaleVersion).toBe(2);
     expect(initialRun("nba-parity-solo").playoffScoringVersion).toBe(2);
+    // Avoid mixing old and recalibrated scores in an already-live weekly title.
+    expect(initialRun("weekly-gm:2026-11-03:standard").ratingScaleVersion).toBeUndefined();
+    expect(initialRun("weekly-gm:2026-11-10:standard").ratingScaleVersion).toBe(2);
+    // Existing head-to-head challenges retain the creator's score version.
+    expect(page).toContain("setup?.ratingScaleVersion === 2 ? 2 : undefined");
+    expect(page).toContain("setup?.playoffScoringVersion === 2 ? 2 : undefined");
+    expect(page).toContain("ratingScaleVersion: run.ratingScaleVersion ?? null");
     expect(page).toContain("ratingScaleVersion={run.ratingScaleVersion}");
     expect(page).toContain("ratingScaleVersion: run.ratingScaleVersion");
     expect(page).toContain("run.ratingScaleVersion, yearOneRoster");
