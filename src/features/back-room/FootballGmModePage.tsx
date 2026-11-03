@@ -111,6 +111,8 @@ export interface PersistedRun {
   shoppedPlayerIds: string[];
   /** New franchises use the shared two-championship playoff reward. */
   playoffScoringVersion?: 2;
+  /** New NFL games apply the NBA-comparable team overall meaning. */
+  ratingScaleVersion?: 2;
   pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
@@ -131,6 +133,14 @@ function challengeSeed(value: ChallengeJson | undefined) {
   return [FOOTBALL_GM_VERSION, "football-gm-v10-shared-real-seasons", "football-gm-v9-grade-driven-playoffs"].includes(String(row?.version)) && typeof row?.seed === "string"
     ? row.seed
     : null;
+}
+
+function challengeScoringFlags(value: ChallengeJson | undefined): Pick<PersistedRun, "ratingScaleVersion" | "playoffScoringVersion"> {
+  const setup = record(value);
+  return {
+    ratingScaleVersion: setup?.ratingScaleVersion === 2 ? 2 : undefined,
+    playoffScoringVersion: setup?.playoffScoringVersion === 2 ? 2 : undefined,
+  };
 }
 
 function freshSeed() {
@@ -168,6 +178,9 @@ export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRu
     tradeTargetPlayerId: null,
     shoppedPlayerIds: [],
     playoffScoringVersion: 2,
+    // The current Nov 3 Weekly GM is already live: every participant in the
+    // same event must stay on the original scale until the next competition.
+    ratingScaleVersion: seed.startsWith("weekly-gm:2026-11-03:") ? undefined : 2,
     pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
@@ -376,7 +389,7 @@ function gmAuditSnapshot(
         : null,
     },
     finalResult: run.phase === "final" && run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion, ratingScaleVersion: run.ratingScaleVersion })
       : null,
   });
 }
@@ -1155,12 +1168,14 @@ export function SeasonCard({
   yearOneRoster,
   roster,
   yearOneRecap = false,
+  ratingScaleVersion,
 }: {
   seed: string;
   year: 1 | 2 | 3;
   yearOneRoster: readonly FootballGmRosterEntry[];
   roster: readonly FootballGmRosterEntry[];
   yearOneRecap?: boolean;
+  ratingScaleVersion?: 2;
 }) {
   const result = footballGmSeasonResultV2({ seed, yearOneRoster, roster, year });
   return (
@@ -1170,11 +1185,11 @@ export function SeasonCard({
         <>
           <strong>{footballGmSeasonRecordLabel(result) ?? "—"}</strong>
           <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
-          <span>{footballGmTeamOverall(result.teamGrade)} OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
+          <span>{footballGmTeamOverall(result.teamGrade, ratingScaleVersion)} OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
         </>
       ) : (
         <>
-          <strong className="football-gm__reveal-overall">{footballGmTeamOverall(result.teamGrade)} <small>OVR</small></strong>
+          <strong className="football-gm__reveal-overall">{footballGmTeamOverall(result.teamGrade, ratingScaleVersion)} <small>OVR</small></strong>
           {footballGmSeasonRecordLabel(result) ? <span className="football-gm__reveal-record">{footballGmSeasonRecordLabel(result)}</span> : null}
           <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
           <span className="football-gm__reveal-odds">{result.titleOdds.toFixed(1)}% TITLE ODDS</span>
@@ -1586,7 +1601,7 @@ export default function FootballGmModePage({
         ? { ...persisted, phase: "draft" }
         : persisted;
     }
-    const fresh = initialRun(seed);
+    const fresh = { ...initialRun(seed), ...(storedSeed ? challengeScoringFlags(profileMatch.challenge?.setup) : {}) };
     return startImmediately ? { ...fresh, phase: "draft" } : fresh;
   });
   const [challengeStatus, setChallengeStatus] = useState("");
@@ -1624,7 +1639,7 @@ export default function FootballGmModePage({
         : persisted);
       return;
     }
-    const fresh = initialRun(storedSeed);
+    const fresh = { ...initialRun(storedSeed), ...challengeScoringFlags(profileMatch.challenge?.setup) };
     setRun(startImmediately ? { ...fresh, phase: "draft" } : fresh);
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
@@ -1732,9 +1747,9 @@ export default function FootballGmModePage({
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
   const finalResult = useMemo(
     () => run.phase === "final"
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons, playoffScoringVersion: run.playoffScoringVersion, ratingScaleVersion: run.ratingScaleVersion })
       : null,
-    [finalRoster, run.phase, run.seed, run.resolvedSeasons, run.playoffScoringVersion, yearOneRoster],
+    [finalRoster, run.phase, run.seed, run.resolvedSeasons, run.playoffScoringVersion, run.ratingScaleVersion, yearOneRoster],
   );
 
   useEffect(() => {
@@ -2134,6 +2149,8 @@ export default function FootballGmModePage({
         seed: run.seed,
         cap: FOOTBALL_GM_CAP,
         rosterSlots: [...FOOTBALL_GM_ROSTER_SLOTS],
+        ratingScaleVersion: run.ratingScaleVersion ?? null,
+        playoffScoringVersion: run.playoffScoringVersion ?? null,
       }),
       creatorResult: asJson(finalResult),
       shareTitle: "The GM Challenge",
@@ -2358,7 +2375,7 @@ export default function FootballGmModePage({
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <section className="football-gm__year-reveal surface-card">
             <p className="eyebrow">YEAR 1 COMPLETE</p>
-            <SeasonCard seed={run.seed} year={1} yearOneRoster={run.roster} roster={run.roster} yearOneRecap />
+            <SeasonCard seed={run.seed} year={1} yearOneRoster={run.roster} roster={run.roster} yearOneRecap ratingScaleVersion={run.ratingScaleVersion} />
             <button className="primary-action" type="button" onClick={() => {
               patch({
                 phase: "offseason",
@@ -2493,8 +2510,8 @@ export default function FootballGmModePage({
           <p className="eyebrow">THE WINDOW</p>
           <h1>YEARS 2 &amp; 3</h1>
           <div className="football-gm__season-grid">
-            <SeasonCard seed={run.seed} year={2} yearOneRoster={run.roster} roster={run.finalRoster} />
-            <SeasonCard seed={run.seed} year={3} yearOneRoster={run.roster} roster={run.finalRoster} />
+            <SeasonCard seed={run.seed} year={2} yearOneRoster={run.roster} roster={run.finalRoster} ratingScaleVersion={run.ratingScaleVersion} />
+            <SeasonCard seed={run.seed} year={3} yearOneRoster={run.roster} roster={run.finalRoster} ratingScaleVersion={run.ratingScaleVersion} />
           </div>
           <button className="primary-action" type="button" onClick={() => {
             const resolvedSeasons: FootballGmSeasonResultV2[] = [1, 2, 3].map((year) =>

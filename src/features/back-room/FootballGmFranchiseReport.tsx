@@ -9,6 +9,8 @@ export interface FootballGmReportRun {
   finalRoster: readonly FootballGmRosterEntry[];
   negotiationConsequences: FootballGmNegotiationConsequences;
   resolvedSeasons?: readonly FootballGmSeasonResultV2[];
+  playoffScoringVersion?: 2;
+  ratingScaleVersion?: 2;
 }
 
 /** The same approved final result presentation powers solo and multiplayer. */
