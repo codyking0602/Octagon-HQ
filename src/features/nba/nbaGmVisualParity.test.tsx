@@ -37,8 +37,11 @@ describe("NBA GM 30-team headshot and Football presentation parity", () => {
 
   it("binds the server-owned repricing forecast to the approved scouting pills", () => {
     expect(page).toContain("nbaGmRepriceLabel(player.repriceRisk,player.gameContract)");
-    expect(page).toContain("nba-gm-dev__reprice is-");
-    expect(css).toContain(".nba-gm-dev__reprice.is-high");
+    expect(page).toContain("nba-gm-dev__scout-pills football-gm__candidate-tags");
+    expect(page).toContain("risk-");
+    expect(page).toContain("risk-locked");
+    expect(css).toContain("/* Locked GM player-card parity");
+    expect(css).not.toContain(".nba-gm-dev .football-gm__quality-pill.quality-impact { border-color: rgba(243,164,73,.5)");
     expect(repository).toContain('repriceRisk:z.enum(["LOW","MEDIUM","HIGH","LOCKED"]).nullable().optional()');
   });
 
