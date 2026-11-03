@@ -104,14 +104,14 @@ export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlay
 }
 
 /** Two championships establish a dynasty even if Year 1 ends early.
- * Keep the actual third finish meaningful, reward exactly two titles at
- * 96–98, and reserve 100 for a three-peat. V2 opt-in only: older saves and
- * finalized weekly titles retain their original playoff components.
+ * Preserve differences in the third season by covering three-quarters
+ * of the distance from the raw three-year average to 100. Three titles
+ * remain the only automatic 100. V2 opt-in only; saved runs stay unchanged.
  */
 export function footballGmDynastyResumeScore(finishes: readonly FootballGmPlayoffFinish[]) {
   const base = footballGmThreeYearResumeScore(finishes);
   if (finishes.length !== 3 || finishes.filter((finish) => finish === "Champion").length !== 2) return base;
-  return Math.round(Math.max(base, Math.min(98, Math.max(96, base + 8))) * 10) / 10;
+  return Math.round((base + (100 - base) * 0.75) * 10) / 10;
 }
 
 /** A full 17-game season is 60–100, so every simulated win has value. */
