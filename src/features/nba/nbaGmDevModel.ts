@@ -49,6 +49,8 @@ export interface NbaGmDevRun {
   caps: NbaGmSalaryWindow;
   results: NbaGmDevSeason[];
   shopPlayerId: string | null;
+  /** Server-owned: spinning a trade partner spends this player's shopping attempt. */
+  shoppedPlayerIds?: string[];
   tradeTeam: string | null;
   tradeAttempts: number;
   displacedAssets?: string[];

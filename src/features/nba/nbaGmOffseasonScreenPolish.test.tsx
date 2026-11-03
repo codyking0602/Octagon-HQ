@@ -52,7 +52,7 @@ describe("NBA GM public offseason compact parity",()=>{
     expect(page).toContain("nba-gm-dev__inline-shop");
     expect(page).not.toContain('className="nba-gm-dev__row-actions"');
     expect(css).toContain(".nba-gm-dev__roster-panel .nba-gm-dev__inline-shop");
-    expect(page).toContain('aria-label={"Shop "+player.name}');
+    expect(page).toContain('aria-label={(run.shoppedPlayerIds?.includes(player.id)?"Already shopped ":"Shop ")+player.name}');
   });
   it("places the collapsed release before advance while preserving cap and confirmation",()=>{
     const screen=page.slice(page.indexOf('{run&&<>'),page.indexOf('{run.phase==="final"'));

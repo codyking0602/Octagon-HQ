@@ -6,7 +6,7 @@ declare
   v_owner uuid:=extensions.gen_random_uuid();
   v_outsider uuid:=extensions.gen_random_uuid();
   v_state jsonb;v_player text;v_team text;v_index integer;v_year integer;
-  v_spend bigint;v_old text;v_rejected boolean;v_before jsonb;v_year_one jsonb;
+  v_spend bigint;v_old text;v_second text;v_rejected boolean;v_before jsonb;v_year_one jsonb;
   v_legacy jsonb;v_trade_accepted boolean;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -95,16 +95,21 @@ begin
   if v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null then
     raise exception 'Failed to cancel trade without roster changes'; end if;
 
-  -- Negotiation is evaluated server-side. Not every partner must offer a legal
-  -- one-for-one deal: displaying a player never implies auto-acceptance.
+  -- Once spun, the first player is permanently SHOPPED. Use a different
+  -- roster player to verify the negotiation remains possible and server-owned.
+  v_rejected:=false;
+  begin perform public.nba_gm_dev_action('shop',null,v_old);
+  exception when others then v_rejected:=true;end;
+  if not v_rejected then raise exception 'Trade wheel re-shopped an already-spun player';end if;
   v_year_one:=v_state->'yearOnePicks';
-  v_state:=public.nba_gm_dev_action('shop',null,v_old);
+  v_second:=v_state->'picks'->1->>'playerId';
+  v_state:=public.nba_gm_dev_action('shop',null,v_second);
   v_state:=public.nba_gm_dev_action('trade-spin');
   select p.id into v_player from private.nba_gm_dev_players p
     where p.team_code=v_state->>'tradeTeam'
       and private.nba_gm_v2_can_add(jsonb_set(v_state,'{picks}',
         (select coalesce(jsonb_agg(x),'[]'::jsonb) from jsonb_array_elements(v_state->'picks') x
-          where x->>'playerId'<>v_old)),p.id)
+          where x->>'playerId'<>v_second)),p.id)
     order by p.overall,p.id limit 1;
   if v_player is not null then
     v_state:=public.nba_gm_dev_action('trade',null,v_player);

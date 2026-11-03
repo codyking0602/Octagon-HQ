@@ -982,6 +982,54 @@
 }
 
 
+
+/* NBA trade asking prices: NFL-equivalent asset scouting with mobile-first layouts. */
+.nba-gm-dev .nba-gm-dev__asking-price > .nba-gm-dev__trade-columns {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:0;gap:0;border-top:1px solid #393634;
+}
+.nba-gm-dev .nba-gm-dev__trade-column {display:grid;align-content:start;gap:7px;padding:12px;min-width:0;}
+.nba-gm-dev .nba-gm-dev__trade-column + .nba-gm-dev__trade-column {border-left:1px solid #393634;}
+.nba-gm-dev .nba-gm-dev__trade-column > small {font-size:10px;letter-spacing:.1em;font-weight:900;color:#e3b477;}
+.nba-gm-dev .nba-gm-dev__offer-player {
+  min-width:0;border:1px solid #3b3937;border-left:3px solid var(--nba-gm-accent);
+  border-radius:9px;background:#191c1e;overflow:hidden;
+}
+.nba-gm-dev .nba-gm-dev__offer-player > summary {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:7px;list-style:none;cursor:pointer;padding:10px 8px;
+}
+.nba-gm-dev .nba-gm-dev__offer-player > summary::-webkit-details-marker {display:none;}
+.nba-gm-dev .nba-gm-dev__offer-player > summary:focus-visible {outline:2px solid #f3a449;outline-offset:-2px;}
+.nba-gm-dev .nba-gm-dev__offer-identity {display:flex;align-items:flex-start;gap:8px;min-width:0;flex:1;}
+.nba-gm-dev .nba-gm-dev__offer-identity .nba-gm-dev__portrait {flex:0 0 36px;width:36px;height:36px;min-width:36px;min-height:36px;}
+.nba-gm-dev .nba-gm-dev__offer-copy {display:grid;gap:4px;min-width:0;flex:1;}
+.nba-gm-dev .nba-gm-dev__offer-copy > small {color:#9faab1;font-size:9px;line-height:1.3;overflow-wrap:anywhere;}
+.nba-gm-dev .nba-gm-dev__offer-copy > strong {font-size:13px;color:#fff;line-height:1.2;overflow-wrap:anywhere;}
+.nba-gm-dev .nba-gm-dev__offer-copy .nba-gm-dev__scout-pills {display:flex;flex-wrap:wrap;gap:4px;min-width:0;}
+.nba-gm-dev .nba-gm-dev__offer-copy .football-gm__quality-pill,
+.nba-gm-dev .nba-gm-dev__offer-copy .football-gm__outlook-pill {font-size:9px;}
+.nba-gm-dev .nba-gm-dev__offer-price {display:grid;justify-items:end;gap:4px;flex-shrink:0;align-self:center;}
+.nba-gm-dev .nba-gm-dev__offer-price > b {color:var(--nba-gm-accent-soft);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.nba-gm-dev .nba-gm-dev__offer-price > small {font-size:9px;color:#9ba9b1;white-space:nowrap;}
+.nba-gm-dev .nba-gm-dev__offer-price > span {font-size:15px;color:#ddb888;line-height:1;transition:transform .15s;}
+.nba-gm-dev .nba-gm-dev__offer-player[open] .nba-gm-dev__offer-price > span {transform:rotate(180deg);}
+.nba-gm-dev .nba-gm-dev__offer-scout {padding:10px;border-top:1px solid #3b3937;display:grid;gap:8px;}
+.nba-gm-dev .nba-gm-dev__offer-scout > small {font-size:10px;color:#e3b477;letter-spacing:.06em;font-weight:900;}
+.nba-gm-dev .nba-gm-dev__offer-scout .nba-gm-dev__skills {grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;}
+.nba-gm-dev .nba-gm-dev__offer-scout .nba-gm-dev__skills > div {min-width:0;}
+.nba-gm-dev .nba-gm-dev__offer-unknown {font-size:12px;color:#f1ada1;padding:10px;}
+.nba-gm-dev .nba-gm-dev__inline-shop:disabled {opacity:.62;cursor:not-allowed;}
+@media (max-width:680px) {
+  .nba-gm-dev .nba-gm-dev__asking-price > .nba-gm-dev__trade-columns {grid-template-columns:minmax(0,1fr);}
+  .nba-gm-dev .nba-gm-dev__trade-column + .nba-gm-dev__trade-column {border-left:0;border-top:1px solid #393634;}
+}
+@media (max-width:370px) {
+  .nba-gm-dev .nba-gm-dev__offer-player > summary {padding:8px 6px;gap:5px;}
+  .nba-gm-dev .nba-gm-dev__offer-identity {gap:5px;}
+  .nba-gm-dev .nba-gm-dev__offer-identity .nba-gm-dev__portrait {width:30px;height:30px;flex-basis:30px;min-width:30px;min-height:30px;}
+  .nba-gm-dev .nba-gm-dev__offer-price > b {font-size:11px;}
+}
+
 /* NBA GM: one compact offseason with factual player development in the roster. */
 .nba-gm-dev .nba-gm-dev__roster-development { display:block;font-size:10px;font-weight:800;line-height:1.3;color:#a3b3bf; }
 .nba-gm-dev .nba-gm-dev__roster-development.is-improved,
