@@ -1,4 +1,5 @@
 import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
+import { NbaGmTeamFit } from "./NbaGmTeamFit";
 import { useState } from "react";
 import { footballGmDevelopmentResult } from "../back-room/footballGmScouting";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
@@ -100,6 +101,7 @@ export function NbaGmFinalExperience({
         <div><b>{arrivals.length}</b><small>OFFSEASON CHANGES</small></div>
       </div>
     </section>
+    <NbaGmTeamFit run={run} catalog={catalog} season={3}/>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
       <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>{(run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"HISTORICAL OFF/DEF GRADES · RECORD · PLAYOFF FINISH":"SIM OFF/DEF AVERAGE · RECORD · PLAYOFF FINISH"}</small></header>
       <div className="gm-final__seasons">
