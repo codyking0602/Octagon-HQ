@@ -277,7 +277,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     const publication = buildFamilyFeudDailySetup(
       persistedPack, "2026-11-01", "nba-daily-regular-v3-oct30-public",
     );
-    for (const answer of ["3 Pointer", "Three point shot", "Slam dunk", "Free throw", "Buzzer-beater", "Referee whistle"]) {
+    for (const answer of ["3 Pointer", "Three", "Three point shot", "Slam dunk", "Free throw", "Buzzer-beater", "Referee whistle"]) {
       const { submission } = strikeOutBothBoards(publication);
       const result = advanceFamilyFeudDailyRuntime(context(publication, submission), {
         type: "answer", answer, question_id: "nba-feud-nba-tv-broadcast",
