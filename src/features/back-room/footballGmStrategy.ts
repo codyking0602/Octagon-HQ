@@ -69,6 +69,20 @@ const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
   [98, 99],
 ] as const;
 
+/**
+ * New NFL GM franchises use NBA's interpretation of team quality, not
+ * the historical NFL display compression that made 90 raw = 96 OVR.
+ * Calibrated against the unchanged NFL championship probability curve:
+ * a 90.6 raw team has ~24% title odds, matching a 92-OVR NBA contender
+ * with ~25% odds. Older saved franchises keep their original ratings.
+ */
+export const FOOTBALL_GM_NBA_PARITY_TEAM_OVR_ANCHORS = [
+  [78,70],[80,72],[82,75],[84,79],[85.5,83],
+  [87,85],[88,87],[89,89],[90,91],[90.6,92],
+  [91.1,93],[92,95],[92.8,96],[93.7,97],[94.5,98],
+  [96,99],[98,99],
+] as const;
+
 const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>> = {
   "Missed Playoffs": 70,
   "Wild Card": 80,
@@ -78,14 +92,16 @@ const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>
   Champion: 100,
 };
 
-export function footballGmTeamOverall(teamGrade: number) {
-  const bounded = clamp(teamGrade, FOOTBALL_GM_TEAM_OVR_ANCHORS[0][0], FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)![0]);
-  let low: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS[0];
-  let high: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)!;
-  for (let index = 1; index < FOOTBALL_GM_TEAM_OVR_ANCHORS.length; index += 1) {
-    if (bounded <= FOOTBALL_GM_TEAM_OVR_ANCHORS[index]![0]) {
-      low = FOOTBALL_GM_TEAM_OVR_ANCHORS[index - 1]!;
-      high = FOOTBALL_GM_TEAM_OVR_ANCHORS[index]!;
+export function footballGmTeamOverall(teamGrade: number, ratingScaleVersion?: 2) {
+  const anchors: readonly (readonly [number, number])[] = ratingScaleVersion === 2
+    ? FOOTBALL_GM_NBA_PARITY_TEAM_OVR_ANCHORS : FOOTBALL_GM_TEAM_OVR_ANCHORS;
+  const bounded = clamp(teamGrade, anchors[0]![0], anchors.at(-1)![0]);
+  let low: readonly [number, number] = anchors[0]!;
+  let high: readonly [number, number] = anchors.at(-1)!;
+  for (let index = 1; index < anchors.length; index += 1) {
+    if (bounded <= anchors[index]![0]) {
+      low = anchors[index - 1]!;
+      high = anchors[index]!;
       break;
     }
   }
@@ -1344,6 +1360,8 @@ export function footballGmFinalResultV2(input: {
   finalRoster: readonly FootballGmRosterEntry[];
   resolvedSeasons?: readonly FootballGmSeasonResultV2[];
   playoffScoringVersion?: 2;
+  /** NBA-equivalent team-strength scale, opt-in for new NFL franchises. */
+  ratingScaleVersion?: 2;
 }) : FootballGmFinalResultV2 {
   const seasons = input.resolvedSeasons?.length === 3
     ? input.resolvedSeasons
@@ -1353,7 +1371,7 @@ export function footballGmFinalResultV2(input: {
         footballGmSeasonResultV2({ seed: input.seed, yearOneRoster: input.yearOneRoster, roster: input.finalRoster, year: 3 }),
       ];
   const optimizedFinal = footballGmReflowRoster(input.finalRoster, 3, input.seed) ?? input.finalRoster;
-  const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade));
+  const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade, input.ratingScaleVersion));
   const rosterManagementScore = Math.round((teamOveralls.reduce((sum, overall) => sum + overall, 0) / teamOveralls.length) * 10) / 10;
   // Pre-record historical saves do not contain 17-game records. Use the
   // underlying roster score as a neutral proxy, never invent game results.
