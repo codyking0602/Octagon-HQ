@@ -362,7 +362,7 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
 
 function WeeklyCurrent({}: Record<string, never>) {
   const now = Date.now();
-  const gmWeek = now >= Date.parse("2026-10-13T05:00:00Z") && now < Date.parse("2026-11-03T06:00:00Z");
+  const gmWeek = now >= Date.parse("2026-10-13T05:00:00Z") && now < Date.parse("2026-11-10T06:00:00Z");
   return (
     <section className="play-v2__weekly play-v2__weekly--compact" aria-label="Weekly Featured Championship">
       <Link className="play-v2__weekly-link" to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}>

@@ -1594,6 +1594,10 @@ export default function FootballGmModePage({
         return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft", spinIndex: 1,
           roster: [{ slot: chosen.family, playerId: chosen.id, acquired: "draft" }] };
       }
+      // Nov 3 standard featured GM mirrors Casual: seven wheel picks, no forced starter.
+      if (weeklyRun.seed.startsWith("weekly-gm:2026-11-03:")) {
+        return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft" };
+      }
       const qbId = weeklyRun.seed.startsWith("weekly-gm:2026-10-20:")
         ? (weeklyRun.scenario === "elite" ? "DAL|QB|dakprescott" : "ATL|QB|michaelpenix")
         : (weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart");
