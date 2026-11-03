@@ -4,7 +4,7 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7)]).optional(),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8)]).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
@@ -42,7 +42,7 @@ const player=z.object({
   pricingKind:z.enum(["GAME_FIXTURE_NOT_REAL_CONTRACT","SIGNED_REAL_SALARY_WINDOW"]),eligibilityKind:z.literal("PROVISIONAL_EDITORIAL"),
   officialNbaPlayerId:z.string().nullable(),ageAtStart:z.number().int().min(18).max(50).nullable().optional(),
   developmentOdds:z.object({breakoutPct:z.number().min(0).max(100),improvePct:z.number().min(0).max(100),declinePct:z.number().min(0).max(100),steadyPct:z.number().min(0).max(100)}).nullable().optional(),
-  // Keep the owner-gated backend forecast; Zod strips unrecognized keys.
+  // Backend owns the salary forecasts; Zod strips unrecognized keys.
   repriceRisk:z.enum(["LOW","MEDIUM","HIGH","LOCKED"]).nullable().optional(),
   officialRosterPosition:z.string().min(1),
   positionReview:z.literal("unverified"),reviewFlags:z.array(z.string()).min(1),
@@ -69,7 +69,7 @@ export function createNbaGmDevRepository(supplied?:RpcClient|null){
     },
     async catalog():Promise<NbaGmDevPlayer[]>{
       const {data,error}=await client.rpc("nba_gm_dev_catalog");
-      if(error)throw Error(error.message||"NBA GM private catalog unavailable.");
+      if(error)throw Error(error.message||"NBA GM catalog unavailable.");
       return z.array(player).length(330).parse(data) as NbaGmDevPlayer[];
     },
     async action(operation:NbaGmDevOperation,playerId?:string,tradeChipId?:string):Promise<NbaGmDevRun|null>{
