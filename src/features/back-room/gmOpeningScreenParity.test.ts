@@ -6,7 +6,7 @@ const nba = readFileSync("src/features/nba/NbaGmDevPage.tsx", "utf8");
 const nflCss = readFileSync("src/styles/football-gm-mode.css", "utf8");
 const nbaCss = readFileSync("src/styles/nba-gm-dev.css", "utf8");
 
-describe("NFL and private NBA GM opening-screen parity", () => {
+describe("NFL and public NBA GM opening-screen parity", () => {
   it("puts the first wheel and its player picker ahead of the empty seven-slot roster", () => {
     expect(nfl).toContain("run.roster.length === 0 ? draftWheelStage : null");
     expect(nfl).toContain("run.roster.length > 0 ? draftWheelStage : null");
@@ -18,10 +18,11 @@ describe("NFL and private NBA GM opening-screen parity", () => {
     expect(nba).toContain('run.pendingTeam&&!wheelSpinning&&<PlayerPicker');
   });
 
-  it("uses a compact Football-style NBA front-office heading while retaining private-only status", () => {
+  it("uses a compact Football-style NBA front-office heading with a public sign-in flow", () => {
     expect(nba).toContain('className="football-gm__header nba-gm-dev__header"');
     expect(nba).toContain("NBA FRONT OFFICE");
-    expect(nba).toContain("OWNER ONLY · NOT PUBLIC");
+    expect(nba).not.toContain("OWNER ONLY · NOT PUBLIC");
+    expect(nba).toContain("SIGN IN TO PLAY");
     expect(nba).not.toContain("Spin a team. Draft your seven-player rotation.");
     expect(nbaCss).toContain("/* Shared GM opening presentation");
     expect(nbaCss).toContain("background: none;");
