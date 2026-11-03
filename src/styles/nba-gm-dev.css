@@ -1465,7 +1465,7 @@
 .nba-gm-final .gm-final__roster-list .gm-final__band { margin: 0; }
 .nba-gm-final .gm-final__roster-list .gm-final__band-track { height: 9px; }
 .nba-gm-final .gm-final__roster-list .gm-final__band-legend { margin-top: 3px; }
-.nba-gm-team-fit__summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin: 12px 0; }
+.nba-gm-team-fit__summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
 .nba-gm-team-fit__summary:has(> :only-child) { grid-template-columns: 1fr; }
 .nba-gm-team-fit__year { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 5px; border: 1px solid rgba(255,255,255,.10); border-radius: 10px; background: rgba(255,255,255,.035); }
 .nba-gm-team-fit__year > small { font-size: 10px; color: #aab2c0; font-weight: 750; }
