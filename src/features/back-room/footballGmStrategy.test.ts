@@ -40,6 +40,7 @@ import {
   footballGmSeasonRoll,
   footballGmTeamOverall,
   footballGmThreeYearResumeScore,
+  footballGmDynastyResumeScore,
   footballGmSignFreeAgent,
   footballGmSwapDisplacedAsset,
   footballGmTargetOfferDominates,
@@ -279,6 +280,49 @@ describe("Football GM strategy v7", () => {
     expect(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(12), 80))
       .toBeGreaterThan(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(9), 80));
     expect(footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"])).toBe(88.7);
+  });
+
+  it("awards an exceptional but outcome-sensitive playoff grade for two titles", () => {
+    expect(footballGmDynastyResumeScore(["Missed Playoffs", "Champion", "Champion"])).toBe(97.5);
+    expect(footballGmDynastyResumeScore(["Wild Card", "Champion", "Champion"])).toBe(98.3);
+    expect(footballGmDynastyResumeScore(["Divisional", "Champion", "Champion"])).toBe(98.8);
+    expect(footballGmDynastyResumeScore(["Conference Championship", "Champion", "Champion"])).toBe(99.3);
+    expect(footballGmDynastyResumeScore(["Super Bowl Loss", "Champion", "Champion"])).toBe(99.7);
+    expect(footballGmDynastyResumeScore(["Champion", "Champion", "Champion"])).toBe(100);
+    // Single titles do not receive a dynasty award.
+    expect(footballGmDynastyResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"])).toBe(80);
+    expect(footballGmDynastyResumeScore(["Divisional", "Divisional", "Divisional"])).toBe(86);
+    expect(footballGmThreeYearResumeScore(["Missed Playoffs", "Champion", "Champion"])).toBe(90);
+  });
+
+  it("versions playoff grading per franchise without changing completed V1 scores", () => {
+    const roster = codyRunRoster();
+    const baseline = footballGmFinalResultV2({ seed:"old-completed-run", yearOneRoster:roster, finalRoster:roster });
+    const locked = baseline.seasons.map((season,index)=>({
+      ...season, finish: (index===0 ? "Missed Playoffs":"Champion") as typeof season.finish,
+    }));
+    const old = footballGmFinalResultV2({
+      seed:"old-completed-run", yearOneRoster:roster, finalRoster:roster, resolvedSeasons:locked,
+    });
+    const next = footballGmFinalResultV2({
+      seed:"new-franchise", yearOneRoster:roster, finalRoster:roster, resolvedSeasons:locked,
+      playoffScoringVersion:2,
+    });
+    expect(old.seasons).toEqual(next.seasons);
+    expect(old.playoffScore).toBe(90);
+    expect(next.playoffScore).toBe(97.5);
+    expect(next.score).toBe(footballGmScoreFromComponents(
+      next.rosterManagementScore, next.regularSeasonScore, next.playoffScore,
+    ));
+    expect(next.score).toBeGreaterThan(old.score);
+    // Legacy Oct 13/20 weekly titles are deliberately untouched even if
+    // an unusual new replay shares that historical seed.
+    const archive = footballGmFinalResultV2({
+      seed:"weekly-gm:2026-10-20:historical",yearOneRoster:roster,finalRoster:roster,
+      resolvedSeasons:locked,playoffScoringVersion:2,
+    });
+    expect(archive.scoreFormula).toBe("legacy");
+    expect(archive.playoffScore).toBe(94.3);
   });
 
   it("reproduces the October 27 WR matchup from locked real season results", () => {
