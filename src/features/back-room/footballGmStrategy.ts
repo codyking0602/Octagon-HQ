@@ -103,6 +103,19 @@ export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlay
   return Math.round((finishes.reduce((sum, finish) => sum + footballGmSeasonResumeScore(finish), 0) / finishes.length) * 10) / 10;
 }
 
+/** For opted-in new runs, two championships outweigh one disappointing year.
+ * Keep 20% of the original three-season mean (including that bad year)
+ * and give 80% championship credit. Zero/one-title teams keep the mean.
+ * The existing scorer remains untouched for all historical franchises.
+ */
+export function footballGmTwoTitlePlayoffScore(finishes: readonly FootballGmPlayoffFinish[]) {
+  const baseline = footballGmThreeYearResumeScore(finishes);
+  if (finishes.length !== 3 || finishes.filter((finish) => finish === "Champion").length < 2) {
+    return baseline;
+  }
+  return Math.round((80 + baseline * 0.20) * 10) / 10;
+}
+
 /** A full 17-game season is 60–100, so every simulated win has value. */
 export function footballGmSeasonRecordScore(wins: number) {
   return Math.round((60 + (40 * clamp(wins, 0, 17) / 17)) * 10) / 10;
@@ -1332,6 +1345,8 @@ export function footballGmFinalResultV2(input: {
   yearOneRoster: readonly FootballGmRosterEntry[];
   finalRoster: readonly FootballGmRosterEntry[];
   resolvedSeasons?: readonly FootballGmSeasonResultV2[];
+  /** Only runs started after the two-championship scoring calibration opt in. */
+  playoffScoringVersion?: 2;
 }) : FootballGmFinalResultV2 {
   const seasons = input.resolvedSeasons?.length === 3
     ? input.resolvedSeasons
@@ -1351,7 +1366,10 @@ export function footballGmFinalResultV2(input: {
   const regularSeasonScore = knownRecords
     ? footballGmThreeYearRecordScore(seasons.map((season) => season.wins!))
     : rosterManagementScore;
-  const playoffScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
+  const finishes = seasons.map((season) => season.finish);
+  const playoffScore = input.playoffScoringVersion === 2
+    ? footballGmTwoTitlePlayoffScore(finishes)
+    : footballGmThreeYearResumeScore(finishes);
   // The Oct 13 and Oct 20 weekly championships were already finalized under
   // the original 90% roster / 10% playoff formula. Keep those archives exact.
   const scoreFormula = /^weekly-gm:2026-10-(?:13|20):/.test(input.seed) ? "legacy" : "current";

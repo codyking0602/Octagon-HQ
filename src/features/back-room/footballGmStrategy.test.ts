@@ -40,6 +40,7 @@ import {
   footballGmSeasonRoll,
   footballGmTeamOverall,
   footballGmThreeYearResumeScore,
+  footballGmTwoTitlePlayoffScore,
   footballGmSignFreeAgent,
   footballGmSwapDisplacedAsset,
   footballGmTargetOfferDominates,
@@ -279,6 +280,36 @@ describe("Football GM strategy v7", () => {
     expect(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(12), 80))
       .toBeGreaterThan(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(9), 80));
     expect(footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"])).toBe(88.7);
+  });
+
+  it("gives repeated champions an elite playoff grade only for newly opted-in franchises", () => {
+    // Football uses Wild Card, not the NBA's First Round label.
+    const legacy = ["Missed Playoffs", "Champion", "Champion"] as const;
+    expect(footballGmThreeYearResumeScore(legacy)).toBe(90);
+    expect(footballGmTwoTitlePlayoffScore(legacy)).toBe(98);
+    expect(footballGmTwoTitlePlayoffScore(["Champion", "Wild Card", "Champion"])).toBe(98.7);
+    expect(footballGmTwoTitlePlayoffScore(["Champion", "Champion", "Champion"])).toBe(100);
+    expect(footballGmTwoTitlePlayoffScore(["Champion", "Missed Playoffs", "Missed Playoffs"])).toBe(80);
+    expect(footballGmTwoTitlePlayoffScore(["Wild Card", "Wild Card", "Wild Card"])).toBe(80);
+    const roster = codyRunRoster();
+    const starting = footballGmFinalResultV2({ seed: "two-title-baseline", yearOneRoster: roster, finalRoster: roster });
+    const fixed = starting.seasons.map((season, index) => ({
+      ...season,
+      finish: legacy[index]!,
+    }));
+    const input = {seed:"two-title-baseline",yearOneRoster:roster,finalRoster:roster,resolvedSeasons:fixed};
+    const oldScore = footballGmFinalResultV2(input);
+    const updated = footballGmFinalResultV2({...input,playoffScoringVersion:2});
+    expect(oldScore.playoffScore).toBe(90);
+    expect(updated.playoffScore).toBe(98);
+    expect(updated.seasons).toEqual(oldScore.seasons);
+    expect(updated.rosterManagementScore).toBe(oldScore.rosterManagementScore);
+    expect(updated.regularSeasonScore).toBe(oldScore.regularSeasonScore);
+    expect(updated.score).toBeGreaterThan(oldScore.score);
+    const historicalWeekly = footballGmFinalResultV2({
+      ...input,seed:"weekly-gm:2026-10-13:archived",playoffScoringVersion:2,
+    });
+    expect(historicalWeekly.scoreFormula).toBe("legacy");
   });
 
   it("reproduces the October 27 WR matchup from locked real season results", () => {
