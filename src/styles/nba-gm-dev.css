@@ -1102,6 +1102,7 @@
 .nba-gm-dev .football-gm__picker .nba-gm-dev__scout-card.nba-gm-dev__player,
 .nba-gm-dev .nba-gm-dev__trade .nba-gm-dev__scout-card.nba-gm-dev__player {
   display: grid;
+  grid-template-columns: minmax(0,1fr);
   gap: 3px;
   width: 100%;
   min-width: 0;
@@ -1198,7 +1199,11 @@
 }
 .nba-gm-dev .nba-gm-dev__scout-card .nba-gm-dev__card-action {
   display: grid;
+  grid-column: 3;
+  grid-row: 1;
+  grid-template-columns: minmax(0,1fr);
   gap: 7px;
+  width: auto;
   align-items: end;
   justify-items: end;
   min-width: 0;
