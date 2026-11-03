@@ -135,6 +135,14 @@ function challengeSeed(value: ChallengeJson | undefined) {
     : null;
 }
 
+function challengeScoringFlags(value: ChallengeJson | undefined): Pick<PersistedRun, "ratingScaleVersion" | "playoffScoringVersion"> {
+  const setup = record(value);
+  return {
+    ratingScaleVersion: setup?.ratingScaleVersion === 2 ? 2 : undefined,
+    playoffScoringVersion: setup?.playoffScoringVersion === 2 ? 2 : undefined,
+  };
+}
+
 function freshSeed() {
   const id = typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
@@ -170,7 +178,9 @@ export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRu
     tradeTargetPlayerId: null,
     shoppedPlayerIds: [],
     playoffScoringVersion: 2,
-    ratingScaleVersion: 2,
+    // The current Nov 3 Weekly GM is already live: every participant in the
+    // same event must stay on the original scale until the next competition.
+    ratingScaleVersion: seed.startsWith("weekly-gm:2026-11-03:") ? undefined : 2,
     pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
@@ -1591,7 +1601,7 @@ export default function FootballGmModePage({
         ? { ...persisted, phase: "draft" }
         : persisted;
     }
-    const fresh = initialRun(seed);
+    const fresh = { ...initialRun(seed), ...(storedSeed ? challengeScoringFlags(profileMatch.challenge?.setup) : {}) };
     return startImmediately ? { ...fresh, phase: "draft" } : fresh;
   });
   const [challengeStatus, setChallengeStatus] = useState("");
@@ -1629,7 +1639,7 @@ export default function FootballGmModePage({
         : persisted);
       return;
     }
-    const fresh = initialRun(storedSeed);
+    const fresh = { ...initialRun(storedSeed), ...challengeScoringFlags(profileMatch.challenge?.setup) };
     setRun(startImmediately ? { ...fresh, phase: "draft" } : fresh);
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
@@ -2139,6 +2149,8 @@ export default function FootballGmModePage({
         seed: run.seed,
         cap: FOOTBALL_GM_CAP,
         rosterSlots: [...FOOTBALL_GM_ROSTER_SLOTS],
+        ratingScaleVersion: run.ratingScaleVersion ?? null,
+        playoffScoringVersion: run.playoffScoringVersion ?? null,
       }),
       creatorResult: asJson(finalResult),
       shareTitle: "The GM Challenge",
