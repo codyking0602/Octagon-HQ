@@ -1456,3 +1456,32 @@
 .nba-gm-team-fit__tier.is-dysfunctional { color: #f18f8f; background: rgba(220,80,80,.15); font-size: 8px; }
 .nba-gm-team-fit__overall { border-bottom: 0; font-weight: 850; }
 @media(max-width: 390px) { .nba-gm-team-fit { padding: 12px; } .nba-gm-team-fit__row { grid-template-columns: minmax(0,1fr) repeat(var(--fit-years,1),minmax(0,76px)); gap: 3px; } .nba-gm-team-fit__tier { font-size: 8px; } .nba-gm-team-fit__tier.is-dysfunctional { font-size: 7px; letter-spacing: -.03em; } }
+
+
+/* Compact final NBA GM: preserve all seven visible players and movement bars. */
+.nba-gm-final .gm-final__roster-list .gm-final__player { padding-top: 9px; padding-bottom: 9px; }
+.nba-gm-final .gm-final__roster-list .gm-final__player-identity { gap: 7px; }
+.nba-gm-final .gm-final__roster-list .gm-final__player-outcome { margin-top: 4px; gap: 7px; }
+.nba-gm-final .gm-final__roster-list .gm-final__band { margin: 0; }
+.nba-gm-final .gm-final__roster-list .gm-final__band-track { height: 9px; }
+.nba-gm-final .gm-final__roster-list .gm-final__band-legend { margin-top: 3px; }
+.nba-gm-team-fit__summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin: 12px 0; }
+.nba-gm-team-fit__summary:has(> :only-child) { grid-template-columns: 1fr; }
+.nba-gm-team-fit__year { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 5px; border: 1px solid rgba(255,255,255,.10); border-radius: 10px; background: rgba(255,255,255,.035); }
+.nba-gm-team-fit__year > small { font-size: 10px; color: #aab2c0; font-weight: 750; }
+.nba-gm-team-fit__year > strong { font-size: 25px; line-height: 1.1; font-weight: 850; font-variant-numeric: tabular-nums; }
+.nba-gm-team-fit__year > .nba-gm-team-fit__tier { width: 100%; }
+.nba-gm-team-fit__meter { padding: 2px 0 12px; }
+.nba-gm-team-fit__meter-label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+.nba-gm-team-fit__meter-label strong { font-size: 11px; letter-spacing: .04em; }
+.nba-gm-team-fit__meter-label span { font-size: 10px; color: #9ca3af; }
+.nba-gm-team-fit__meter-track { position: relative; height: 12px; border-radius: 999px; margin: 0 7px; background: linear-gradient(90deg,#c75b68 0%,#df955e 32%,#e4c270 55%,#9cbe8b 76%,#44bd91 100%); }
+.nba-gm-team-fit__marker { position: absolute; top: -4px; width: 0; height: 20px; z-index: 1; }
+.nba-gm-team-fit__marker i { display: block; width: 11px; height: 20px; transform: translateX(-50%); border: 2px solid #fff; border-radius: 6px; background: #243449; box-shadow: 0 0 0 1px #101215; }
+.nba-gm-team-fit__marker b { position: absolute; top: -16px; left: 0; transform: translateX(-50%); font-size: 9px; color: #e5e7eb; }
+.nba-gm-team-fit__marker:nth-child(2) { z-index: 2; }
+.nba-gm-team-fit__marker:nth-child(3) { z-index: 3; }
+.nba-gm-team-fit__meter-ends { display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; color: #9ca3af; margin-top: 10px; }
+.nba-gm-team-fit__row { padding: 7px 0; }
+.nba-gm-team-fit__row > span:first-child { font-size: 11px; }
+@media(max-width:390px) { .nba-gm-team-fit__summary { gap: 5px; } .nba-gm-team-fit__year { padding: 8px 3px; } .nba-gm-team-fit__year > strong { font-size: 22px; } }
