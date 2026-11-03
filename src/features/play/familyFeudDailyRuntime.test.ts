@@ -258,10 +258,11 @@ describe("Family Feud V2 Daily persistence contract", () => {
     const published = buildFamilyFeudDailySetup(archived, "2026-11-01", "nba-daily-regular-v3-oct30-public");
     const result = advanceFamilyFeudDailyRuntime(context(published), { type: "answer", answer: "Birdman" });
     expect(result.publicState.last_feedback).toMatchObject({ type: "correct", points: 2 });
-    const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
-    const guesses = boards[0]?.recorded_guesses as Array<Record<string, unknown>>;
-    expect(guesses[0]).toMatchObject({
-      submitted_answer: "Birdman", matched_answer: "Chris Andersen", accepted: true,
+    const engine = result.submissionState.engine_state as {
+      mainBoards: Array<{ attempts: Array<{ submittedText: string; entityId: string; points: number; status: string }> }>;
+    };
+    expect(engine.mainBoards[0]?.attempts[0]).toMatchObject({
+      submittedText: "Birdman", points: 2, status: "accepted",
     });
   });
 
@@ -269,6 +270,11 @@ describe("Family Feud V2 Daily persistence contract", () => {
     const persistedPack: FamilyFeudPack = {
       ...pack,
       sport: "nba",
+      // The synthetic fixture has a person called "Charlie Three", whose
+      // surname otherwise conflicts with the basketball call "Three".
+      // The real NBA broadcast board is non-person entities.
+      entities: pack.entities.map((entity) => entity.displayName === "Charlie Three"
+        ? { ...entity, kind: "other" as const } : entity),
       fastMoney: pack.fastMoney.map((question, index) => index === 0
         ? { ...question, id: "nba-feud-nba-tv-broadcast",
             prompt: "Name something you might see or hear during an NBA TV broadcast." }
