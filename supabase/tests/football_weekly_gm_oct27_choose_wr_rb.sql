@@ -16,6 +16,10 @@ begin
     'weekly-gm-oct27-test@login.octagon-hq.app','',now(),now(),now(),
     jsonb_build_object('display_name','GM OCT27 TEST','historical_unclaimed',true));
   perform public.register_unclaimed_pin_profile(v_player,'GM OCT27 TEST','GO');
+  -- Keep the current standard GM event out of this historical Oct 27 test.
+  update private.football_weekly_gm_events
+    set opens_at=now()+interval '1 day',closes_at=now()+interval '8 days'
+    where week_start=date '2026-11-03';
   update private.football_weekly_gm_events
     set closes_at=now()-interval '1 minute'
     where week_start=date '2026-10-20';

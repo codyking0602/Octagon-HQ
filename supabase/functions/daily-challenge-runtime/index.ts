@@ -1019,35 +1019,25 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
   });
   if (response.error) throw new Error("The official daily runtime state is unavailable.");
   const context = runtimeContext(response.data);
-  // Immutable official attempt rows retain the original grading proof. A
-  // separately recorded correction is projected into the authenticated result.
-  // The same correction is applied by the history view to every leaderboard.
-  if (((context.central_day === "2026-10-30" && context.gameType === "sports_feud")
-    || (context.central_day === "2026-11-01"
-      && context.gameType === "sports_feud"
-      && context.schedule_version === "nba-daily-regular-v3-oct30-public"))
-    && asRecord(context.official_attempt)) {
-    const adjustment = await admin.rpc("get_official_daily_score_correction", {
+  // The immutable attempt remains the audit source. For completed Feud and
+  // Average Fan runs, project the exact same correction-backed history row
+  // used by scoreboards, standings, and member history.
+  if (asRecord(context.official_attempt)
+    && (context.gameType === "sports_feud" || context.gameType === "average_fan")) {
+    const adjusted = await admin.rpc("get_official_daily_corrected_attempt", {
       p_daily_challenge_id: dailyChallengeId,
       p_profile_id: profileId,
     });
-    if (adjustment.error) throw new Error("The Daily Feud score correction could not be verified.");
-    const delta = Number(adjustment.data ?? 0);
-    if (Number.isInteger(delta) && delta > 0) {
-      const attempt = requiredRecord(context.official_attempt, "Daily Feud official attempt");
-      const originalResult = requiredRecord(attempt.public_result, "Daily Feud original result");
+    if (adjusted.error) throw new Error("The official Daily correction could not be verified.");
+    if (adjusted.data != null) {
+      const revised = requiredRecord(adjusted.data, "Official Daily audited result");
       return {
         ...context,
         official_attempt: {
-          ...attempt,
-          native_score: Math.min(100, Number(attempt.native_score) + delta),
-          normalized_score: Math.min(100, Number(attempt.normalized_score) + delta),
-          public_result: {
-            ...originalResult,
-            score: Math.min(100, Number(attempt.native_score) + delta),
-            fast_money_points: Number(originalResult.fast_money_points ?? 0) + delta,
-            editorial_correction_points: delta,
-          },
+          ...requiredRecord(context.official_attempt, "Official Daily recorded result"),
+          native_score: Number(revised.native_score),
+          normalized_score: Number(revised.normalized_score),
+          public_result: requiredRecord(revised.public_result, "Official Daily corrected breakdown"),
         },
       };
     }

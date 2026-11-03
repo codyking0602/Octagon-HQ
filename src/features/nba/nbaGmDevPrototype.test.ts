@@ -87,7 +87,7 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(page).toContain("nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase))");
  });
 
- it("preserves 330 researched candidates, six skills and owner-only access",()=>{
+ it("preserves 330 researched candidates, six skills and public member access",()=>{
   expect(nbaGmDevCatalogErrors(catalog)).toEqual([]);
   expect(new Set(catalog.map(p=>p.teamCode)).size).toBe(30);
   expect(NBA_GM_SKILL_KEYS).toHaveLength(6);
@@ -95,8 +95,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(wemby.skills.interiorDefense).toBe(99);
   expect(kennard.currentGrade).toBe(78);
   expect(kennard.skills.shooting).toBe(95);
-  expect(router).toContain('path: "nba/gm-dev", element: <NbaWhoAmIOwnerGate>');
-  expect(hub).toContain('navigate("/nba/gm-dev")');
+  expect(router).toContain('path: "nba/gm", element: <NbaGmDevPage />');
+  expect(hub).toContain('navigate("/nba/gm")');
   expect(runtime).toContain("private.football_gm_runs");
   expect(sql).toContain("private.football_gm_run_snapshots");
   expect(sql).toContain("private.nba_gm_dev_owner()");

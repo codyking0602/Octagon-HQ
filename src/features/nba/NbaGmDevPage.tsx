@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
 import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
+import { nbaGmPlayoffFinishText } from "./nbaGmPlayoffFinishText";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
-  nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
+  nbaGmDevAssignRoster, nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook, nbaGmRepriceLabel } from "./nbaGmScouting";
@@ -117,9 +119,6 @@ function FitReport({picks,catalog}:{
     </div>
   </section>;
 }
-const NBA_GM_PLAYOFF_FINISHES = [
-  "Champion","Finals","Conference Finals","Conference Semifinals","First Round","Missed Playoffs",
-] as const;
 function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean}){
   return <div className="nba-gm-dev__season-summary">
     {seasons.map(season=><article key={season.season} className="football-gm__season-card nba-gm-dev__year-one-card is-year-one">
@@ -128,17 +127,28 @@ function Results({seasons,graded}:{seasons:NbaGmDevRun["results"];graded:boolean
       {season.teamOverall!=null&&season.titleOdds!=null&&
         <span className="nba-gm-dev__headline-odds">{season.teamOverall} OVR · {season.titleOdds.toFixed(1)}% TITLE ODDS</span>}
       <span>{graded?`OFFENSE GRADE ${Math.round(season.offense)} · DEFENSE GRADE ${Math.round(season.defense)}`:`OFFENSE ${season.offense.toFixed(1)} · DEFENSE ${season.defense.toFixed(1)}`}</span>
-      {season.outcomeOdds&&<details className="nba-gm-dev__outcome-odds">
-        <summary>VIEW PLAYOFF OUTCOME ODDS</summary>
-        <div>{NBA_GM_PLAYOFF_FINISHES.map(finish=>
-          <div key={finish}><span>{finish==="Finals"?"Finals Loss":finish}</span>
-          <strong>{((season.outcomeOdds?.[finish]??0)*100).toFixed(1)}%</strong></div>)}</div>
-        <small>Projected outcomes, not guaranteed results. Playoffs are simulated game by game.</small>
-      </details>}
     </article>)}
   </div>;
 }
+/** Front-end-only season reveal: final outcomes are already fixed by the server. */
+function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
+  return <section className="nba-gm-dev__season-reveal surface-card" aria-label="NBA GM Years 2 and 3 results">
+    <header><small>THE WINDOW</small><h2>YEARS 2 &amp; 3</h2></header>
+    <div className="nba-gm-dev__reveal-grid">
+      {run.results.filter(season=>season.season>=2).map(season=><article key={season.season}>
+        <small className="nba-gm-dev__reveal-year">YEAR {season.season}</small>
+        <strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)} <span>{(run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></strong>
+        <b>{season.wins}–{season.losses}</b>
+        <em>{nbaGmPlayoffFinishText(season.finish)}</em>
+        {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
+      </article>)}
+    </div>
+    <button type="button" className="nba-gm-dev__primary" onClick={onReveal}>REVEAL GM SCORE</button>
+  </section>;
+}
 export default function NbaGmDevPage(){
+  const identity=useIdentity();
+  const signedIn=Boolean(identity.profile?.id);
   const repo=useMemo(()=>createNbaGmDevRepository(),[]);
   const [run,setRun]=useState<NbaGmDevRun|null>(null);
   const [catalog,setCatalog]=useState<NbaGmDevPlayer[]>([]);
@@ -153,6 +163,7 @@ export default function NbaGmDevPage(){
   useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
   const [offseasonView,setOffseasonView]=useState<"report"|"moves">("report");
+  const [showSeasonReveal,setShowSeasonReveal]=useState(false);
   const selectOffseasonView=(view:"report"|"moves")=>{
     setOffseasonView(view);
     window.scrollTo({top:0,behavior:"instant"});
@@ -171,8 +182,14 @@ export default function NbaGmDevPage(){
     if(run?.phase==="offseason")window.scrollTo({top:0,behavior:"instant"});
   },[run?.phase,run?.shopPlayerId,run?.tradeTeam,tradeTarget]);
   useEffect(()=>{
-    if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
+    if(!identity.ready)return;
+    if(!signedIn){
+      setRun(null);setCatalog([]);setError("");setLoading(false);
+      return;
+    }
+    if(!repo){setError("NBA GM is temporarily unavailable.");setLoading(false);return;}
     let mounted=true;
+    setLoading(true);
     Promise.all([repo.catalog(),repo.action("load")]).then(([players,saved])=>{
       if(!mounted)return;
       const issues=nbaGmDevCatalogErrors(players);
@@ -181,7 +198,7 @@ export default function NbaGmDevPage(){
     }).catch(failure=>{if(mounted)setError(failure instanceof Error?failure.message:String(failure));})
       .finally(()=>{if(mounted)setLoading(false);});
     return()=>{mounted=false;};
-  },[repo]);
+  },[repo,identity.ready,signedIn,identity.profile?.id]);
 
   async function act(action:NbaGmDevOperation,playerId?:string,extraTradeChip?:string){
     if(!repo||busy)return;
@@ -193,6 +210,8 @@ export default function NbaGmDevPage(){
       }
       if(action==="pick")setPositionFilter(null);
       if(action==="offseason")setOffseasonView("report");
+      if(action==="advance"&&state?.phase==="final"){setShowSeasonReveal(true);window.scrollTo({top:0,behavior:"instant"});}
+      if(action==="start")setShowSeasonReveal(false);
       if(["shop","trade","cancel-trade","release","release-displaced","promote-displaced","sign","pass-fa","emergency-sign"].includes(action)){
         setOffseasonView("moves");
       }
@@ -295,8 +314,6 @@ export default function NbaGmDevPage(){
       &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
       .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
     :[];
-  const retainedCount=run?.picks.filter(pick=>
-    run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length??0;
   // A release budget is constrained by BOTH remaining seasons, exactly as the
   // server's two-year cap gate. This is a ceiling, not guaranteed FA inventory.
   const releasePanel=run?.phase==="offseason"&&spend&&run.picks.length===7
@@ -403,7 +420,7 @@ export default function NbaGmDevPage(){
               {tradeOfferError?<p className="nba-gm-dev__trade-warning" role="alert">{tradeOfferError}</p>:null}
               {!offersBusy&&!tradeOfferError&&tradeOffers.length===0?<div className="nba-gm-dev__no-offer">
                 <strong>NO LEGAL DEAL AVAILABLE</strong>
-                <p>There is no fair package for this target within the Year 2 and Year 3 cap and legal rotation. You can end these talks without making a trade.</p>
+                <p>No mutually acceptable value-and-position package exists for this target. As in NFL GM, a temporary salary-cap crisis alone does not reject a trade. End talks to choose a different trade partner.</p>
               </div>:null}
               {tradeOffers.length>0&&<>
                 <p className="nba-gm-dev__hint">{tradeOffers.length} accepted asking {tradeOffers.length===1?"price":"prices"}. All are legal; none is automatically the best choice.</p>
@@ -413,6 +430,12 @@ export default function NbaGmDevPage(){
                   <div><small>YOU GET</small>{offer.incomingPlayerIds.map(id=><span key={id}>{byId.get(id)?.name??id} <b>{byId.has(id)?money(nbaGmDevSalary(byId.get(id)!,1)):""}</b></span>)}</div>
                   {offer.requiresFreeAgency?<p>Leaves an open slot for your three-visit free-agent market.</p>:null}
                   {offer.requiresRosterMove?<p>One acquired asset will be held outside your seven-player rotation until you resolve it.</p>:null}
+                  {((offer.capOverYear2??0)>0||(offer.capOverYear3??0)>0)&&<p className="nba-gm-dev__cap-crisis" role="status">
+                    CAP CRISIS IF ACCEPTED · {[
+                      (offer.capOverYear2??0)>0?"Year 2 "+money(offer.capOverYear2! )+" over":null,
+                      (offer.capOverYear3??0)>0?"Year 3 "+money(offer.capOverYear3! )+" over":null,
+                    ].filter(Boolean).join(" · ")}. You must clear the excess before simulating.
+                  </p>}
                   <button type="button" className="nba-gm-dev__primary" disabled={busy}
                     onClick={()=>void act("trade",tradeTarget,"offer:"+(index+1))}>ACCEPT ASKING PRICE {index+1}</button>
                 </article>)}
@@ -429,14 +452,20 @@ export default function NbaGmDevPage(){
       <span>
         <small>NBA FRONT OFFICE</small>
         <strong>THE GM</strong>
-        <em className="nba-gm-dev__private">OWNER ONLY · NOT PUBLIC</em>
+        
       </span>
       <b>3 YEARS</b>
     </header>
     {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
     {notice&&<div className="nba-gm-dev__notice" role="status">{notice}</div>}
-    {loading&&<p className="nba-gm-dev__status">Loading your private franchise…</p>}
-    {!loading&&!run&&<section className="nba-gm-dev__panel nba-gm-dev__intro">
+    {loading&&<p className="nba-gm-dev__status">Loading your franchise…</p>}
+    {!loading&&!signedIn&&<section className="nba-gm-dev__panel nba-gm-dev__intro" aria-label="Sign in to NBA GM">
+      <strong>NBA FRONT OFFICE CHALLENGE</strong>
+      <h2>BUILD YOUR FRANCHISE.</h2>
+      <p>Seven players. Three seasons. One offseason. Sign in to save your draft and compete.</p>
+      <button type="button" className="nba-gm-dev__primary" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+    </section>}
+    {!loading&&signedIn&&!run&&<section className="nba-gm-dev__panel nba-gm-dev__intro">
       <strong>NBA FRONT OFFICE CHALLENGE</strong><h2>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h2>
       <p>Seven team-wheel picks. The game automatically assigns eligible NBA positions, including a backup guard and a backup big. Ratings stay hidden; scouting is letter grades.</p>
       <div className="nba-gm-dev__summary"><span>1YR / 3YR DEALS</span><span>THREE SEASONS</span><span>ONE OFFSEASON</span></div>
@@ -471,12 +500,6 @@ export default function NbaGmDevPage(){
           {[0,1,2].filter(index=>index!==displaySalaryYear).map(index=>
             <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
         </div>
-      </section>}
-      {showOffseasonReport&&<section className="nba-gm-dev__continuity surface-card" aria-label="Roster continuity">
-        <header><span><small>ROSTER CONTINUITY</small><strong>{retainedCount===7?"FULL CORE":retainedCount>=5?"MOSTLY INTACT":"REBUILT CORE"}</strong></span>
-          <b>{Math.round(retainedCount/7*100)}/100</b></header>
-        <i className="nba-gm-dev__continuity-track"><em style={{width:(retainedCount/7*100)+"%"}}/></i>
-        <p>{retainedCount}/7 Year 1 players retained. Year 1 results are locked. No extra continuity bonus.</p>
       </section>}
       {showOffseasonReport&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__report-next"
         onClick={()=>selectOffseasonView("moves")}>CONTINUE TO OFFSEASON MOVES</button>}
@@ -518,7 +541,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length>0&&draftStage}
       {run.phase==="year1"&&<section className="football-gm__year-reveal surface-card nba-gm-dev__year-reveal">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
-        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7}/>
+        <Results seasons={run.results} graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("offseason")}>
           ENTER THE OFFSEASON
         </button>
@@ -547,8 +570,12 @@ export default function NbaGmDevPage(){
                 <option value="">Choose active player</option>
                 {run.picks.filter(pick=>{
                   const player=byId.get(id);
-                  return player&&nbaGmDevCanAdd(run.picks.filter(row=>row.playerId!==pick.playerId),
-                    player,catalog,run.caps,"offseason");
+                  // Swapping a held asset does not change total salary. NFL GM
+                  // permits the swap even during a temporary cap crisis.
+                  return player&&nbaGmDevAssignRoster([
+                    ...run.picks.filter(row=>row.playerId!==pick.playerId).map(row=>row.playerId),
+                    player.id,
+                  ],catalog)!==null;
                 }).map(pick=><option key={pick.playerId} value={pick.playerId}>
                   {byId.get(pick.playerId)?.name??pick.playerId}</option>)}
               </select>
@@ -596,9 +623,11 @@ export default function NbaGmDevPage(){
           </div>}
         {!capCrisis&&releasePanel}
       </section>}
-      {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
-        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
-      <footer className="nba-gm-dev__disclaimer">Owner-only playtest · Fictional contracts</footer>
+      {run.phase==="final"&&(showSeasonReveal
+        ?<NbaGmSeasonReveal run={run} onReveal={()=>{setShowSeasonReveal(false);window.scrollTo({top:0,behavior:"instant"});}}/>
+        :<><NbaGmFinalExperience run={run} catalog={catalog}/>
+          <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW GM RUN</button></>)}
+      <footer className="nba-gm-dev__disclaimer">Three seasons · Signed NBA salary windows</footer>
     </>}
   </main>;
 }

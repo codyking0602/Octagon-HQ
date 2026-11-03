@@ -1,4 +1,4 @@
--- Owner-only NBA GM V4 contract-window lifecycle, preserving original V3 saves. Transactional fixture; no production changes.
+-- Public NBA GM V9 per-member lifecycle, preserving all historical V3/V4 contracts and scores. Transactional fixture; no production changes.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
 do $$
@@ -187,17 +187,30 @@ begin
   if v_state->>'phase'<>'final' or jsonb_array_length(v_state->'results')<>3
     then raise exception 'Replacement did not permit full franchise completion'; end if;
 
+  -- Public V9: a second authenticated member can independently catalog/start.
   perform set_config('request.jwt.claim.sub',v_outsider::text,true);
+  if jsonb_array_length(public.nba_gm_dev_catalog())<>330
+     then raise exception 'NBA GM public member board unavailable'; end if;
+  if public.nba_gm_dev_action('load') is not null
+     then raise exception 'Public member could read another members saved franchise'; end if;
+  v_state:=public.nba_gm_dev_action('start');
+  if v_state->>'simulationModelVersion'<>'9'
+     then raise exception 'NBA GM public members must start on calibrated V9'; end if;
+  perform set_config('request.jwt.claim.sub',v_owner::text,true);
+  if (public.nba_gm_dev_action('load')->>'seed')=v_state->>'seed'
+     then raise exception 'Public member franchise polluted original owner run'; end if;
+  -- Anonymous calls still fail, while the private catalog TABLE remains inaccessible.
+  perform set_config('request.jwt.claim.sub','',true);
   v_rejected:=false;
   begin perform public.nba_gm_dev_catalog(); exception when others then v_rejected:=true; end;
-  if not v_rejected then raise exception 'Non-owner could see player board'; end if;
+  if not v_rejected then raise exception 'Anonymous user could see NBA GM board'; end if;
   v_rejected:=false;
   begin perform public.nba_gm_dev_action('start'); exception when others then v_rejected:=true; end;
-  if not v_rejected then raise exception 'Non-owner could start NBA GM'; end if;
+  if not v_rejected then raise exception 'Anonymous user could start NBA GM'; end if;
 
   if has_table_privilege('authenticated','private.nba_gm_dev_players','SELECT')
     or has_function_privilege('anon','public.nba_gm_dev_catalog()','EXECUTE')
     or has_function_privilege('anon','public.nba_gm_dev_action(text,text,text)','EXECUTE')
-    then raise exception 'Private catalog or action exposed publicly'; end if;
+    then raise exception 'NBA GM private table or public member RPC privileges unsafe'; end if;
 end $$;
 rollback;

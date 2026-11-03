@@ -122,7 +122,10 @@ jobs:
             supabase/tests/nba_gm_v6_independent_skills_historical_grades.sql \
             supabase/tests/nba_gm_v7_nfl_playoff_odds.sql \
             supabase/tests/nba_gm_330_positions_lineup.sql \
-            supabase/tests/nba_gm_trade_offers_parity.sql
+            supabase/tests/nba_gm_trade_offers_parity.sql \
+            supabase/tests/nba_gm_trade_cap_crisis_parity.sql \
+            supabase/tests/nba_gm_public_v8_calibration.sql \
+            supabase/tests/nba_gm_v9_historical_overall.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"

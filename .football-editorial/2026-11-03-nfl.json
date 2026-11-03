@@ -1,0 +1,150 @@
+{
+  "week_of": "2026-11-03",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "joe-burrow",
+        "name": "Joe Burrow",
+        "team": "Cincinnati Bengals",
+        "position": "QB",
+        "summary": "Threw for 462 yards in Cincinnati's 43-36 overtime win over Tennessee on November 1."
+      },
+      {
+        "id": "jahmyr-gibbs",
+        "name": "Jahmyr Gibbs",
+        "team": "Detroit Lions",
+        "position": "RB",
+        "summary": "Rushed for 153 yards in Detroit's 19-15 victory over Minnesota on November 1."
+      },
+      {
+        "id": "bucky-irving",
+        "name": "Bucky Irving",
+        "team": "Tampa Bay Buccaneers",
+        "position": "RB",
+        "summary": "Rushed for 170 yards as Tampa Bay shut out Atlanta 16-0 on November 1."
+      },
+      {
+        "id": "jaylen-warren",
+        "name": "Jaylen Warren",
+        "team": "Pittsburgh Steelers",
+        "position": "RB",
+        "summary": "Rushed for 143 yards and a touchdown in Pittsburgh's 27-6 win over Cleveland on November 1."
+      },
+      {
+        "id": "kirk-cousins",
+        "name": "Kirk Cousins",
+        "team": "Las Vegas Raiders",
+        "position": "QB",
+        "summary": "Completed 19 of 26 passes for 247 yards and four total touchdowns in Las Vegas' 38-33 win over the Jets on November 1."
+      }
+    ],
+    "games": [
+      {
+        "id": "packers-at-patriots",
+        "away_team": "Green Bay Packers",
+        "home_team": "New England Patriots",
+        "kickoff_at": "2026-11-08T15:25:00-06:00",
+        "summary": "Interconference late-window matchup in Foxborough between Green Bay and New England."
+      },
+      {
+        "id": "bills-at-vikings",
+        "away_team": "Buffalo Bills",
+        "home_team": "Minnesota Vikings",
+        "kickoff_at": "2026-11-09T19:15:00-06:00",
+        "summary": "Monday Night Football features Buffalo visiting Minnesota."
+      },
+      {
+        "id": "buccaneers-at-bears",
+        "away_team": "Tampa Bay Buccaneers",
+        "home_team": "Chicago Bears",
+        "kickoff_at": "2026-11-08T19:20:00-06:00",
+        "summary": "Sunday Night Football in Chicago after Tampa Bay's November 1 shutout of Atlanta."
+      },
+      {
+        "id": "giants-at-eagles",
+        "away_team": "New York Giants",
+        "home_team": "Philadelphia Eagles",
+        "kickoff_at": "2026-11-08T12:00:00-06:00",
+        "summary": "NFC East rivalry at Lincoln Financial Field, with Philadelphia coming off a loss to Washington."
+      },
+      {
+        "id": "texans-at-chargers",
+        "away_team": "Houston Texans",
+        "home_team": "Los Angeles Chargers",
+        "kickoff_at": "2026-11-08T15:05:00-06:00",
+        "summary": "AFC matchup in Los Angeles in the Sunday late window."
+      }
+    ]
+  },
+  "selection": {
+    "player_id": "joe-burrow",
+    "game_id": "packers-at-patriots"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Joe Burrow",
+      "team": "Cincinnati Bengals",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "462"
+        },
+        {
+          "label": "PASS TD",
+          "value": "5"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "38/48"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "1"
+        }
+      ],
+      "result": "W 43–36 (OT) vs Tennessee",
+      "measurements": "6 ft 4 in · 215 lbs",
+      "team_color": "#FB4F14",
+      "highlight_url": "https://youtu.be/sxJODPlYFmo?is=kOVidLVm2ZuX4K19",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/3915511.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-03/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Green Bay Packers",
+      "home_team": "New England Patriots",
+      "kickoff_at": "2026-11-08T15:25:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.nfl.com/games/packers-at-patriots-2026-reg-9",
+        "https://www.packers.com/news/game-recap-5-takeaways-from-packers-victory-over-panthers-week-8-2026",
+        "https://www.patriots.com/news/after-further-review-drake-maye-film-breakdown-defense-review-quick-hit-film-notes-from-win-over-dolphins",
+        "https://www.bengals.com/news/bengals-titans-recap-postgame-notes-quotes-stats-week-8-2026",
+        "https://www.packers.com/schedule/2026/"
+      ],
+      "breakdown": {
+        "setup": [
+          "Green Bay (5–3) travels to New England (5–3) with both teams fresh off wins. Jordan Love threw three touchdowns in the Packers' 27–19 win over Carolina, while Drake Maye powered a second-half Patriots comeback at Miami. The central question is which quarterback can sustain drives against an aggressive opposing front without giving away the ball."
+        ],
+        "things": [
+          {
+            "title": "Love's protection and downfield targets",
+            "body": "Love threw for 288 yards and three scores against Carolina without taking a sack, and Christian Watson had 113 receiving yards. New England must compress passing windows and disrupt timing rather than let Green Bay's receivers run free."
+          },
+          {
+            "title": "Can Maye handle Green Bay's pressure?",
+            "body": "The Packers sacked Bryce Young six times last week. Maye completed 16 of 20 passes for 199 yards in the Patriots' win at Miami, with his best work coming after halftime. Protection and quick answers to pressure will shape New England's attack."
+          },
+          {
+            "title": "Who creates reliable early-down gains?",
+            "body": "Green Bay managed only 48 rushing yards on 25 carries against Carolina, leaving Love to carry the offense. New England got 82 rushing yards from Rhamondre Stevenson against Miami. The team that stays ahead of the chains can protect its quarterback from obvious passing downs."
+          }
+        ],
+        "bottom_line": "Both quarterbacks have enough playmaking ability to swing the game, but their protection and the ground-game support around them differ. Green Bay's pass rush, New England's response under pressure, and limiting turnovers are the key levers at Gillette Stadium."
+      }
+    }
+  }
+}

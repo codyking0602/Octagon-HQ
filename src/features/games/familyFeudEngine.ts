@@ -374,6 +374,20 @@ export function matchFamilyFeudAnswer(
     if (row.term.length < 3) continue;
     const entity = entitiesById.get(row.entityId);
     if (entity?.kind === "person" && !fuzzyPersonFullNameCompatible(normalized, row.term)) continue;
+    // NBA's curated answers are people, not approximate strings: do not
+    // mistake two distinct full names for a typo (Jalen Rose != Glen Rice).
+    // Still tolerate true spelling variants (Chris Anderson / Andersen).
+    if (entity?.kind === "person" && question.id.startsWith("nba-feud-")) {
+      const given = normalized.split(" ").filter(Boolean);
+      const reference = row.term.split(" ").filter(Boolean);
+      if (given.length >= 2 && reference.length >= 2) {
+        const surname = given.at(-1)!;
+        const canonicalSurname = reference.at(-1)!;
+        const allowedSurnameDistance = Math.max(surname.length, canonicalSurname.length) >= 8 ? 2 : 1;
+        if (editDistance(surname, canonicalSurname) > allowedSurnameDistance
+          || !likelySamePersonGivenName(given[0]!, reference[0]!)) continue;
+      }
+    }
     // Football Feud v2 has objectively bounded, named historical answer sets.
     // A whole different surname must not receive credit simply because the
     // remaining full-name characters happen to sit inside the typo allowance.

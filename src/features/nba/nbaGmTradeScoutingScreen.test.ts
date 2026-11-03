@@ -38,7 +38,7 @@ describe("NBA GM dedicated trade screen and scouting-first target selection",()=
     const offerIndex=page.indexOf("onClick={()=>void chooseTradeTarget(player.id)}");
     expect(toggleIndex).toBeGreaterThan(0);
     expect(offerIndex).toBeGreaterThan(toggleIndex);
-    expect(page).toContain("OWNER ONLY · NOT PUBLIC");
+    expect(page).not.toContain("OWNER ONLY · NOT PUBLIC");
     expect(page).not.toContain("OPTIONAL SECOND TRADE CHIP");
   });
 });

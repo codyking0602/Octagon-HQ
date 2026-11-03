@@ -36,7 +36,13 @@ const OCT27_SCENARIOS: typeof OCT13_SCENARIOS = [
   { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "Pick your starting running back." },
 ];
 
+const NOV03_STANDARD_SCENARIOS: typeof OCT13_SCENARIOS = [
+  { id: "elite", title: "FRANCHISE 1", quarterback: "THE GM", development: "Build your seven-player core with the standard NFL wheel." },
+  { id: "young", title: "FRANCHISE 2", quarterback: "THE GM", development: "Build a second independent seven-player core." },
+];
+
 function scenariosForWeek(weekStart: string, preview: boolean) {
+  if (!preview && weekStart === "2026-11-03") return NOV03_STANDARD_SCENARIOS;
   if (!preview && weekStart === OCT27_WEEKLY_GM_START) return OCT27_SCENARIOS;
   if (!preview && weekStart === "2026-10-20") return OCT20_SCENARIOS;
   return OCT13_SCENARIOS;
@@ -152,6 +158,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   if (preview && !isOwner) return <div className="page football-gm-page"><section className="surface-card"><h1>OWNER-ONLY PLAYTEST</h1><p>This production test is reserved for the Octagon HQ owner.</p><Link to="/football/weekly-gm">Weekly GM Championship</Link></section></div>;
 
   const isOct27Week = !preview && state?.week_start === OCT27_WEEKLY_GM_START;
+  const isStandardWeek = !preview && state?.week_start === "2026-11-03";
   const scenarios = scenariosForWeek(state?.week_start ?? "2026-10-13", preview);
   const attempt = playing ? state?.attempts[playing] : null;
   if (playing && state && attempt && state.status === "active") {
@@ -160,8 +167,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <div className="page football-gm-page">
           <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
             <button type="button" onClick={() => { setPlaying(null); void refresh().catch(() => {}); }}>← WEEKLY CHAMPIONSHIP</button>
-            <h2>{(isOct27Week ? footballGmPlayerById(attempt.starting_player_id ?? "")?.name : scenarios.find((scenario) => scenario.id === playing)?.quarterback)?.toUpperCase()} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
-            <p>{preview ? "Real production gameplay, scoring, saves, and result screens. Test attempts stay outside the official standings." : "One official attempt · Six random wheel spins · Normal player-specific development over three seasons."}</p>
+            <h2>{(isStandardWeek ? "THE GM" : isOct27Week ? footballGmPlayerById(attempt.starting_player_id ?? "")?.name : scenarios.find((scenario) => scenario.id === playing)?.quarterback)?.toUpperCase()} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
+            <p>{preview ? "Real production gameplay, scoring, saves, and result screens. Test attempts stay outside the official standings." : `One official attempt · ${isStandardWeek ? "Seven" : "Six"} random wheel spins · Normal player-specific development over three seasons.`}</p>
             {error ? <p role="alert">{error}</p> : null}
           </section>
         </div>
@@ -232,7 +239,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL PLAY"}</Link>
             <p className="eyebrow">{preview ? "OWNER PLAYTEST" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
             <h1>{preview ? "TEST WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · $150M cap · Six spins each</p>
+            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · $150M cap · {isStandardWeek ? "Seven" : "Six"} spins each</p>
             <p className="football-weekly-gm__progress">
               <strong>{myTotal.toFixed(1)} / 200</strong>
               <span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span>
