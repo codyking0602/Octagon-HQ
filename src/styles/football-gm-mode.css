@@ -4539,6 +4539,50 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   color: #8da2b2; font-size: 12px; line-height: 1.5; margin: 0;
 }
 
+/* Approved final NFL offseason polish: compact advance and quiet release warning. */
+.football-gm-page .football-gm__offseason-status.is-ready {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+.football-gm-page .football-gm__offseason-status.is-ready > h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: clamp(17px, 4.7vw, 21px);
+  line-height: 1.2;
+}
+.football-gm-page .football-gm__offseason-status.is-ready > h2::before {
+  content: "✓";
+  color: #8cdeb0;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid rgba(140,222,176,.55);
+  border-radius: 50%;
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+.football-gm-page .football-gm__offseason-status.is-ready > p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.football-gm-page .football-gm__offseason-status.is-ready > .primary-action {
+  margin-top: 2px;
+  min-height: 46px;
+}
+.football-gm-page .football-gm__release-details .football-gm__trade-warning {
+  display: block;
+  margin: 0;
+  color: #91a6b7;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
 /* Shared GM endgame: compact season reveal without repeating the team report. */
 .football-gm-page .football-gm__years23 { display:grid;gap:12px;padding:16px; }
 .football-gm-page .football-gm__years23 h1 { margin:0;font-size:clamp(25px,7vw,38px);line-height:1.1; }
