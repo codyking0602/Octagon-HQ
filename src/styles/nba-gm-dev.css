@@ -1511,3 +1511,32 @@
 .nba-gm-team-fit__meter-ends { margin-top: 8px; }
 .nba-gm-team-fit__row { padding: 6px 0; }
 @media(max-width:390px) { .nba-gm-team-fit__year-values { gap: 8px; } .nba-gm-team-fit__primary > strong { font-size: 22px; } }
+
+
+/* NBA final roster: one horizontal identity + development row, not two stacked cards. */
+.nba-gm-final .gm-final__roster-list .gm-final__player {
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  align-items:center; column-gap:10px; padding:9px 8px;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-identity {
+  display:grid; grid-template-columns:20px 34px 20px minmax(0,1fr);
+  gap:4px; align-items:center; min-width:0;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-name { min-width:0; }
+.nba-gm-final .gm-final__roster-list .gm-final__player-name strong { font-size:12px; line-height:1.15; overflow-wrap:anywhere; }
+.nba-gm-final .gm-final__roster-list .gm-final__tier {
+  grid-column:4; justify-self:start; font-size:8px; padding:2px 5px;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-outcome {
+  min-width:0; display:flex; flex-direction:column; gap:5px; margin:0;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__band { width:100%; min-width:0; }
+.nba-gm-final .gm-final__roster-list .gm-final__band-legend { display:none; }
+.nba-gm-final .gm-final__roster-list .gm-final__outcome-text {
+  font-size:9px; letter-spacing:.02em; text-align:center; align-self:center;
+}
+@media(max-width:390px) {
+  .nba-gm-final .gm-final__roster-list .gm-final__player { grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); column-gap:6px; }
+  .nba-gm-final .gm-final__roster-list .gm-final__player-identity { grid-template-columns:17px 29px 17px minmax(0,1fr); gap:2px; }
+  .nba-gm-final .gm-final__roster-list .gm-final__player-name strong { font-size:11px; }
+}
