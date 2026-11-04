@@ -1,3 +1,5 @@
+import {CUP_GAMES} from "../src/features/nba/nbaCupTracker";
+import {fetchOfficialNbaCupScores} from "./nbaCupNbaSchedule";
 /**
  * Read-only ESPN NBA scoreboard adapter for the seven *official* 2026 Cup nights.
  * Fixture eligibility is validated separately against the NBA-authored 60-game
@@ -79,24 +81,85 @@ export function parseEspnNbaCupScoreboard(day:string,payload:unknown):NbaCupScor
   return events;
 }
 
+/** Final October 30 game results cross-checked against NBA's public box scores.
+ * These verified results are a fallback, not a source for later Cup nights.
+ * https://www.nba.com/game/DET-vs-BKN-0022600017
+ */
+export const VERIFIED_CUP_OPENING_NIGHT:NbaCupScoreEvent[]=[
+  ["CHA","WAS",79,95],["CHI","BOS",111,125],
+  ["DET","BKN",110,94],["NYK","PHI",93,98],
+  ["ORL","TOR",121,114],["IND","MIA",125,145],
+  ["HOU","DAL",111,116],["LAC","MIN",101,127],
+  ["LAL","GSW",95,112],["DEN","PHX",127,120],
+].map(([away,home,awayScore,homeScore])=>({
+  id:"2026-10-30|"+away+"|"+home,
+  away:String(away),home:String(home),awayScore:Number(awayScore),homeScore:Number(homeScore),
+  status:"final" as const,detail:"Final",
+}));
+
+const CUP_FIXTURES=new Set(CUP_GAMES.map(game=>game.id));
+function confirmedFixture(event:NbaCupScoreEvent){
+  return CUP_FIXTURES.has(event.id)
+    && event.id.split("|")[1]===event.away
+    && event.id.split("|")[2]===event.home;
+}
+function progress(status:NbaCupScoreEvent["status"]){
+  return status==="final"?2:status==="live"?1:0;
+}
+export function mergeCupGameScores(...lists:readonly NbaCupScoreEvent[][]):NbaCupScoreEvent[]{
+  const result=new Map<string,NbaCupScoreEvent>();
+  for(const list of lists)for(const event of list){
+    if(!confirmedFixture(event))continue;
+    const prior=result.get(event.id);
+    if(!prior||progress(event.status)>=progress(prior.status)){
+      result.set(event.id,event);
+    }
+  }
+  return [...result.values()];
+}
+async function fetchEspnNight(day:string):Promise<NbaCupScoreEvent[]>{
+  try{
+    const response=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates="+day.replaceAll("-","")+"&limit=100",{
+      headers:{Accept:"application/json","User-Agent":"OctagonHQ/1.0"},
+      signal:AbortSignal.timeout(9000),
+    });
+    if(!response.ok)return [];
+    return parseEspnNbaCupScoreboard(day,await response.json()).filter(confirmedFixture);
+  }catch{return [];}
+}
 export async function serveNbaCupScoreboard(requestUrl:URL):Promise<Response>{
   const day=requestUrl.searchParams.get("date")??"";
   const jsonHeaders={"Content-Type":"application/json; charset=utf-8"};
-  if(!NBA_CUP_2026_DATES.has(day))return new Response(JSON.stringify({error:"Invalid 2026 NBA Cup date."}),{
+  if(day&&!NBA_CUP_2026_DATES.has(day))return new Response(JSON.stringify({error:"Invalid 2026 NBA Cup date."}),{
     status:400,headers:{...jsonHeaders,"Cache-Control":"no-store"},
   });
-  try{
-    const upstream=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates="+day.replaceAll("-","")+"&limit=100",{
-      headers:{Accept:"application/json","User-Agent":"OctagonHQ/1.0"},
-    });
-    if(!upstream.ok)throw new Error("NBA score provider unavailable");
-    const events=parseEspnNbaCupScoreboard(day,await upstream.json());
-    return new Response(JSON.stringify({date:day,source:"ESPN",events}),{
-      status:200,headers:{...jsonHeaders,"Cache-Control":"public, max-age=75, stale-while-revalidate=180"},
-    });
-  }catch{
+
+  let official:NbaCupScoreEvent[]=[];
+  try{official=await fetchOfficialNbaCupScores();}catch{/* ESPN and verified result fallback. */}
+  const now=Date.now();
+  // ESPN complements the NBA CDN only if official past results are missing or
+  // a Cup night is currently active. Do not fetch seven future nights repeatedly.
+  const needed=[...NBA_CUP_2026_DATES].filter(date=>{
+    const games=CUP_GAMES.filter(game=>game.date===date);
+    if(!games.length)return false;
+    if(games.some(game=>Date.parse(game.startAt)<now
+      && Date.parse(game.startAt)+4*60*60*1000>now))return true;
+    return games.some(game=>Date.parse(game.startAt)+5*60*60*1000<now
+      && official.find(event=>event.id===game.id)?.status!=="final");
+  });
+  const supplementary=await Promise.all(needed.map(fetchEspnNight));
+  const events=mergeCupGameScores(
+    VERIFIED_CUP_OPENING_NIGHT,
+    ...supplementary,
+    official,
+  ).filter(event=>!day||event.id.startsWith(day+"|"));
+  if(!events.length&&needed.length&&official.length===0)
     return new Response(JSON.stringify({error:"NBA Cup scores temporarily unavailable."}),{
       status:502,headers:{...jsonHeaders,"Cache-Control":"no-store"},
     });
-  }
+  return new Response(JSON.stringify({
+    date:day||null,source:"NBA+ESPN",events,refreshedAt:new Date().toISOString(),
+  }),{
+    status:200,headers:{...jsonHeaders,"Cache-Control":"public, max-age=75, stale-while-revalidate=180"},
+  });
 }
