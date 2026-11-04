@@ -1,9 +1,0 @@
-{
-  "kind": "thumb",
-  "destination": "public/assets/fighters/ciryl-gane-thumb.webp",
-  "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4426000.png",
-  "fighter_name": "Ciryl Gane",
-  "official_headshot_reviewed": true,
-  "verified_espn_athlete_id": "4426000",
-  "debug_preserve_raw_source": true
-}
