@@ -121,11 +121,20 @@ begin
     or not exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_target)
     or private.nba_gm_v2_assign(v_state->'picks') is null then
     raise exception 'Accepted asking price failed to update active NBA rotation';end if;
+  -- NFL parity permits a temporary cap crisis on an accepted trade.
+  -- Verify the disclosed overages against the acquired roster AND holdings,
+  -- rather than treating any over-cap offer as an invalid transaction.
   for v_year in 2..3 loop
     select coalesce(sum(private.nba_gm_v3_salary(v_state,x->>'playerId',v_year)),0)
       into v_spend from jsonb_array_elements(v_state->'picks') x;
-    if v_spend>(v_state->'caps'->>(v_year-1))::bigint then
-      raise exception 'Accepted asking price overspent Year %',v_year;end if;
+    select v_spend+coalesce(sum(private.nba_gm_v3_salary(v_state,x#>>'{}',v_year)),0)
+      into v_spend from jsonb_array_elements(
+        coalesce(v_state->'displacedAssets','[]'::jsonb)) x;
+    if greatest(0,v_spend-(v_state->'caps'->>(v_year-1))::bigint) <>
+      coalesce((v_offers->0->>(
+        case when v_year=2 then 'capOverYear2' else 'capOverYear3' end))::bigint,0)
+      then raise exception 'Accepted trade cap forecast differs for Year %',v_year;
+    end if;
   end loop;
   if public.nba_gm_dev_action('load')->'picks' is distinct from v_state->'picks' then
     raise exception 'Accepted trade was not saved';end if;
