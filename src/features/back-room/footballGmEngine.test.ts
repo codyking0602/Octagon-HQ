@@ -37,7 +37,7 @@ function greedyValueRoster(seed = "gm-engine-test") {
 
 describe("Football GM playtest engine", () => {
   it("uses the complete contract authority without changing the seven locked GM slots", () => {
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
     expect(FOOTBALL_GM_TEAMS).toHaveLength(32);
     expect(FOOTBALL_GM_ROSTER_SLOTS).toEqual(["QB", "RB", "WR", "FLEX", "DL", "LB", "DB"]);
   });
