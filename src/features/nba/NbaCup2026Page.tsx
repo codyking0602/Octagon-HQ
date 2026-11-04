@@ -4,7 +4,8 @@ import {useIdentity} from "../identity/IdentityProvider";
 import {NBA_TEAM_BY_ID} from "./nbaFutures";
 import {NbaTeamMark,nbaTeamColor} from "./nbaTeamBranding";
 import {CUP_GROUPS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
-import {loadCupPreview,saveCupPreview} from "./nbaCupRepository";
+import {loadCupPreview,loadCupStandings,saveCupPreview,type CupStandingMember} from "./nbaCupRepository";
+import {NbaCupLockedView} from "./NbaCupLockedView";
 import "../../styles/nba-hq.css";
 import "./nbaCup2026.css";
 
@@ -17,6 +18,9 @@ export function NbaCupGroups(){
   const [picks,setPicks]=useState<CupGroupPicks|null>(null);
   const [saved,setSaved]=useState("{}");
   const [locked,setLocked]=useState(false);
+  const [members,setMembers]=useState<CupStandingMember[]>([]);
+  const [standingsLoading,setStandingsLoading]=useState(false);
+  const [standingsError,setStandingsError]=useState("");
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
   const [error,setError]=useState("");
@@ -26,12 +30,18 @@ export function NbaCupGroups(){
   const saveRef=useRef<HTMLDivElement>(null);
   useEffect(()=>{
     let active=true;
-    setLoading(true);setError("");
+    setLoading(true);setError("");setMembers([]);setStandingsError("");setStandingsLoading(false);
     if(!profile?.id){setLoading(false);return()=>{active=false};}
     void loadCupPreview().then(snapshot=>{
       if(!active)return;
       setPicks(snapshot.picks);setSaved(serializePicks(snapshot.picks));
       setLocked(snapshot.locked);setLoading(false);
+      if(snapshot.locked){
+        setStandingsLoading(true);
+        void loadCupStandings().then(entries=>{if(active)setMembers(entries);})
+          .catch(reason=>{if(active)setStandingsError(reason instanceof Error?reason.message:"Standings unavailable.");})
+          .finally(()=>{if(active)setStandingsLoading(false);});
+      }
     }).catch(err=>{if(active){setError(err instanceof Error?err.message:"Could not load Cup picks.");setLoading(false);}});
     return()=>{active=false};
   },[profile?.id]);
@@ -68,14 +78,14 @@ export function NbaCupGroups(){
         <h1>NBA Cup 2026</h1>
         <div className="nba-cup__summary-title"><strong>GROUP WINNERS</strong><span>OCT 30 – NOV 27</span></div>
         <p>Six group winners. December knockout bracket coming next.</p>
-        <div className="nba-cup__progress-line">
+        {!locked?<div className="nba-cup__progress-line">
           <div className="nba-cup__progress" role="progressbar" aria-label="Groups picked" aria-valuenow={count} aria-valuemin={0} aria-valuemax={6}><span style={{width:(count/6*100)+"%"}} /></div>
           <strong>{count}/6 {dirty?"SELECTED · UNSAVED":complete?"PICKS SAVED ✓":locked?"LOCKED":"PICKED"}</strong>
-        </div>
+        </div>:null}
       </section>
       {loading?<p role="status">Loading NBA Cup picks…</p>:null}
       {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
-      {picks?<><div className="nba-cup__tabs" ref={tabsRef} role="group" aria-label="Conference">
+      {picks&&locked?<NbaCupLockedView picks={picks} members={members} loading={standingsLoading} error={standingsError}/>:picks?<><div className="nba-cup__tabs" ref={tabsRef} role="group" aria-label="Conference">
         {(["East","West"] as const).map(conf=><button key={conf} type="button" aria-pressed={conference===conf} className={conference===conf?"is-active":""} onClick={()=>switchConference(conf)}>
           {conf.toUpperCase()} · {CUP_GROUPS.filter(g=>g.conference===conf&&picks[g.id]).length}/3
         </button>)}
