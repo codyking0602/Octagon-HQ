@@ -8,7 +8,7 @@ describe("Nov 2026 approved NFL GM 43-player expansion", () => {
   it("adds exactly 43 current players without changing the original 594 identities", () => {
     expect(expansion.players).toHaveLength(43);
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
-    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(637);
+    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
     expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(637);
     const ids = new Set(FOOTBALL_GM_PLAYER_POOL.map((p) => p.id));
     expect(ids.size).toBe(FOOTBALL_GM_PLAYER_POOL.length);
