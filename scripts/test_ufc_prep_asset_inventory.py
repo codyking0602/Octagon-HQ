@@ -42,6 +42,15 @@ class UfcPrepMediaInventoryTests(unittest.TestCase):
         self.assertTrue(rows[3]["needs_new_thumb"])
         self.assertFalse(rows[0]["needs_new_thumb"])
 
+    def test_existing_png_and_jpeg_thumbnails_match_frontend_glob(self):
+        (self.assets / "legacy-fighter-thumb.png").write_bytes(b"legacy png")
+        (self.assets / "other-fighter-thumb.jpeg").write_bytes(b"legacy jpeg")
+        rows = inventory(["legacy-fighter", "other-fighter"], self.root)
+        self.assertEqual([row["thumbnail_status"] for row in rows],
+                         ["existing_local", "existing_local"])
+        self.assertEqual(rows[0]["thumb_path"], "/assets/fighters/legacy-fighter-thumb.png")
+        self.assertEqual(rows[1]["thumb_path"], "/assets/fighters/other-fighter-thumb.jpeg")
+
     def test_current_frontend_remote_is_reuse_candidate_not_approval(self):
         row = inventory(["remote-fighter"], self.root)[0]
         self.assertEqual(row["thumbnail_status"], "existing_remote")
