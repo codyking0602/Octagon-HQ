@@ -246,7 +246,7 @@ export function FootballGmFinalExperience({
           </>
         )}
         <div className="nfl-gm-final__score-components" aria-label="GM scoring components">
-          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>ROSTER</small><span>{result.scoreFormula==="legacy"?"90%":"90%"}</span></div>
+          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>ROSTER</small><span>90%</span></div>
           <div><b>{result.scoreFormula==="legacy"?"—":result.regularSeasonScore.toFixed(1)}</b><small>RECORD</small><span>{result.scoreFormula==="legacy"?"LEGACY":"3%"}</span></div>
           <div><b>{result.playoffScore.toFixed(1)}</b><small>PLAYOFFS</small><span>{result.scoreFormula==="legacy"?"10%":"7%"}</span></div>
         </div>
