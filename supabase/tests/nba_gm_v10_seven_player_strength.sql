@@ -6,9 +6,9 @@ set local statement_timeout='180s';
 do $nba_v10_strength_test$
 declare
   v_picks jsonb:=jsonb_build_array(
-    jsonb_build_object('slot','PG','playerId','nba-gm-draft-lukadoncic'),
+    jsonb_build_object('slot','PG','playerId','nba-gm-draft-jalenbrunson'),
     jsonb_build_object('slot','SG','playerId','nba-gm-draft-krisdunn'),
-    jsonb_build_object('slot','SF','playerId','nba-gm-draft-jalenbrunson'),
+    jsonb_build_object('slot','SF','playerId','nba-gm-draft-lukadoncic'),
     jsonb_build_object('slot','PF','playerId','nba-gm-draft-deniavdija'),
     jsonb_build_object('slot','C','playerId','nba-gm-draft-rudygobert'),
     jsonb_build_object('slot','GUARD','playerId','nba-gm-draft-camspencer'),
