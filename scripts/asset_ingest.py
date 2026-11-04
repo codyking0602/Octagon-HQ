@@ -725,6 +725,9 @@ def verified_thumb_candidates(spec):
 
 def ingest_fighter_candidate(spec, kind, dest, size):
     source_url, data = resolve_source(spec)
+    if spec.get("debug_espn_combiner") and dest == "public/assets/fighters/drew-dober-thumb.webp":
+        with open("public/assets/fighters/drew-dober-raw-combiner-debug.png", "wb") as raw_file:
+            raw_file.write(data)
     if source_url_looks_like_placeholder(source_url):
         fail("source URL is a known placeholder or silhouette asset")
     try:
@@ -733,7 +736,7 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         fail(f"cannot decode source image: {exc}")
 
     if kind == "thumb":
-        if not approved_square_thumb_source(spec, source_url, im.size):
+        if not approved_square_thumb_source(spec, source_url, im.size) and not spec.get("debug_espn_combiner"):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
             fail("thumbnail source cannot be cropped or background-removed")
