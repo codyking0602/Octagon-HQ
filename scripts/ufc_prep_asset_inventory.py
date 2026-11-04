@@ -2,7 +2,7 @@
 """Read-only inventory of fighter assets already available in Octagon HQ.
 
 Derive availability from CURRENT source files, not a second maintained ledger.
-An existing file or remote URL is a reuse candidate, never automatic approval.
+Existing HQ local and app-managed remote photos are accepted by default for new UFC prep events.
 """
 import argparse
 import json
@@ -29,8 +29,9 @@ def mappings(root=ROOT):
     return section("thumbnailSlugAliases"), section("remotePhotoBySlug")
 
 
-def inventory(slugs, root=ROOT):
+def inventory(slugs, root=ROOT, runtime=None):
     aliases, remotes = mappings(root)
+    runtime = runtime or {}
     records = []
     for requested in slugs:
         slug = str(requested).strip().lower()
@@ -47,7 +48,12 @@ def inventory(slugs, root=ROOT):
             if (root / "public/assets/fighters" / f"{canonical}-thumb.{ext}").is_file()
         ), None)
         spotlight = root / "public/assets/fighters" / f"{canonical}-spotlight.webp"
-        photo = remotes.get(canonical)
+        # Runtime photo URLs are the same already-used HQ assets returned by
+        # get_ufc_fighter_media_map; never require another provenance audit.
+        runtime_photo = runtime.get(canonical)
+        if runtime_photo and not re.fullmatch(r"https://a\.espncdn\.com/i/headshots/mma/players/full/[0-9]+\.png", str(runtime_photo)):
+            raise ValueError(f"Invalid HQ runtime photo URL for {canonical}")
+        photo = remotes.get(canonical) or runtime_photo
         if thumb_name:
             status = "existing_local"
         elif photo:
@@ -62,7 +68,7 @@ def inventory(slugs, root=ROOT):
             "remote_headshot_url": photo,
             "spotlight_path": f"/assets/fighters/{canonical}-spotlight.webp" if spotlight.is_file() else None,
             "needs_new_thumb": status == "missing",
-            "needs_separate_visual_and_provenance_review": status != "missing",
+            "accepted_existing_hq_photo": status != "missing",
         })
     return records
 
@@ -94,6 +100,7 @@ def main():
     parser.add_argument("--slugs", help="Comma-separated UFC fighter slugs")
     parser.add_argument("--prep-json", type=Path, help="Exported UFC prep package JSON")
     parser.add_argument("--manifest", type=Path, help="Asset Ingest manifest preflight")
+    parser.add_argument("--runtime-map-json", type=Path, help="Current get_ufc_fighter_media_map JSON, optional")
     parser.add_argument("--preflight", action="store_true", help="Print reuse/process for the manifest")
     args = parser.parse_args()
     if args.manifest:
@@ -112,14 +119,17 @@ def main():
         fighters = [slug.strip() for slug in args.slugs.split(",") if slug.strip()]
     else:
         parser.error("Provide --slugs, --prep-json or --manifest")
-    records = inventory(fighters)
+    runtime = json.loads(args.runtime_map_json.read_text(encoding="utf-8")) if args.runtime_map_json else {}
+    if not isinstance(runtime, dict):
+        parser.error("--runtime-map-json must contain a fighter_slug: URL map")
+    records = inventory(fighters, runtime=runtime)
     print(json.dumps({
         "fighters": len(records),
         "existing_local": sum(v["thumbnail_status"] == "existing_local" for v in records),
         "existing_remote": sum(v["thumbnail_status"] == "existing_remote" for v in records),
         "missing": sum(v["thumbnail_status"] == "missing" for v in records),
         "records": records,
-        "note": "Existing != source-approved or live-verified; never set thumb_ready from this inventory alone.",
+        "note": "Owner-locked: existing HQ local or app-managed remote photos are accepted; set thumb_ready true with their current app path/URL. Only missing photos need acquisition.",
     }, indent=2))
 
 

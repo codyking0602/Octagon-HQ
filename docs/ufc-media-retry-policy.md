@@ -1,5 +1,7 @@
 # UFC media retry policy
 
+**Existing HQ photos are already accepted.** This retry/visual-review policy applies to NEW media being acquired or to an explicitly established wrong/absent photo. The next-card monitor must reuse local and app-managed remote fighter photos as-is without re-reviewing old sources or asking for owner approvals. Only missing assets need new UFC/ESPN acquisition, rendered-image visual inspection, green PR head, deployment and verification. The automation completes those steps autonomously; it never stages or publishes Picks.
+
 Never treat failed visual review as a passing asset. Record exact official source URL and rejection reason. Retry with a changed verified source or an updated image processor, and validate the exact resulting head before publication.
 
 ## October 29 reviewed rejections

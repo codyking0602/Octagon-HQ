@@ -51,12 +51,24 @@ class UfcPrepMediaInventoryTests(unittest.TestCase):
         self.assertEqual(rows[0]["thumb_path"], "/assets/fighters/legacy-fighter-thumb.png")
         self.assertEqual(rows[1]["thumb_path"], "/assets/fighters/other-fighter-thumb.jpeg")
 
-    def test_current_frontend_remote_is_reuse_candidate_not_approval(self):
+    def test_current_frontend_remote_is_accepted_hq_photo(self):
         row = inventory(["remote-fighter"], self.root)[0]
         self.assertEqual(row["thumbnail_status"], "existing_remote")
-        self.assertTrue(row["needs_separate_visual_and_provenance_review"])
+        self.assertTrue(row["accepted_existing_hq_photo"])
         self.assertFalse(row["needs_new_thumb"])
         self.assertIsNone(row["thumb_path"])
+
+    def test_existing_runtime_hq_fighter_photos_are_accepted(self):
+        urls = {
+            "josh-hokit": "https://a.espncdn.com/i/headshots/mma/players/full/4049391.png",
+            "caio-borralho": "https://a.espncdn.com/i/headshots/mma/players/full/4835137.png",
+        }
+        rows = inventory(["josh-hokit", "caio-borralho", "luis-gurule"], self.root, runtime=urls)
+        self.assertEqual([row["thumbnail_status"] for row in rows],
+                         ["existing_remote", "existing_remote", "missing"])
+        self.assertTrue(rows[0]["accepted_existing_hq_photo"])
+        self.assertEqual(rows[0]["remote_headshot_url"], urls["josh-hokit"])
+        self.assertFalse(rows[2]["accepted_existing_hq_photo"])
 
     def test_ingest_manifest_defaults_to_reuse_and_requires_reason_to_replace(self):
         spec = {
