@@ -1580,3 +1580,43 @@
     column-gap:5px;
   }
 }
+
+
+/* NBA GM final report: compact approved five-metric hierarchy. NFL untouched. */
+.nba-gm-final .gm-final__hero { padding: 14px; }
+.nba-gm-final .gm-final__hero-main { margin: 7px 0 10px; align-items:center; }
+.nba-gm-final .gm-final__score strong { line-height:1; }
+.nba-gm-final .gm-final__verdict { padding:8px 10px; min-height:0; }
+.nba-gm-final .gm-final__verdict b { font-size:clamp(15px,3.5vw,22px); line-height:1.1; }
+.nba-gm-final .gm-final__verdict span { font-size:9px; margin-top:3px; }
+.nba-gm-final__score-components { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.nba-gm-final__score-components > div { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-width:0; padding:8px 3px; border-radius:9px; background:rgba(255,255,255,.045); border:1px solid rgba(243,164,73,.18); }
+.nba-gm-final__score-components b { font-size:clamp(17px,4vw,24px); line-height:1; font-variant-numeric:tabular-nums; }
+.nba-gm-final__score-components small { font-size:10px; font-weight:800; letter-spacing:.04em; color:#f1c28b; }
+.nba-gm-final__score-components span { font-size:9px; color:#aeb5c1; }
+.nba-gm-final__management-stats { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px 18px; padding-top:9px; color:#b8c0cc; font-size:11px; }
+.nba-gm-final__management-stats span { white-space:nowrap; }
+.nba-gm-final__management-stats b { font-size:14px; color:#f5f5f5; margin-right:4px; }
+.nba-gm-final .gm-final__seasons { gap:7px; }
+.nba-gm-final .gm-final__season { padding:8px 4px; min-height:0; gap:3px; }
+.nba-gm-final .gm-final__season > div { margin:0; }
+.nba-gm-final .gm-final__season > em { border:0; background:none; padding:2px 0; line-height:1.15; }
+.nba-gm-final .gm-final__season > small:last-child { font-size:9px; }
+.nba-gm-team-fit { padding:12px; }
+.nba-gm-team-fit__header { margin-bottom:5px; }
+.nba-gm-team-fit__header h2 { margin:0; }
+.nba-gm-team-fit__inline-summary { display:flex; align-items:center; gap:14px; padding:5px 0 0; }
+.nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary { flex:0 0 auto; gap:6px; }
+.nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary > strong { font-size:26px; }
+.nba-gm-team-fit__inline-meter { flex:1; min-width:0; }
+.nba-gm-team-fit__inline-meter .nba-gm-team-fit__meter-track { margin:4px 7px 0; }
+.nba-gm-team-fit__inline-meter .nba-gm-team-fit__meter-ends { margin-top:8px; }
+.nba-gm-team-fit__year-caption { margin:3px 0 8px; font-size:10px; color:#9ca3af; text-align:right; }
+.nba-gm-team-fit__row { padding:5px 0; }
+.nba-gm-team-fit__tier { padding:5px 2px; }
+@media(max-width:390px) {
+  .nba-gm-final__management-stats { gap:6px 12px; font-size:10px; }
+  .nba-gm-team-fit__inline-summary { gap:9px; }
+  .nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary > strong { font-size:23px; }
+  .nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary > .nba-gm-team-fit__tier { font-size:8px; padding:3px 4px; }
+}

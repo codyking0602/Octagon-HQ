@@ -49,7 +49,8 @@ describe("NBA GM V7 mirrors NFL's outcome curve without predetermining results",
     expect(page).not.toContain("VIEW PLAYOFF OUTCOME ODDS");
     expect(page).not.toContain("Finals Loss");
     expect(page).toContain("graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9}");
-    expect(final).toContain('(run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"OVR"');
+    expect(final).toContain('season.teamOverall??Math.round((season.offense+season.defense)/2)');
+    expect(final).not.toContain('?"OVR"');
     expect(repository).toContain('teamOverall:z.number().int().min(70).max(99).optional()');
     expect(sql).toContain("'titleOdds',round(100*(v_odds->>'Champion')::numeric,1)");
   });
