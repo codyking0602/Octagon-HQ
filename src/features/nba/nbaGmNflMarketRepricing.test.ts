@@ -22,7 +22,7 @@ describe("NBA GM new-franchise NFL market repricing parity", () => {
     expect(migration).toContain("v_player.positions[1]");
     expect(migration).toContain("v_player.verified_birth_date");
     expect(migration).toContain("private.nba_gm_v3_grade(p_state,p_id,2)");
-    expect(migration).not.toContain("v_start*1.065");
+    expect(migration).toContain("v_base*v_position*v_age");
     expect(migration).toContain("v_roll*2-1");
   });
 
