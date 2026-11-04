@@ -39,7 +39,7 @@ describe("current NFL Oct 27 ability reaches new Short and Long GM games",()=>{
    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
    expect(contracts.players).toHaveLength(594);
    expect(profiles.profiles).toHaveLength(594);
-   expect(NFL_GM_LONG_PLAYER_POOL).toHaveLength(FOOTBALL_GM_PLAYER_POOL.length+179);
+   expect(NFL_GM_LONG_PLAYER_POOL).toHaveLength(594 + 179); // Long GM authority remains independent of the 43 Short GM-only additions.
    for(const change of changes){
      const row=gmPlayer(change.team,change.family,change.player);
      const contract=contracts.players.find(c=>c.team===change.team&&c.family===change.family&&c.player===change.player)!;
