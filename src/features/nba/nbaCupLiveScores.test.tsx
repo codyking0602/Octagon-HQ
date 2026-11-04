@@ -1,5 +1,6 @@
 import {afterEach,describe,expect,it,vi} from "vitest";
 import {renderToStaticMarkup} from "react-dom/server";
+import {readFileSync} from "node:fs";
 import {CUP_GAMES,CUP_NIGHTS,cupGroupRecords,cupFixtureId} from "./nbaCupTracker";
 import {normalizeCupScoreFeed} from "./nbaCupScoresRepository";
 import {NbaCupLockedView} from "./NbaCupLockedView";
@@ -67,6 +68,43 @@ describe("NBA Cup actual results and Football-like follow-along",()=>{
     expect(html).toContain("GROUP STANDINGS");
     expect(html.match(/nba-cup__locked-card"/g)).toHaveLength(6);
     expect(html).not.toContain("SAVE PICKS");
+  });
+  it("uses Cup W-L and differential instead of Pending in every collapsed card",()=>{
+    vi.spyOn(Date,"now").mockReturnValue(now);
+    const html=renderToStaticMarkup(<NbaCupLockedView picks={picks} members={[]} loading={false} error=""
+      scoreFeed={sample(VERIFIED_CUP_OPENING_NIGHT)}/>);
+    expect(html).toContain('aria-label="Cup record: 1–0 · +16"');
+    expect(html).toContain('aria-label="Cup record: 0–0 · 0"');
+    expect(html).not.toContain(">PENDING</span>");
+    const incomplete=renderToStaticMarkup(<NbaCupLockedView picks={picks} members={[]} loading={false} error=""
+      scoreFeed={sample([])}/>);
+    expect(incomplete).toContain('aria-label="Cup record: —"');
+  });
+  it("keeps the next Cup night personalized without repeating the four featured games",()=>{
+    vi.spyOn(Date,"now").mockReturnValue(now);
+    const html=renderToStaticMarkup(<NbaCupLockedView picks={picks} members={[]} loading={false} error=""
+      scoreFeed={sample(VERIFIED_CUP_OPENING_NIGHT)}/>);
+    const nextNight=html.split('class="nba-cup__locked-section-heading"')[0];
+    expect(nextNight).toContain("OTHER 5 CUP MATCHUPS");
+    expect(nextNight).not.toContain("ALL 9 CUP MATCHUPS");
+    expect((nextNight.match(/Boston Celtics @ Charlotte Hornets/g)??[])).toHaveLength(1);
+    expect((nextNight.match(/Philadelphia 76ers @ Cleveland Cavaliers/g)??[])).toHaveLength(1);
+    expect((nextNight.match(/Oklahoma City Thunder @ Memphis Grizzlies/g)??[])).toHaveLength(1);
+    expect((nextNight.match(/San Antonio Spurs @ Sacramento Kings/g)??[])).toHaveLength(1);
+    expect(nextNight).toContain("Washington Wizards @ Atlanta Hawks");
+  });
+  it("renders one compact final score row and eliminates locked-only bottom padding",()=>{
+    vi.spyOn(Date,"now").mockReturnValue(now);
+    const html=renderToStaticMarkup(<NbaCupLockedView picks={picks} members={[]} loading={false} error=""
+      scoreFeed={sample(VERIFIED_CUP_OPENING_NIGHT)}/>);
+    expect(html).toContain('class="nba-cup__game-final-main"');
+    expect(html).toContain("110–94");
+    expect(html).toContain("Oct 30 · FINAL");
+    expect(html).not.toContain("nba-cup__game-final-score is-my-team");
+    const css=readFileSync("src/features/nba/nbaCup2026.css","utf8");
+    const page=readFileSync("src/features/nba/NbaCup2026Page.tsx","utf8");
+    expect(css).toContain(".nba-picks-page .nba-cup__main--locked{padding-bottom:0}");
+    expect(page).toContain('locked?" nba-cup__main--locked":""');
   });
   it("marks missing past scores without inventing records, but not future dates",()=>{
     const feed=sample([]);
