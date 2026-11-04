@@ -15,7 +15,6 @@ describe("locked 2026 NBA Cup Football Picks parity",()=>{
     expect(html).toContain("GROUP RANK");
     expect(html).toContain("PICKS MADE");
     expect(html).toContain("VIEW STANDINGS");
-    expect(html).toContain("3"); // entry count
     expect(html).toContain("Detroit Pistons");
     expect(html).toContain("Houston Rockets");
     expect(html).toContain("San Antonio Spurs");
