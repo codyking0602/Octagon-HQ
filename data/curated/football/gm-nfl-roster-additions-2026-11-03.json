@@ -147,7 +147,7 @@
       "gmEligibleSlots": [
         "DL"
       ],
-      "age": 31,
+      "age": 30,
       "dateOfBirth": "1995-11-19",
       "draftYear": 2018,
       "draftRound": null,
@@ -172,7 +172,7 @@
       "gmEligibleSlots": [
         "DL"
       ],
-      "age": 25,
+      "age": 24,
       "dateOfBirth": "2001-11-21",
       "draftYear": 2023,
       "draftRound": 4,
@@ -272,7 +272,7 @@
       "gmEligibleSlots": [
         "DL"
       ],
-      "age": 34,
+      "age": 33,
       "dateOfBirth": "1992-12-16",
       "draftYear": 2016,
       "draftRound": 2,
@@ -397,7 +397,7 @@
       "gmEligibleSlots": [
         "LB"
       ],
-      "age": 30,
+      "age": 29,
       "dateOfBirth": "1996-11-13",
       "draftYear": 2019,
       "draftRound": 3,
@@ -647,7 +647,7 @@
       "gmEligibleSlots": [
         "DB"
       ],
-      "age": 31,
+      "age": 30,
       "dateOfBirth": "1995-11-08",
       "draftYear": 2018,
       "draftRound": 2,
@@ -773,7 +773,7 @@
         "WR",
         "FLEX"
       ],
-      "age": 30,
+      "age": 29,
       "dateOfBirth": "1996-11-18",
       "draftYear": 2018,
       "draftRound": 2,
@@ -825,7 +825,7 @@
         "RB",
         "FLEX"
       ],
-      "age": 27,
+      "age": 26,
       "dateOfBirth": "1999-11-23",
       "draftYear": 2024,
       "draftRound": 5,
@@ -900,7 +900,7 @@
       "gmEligibleSlots": [
         "DL"
       ],
-      "age": 35,
+      "age": 34,
       "dateOfBirth": "1991-12-27",
       "draftYear": 2014,
       "draftRound": 4,
@@ -1076,7 +1076,7 @@
       "gmEligibleSlots": [
         "DB"
       ],
-      "age": 25,
+      "age": 24,
       "dateOfBirth": "2001-12-04",
       "draftYear": 2025,
       "draftRound": 1,
@@ -1195,7 +1195,7 @@
       "team": "LAR",
       "family": "Front Seven",
       "position": "IDL",
-      "ageAtCalibration": 31,
+      "ageAtCalibration": 30,
       "gradeAtCalibration": 81,
       "confidence": "high",
       "draftOverall": null,
@@ -1214,7 +1214,7 @@
       "team": "PIT",
       "family": "Front Seven",
       "position": "ED",
-      "ageAtCalibration": 25,
+      "ageAtCalibration": 24,
       "gradeAtCalibration": 80,
       "confidence": "medium",
       "draftOverall": 132,
@@ -1290,7 +1290,7 @@
       "team": "SEA",
       "family": "Front Seven",
       "position": "IDL",
-      "ageAtCalibration": 34,
+      "ageAtCalibration": 33,
       "gradeAtCalibration": 76,
       "confidence": "medium",
       "draftOverall": 49,
@@ -1385,7 +1385,7 @@
       "team": "TEN",
       "family": "Front Seven",
       "position": "LB",
-      "ageAtCalibration": 30,
+      "ageAtCalibration": 29,
       "gradeAtCalibration": 78,
       "confidence": "high",
       "draftOverall": 88,
@@ -1575,7 +1575,7 @@
       "team": "LAC",
       "family": "Secondary",
       "position": "CB",
-      "ageAtCalibration": 31,
+      "ageAtCalibration": 30,
       "gradeAtCalibration": 75,
       "confidence": "medium",
       "draftOverall": 55,
@@ -1670,7 +1670,7 @@
       "team": "SF",
       "family": "WR",
       "position": "WR",
-      "ageAtCalibration": 30,
+      "ageAtCalibration": 29,
       "gradeAtCalibration": 78,
       "confidence": "high",
       "draftOverall": 47,
@@ -1708,7 +1708,7 @@
       "team": "NYG",
       "family": "RB",
       "position": "RB",
-      "ageAtCalibration": 27,
+      "ageAtCalibration": 26,
       "gradeAtCalibration": 76,
       "confidence": "medium",
       "draftOverall": 166,
@@ -1765,7 +1765,7 @@
       "team": "NE",
       "family": "Front Seven",
       "position": "IDL",
-      "ageAtCalibration": 35,
+      "ageAtCalibration": 34,
       "gradeAtCalibration": 75,
       "confidence": "medium",
       "draftOverall": 112,
@@ -1898,7 +1898,7 @@
       "team": "DEN",
       "family": "Secondary",
       "position": "CB",
-      "ageAtCalibration": 25,
+      "ageAtCalibration": 24,
       "gradeAtCalibration": 80,
       "confidence": "medium",
       "draftOverall": 20,
