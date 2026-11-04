@@ -32,7 +32,7 @@ function finalScore(raw:unknown):number|null{
 export function parseOfficialNbaCupSchedule(payload:unknown):NbaCupScoreEvent[]{
   const schedule=payload as SchedulePayload|null;
   const year=String(schedule?.leagueSchedule?.seasonYear??"");
-  if(year!=="2026"||!Array.isArray(schedule?.leagueSchedule?.gameDates)){
+  if(year!=="2026"&&year!=="2026-27"&&year!=="2026-2027"||!Array.isArray(schedule?.leagueSchedule?.gameDates)){
     throw new Error("NBA schedule does not represent the 2026 season.");
   }
   const matches:NbaCupScoreEvent[]=[];
