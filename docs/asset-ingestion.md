@@ -4,12 +4,12 @@ Octagon HQ automation can ingest approved binary fighter assets without passing 
 
 ## Contract
 
-1. **Inventory existing assets first.** For UFC fighters, run `python scripts/ufc_prep_asset_inventory.py --slugs fighter-a,fighter-b` (or `--prep-json` on the exported current prep object). It derives existing local thumbs/Spotlights and frontend static remote fallbacks directly from the live repo, including canonical aliases. For a fighter already in HQ, reuse and separately validate official source provenance and live delivery; do not download another copy solely because the new prep package's readiness flag is false. The workflow's UFC preflight also skips existing destinations automatically. A deliberate replacement requires `"replace_existing": true` and a documented `"replacement_reason"`.
-2. The automation verifies identity and approved provenance before queueing anything.
+1. **Inventory existing assets first.** For UFC fighters, run `python scripts/ufc_prep_asset_inventory.py --slugs fighter-a,fighter-b` (or `--prep-json` on the exported current prep object). It derives existing local thumbs/Spotlights and frontend static remote fallbacks directly from the live repo, including canonical aliases. For a fighter already shown by HQ, reuse automatically and set the event prep thumb_ready/actual app photo path without historical photo audits, redundant source checks, or owner approval; only missing fighters need new acquisition. Include the current Supabase runtime media map alongside the repository inventory (pass --runtime-map-json with an exported map when available). The workflow's UFC preflight also skips existing destinations automatically. A deliberate replacement requires `"replace_existing": true` and a documented `"replacement_reason"`.
+2. For genuinely missing fighters, the automation verifies identity and approved provenance before queueing anything. Existing photos never generate manifests.
 3. It creates a focused branch from fresh `main`.
 4. It writes one JSON manifest under `.asset-ingest/`.
 5. The `Asset Ingest` GitHub Action downloads the official source inside GitHub Actions, validates the source provenance, processes the asset, validates dimensions/transparency, deletes the manifest, and commits the generated WebP back to that branch.
-6. The automation waits for that generated commit, opens/updates the focused PR, explicitly validates the exact generated head, and follows the normal exact-head green/deploy/verify/merge rules.
+6. The automation waits for the generated commit, opens/updates the focused PR, visually reviews every NEW photo, validates the exact head, merges the clean PR after green checks, verifies production, and marks the missing fighter ready. It performs this autonomously without asking the owner to approve each image. It must not stage/publish Picks.
 
 Direct-image manifest:
 
@@ -38,6 +38,8 @@ Provide exactly one of `source_url` or `source_page_url`. `crop` is optional and
 Direct source hosts remain restricted to ESPN/ESPN CDN and UFC. For `source_page_url`, the page itself must be an approved official UFC athlete page (including supported official localized UFC domains), and the processor accepts only the image element whose alt text identifies the requested fighter. The resolved image must be a safe public HTTPS URL. This lets UFC-owned athlete imagery remain usable even when the page serves the binary from an internal CDN URL that is not exposed to the prep monitor.
 
 Destinations are restricted to `public/assets/fighters/` and must end in `-thumb.webp` or `-spotlight.webp`. Thumbs are exactly 320×320; Spotlights are exactly 626×800. Approved ESPN/UFC source imagery may be opaque. When needed, the ingest processor removes the source background and must still produce real visible transparency in the finished WebP. If background removal cannot produce valid transparency, the job fails closed rather than inventing or substituting imagery.
+
+For UFC **new thumbnails only**, the source original must already be genuinely transparent and clean. Background removal is not allowed for thumbnail processing; Spotlight photos follow their separate cutout rules. Existing HQ fighter photos are not reprocessed or reaudited when reused on a new card.
 
 This is a transport/processing primitive, not a provenance bypass. Sport-specific source rules still apply.
 
