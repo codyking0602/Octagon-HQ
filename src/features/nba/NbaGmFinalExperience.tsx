@@ -76,28 +76,26 @@ export function NbaGmFinalExperience({
   const biggestJump=[...finalRows].sort((a,b)=>b.delta-a.delta)[0];
   const biggestDrop=[...finalRows].sort((a,b)=>a.delta-b.delta)[0];
   const missedEveryPlayoff=results.length===3&&results.every(season=>season.finish==="Missed Playoffs");
-  const totalWins=results.reduce((sum,season)=>sum+season.wins,0);
   const verdict=!score?"LEGACY RUN"
     :missedEveryPlayoff?(score.roster>=80?"TALENT, NO PLAYOFFS":"MISSED THE PLAYOFFS")
     :score.score>=92?"ELITE RUN":score.score>=85?"STRONG BUILD"
       :score.score>=78?"SOLID FOUNDATION":score.score>=70?"MIXED RESULTS":"REBUILD NEEDED";
-  const verdictDetail=missedEveryPlayoff
-    ? `${totalWins} WINS IN THREE SEASONS · NO PLAYOFF APPEARANCES`
-    : "THREE SEASONS. YOUR ROSTER DECISIONS.";
   return <div className="football-gm-final gm-final nba-gm-final"
     aria-label="Three-year NBA GM final result">
     <section className="gm-final__hero surface-card">
       <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>NBA · THREE-SEASON RECAP</span></div>
       <div className="gm-final__hero-main">
         <div className="gm-final__score"><strong>{score?score.score.toFixed(1):"—"}</strong><span>GM SCORE</span></div>
-        <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b>
-          <span>{verdictDetail}</span></div>
+        <div className="gm-final__verdict"><b>{verdict}</b><span>NBA · THREE SEASONS</span></div>
       </div>
-      <div className="gm-final__stats">
-        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>3-YR ROSTER GRADE</small></div>
-        <div><b>{score?score.playoffs.toFixed(1):"—"}</b><small>PLAYOFF GRADE</small></div>
-        <div><b>{retained}/7</b><small>CORE RETAINED</small></div>
-        <div><b>{arrivals.length}</b><small>OFFSEASON CHANGES</small></div>
+      <div className="nba-gm-final__score-components" aria-label="GM scoring components">
+        <div><b>{score?score.roster.toFixed(1):"—"}</b><small>ROSTER</small><span>90%</span></div>
+        <div><b>{score?score.regularSeason.toFixed(1):"—"}</b><small>RECORD</small><span>3%</span></div>
+        <div><b>{score?score.playoffs.toFixed(1):"—"}</b><small>PLAYOFFS</small><span>7%</span></div>
+      </div>
+      <div className="nba-gm-final__management-stats">
+        <span><b>{retained}/7</b> Core retained</span>
+        <span><b>{arrivals.length}</b> Offseason changes</span>
       </div>
     </section>
     <section className="gm-final__section surface-card" aria-label="Three-year NBA franchise results">
@@ -105,7 +103,7 @@ export function NbaGmFinalExperience({
       <div className="gm-final__seasons">
         {results.map(season=><div className="gm-final__season" key={season.season}>
           <small>YEAR {season.season}</small>
-          <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong><span>{(run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9)?"OVR":run.simulationModelVersion===6?"GRD":"SIM"}</span></div>
+          <div><strong>{season.teamOverall??Math.round((season.offense+season.defense)/2)}</strong></div>
           <b>{season.wins}–{season.losses}</b><em>{nbaGmPlayoffFinishText(season.finish)}</em>
           {season.titleOdds!=null&&<small>{season.titleOdds.toFixed(1)}% TITLE ODDS</small>}
         </div>)}
@@ -182,18 +180,5 @@ export function NbaGmFinalExperience({
         </div>
       </details>
     <NbaGmTeamFit run={run} catalog={catalog} season={3}/>
-    <div className="gm-final__bottom">
-      <section className="gm-final__section surface-card" aria-label="NBA GM score breakdown">
-        <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
-        {[
-          ["Roster (90%)",score?.roster],
-          ["Season record (3%)",score?.regularSeason],
-          ["Playoffs (7%)",score?.playoffs],
-        ].map(([label,value])=><div className="gm-final__math" key={String(label)}>
-          <span>{label}</span><i><b style={{width:(typeof value==="number"?value:0)+"%"}}/></i>
-          <strong>{typeof value==="number"?value.toFixed(1):"—"}</strong>
-        </div>)}
-      </section>
-    </div>
   </div>;
 }
