@@ -40,7 +40,7 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
   });
 
   it("labels V6 percentage-relative grades without relabeling legacy 86.8 / 82.7 as grades", () => {
-    expect(page).toContain('graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9}');
+    expect(page).toContain('graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9||run.simulationModelVersion===10}');
     expect(page).toContain("OFFENSE GRADE");
     expect(page).toContain("DEFENSE GRADE");
     expect(page).toContain("season.offense.toFixed(1)");
