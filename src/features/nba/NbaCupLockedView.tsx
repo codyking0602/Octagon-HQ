@@ -32,14 +32,35 @@ function gameProgress(game:CupGame,feed:CupScoreFeed|null){
   if(score&&score.status==="live")return "LIVE · "+score.awayScore+"–"+score.homeScore+(score.detail?" · "+score.detail:"");
   return cupGameDateLabel(game);
 }
-function GameLine({game,feed,chosen}:{game:CupGame;feed:CupScoreFeed|null;chosen?:string}){
+function GameLine({game,feed,chosen,featuredPick}:{
+  game:CupGame;feed:CupScoreFeed|null;chosen?:string;featuredPick?:string;
+}){
   const opponent=chosen?(chosen===game.away?game.home:game.away):null;
   const label=opponent
     ?(chosen===game.away?"at ":"vs ")+shortName(opponent)
     :shortName(game.away)+" @ "+shortName(game.home);
   const status=cupGameStatus(game,feed);
-  return <div className={"nba-cup__game-line"+(chosen?" is-chosen":"")} data-status={status}>
-    <span className="nba-cup__game-name">{label}</span>
+  const score=cupGameScore(game,feed);
+  const picked=chosen??featuredPick;
+  if(chosen&&score&&score.status==="final"&&score.homeScore!==null&&score.awayScore!==null){
+    const pickedScore=chosen===game.away?score.awayScore:score.homeScore;
+    const opponentScore=chosen===game.away?score.homeScore:score.awayScore;
+    const won=pickedScore>opponentScore;
+    return <div className="nba-cup__game-final" data-status="final">
+      <div className="nba-cup__game-final-heading">
+        <span>{new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric"}).format(new Date(game.startAt))} · FINAL</span>
+        <strong className={won?"is-win":"is-loss"}>{won?"WIN":"LOSS"}</strong>
+      </div>
+      <div className="nba-cup__game-final-score is-my-team"><span>{shortName(chosen)}</span><strong>{pickedScore}</strong></div>
+      <div className="nba-cup__game-final-score"><span>{shortName(opponent??"")}</span><strong>{opponentScore}</strong></div>
+    </div>;
+  }
+  return <div className={"nba-cup__game-line"+(chosen?" is-chosen":"")+(featuredPick?" is-featured":"")} data-status={status}>
+    {featuredPick&&NBA_TEAM_BY_ID.get(featuredPick)?<span className="nba-cup__game-pick-mark"><NbaTeamMark team={NBA_TEAM_BY_ID.get(featuredPick)!}/></span>:null}
+    <span className="nba-cup__game-label-stack">
+      <span className="nba-cup__game-name">{label}</span>
+      {featuredPick?<small>✓ YOUR PICK</small>:null}
+    </span>
     <span className={"nba-cup__game-date"+(status==="live"?" is-live":"")}>{gameProgress(game,feed)}</span>
   </div>;
 }
@@ -51,7 +72,7 @@ export function NbaCupLockedView({picks,members,loading,error,scoreFeed=null,sco
   const pickedTeams=new Set(Object.values(picks).filter(Boolean));
   const nightGames=nextDate?CUP_GAMES.filter(game=>game.date===nextDate):[];
   const followed=nightGames.filter(game=>pickedTeams.has(game.away)||pickedTeams.has(game.home));
-  const preview=followed.slice(0,2);
+  const preview=followed;
   const anyScoresMissing=(scoreFeed?.failedDates.length??0)>0;
 
   return <div className="nba-cup__locked" data-testid="nba-cup-locked-view">
@@ -90,7 +111,8 @@ export function NbaCupLockedView({picks,members,loading,error,scoreFeed=null,sco
     {nextDate?<section className="nba-cup__next-night" aria-label="Next NBA Cup night">
       <header><strong>NEXT CUP NIGHT</strong><span>{dateLabel(nextDate)} · {nightGames.length} GAMES</span></header>
       <div className="nba-cup__next-night-games">
-        {preview.map(game=><GameLine key={game.id} game={game} feed={scoreFeed}/>)}
+        {preview.length?<p className="nba-cup__night-pick-count">{preview.length} OF YOUR PICKS PLAYING</p>:null}
+        {preview.map(game=><GameLine key={game.id} game={game} feed={scoreFeed} featuredPick={pickedTeams.has(game.away)?game.away:game.home}/>) }
         {!preview.length?<p>See all NBA Cup group games below.</p>:null}
       </div>
       <details className="nba-cup__night-more">
