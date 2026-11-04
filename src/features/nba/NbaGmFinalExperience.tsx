@@ -143,12 +143,11 @@ export function NbaGmFinalExperience({
             <FinalTeamLogo code={row.player.teamCode}/>
             <div className="gm-final__player-name">
               <strong>{row.player.name}</strong>
-              
+              <b className={`gm-final__tier is-${nbaGmScoutTier({...row.player,
+                currentGrade:row.report?.year3Grade??row.player.currentGrade}).toLowerCase()}`}>
+                {nbaGmScoutTier({...row.player,currentGrade:row.report?.year3Grade??row.player.currentGrade})}
+              </b>
             </div>
-            <b className={`gm-final__tier is-${nbaGmScoutTier({...row.player,
-              currentGrade:row.report?.year3Grade??row.player.currentGrade}).toLowerCase()}`}>
-              {nbaGmScoutTier({...row.player,currentGrade:row.report?.year3Grade??row.player.currentGrade})}
-            </b>
           </div>
           <div className="gm-final__player-outcome">
             {row.report?<MovementBand name={row.player.name} delta={row.delta}/>
