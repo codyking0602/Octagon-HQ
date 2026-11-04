@@ -1,0 +1,7 @@
+{
+  "kind": "thumb",
+  "destination": "public/assets/fighters/drew-dober-thumb.webp",
+  "fighter_name": "Drew Dober",
+  "source_url": "https://a.espncdn.com/combiner/i?img=%2Fi%2Fheadshots%2Fmma%2Fplayers%2Ffull%2F2951202.png",
+  "debug_espn_combiner": true
+}
