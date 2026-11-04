@@ -1,3 +1,4 @@
+import gmRosterAdditions from "../../../data/curated/football/gm-nfl-roster-additions-2026-11-03.json";
 import {
   contractsArtifact,
   frontSevenGradesArtifact,
@@ -151,6 +152,14 @@ for (const [family, artifact] of gradeArtifacts) {
   }
 }
 
+// The GM-only audit expands the draft wheel without rewriting Wheel grade
+// snapshots or changing the identity of any of the original 594 players.
+for (const addition of gmRosterAdditions.players) {
+  const key = gradeKey(addition.team, addition.family, addition.player);
+  if (gradeByKey.has(key)) throw new Error(`Duplicate NFL GM grade for ${key}`);
+  gradeByKey.set(key, addition.hqGrade);
+}
+
 function playerId(contract: WheelFootballGmContractRow) {
   // IDs are saved in historical GM matches; preserve a pre-trade ID explicitly.
   return contract.stablePlayerId ?? gradeKey(contract.team, contract.family, contract.player);
@@ -165,7 +174,10 @@ function extensionRisk(contract: WheelFootballGmContractRow, extensionApy: numbe
   return "LOW";
 }
 
-const contracts = (contractsArtifact as { players: WheelFootballGmContractRow[] }).players;
+const contracts: WheelFootballGmContractRow[] = [
+  ...(contractsArtifact as { players: WheelFootballGmContractRow[] }).players,
+  ...(gmRosterAdditions.players as unknown as WheelFootballGmContractRow[]),
+];
 
 export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.map((contract) => {
   const currentGrade = gradeByKey.get(gradeKey(contract.team, contract.family, contract.player));

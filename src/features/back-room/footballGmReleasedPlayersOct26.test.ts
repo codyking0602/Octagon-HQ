@@ -34,10 +34,10 @@ describe("Oct 2026 NFL verified released-player eligibility, historical identiti
   it("retains 594 original GM records and grades, but excludes exactly three departures from new drafts", () => {
     expect(FOOTBALL_GM_TEAMS).toHaveLength(32);
     expect(contracts.players).toHaveLength(594);
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
-    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(591);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
+    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
     const savedIds = new Set(FOOTBALL_GM_PLAYER_POOL.map(player => player.id));
-    expect(savedIds.size).toBe(594);
+    expect(savedIds.size).toBe(637);
     for (const { team, name, family, id } of released) {
       const contract = contracts.players.find(x => x.team === team && x.player === name && x.family === family);
       expect(contract?.currentRosterEligible).toBe(false);

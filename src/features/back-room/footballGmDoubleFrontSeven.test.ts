@@ -16,12 +16,12 @@ import {
 const acquired = "draft" as const;
 
 describe("NFL GM double Front Seven positions", () => {
-  it("keeps persisted slot keys and admits all 191 Front Seven players into either spot", () => {
+  it("keeps persisted slot keys and admits all 211 Front Seven players into either spot", () => {
     expect(FOOTBALL_GM_ROSTER_SLOTS).toEqual(["QB", "RB", "WR", "FLEX", "DL", "LB", "DB"]);
     expect(footballGmSlotLabel("DL")).toBe("F7-1");
     expect(footballGmSlotLabel("LB")).toBe("F7-2");
     const defenders = FOOTBALL_GM_PLAYER_POOL.filter((player) => player.family === "Front Seven");
-    expect(defenders).toHaveLength(191);
+    expect(defenders).toHaveLength(211);
     expect(defenders.every((player) => player.eligibleSlots.join(",") === "DL,LB")).toBe(true);
     expect(defenders.some((player) => player.marketPosition === "DL")).toBe(true);
     expect(defenders.some((player) => player.marketPosition === "LB")).toBe(true);
