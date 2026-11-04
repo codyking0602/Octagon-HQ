@@ -1,3 +1,4 @@
+import { footballGmActualRole, footballGmRoleMultiplier } from "./footballGmPositionalValue";
 import { describe, expect, it } from "vitest";
 import expansion from "../../../data/curated/football/nfl/gm-nfl-roster-expansion-2026-11-03.json";
 import verified from "../../../data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json";
@@ -69,6 +70,8 @@ describe("Nov 3 owner-approved 43-person NFL GM roster expansion", () => {
       expect(player.position).toBe("FB");
       expect(player.family).toBe("TE");
       expect(player.eligibleSlots).toEqual(["FLEX"]);
+      expect(footballGmActualRole(player)).toBe("FB");
+      expect(footballGmRoleMultiplier(player, "FLEX")).toBe(0.98);
       expect(footballGmCandidatesForTeam({ team: player.team, roster: [] })
         .find(candidate => candidate.player.id === player.id)?.legalSlots).toEqual(["FLEX"]);
     }
