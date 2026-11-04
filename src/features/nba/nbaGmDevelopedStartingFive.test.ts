@@ -73,7 +73,7 @@ describe("NBA GM developing starters: backup big promotion", () => {
   });
 
   it("wires backend simulator AND advance to the versioned developed lineup", () => {
-    const sql = readFileSync("supabase/migrations/202612310929_nba_gm_developed_season_lineup.sql", "utf8");
+    const sql = readFileSync("supabase/migrations/202612310936_nba_gm_developed_season_lineup.sql", "utf8");
     const regression = readFileSync("supabase/tests/nba_gm_developed_season_lineup.sql", "utf8");
     const fit = readFileSync("src/features/nba/NbaGmTeamFit.tsx", "utf8");
     expect(sql).toContain("private.nba_gm_v3_grade(p_state,p.id,p_year)");
