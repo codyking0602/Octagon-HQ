@@ -111,7 +111,7 @@ export function mergeCupGameScores(...lists:readonly NbaCupScoreEvent[][]):NbaCu
   for(const list of lists)for(const event of list){
     if(!confirmedFixture(event))continue;
     const prior=result.get(event.id);
-    if(!prior||progress(event.status)>progress(prior.status)){
+    if(!prior||progress(event.status)>=progress(prior.status)){
       result.set(event.id,event);
     }
   }
