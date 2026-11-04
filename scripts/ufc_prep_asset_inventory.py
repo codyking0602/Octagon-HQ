@@ -40,10 +40,15 @@ def inventory(slugs, root=ROOT):
         # Resolve the alias from the same frontend resolver; no copied roster.
         if not VALID_SLUG.fullmatch(canonical):
             raise ValueError(f"Invalid canonical fighter slug: {canonical!r}")
-        thumb = root / "public/assets/fighters" / f"{canonical}-thumb.webp"
+        # The frontend glob supports webp, png, jpg and jpeg; match all four.
+        thumb_name = next((
+            f"{canonical}-thumb.{ext}"
+            for ext in ("webp", "png", "jpg", "jpeg")
+            if (root / "public/assets/fighters" / f"{canonical}-thumb.{ext}").is_file()
+        ), None)
         spotlight = root / "public/assets/fighters" / f"{canonical}-spotlight.webp"
         photo = remotes.get(canonical)
-        if thumb.is_file():
+        if thumb_name:
             status = "existing_local"
         elif photo:
             status = "existing_remote"
@@ -53,7 +58,7 @@ def inventory(slugs, root=ROOT):
             "fighter_slug": slug,
             "canonical_slug": canonical,
             "thumbnail_status": status,
-            "thumb_path": f"/assets/fighters/{canonical}-thumb.webp" if thumb.is_file() else None,
+            "thumb_path": f"/assets/fighters/{thumb_name}" if thumb_name else None,
             "remote_headshot_url": photo,
             "spotlight_path": f"/assets/fighters/{canonical}-spotlight.webp" if spotlight.is_file() else None,
             "needs_new_thumb": status == "missing",
