@@ -6,7 +6,7 @@ import {
 } from "./nbaGmDevModel";
 
 const player = (id: string, grade: number, positions: Array<"PG" | "SG" | "SF" | "PF" | "C">) =>
-  ({ id, currentGrade: grade, positions }) as NbaGmDevPlayer;
+  ({ id, currentGrade: grade, positions }) as unknown as NbaGmDevPlayer;
 const catalog = [
   player("nba-gm-draft-tyjerome", 80, ["PG", "SG"]),
   player("nba-gm-draft-aaronnesmith", 81, ["SF", "SG"]),
