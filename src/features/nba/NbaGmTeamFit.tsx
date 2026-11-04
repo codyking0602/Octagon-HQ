@@ -45,7 +45,10 @@ function fitForSeason(run: NbaGmDevRun, catalog: readonly NbaGmDevPlayer[], year
     mean(rotation.filter(row => ["PF", "C", "BIG"].includes(row.slot)).map(row => row.player), "rebounding"),
   ];
   const tiers = signals.map((signal, index) => tierForSignal(signal.status, scores[index]!));
-  const index = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+  // The simulation owns the overall fit. Do not average display-only scouting categories.
+  const actualFit = run.results.find(result => result.season === year)?.positionalFit;
+  if (actualFit == null || !Number.isFinite(actualFit)) return null;
+  const index = Math.max(0, Math.min(100, Math.round(actualFit)));
   const overall = tierFromIndex(index);
   return { tiers, overall, index };
 }
@@ -60,19 +63,22 @@ export function NbaGmTeamFit({ run, catalog, season }: {
     <header className="nba-gm-team-fit__header">
       <div><small>{season === 1 ? "AFTER SEASON 1" : "THREE-SEASON RECAP"}</small><h2>TEAM FIT</h2></div>
     </header>
-    <div className="nba-gm-team-fit__summary">
-      {data.map(item => <div className="nba-gm-team-fit__year" key={item.year}>
-        <small>YEAR {item.year}</small>
-        <strong>{item.fit!.index}</strong>
-        <b className={`nba-gm-team-fit__tier is-${tierClass(item.fit!.overall)}`}>{item.fit!.overall}</b>
-      </div>)}
+    <div className="nba-gm-team-fit__compact">
+      <div className="nba-gm-team-fit__primary">
+        <small>OVERALL TEAM FIT</small>
+        <strong>{data[data.length-1]!.fit!.index}</strong>
+        <b className={`nba-gm-team-fit__tier is-${tierClass(data[data.length-1]!.fit!.overall)}`}>{data[data.length-1]!.fit!.overall}</b>
+      </div>
+      <div className="nba-gm-team-fit__year-values">
+        {data.map(item => <div key={item.year}><small>Y{item.year}</small><strong>{item.fit!.index}</strong></div>)}
+      </div>
     </div>
     <div className="nba-gm-team-fit__meter" aria-label="Overall roster composition index">
-      <div className="nba-gm-team-fit__meter-label"><strong>OVERALL TEAM FIT</strong><span>Roster composition index</span></div>
       <div className="nba-gm-team-fit__meter-track">
-        {data.map(item => <span key={item.year} className="nba-gm-team-fit__marker" style={{left: `${item.fit!.index}%`}} title={`Year ${item.year}: ${item.fit!.index}`}>
-          <i/>{season === 3 && <b>Y{item.year}</b>}
-        </span>)}
+        {[...new Set(data.map(item => item.fit!.index))].map(index =>
+          <span key={index} className="nba-gm-team-fit__marker" style={{left: `${index}%`}} title={`Team fit ${index}`}>
+            <i/>
+          </span>)}
       </div>
       <div className="nba-gm-team-fit__meter-ends"><span>DYSFUNCTIONAL</span><span>ELITE</span></div>
     </div>
