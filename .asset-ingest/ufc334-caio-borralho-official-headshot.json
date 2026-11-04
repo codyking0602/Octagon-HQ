@@ -1,0 +1,13 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/caio-borralho",
+  "fighter_name": "Caio Borralho",
+  "kind": "thumb",
+  "destination": "public/assets/fighters/caio-borralho-thumb.webp",
+  "fallback_sources": [
+    {
+      "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4835137.png",
+      "official_headshot_reviewed": true,
+      "verified_espn_athlete_id": "4835137"
+    }
+  ]
+}
