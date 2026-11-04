@@ -36,7 +36,7 @@ describe("NBA GM V6 independent two-sided model and historical grading", () => {
     expect(sql).toContain("''simulationModelVersion''=''5'' then");
     expect(sql).toContain("''simulationModelVersion'',6");
     expect(tests).toContain("V5 saved run changed under V6 router");
-    expect(repo).toContain("simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9)]).optional()");
+    expect(repo).toContain("simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9),z.literal(10)]).optional()");
   });
 
   it("labels V6 percentage-relative grades without relabeling legacy 86.8 / 82.7 as grades", () => {
