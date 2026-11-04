@@ -71,15 +71,15 @@ describe("NBA 2026 Cup group-play tracker",()=>{
       status:"final",homeScore:94,awayScore:110,detail:"Final",
     }]);
     expect(parseEspnNbaCupScoreboard("2026-11-04",{events:[]})).toEqual([]);
-    expect(parseEspnNbaCupScoreboard("2026-11-06",{events:[{
-      date:"2026-11-07T01:00:00Z",
+    expect(parseEspnNbaCupScoreboard("2026-11-13",{events:[{
+      date:"2026-11-14T02:30:00Z",
       status:{type:{state:"pre",completed:false,shortDetail:"7:00 PM EST"}},
       competitions:[{competitors:[
-        {homeAway:"away",team:{abbreviation:"NY"},score:"0"},
+        {homeAway:"away",team:{abbreviation:"GS"},score:"0"},
         {homeAway:"home",team:{abbreviation:"SA"},score:"0"},
       ]}],
     }]})).toEqual([{
-      id:"2026-11-06|NYK|SAS",home:"SAS",away:"NYK",
+      id:"2026-11-13|GSW|SAS",home:"SAS",away:"GSW",
       status:"scheduled",homeScore:null,awayScore:null,detail:"7:00 PM EST",
     }]);
   });
