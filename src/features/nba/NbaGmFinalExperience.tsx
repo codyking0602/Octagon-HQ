@@ -143,9 +143,8 @@ export function NbaGmFinalExperience({
             <FinalTeamLogo code={row.player.teamCode}/>
             <div className="gm-final__player-name">
               <strong>{row.player.name}</strong>
-              <small>{row.player.teamCode} · {money(row.report?.year3Salary??row.player.salaries[2])}</small>
+              
             </div>
-            <span className={`gm-final__acquired${row.retained?"":" is-new"}`}>{row.retained?"RETAINED":"ACQUIRED"}</span>
             <b className={`gm-final__tier is-${nbaGmScoutTier({...row.player,
               currentGrade:row.report?.year3Grade??row.player.currentGrade}).toLowerCase()}`}>
               {nbaGmScoutTier({...row.player,currentGrade:row.report?.year3Grade??row.player.currentGrade})}
