@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
-  footballGmMoney,
   footballGmPlayerById,
   footballGmPlayoffFinishLabel,
   footballGmProjectedGradeForPlayer,
@@ -13,8 +11,6 @@ import {
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
 import {
-  footballGmAdjustedRosterCap,
-  footballGmAdjustedSalaryForPlayer,
   footballGmFinalResultV2,
   footballGmSeasonRecordLabel,
 } from "./footballGmStrategy";
@@ -121,7 +117,6 @@ type RosterRow = {
   player: FootballGmPlayer;
   entry: FootballGmRosterEntry;
   before: FootballGmPlayer | null;
-  salary: number;
   band: ReturnType<typeof footballGmResultDevelopmentBand>;
 };
 
@@ -192,7 +187,6 @@ export function FootballGmFinalExperience({
       entry,
       player,
       before: prior ? footballGmPlayerById(prior.playerId) ?? null : null,
-      salary: footballGmAdjustedSalaryForPlayer(player, 3, selectedRun.seed, selectedRun.negotiationConsequences),
       band: footballGmResultDevelopmentBand(player, selectedRun.seed),
     }];
   });
@@ -201,7 +195,6 @@ export function FootballGmFinalExperience({
   const changes = rows.filter((row) => !retainedIds.has(row.player.id));
   const trades = changes.filter((row) => row.entry.acquired === "trade").length;
   const freeAgents = changes.length - trades;
-  const payroll = footballGmAdjustedRosterCap(end, 3, selectedRun.seed, selectedRun.negotiationConsequences);
   const moved = [...changes].sort((a, b) => {
     const impact = (row: RosterRow) => row.band.final - (row.before ? footballGmProjectedGradeForPlayer(row.before, 3, selectedRun.seed) : row.band.start);
     return impact(b) - impact(a);
@@ -213,17 +206,10 @@ export function FootballGmFinalExperience({
   const regression = [...rows].sort((a, b) => a.band.delta - b.band.delta)[0] ?? null;
   const greatLeap = breakout && breakout.band.delta > 0.85;
   const toughRegression = regression && regression.band.delta < -0.85;
-  const opening = result.teamOveralls[0] ?? 0;
-  const closing = result.teamOveralls[2] ?? opening;
   const verdict = result.score >= 92 ? "ELITE RUN"
     : result.score >= 85 ? "STRONG BUILD"
       : result.score >= 78 ? "SOLID FOUNDATION"
         : result.score >= 70 ? "MIXED RESULTS" : "REBUILD NEEDED";
-  const subtitle = closing <= opening - 5 ? "STRONG START, TOUGH FINISH"
-    : result.resumeScore + 4 < result.rosterManagementScore ? "GOOD ROSTER, TOUGH FINISH"
-      : closing > opening + 4 ? "YOUR TEAM GOT STRONGER"
-        : result.resumeScore > result.rosterManagementScore + 4 ? "RESULTS LIFTED YOUR RUN"
-          : "THREE SEASONS. YOUR DECISIONS.";
   const record = (season: (typeof result.seasons)[number]) => footballGmSeasonRecordLabel(season) ?? "—";
 
   return (
@@ -255,20 +241,23 @@ export function FootballGmFinalExperience({
             <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>{name.toUpperCase()}</span></div>
             <div className="gm-final__hero-main">
               <div className="gm-final__score"><strong>{result.score.toFixed(1)}</strong><span>GM SCORE</span></div>
-              <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b><span>{subtitle}</span></div>
+              <div className="gm-final__verdict"><b>{verdict}</b><span>NFL · THREE SEASONS</span></div>
             </div>
           </>
         )}
-        <div className="gm-final__stats">
-          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>3-YR ROSTER GRADE</small></div>
-          <div><b>{result.playoffScore.toFixed(1)}</b><small>PLAYOFF GRADE</small></div>
-          <div><b>{retained.length}/7</b><small>CORE RETAINED</small></div>
-          <div><b>{changes.length}</b><small>OFFSEASON CHANGES</small></div>
+        <div className="nfl-gm-final__score-components" aria-label="GM scoring components">
+          <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>ROSTER</small><span>90%</span></div>
+          <div><b>{result.scoreFormula==="legacy"?"—":result.regularSeasonScore.toFixed(1)}</b><small>RECORD</small><span>{result.scoreFormula==="legacy"?"LEGACY":"3%"}</span></div>
+          <div><b>{result.playoffScore.toFixed(1)}</b><small>PLAYOFFS</small><span>{result.scoreFormula==="legacy"?"10%":"7%"}</span></div>
+        </div>
+        <div className="nfl-gm-final__management-stats">
+          <span><b>{retained.length}/7</b> Core retained</span>
+          <span><b>{changes.length}</b> Offseason changes</span>
         </div>
       </section>
 
       <section className="gm-final__section surface-card" aria-label="Three-year franchise results">
-        <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>OVR · RECORD · PLAYOFF FINISH</small></header>
+        <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>RECORD · PLAYOFF FINISH</small></header>
         {opponentResult ? (
           <div className="gm-final__seasons is-match">
             {ownResult.seasons.map((season, index) => {
@@ -297,7 +286,7 @@ export function FootballGmFinalExperience({
             {result.seasons.map((season, index) => (
               <div className="gm-final__season" key={season.year}>
                 <small>YEAR {season.year}</small>
-                <div><strong>{result.teamOveralls[index]}</strong><span>OVR</span></div>
+                <div><strong>{result.teamOveralls[index]}</strong></div>
                 <b>{record(season)}</b>
                 <em>{footballGmPlayoffFinishLabel(season.finish)}</em>
               </div>
@@ -336,11 +325,8 @@ export function FootballGmFinalExperience({
 
       <section className="gm-final__section gm-final__roster surface-card" aria-label="Final roster development outcomes">
         <header className="gm-final__heading"><h2>{opponentResult ? selectedName.toUpperCase() + " · FINAL ROSTER" : "YOUR FINAL ROSTER"}</h2><small>YEAR 1 → YEAR 3</small></header>
-        <p className="gm-final__hint">Movement from Year 1 to Year 3. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
-            const acquisition = retainedIds.has(row.player.id) ? "RETAINED"
-              : row.entry.acquired === "trade" ? "TRADE" : "FREE AGENT";
             const tier = scoutingTier(row.band.final);
             return (
               <article className="gm-final__player" key={row.slot}>
@@ -348,9 +334,7 @@ export function FootballGmFinalExperience({
                   <b className="gm-final__position">{footballGmSlotLabel(row.slot)}</b>
                   <PlayerPortrait player={row.player} />
                   <TeamLogo team={row.player.team} />
-                  <div className="gm-final__player-name"><strong>{row.player.name}</strong><small>{row.player.team} · {footballGmMoney(row.salary)}</small></div>
-                  <span className={"gm-final__acquired" + (acquisition === "RETAINED" ? "" : " is-new")}>{acquisition}</span>
-                  <b className={"gm-final__tier is-" + tier.toLowerCase()}>{tier}</b>
+                  <div className="gm-final__player-name"><strong>{row.player.name}</strong><b className={"gm-final__tier is-" + tier.toLowerCase()}>{tier}</b></div>
                 </div>
                 <div className="gm-final__player-outcome">
                   <OutcomeBand band={row.band} name={row.player.name} />
@@ -385,19 +369,6 @@ export function FootballGmFinalExperience({
             </div>)}
           </div>
         </details>
-      <div className="gm-final__bottom">
-        <section className="gm-final__section surface-card" aria-label="GM score breakdown">
-          <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
-          <div className="gm-final__math"><span>Roster (90%)</span><i><b style={{ width: result.rosterManagementScore + "%" }} /></i><strong>{result.rosterManagementScore.toFixed(1)}</strong></div>
-          {result.scoreFormula !== "legacy" ? <div className="gm-final__math"><span>Season record (3%)</span><i><b style={{ width: result.regularSeasonScore + "%" }} /></i><strong>{result.regularSeasonScore.toFixed(1)}</strong></div> : null}
-          <div className="gm-final__math is-playoff"><span>{result.scoreFormula === "legacy" ? "Playoffs (10%)" : "Playoffs (7%)"}</span><i><b style={{ width: result.playoffScore + "%" }} /></i><strong>{result.playoffScore.toFixed(1)}</strong></div>
-        </section>
-        <section className="gm-final__section surface-card" aria-label="Year 3 finances">
-          <header className="gm-final__heading"><h2>FINANCIALS · YEAR 3</h2></header>
-          <div className="gm-final__money"><span>Payroll</span><strong>{footballGmMoney(payroll)}</strong></div>
-          <div className="gm-final__money"><span>Cap remaining</span><strong>{footballGmMoney(FOOTBALL_GM_CAP - payroll)}</strong></div>
-        </section>
-      </div>
     </div>
   );
 }

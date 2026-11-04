@@ -196,7 +196,7 @@ describe("The GM head-to-head presentation", () => {
     expect(visualReport).toContain("gm-final__band");
     expect(visualReport).toContain("RUN HIGHLIGHTS");
     expect(visualReport).toContain("OFFSEASON MOVES");
-    expect(visualReport).toContain("GM SCORE BREAKDOWN");
+    expect(visualReport).toContain("nfl-gm-final__score-components");
     expect(visualReport).toContain("VIEW FULL ROSTER EVOLUTION");
     expect(visualCss).toContain(".gm-final__match-year");
     expect(visualCss).toContain(".gm-final__franchise-tabs");
@@ -213,7 +213,7 @@ describe("The GM head-to-head presentation", () => {
     expect(visualReport).toContain("footballGmPlayoffFinishLabel(season.finish)");
     expect(visualReport).toContain("teamOveralls[index]");
     expect(visualReport).not.toContain("teamGrade.toFixed");
-    expect(visualReport).toContain("Exact grades stay hidden.");
+    expect(visualReport).toContain("Exact grades remain hidden.");
     expect(visualReport).not.toContain("<svg");
   });
 

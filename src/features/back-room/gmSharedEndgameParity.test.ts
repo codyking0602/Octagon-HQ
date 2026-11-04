@@ -36,7 +36,13 @@ describe("NFL and NBA GM endgame parity", () => {
     expect(nbaFinal).not.toContain("Legacy SIM grade; new franchises use the updated team OVR model.");
     expect(nbaFinal).toContain("nba-gm-final__score-components");
     expect(nbaFinal).toContain("<small>ROSTER</small><span>90%</span>");
-    expect(nflFinal).toContain("3-YR ROSTER GRADE");
+    expect(nflFinal).toContain("nfl-gm-final__score-components");
+    expect(nflFinal).toContain("<small>ROSTER</small>");
+    expect(nflFinal).toContain("<small>RECORD</small>");
+    expect(nflFinal).toContain("<small>PLAYOFFS</small>");
+    expect(nflFinal).toContain("Core retained");
+    expect(nflFinal).toContain("Offseason changes");
+    expect(nflFinal).not.toContain("GM SCORE BREAKDOWN");
   });
   it("keeps one expandable roster evolution action per sport", () => {
     expect(football).not.toContain("VIEW FULL ROSTER</button>");
