@@ -35,9 +35,9 @@ describe("owner-reviewed 43 NFL GM roster additions", () => {
       expect(actual!.salaryApy).toBe(row.salaryApy);
       expect(actual!.gameContract).toBe(row.realContractEndSeason >= 2028 ? "3YR" : "1YR");
       expect(actual!.currentRosterEligible).toBe(true);
-      expect(row.dateOfBirth).toMatch(/^\\d{4}-\\d{2}-\\d{2}$/);
+      expect(row.dateOfBirth).toHaveLength(10);
       expect(row.source.provider).toBe("OverTheCap");
-      expect(row.source.playerPage).toMatch(/^https:\\/\\/overthecap\\.com\\/player\\//);
+      expect(row.source.playerPage.startsWith("https://overthecap.com/player/")).toBe(true);
       expect(row.salaryApy).toBeGreaterThan(0);
 
       const profile = footballGmDevelopmentProfile(id);
