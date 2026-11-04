@@ -50,6 +50,31 @@ class AssetIngestQualityTests(unittest.TestCase):
                 validate_asset_quality(image, kind)
         self.assertIn(reason, stderr.getvalue())
 
+    def test_espn_combiner_requires_exact_verified_mma_athlete_id(self):
+        # Same official ESPN MMA image product via the alternate CDN wrapper.
+        url = ("https://a.espncdn.com/combiner/i?"
+               "img=%2Fi%2Fheadshots%2Fmma%2Fplayers%2Ffull%2F2951202.png")
+        spec = {
+            "source_url": url,
+            "fighter_name": "Drew Dober",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "2951202",
+        }
+        self.assertTrue(approved_square_thumb_source(spec, url, (600, 436)))
+        self.assertFalse(approved_square_thumb_source(spec, url, (600, 600)))
+        self.assertFalse(approved_square_thumb_source(
+            {**spec, "verified_espn_athlete_id": "2951203"}, url, (600, 436)))
+        self.assertFalse(approved_square_thumb_source(
+            {**spec, "official_headshot_reviewed": False}, url, (600, 436)))
+        for bad in (
+            "https://a.espncdn.com/combiner/i?img=https%3A%2F%2Fother.org%2Fpic.png",
+            "https://a.espncdn.com/combiner/i?img=%2Fi%2Fheadshots%2Fnfl%2Fplayers%2Ffull%2F2951202.png",
+            url + "&w=200",
+            url + "&img=%2Fi%2Fheadshots%2Fmma%2Fplayers%2Ffull%2F2951202.png",
+            url + "#not-an-asset",
+        ):
+            self.assertFalse(approved_square_thumb_source(spec, bad, (600, 436)))
+
     def test_official_headshot_source_gate_rejects_profile_and_non_square(self):
         espn = "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png"
         self.assertTrue(approved_square_thumb_source({"source_url": espn}, espn, (600, 600)))
