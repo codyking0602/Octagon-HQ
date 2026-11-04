@@ -1,0 +1,7 @@
+{
+  "kind": "thumb",
+  "fighter_name": "Ciryl Gane",
+  "destination": "public/assets/fighters/ciryl-gane-thumb.webp",
+  "source_url": "https://ufc.com/images/2026-06/GANE_CIRYL_BELT_01-22.png",
+  "debug_original_ufc": true
+}
