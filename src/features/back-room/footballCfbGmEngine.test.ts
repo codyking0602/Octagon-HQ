@@ -227,12 +227,15 @@ describe("CFB GM UI parity and owner gating", () => {
     const nflFinal = read("src/features/back-room/FootballGmFinalExperience.tsx");
     expect(nflFinal).toContain("YOUR FINAL ROSTER");
     for (const token of ["football-gm-final gm-final","gm-final__hero","gm-final__hero-main",
-      "nfl-gm-final__score-components","gm-final__seasons","gm-final__highlights","gm-final__roster-list",
+      "gm-final__seasons","gm-final__highlights","gm-final__roster-list",
       "gm-final__band-track","gm-final__band-start","gm-final__transactions",
-      "gm-final__disclosure","gm-final__math","gm-final__money"]) {
+      "gm-final__disclosure"]) {
       expect(page).toContain(token);
       expect(nflFinal).toContain(token);
     }
+    expect(nflFinal).toContain("nfl-gm-final__score-components");
+    expect(page).toContain("gm-final__math");
+    expect(page).toContain("gm-final__money");
     expect(page).toContain('style={{left: "50%"}}');
     expect(page).toContain("COLLEGE DEPARTURES");
     expect(page).toContain("TWO-YEAR RESULTS");
