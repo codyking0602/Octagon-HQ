@@ -725,6 +725,11 @@ def verified_thumb_candidates(spec):
 
 def ingest_fighter_candidate(spec, kind, dest, size):
     source_url, data = resolve_source(spec)
+    if spec.get("debug_preserve_raw_source") is True and dest == "public/assets/fighters/ciryl-gane-thumb.webp":
+        # Scratch branch only. Compare byte-for-byte original ESPN PNG to
+        # the WebP that the normal codec emits. NEVER merge forensic outputs.
+        with open("public/assets/fighters/ciryl-gane-raw-source-debug.png", "wb") as debug_file:
+            debug_file.write(data)
     if source_url_looks_like_placeholder(source_url):
         fail("source URL is a known placeholder or silhouette asset")
     try:
