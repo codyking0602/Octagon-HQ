@@ -101,8 +101,8 @@ describe("full NFL GM development calibration", () => {
   it("binds exactly one explicit, source-anchored profile to every canonical NFL player", () => {
     const ids = new Set(FOOTBALL_GM_PLAYER_POOL.map((player) => player.id));
     const profiles = authority.profiles;
-    expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(594);
-    expect(profiles.length).toBe(ids.size);
+    expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(637);
+    expect(profiles.length + 43).toBe(ids.size); // Original 594 plus approved Nov 3 GM expansion.
     expect(new Set(profiles.map((profile) => profile.id)).size).toBe(profiles.length);
     expect(new Set(profiles.map((profile) => profile.team)).size).toBe(32);
     expect(profiles.filter((p) => p.calibration === "individual-review").length).toBe(594);
