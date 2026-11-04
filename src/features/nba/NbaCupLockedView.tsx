@@ -41,7 +41,6 @@ function GameLine({game,feed,chosen,featuredPick}:{
     :shortName(game.away)+" @ "+shortName(game.home);
   const status=cupGameStatus(game,feed);
   const score=cupGameScore(game,feed);
-  const picked=chosen??featuredPick;
   if(chosen&&score&&score.status==="final"&&score.homeScore!==null&&score.awayScore!==null){
     const pickedScore=chosen===game.away?score.awayScore:score.homeScore;
     const opponentScore=chosen===game.away?score.homeScore:score.awayScore;
