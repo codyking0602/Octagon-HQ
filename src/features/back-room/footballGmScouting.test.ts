@@ -29,7 +29,7 @@ describe("NFL GM locked scouting pills", () => {
   });
 
   it("uses every player's authored odds, and recalculates the year-three odds from ACTUAL seeded year-two ability", () => {
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
     const firstYearLabels = new Set<string>();
     const secondYearLabels = new Set<string>();
     for (const player of FOOTBALL_GM_PLAYER_POOL) {
