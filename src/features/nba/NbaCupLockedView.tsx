@@ -46,12 +46,14 @@ function GameLine({game,feed,chosen,featuredPick}:{
     const opponentScore=chosen===game.away?score.homeScore:score.awayScore;
     const won=pickedScore>opponentScore;
     return <div className="nba-cup__game-final" data-status="final">
-      <div className="nba-cup__game-final-heading">
+      <div className="nba-cup__game-final-main">
+        <strong className="nba-cup__game-name">{label}</strong>
+        <strong className="nba-cup__game-final-score">{pickedScore}–{opponentScore}</strong>
+      </div>
+      <div className="nba-cup__game-final-meta">
         <span>{new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric"}).format(new Date(game.startAt))} · FINAL</span>
         <strong className={won?"is-win":"is-loss"}>{won?"WIN":"LOSS"}</strong>
       </div>
-      <div className="nba-cup__game-final-score is-my-team"><span>{shortName(chosen)}</span><strong>{pickedScore}</strong></div>
-      <div className="nba-cup__game-final-score"><span>{shortName(opponent??"")}</span><strong>{opponentScore}</strong></div>
     </div>;
   }
   return <div className={"nba-cup__game-line"+(chosen?" is-chosen":"")+(featuredPick?" is-featured":"")} data-status={status}>
@@ -71,6 +73,7 @@ export function NbaCupLockedView({picks,members,loading,error,scoreFeed=null,sco
   const pickedTeams=new Set(Object.values(picks).filter(Boolean));
   const nightGames=nextDate?CUP_GAMES.filter(game=>game.date===nextDate):[];
   const followed=nightGames.filter(game=>pickedTeams.has(game.away)||pickedTeams.has(game.home));
+  const otherGames=nightGames.filter(game=>!followed.some(pickGame=>pickGame.id===game.id));
   const preview=followed;
   const anyScoresMissing=(scoreFeed?.failedDates.length??0)>0;
 
@@ -114,10 +117,10 @@ export function NbaCupLockedView({picks,members,loading,error,scoreFeed=null,sco
         {preview.map(game=><GameLine key={game.id} game={game} feed={scoreFeed} featuredPick={pickedTeams.has(game.away)?game.away:game.home}/>) }
         {!preview.length?<p>See all NBA Cup group games below.</p>:null}
       </div>
-      <details className="nba-cup__night-more">
-        <summary>ALL {nightGames.length} CUP MATCHUPS <span aria-hidden="true">⌄</span></summary>
-        <div>{nightGames.map(game=><GameLine key={game.id} game={game} feed={scoreFeed}/>)}</div>
-      </details>
+      {otherGames.length>0?<details className="nba-cup__night-more">
+        <summary>{preview.length?"OTHER ":"ALL "}{otherGames.length} CUP MATCHUPS <span aria-hidden="true">⌄</span></summary>
+        <div>{otherGames.map(game=><GameLine key={game.id} game={game} feed={scoreFeed}/>)}</div>
+      </details>:null}
     </section>:null}
 
     <div className="nba-cup__locked-section-heading">
@@ -133,10 +136,15 @@ export function NbaCupLockedView({picks,members,loading,error,scoreFeed=null,sco
         const groupGames=CUP_GAMES.filter(game=>game.groupId===group.id);
         const records=cupGroupRecords(group.id,scoreFeed);
         const live=groupGames.some(game=>cupGameStatus(game,scoreFeed)==="live");
+        const teamRecord=records.find(record=>record.teamId===teamId);
+        const missingGroupResults=groupGames.some(game=>scoreFeed?.failedDates.includes(game.date));
+        const recordLabel=scoreFeed&&teamRecord&&!missingGroupResults
+          ?teamRecord.wins+"–"+teamRecord.losses+" · "+(teamRecord.differential>0?"+":"")+teamRecord.differential
+          :"—";
         return <details key={group.id} className="nba-cup__locked-card" aria-label={group.name}
           style={{"--team-accent":nbaTeamColor(teamId)} as CSSProperties}>
           <summary>
-            <header><strong>{group.name.toUpperCase()}</strong><span className={live?"is-live":""}>{live?"LIVE":"PENDING"}</span></header>
+            <header><strong>{group.name.toUpperCase()}</strong><span className={live?"is-live":""} aria-label={"Cup record: "+recordLabel}>{recordLabel}</span></header>
             <div className="nba-cup__locked-selection">
               {team?<NbaTeamMark team={team}/>:null}
               <div><strong>{team?.name??"No pick saved"}</strong><small>{team?"✓ YOUR PICK":"NO PICK"}</small></div>

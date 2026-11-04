@@ -227,14 +227,14 @@
 .nba-cup__game-pick-mark .nba-team-mark{width:30px;height:30px}
 .nba-cup__game-label-stack{display:grid;gap:3px;min-width:0;flex:1}
 .nba-cup__game-label-stack>small{color:#e9b471;font-size:.5rem;font-weight:900;letter-spacing:.07em}
-.nba-cup__game-final{display:grid;gap:2px;margin:5px 0 8px;padding:9px 10px;border-radius:9px;border:1px solid #313a3d;background:#151b1c}
-.nba-cup__game-final-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px;color:#a7b0b4;font-size:.55rem;letter-spacing:.07em;font-weight:900}
-.nba-cup__game-final-heading strong{font-size:.52rem;border-radius:4px;padding:3px 6px}
-.nba-cup__game-final-heading strong.is-win{background:#173d2b;color:#86deb0}
-.nba-cup__game-final-heading strong.is-loss{background:#44252b;color:#f4a3a9}
-.nba-cup__game-final-score{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:3px 0;font-size:.71rem;color:#b6bfc3}
-.nba-cup__game-final-score.is-my-team{font-weight:900;color:#f6f7f7}
-.nba-cup__game-final-score strong{font-size:.87rem;font-variant-numeric:tabular-nums}
+.nba-cup__game-final{display:grid;gap:3px;margin:1px 0;padding:7px 8px;border:1px solid #30393c;border-radius:7px;background:#141a1b}
+.nba-cup__game-final-main,.nba-cup__game-final-meta{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
+.nba-cup__game-final-main .nba-cup__game-name{flex:1;min-width:0}
+.nba-cup__game-final-score{color:#f3f5f5;font-size:.82rem;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap}
+.nba-cup__game-final-meta{color:#9ea9ae;font-size:.52rem;font-weight:850;letter-spacing:.065em}
+.nba-cup__game-final-meta strong{font-size:.51rem;border-radius:4px;padding:2px 5px}
+.nba-cup__game-final-meta strong.is-win{background:#173d2b;color:#86deb0}
+.nba-cup__game-final-meta strong.is-loss{background:#44252b;color:#f4a3a9}
 .nba-cup__group-expanded{gap:6px;padding-top:8px;padding-bottom:8px}
 .nba-cup__group-table>div{padding:5px 8px}
 .nba-cup__game-line{padding:7px 3px}
@@ -245,3 +245,7 @@
   .nba-cup__group-table>div{padding:5px 7px}
   .nba-cup__game-line.is-featured .nba-cup__game-date{font-size:.49rem}
 }
+
+/* Locked Cup cards stay informative and do not leave editable-ballot bottom space. */
+.nba-picks-page .nba-cup__main--locked{padding-bottom:0}
+.nba-cup__locked-card>summary>header span{background:#283033;color:#e4c192;font-variant-numeric:tabular-nums;white-space:nowrap}
