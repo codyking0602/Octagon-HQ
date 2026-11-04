@@ -11,7 +11,6 @@ import { nbaGmScoutTier } from "./nbaGmScouting";
 import { nbaTeamLogoSrc } from "./nbaTeamBranding";
 import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 
-const money = (amount: number) => "$" + (amount / 1_000_000).toFixed(1) + "M";
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
 
 /** The final recap uses Football GM's compact portrait size, not NBA's
@@ -52,7 +51,7 @@ function MovementBand({name, delta}: {name:string;delta:number}) {
 }
 
 /** Mirrors FootballGmFinalExperience: same gm-final sections, hierarchy, score
- * layout, movement bands and financial recap. All results are server-owned.
+ * layout and movement bands. All game results are server-owned.
  */
 export function NbaGmFinalExperience({
   run, catalog,
