@@ -68,13 +68,14 @@ export function parseOfficialNbaCupSchedule(payload:unknown):NbaCupScoreEvent[]{
 }
 
 export async function fetchOfficialNbaCupScores():Promise<NbaCupScoreEvent[]>{
-  for(const url of NBA_SCHEDULE_CDN){
-    try{
-      const response=await fetch(url,{headers:{Accept:"application/json","User-Agent":"OctagonHQ/1.0"},signal:AbortSignal.timeout(12000)});
-      if(!response.ok)continue;
-      const events=parseOfficialNbaCupSchedule(await response.json());
-      return events;
-    }catch{/* Try the alternate official CDN endpoint. */}
-  }
-  throw new Error("Official NBA schedule feed unavailable.");
+  // Both public CDN variants are equivalent for the current NBA season.
+  // Probe them together so one stalled provider cannot delay the Picks page.
+  return Promise.any(NBA_SCHEDULE_CDN.map(async url=>{
+    const response=await fetch(url,{
+      headers:{Accept:"application/json","User-Agent":"OctagonHQ/1.0"},
+      signal:AbortSignal.timeout(6500),
+    });
+    if(!response.ok)throw new Error("Official NBA CDN returned "+response.status);
+    return parseOfficialNbaCupSchedule(await response.json());
+  }));
 }
