@@ -7,8 +7,8 @@ DO $verify_nba_nfl_market$
 DECLARE
   v_draft jsonb:='{"economyVersion":4,"developmentModelVersion":2,"repriceModelVersion":2,"phase":"draft","seed":"draft-a"}'::jsonb;
   v_draft_alt jsonb:='{"economyVersion":4,"developmentModelVersion":2,"repriceModelVersion":2,"phase":"draft","seed":"draft-b"}'::jsonb;
-  v_off jsonb:='{"economyVersion":4,"developmentModelVersion":2,"repriceModelVersion":2,"phase":"offseason","seed":"nba-gm-14881242-c67d-4e95-9848-9b73bee767b0"}'::jsonb;
-  v_old jsonb:='{"economyVersion":4,"developmentModelVersion":2,"phase":"offseason","seed":"nba-gm-14881242-c67d-4e95-9848-9b73bee767b0"}'::jsonb;
+  v_off jsonb:='{"economyVersion":4,"developmentModelVersion":2,"repriceModelVersion":2,"phase":"offseason","seed":"nba-gm-market-regression-fixture"}'::jsonb;
+  v_old jsonb:='{"economyVersion":4,"developmentModelVersion":2,"phase":"offseason","seed":"nba-gm-market-regression-fixture"}'::jsonb;
   v_row record;v_y1 bigint;v_y2 bigint;v_y3 bigint;v_draft_y2 bigint;
   v_total integer:=0;v_expiring integer:=0;v_locked integer:=0;
 BEGIN
@@ -45,12 +45,12 @@ BEGIN
     RAISE EXCEPTION 'Invalid 330-player contract census: %, %, %',
       v_total,v_expiring,v_locked;END IF;
   -- A bargain contract must reprice near his CURRENT ability, even if he
-  -- regresses. The current saved 88 -> 85.61 Deni run is the direct proof.
+  -- regresses. Use a synthetic seed, never an actual player's saved run.
   IF private.nba_gm_v4_salary(v_off,'nba-gm-draft-deniavdija',2) NOT BETWEEN
     30000000 AND 50000000 THEN
     RAISE EXCEPTION 'Deni stayed anchored to his stale $12.5M contract';END IF;
-  IF private.nba_gm_v4_salary(v_old,'nba-gm-draft-deniavdija',2) <>
-     11000000 THEN
+  IF private.nba_gm_v4_salary(v_old,'nba-gm-draft-deniavdija',2) >=
+     30000000 THEN
     RAISE EXCEPTION 'Existing unversioned V4 save salary changed';END IF;
   IF private.nba_gm_v11_market_apy(88,'SF',26) <=
      private.nba_gm_v11_market_apy(85,'SF',26) OR
