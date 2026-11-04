@@ -1,11 +1,15 @@
 import profileAuthority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
+import rosterExpansionArtifact from "../../../data/curated/football/nfl/gm-nfl-roster-expansion-2026-11-03.json";
 import type { FootballGmActualRole } from "./footballGmPositionalValue";
 
 export const WHEEL_FOOTBALL_GM_CAP = 150_000_000;
 
 export type FootballGmDevelopmentProfile = (typeof profileAuthority.profiles)[number];
-const developmentProfiles = new Map(profileAuthority.profiles.map((profile) => [profile.id, profile]));
-export const FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT = profileAuthority.profileCount;
+const developmentProfiles = new Map<string, FootballGmDevelopmentProfile>([
+  ...profileAuthority.profiles,
+  ...rosterExpansionArtifact.players.map((player) => player.development),
+].map((profile) => [profile.id, profile] as const));
+export const FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT = developmentProfiles.size;
 
 /** Identity-bound authored calibration; synthetic grade tests retain the old fallback. */
 export function footballGmDevelopmentProfile(playerId: string): FootballGmDevelopmentProfile | null {

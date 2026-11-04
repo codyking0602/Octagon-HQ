@@ -1,3 +1,4 @@
+import rosterExpansionArtifact from "../../../data/curated/football/nfl/gm-nfl-roster-expansion-2026-11-03.json";
 import contractsArtifact from "../../../data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json";
 import qbGradesArtifact from "../../../data/generated/football/wheel-nfl-qb-grades-2026-10-27.json";
 import rbGradesArtifact from "../../../data/generated/football/wheel-nfl-rb-grades-2026-10-27.json";
@@ -19,6 +20,7 @@ export const WHEEL_NFL_GM_AUTHORITY = {
 } as const;
 
 export {
+  rosterExpansionArtifact,
   contractsArtifact,
   qbGradesArtifact,
   rbGradesArtifact,

@@ -3,9 +3,9 @@ import { contractsArtifact } from "./wheelFootballNflCurrentAuthority";
 import { FOOTBALL_GM_PLAYER_POOL, FOOTBALL_GM_CAP } from "./footballGmEngine";
 
 describe("verified Oct 26 NFL GM contract corrections", () => {
-  it("preserves the 594-person curated NFL GM population", () => {
+  it("preserves the 594 original contracts while expanding the live pool by 43", () => {
     expect(contractsArtifact.players).toHaveLength(594);
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
   });
 
   it("applies Gervon Dexter's confirmed extension without misreading void years", () => {
