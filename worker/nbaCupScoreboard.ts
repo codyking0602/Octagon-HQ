@@ -56,9 +56,8 @@ export function parseEspnNbaCupScoreboard(day:string,payload:unknown):NbaCupScor
     const home=nbaAbbreviation(homeTeam?.team?.abbreviation);
     const away=nbaAbbreviation(awayTeam?.team?.abbreviation);
     if(!home||!away||home===away)continue;
-    const actualDay=event.date
-      ?new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(event.date))
-      :null;
+    const actualParts=event.date?new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(event.date)).reduce((parts,item)=>item.type==="year"||item.type==="month"||item.type==="day"?{...parts,[item.type]:item.value}:parts,{} as Record<string,string>):null;
+    const actualDay=actualParts?actualParts.year+"-"+actualParts.month+"-"+actualParts.day:null;
     // ESPN's date parameter is not proof that a rescheduled game belongs to
     // the requested date. Exclude any event whose actual tipoff day differs.
     if(actualDay!==day)continue;
