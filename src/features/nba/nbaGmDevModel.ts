@@ -36,6 +36,8 @@ export interface NbaGmDevRun {
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
   simulationModelVersion?: 5 | 6 | 7 | 8 | 9;
+  /** Automatic developed best-five lineups for new franchises only. */
+  lineupModelVersion?: 1;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
@@ -65,6 +67,19 @@ export interface NbaGmDevRun {
   scoreBreakdown?: {score:number;roster:number;regularSeason:number;playoffs:number;
     weights:[number,number,number]};
 }
+/** Present the same season-specific best five as the backend; do not reinterpret old results. */
+export function nbaGmDevSeasonPicks(
+  run: NbaGmDevRun, catalog: readonly NbaGmDevPlayer[], season: 1 | 2 | 3,
+): NbaGmPick[] {
+  const saved = season === 1 ? run.yearOnePicks : run.picks;
+  if (season === 1 || run.lineupModelVersion !== 1 || !run.development) return saved;
+  const grades = new Map(saved.map(pick => [pick.playerId,
+    (season === 2 ? run.development?.[pick.playerId]?.year2Grade : run.development?.[pick.playerId]?.year3Grade)
+      ?? catalog.find(player => player.id === pick.playerId)?.currentGrade ?? 0,
+  ]));
+  return nbaGmDevAssignRoster(saved.map(pick => pick.playerId), catalog, grades) ?? saved;
+}
+
 export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [155_000_000, 155_000_000, 155_000_000];
 export const NBA_GM_DEV_SKILL_LABELS = {
   scoring: "Scoring", shooting: "Shooting", playmaking: "Playmaking",
@@ -103,7 +118,7 @@ export function nbaGmDevEligible(player: NbaGmDevPlayer, slot: NbaGmSlot) {
 /** Exhaustive legal assignment: fill five starters first, then maximize their
  * rated talent. Position familiarity breaks ties, never star-vs-bench value.
  * Match the authoritative server order in NBA GM migration 202612310902. */
-export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: readonly NbaGmDevPlayer[]): NbaGmPick[] | null {
+export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: readonly NbaGmDevPlayer[], gradesById?: ReadonlyMap<string, number>): NbaGmPick[] | null {
   if (playerIds.length > 7 || new Set(playerIds).size !== playerIds.length) return null;
   const byId=new Map(catalog.map(p=>[p.id,p]));
   // Player identity order is canonical; neither draft order nor trade history can
@@ -132,7 +147,7 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
       visit(index+1,new Set([...used,slot]),[...picks,{slot,playerId:player.id}],
         bench+(slot==="GUARD"||slot==="BIG"?1:0),
         offRole+(slot===player.positions[0]?0:1),
-        starterPower+(slot==="GUARD"||slot==="BIG"?0:player.currentGrade));
+        starterPower+(slot==="GUARD"||slot==="BIG"?0:(gradesById?.get(player.id)??player.currentGrade)));
     }
   }
   visit(0,new Set(),[],0,0,0);
