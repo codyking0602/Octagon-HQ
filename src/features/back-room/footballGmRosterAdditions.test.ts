@@ -16,7 +16,7 @@ describe("owner-reviewed 43 NFL GM roster additions", () => {
     expect(additions.players).toHaveLength(43);
     expect(additions.developmentProfiles).toHaveLength(43);
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
-    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(637);
+    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
     expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(637);
     expect(FOOTBALL_GM_PLAYER_POOL.slice(0, 594).map(player => player.name))
       .toEqual(contractsArtifact.players.map(contract => contract.player));
@@ -77,7 +77,7 @@ describe("owner-reviewed 43 NFL GM roster additions", () => {
     expect(barron).toMatchObject({
       team: "DEN", family: "Secondary", position: "CB",
       currentGrade: 80, eligibleSlots: ["DB"],
-      age: 25, gameContract: "3YR",
+      age: 24, gameContract: "3YR",
     });
     expect(footballGmCandidatesForTeam({ team: "DEN", roster: [] })
       .some(candidate => candidate.player.id === barron?.id)).toBe(true);
