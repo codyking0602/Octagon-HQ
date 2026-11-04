@@ -6,6 +6,8 @@ import {NbaTeamMark,nbaTeamColor} from "./nbaTeamBranding";
 import {CUP_GROUPS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
 import {loadCupPreview,loadCupStandings,saveCupPreview,type CupStandingMember} from "./nbaCupRepository";
 import {NbaCupLockedView} from "./NbaCupLockedView";
+import {loadCupScoreFeed} from "./nbaCupScoresRepository";
+import {CUP_NIGHTS,type CupScoreFeed} from "./nbaCupTracker";
 import "../../styles/nba-hq.css";
 import "./nbaCup2026.css";
 
@@ -21,6 +23,8 @@ export function NbaCupGroups(){
   const [members,setMembers]=useState<CupStandingMember[]>([]);
   const [standingsLoading,setStandingsLoading]=useState(false);
   const [standingsError,setStandingsError]=useState("");
+  const [scoreFeed,setScoreFeed]=useState<CupScoreFeed|null>(null);
+  const [scoresLoading,setScoresLoading]=useState(false);
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
   const [error,setError]=useState("");
@@ -45,6 +49,31 @@ export function NbaCupGroups(){
     }).catch(err=>{if(active){setError(err instanceof Error?err.message:"Could not load Cup picks.");setLoading(false);}});
     return()=>{active=false};
   },[profile?.id]);
+  useEffect(()=>{
+    if(!locked||!profile?.id)return;
+    let active=true;
+    const refresh=()=>{
+      void loadCupScoreFeed().then(feed=>{if(active)setScoreFeed(feed);})
+        .catch(()=>{if(active)setScoreFeed({byGame:{},failedDates:[...CUP_NIGHTS],refreshedAt:new Date().toISOString()});})
+        .finally(()=>{if(active)setScoresLoading(false);});
+    };
+    setScoresLoading(true);
+    refresh();
+    const easternParts=new Intl.DateTimeFormat("en-US",{
+      timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",
+    }).formatToParts(new Date());
+    const dateParts=Object.fromEntries(easternParts.map(part=>[part.type,part.value]));
+    const today=dateParts.year+"-"+dateParts.month+"-"+dateParts.day;
+    const interval=window.setInterval(()=>{
+      if(document.visibilityState==="visible")refresh();
+    },CUP_NIGHTS.some(day=>day===today)?90_000:15*60_000);
+    const focus=()=>refresh();
+    const visible=()=>{if(document.visibilityState==="visible")refresh();};
+    window.addEventListener("focus",focus);
+    document.addEventListener("visibilitychange",visible);
+    return()=>{active=false;window.clearInterval(interval);window.removeEventListener("focus",focus);document.removeEventListener("visibilitychange",visible);};
+  },[locked,profile?.id]);
+
   const dirtySaveTarget=picks!==null&&serializePicks(picks)!==saved;
   useEffect(()=>{
     const target=saveRef.current;
@@ -85,7 +114,7 @@ export function NbaCupGroups(){
       </section>
       {loading?<p role="status">Loading NBA Cup picks…</p>:null}
       {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
-      {picks&&locked?<NbaCupLockedView picks={picks} members={members} loading={standingsLoading} error={standingsError}/>:picks?<><div className="nba-cup__tabs" ref={tabsRef} role="group" aria-label="Conference">
+      {picks&&locked?<NbaCupLockedView picks={picks} members={members} loading={standingsLoading} error={standingsError} scoreFeed={scoreFeed} scoresLoading={scoresLoading}/>:picks?<><div className="nba-cup__tabs" ref={tabsRef} role="group" aria-label="Conference">
         {(["East","West"] as const).map(conf=><button key={conf} type="button" aria-pressed={conference===conf} className={conference===conf?"is-active":""} onClick={()=>switchConference(conf)}>
           {conf.toUpperCase()} · {CUP_GROUPS.filter(g=>g.conference===conf&&picks[g.id]).length}/3
         </button>)}

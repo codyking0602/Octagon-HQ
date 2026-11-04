@@ -1,4 +1,5 @@
 import { serveNextNumberedUfcEvent } from "./nextNumberedUfcEvent";
+import { serveNbaCupScoreboard } from "./nbaCupScoreboard";
 import {
   dynamicPreviewRequest,
   resolveRichPreview,
@@ -397,6 +398,9 @@ export default {
     if (request.method !== "GET") return env.ASSETS.fetch(request);
     if (requestUrl.pathname === "/api/ufc/next-numbered-event") {
       return serveNextNumberedUfcEvent(request, context);
+    }
+    if (requestUrl.pathname === "/api/nba/cup-2026-scoreboard") {
+      return serveNbaCupScoreboard(requestUrl);
     }
     if (requestUrl.pathname === "/api/football/nfl-roster") {
       return serveNflRoster(requestUrl);
