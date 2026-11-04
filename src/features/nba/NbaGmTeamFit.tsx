@@ -1,4 +1,4 @@
-import { nbaGmDevFitSignals, type NbaGmDevPlayer, type NbaGmDevRun } from "./nbaGmDevModel";
+import { nbaGmDevFitSignals, nbaGmDevSeasonPicks, type NbaGmDevPlayer, type NbaGmDevRun } from "./nbaGmDevModel";
 
 /** Six roster-composition signals, not additional simulation points. */
 const labels = ["Shot creation", "Floor spacing", "Secondary playmaking", "Perimeter defense", "Rim protection", "Rebounding"] as const;
@@ -11,7 +11,7 @@ function tierForSignal(status: "STRONG" | "FAIR" | "NEEDS WORK", strength: numbe
   return strength >= 65 ? "POOR" : "DYSFUNCTIONAL";
 }
 function fitForSeason(run: NbaGmDevRun, catalog: readonly NbaGmDevPlayer[], year: number) {
-  const picks = year === 1 ? run.yearOnePicks : run.picks;
+  const picks = nbaGmDevSeasonPicks(run, catalog, year as 1 | 2 | 3);
   const byId = new Map(catalog.map(player => [player.id, player]));
   const players = picks.map(pick => byId.get(pick.playerId)).filter((player): player is NbaGmDevPlayer => Boolean(player));
   if (players.length !== 7) return null;
