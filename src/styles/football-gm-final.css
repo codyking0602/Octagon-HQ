@@ -619,3 +619,59 @@
   padding:15px 0;min-height:47px;align-items:center;
 }
 .gm-final > .gm-final__evolution-panel[open] { padding-bottom:12px; }
+
+
+/* NFL solo and H2H final reports match the approved compact NBA layout.
+   Scoped to NFL so NBA orange branding and all GM gameplay remain untouched. */
+.football-gm-final:not(.nba-gm-final) .gm-final__hero { padding:14px; }
+.football-gm-final:not(.nba-gm-final) .gm-final__hero-main { margin:7px 0 10px; align-items:center; }
+.football-gm-final:not(.nba-gm-final) .gm-final__score strong { line-height:1; }
+.football-gm-final:not(.nba-gm-final) .gm-final__verdict { padding:8px 10px; min-height:0; }
+.football-gm-final:not(.nba-gm-final) .gm-final__verdict b { font-size:clamp(15px,3.5vw,22px); line-height:1.1; }
+.football-gm-final:not(.nba-gm-final) .gm-final__verdict span { font-size:9px; margin-top:3px; }
+.nfl-gm-final__score-components { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.nfl-gm-final__score-components > div { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-width:0; padding:8px 3px; border-radius:9px; background:rgba(255,255,255,.045); border:1px solid rgba(127,185,227,.18); }
+.nfl-gm-final__score-components b { font-size:clamp(17px,4vw,24px); line-height:1; font-variant-numeric:tabular-nums; }
+.nfl-gm-final__score-components small { font-size:10px; font-weight:800; letter-spacing:.04em; color:#8ac9f1; }
+.nfl-gm-final__score-components span { font-size:9px; color:#aeb5c1; }
+.nfl-gm-final__management-stats { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px 18px; padding-top:9px; color:#b8c0cc; font-size:11px; }
+.nfl-gm-final__management-stats span { white-space:nowrap; }
+.nfl-gm-final__management-stats b { font-size:14px; color:#f5f5f5; margin-right:4px; }
+.football-gm-final:not(.nba-gm-final) .gm-final__seasons { gap:7px; }
+.football-gm-final:not(.nba-gm-final) .gm-final__season { padding:8px 4px; min-height:0; gap:3px; }
+.football-gm-final:not(.nba-gm-final) .gm-final__season > div { margin:0; }
+.football-gm-final:not(.nba-gm-final) .gm-final__season > em { border:0; background:none; padding:2px 0; min-height:0; line-height:1.15; }
+.football-gm-final:not(.nba-gm-final) .gm-final__player {
+  display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,.85fr);
+  align-items:center; column-gap:10px; padding:9px 8px; min-height:0;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__player-identity {
+  display:grid; grid-template-columns:20px 34px 20px minmax(0,1fr);
+  gap:4px; align-items:center; min-width:0; width:100%;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__player-name {
+  grid-column:4; display:flex; flex-direction:column; align-items:flex-start;
+  justify-content:center; gap:4px; min-width:0;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__player-name strong {
+  display:block; width:100%; font-size:clamp(11px,2.9vw,14px);
+  line-height:1.15; overflow-wrap:normal; word-break:normal; hyphens:none;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__player-name .gm-final__tier {
+  grid-column:auto; grid-row:auto; justify-self:auto; max-width:100%;
+  font-size:8px; padding:2px 5px;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__player-outcome {
+  min-width:0; display:flex; flex-direction:column; gap:5px; margin:0;
+}
+.football-gm-final:not(.nba-gm-final) .gm-final__band { width:100%; min-width:0; }
+.football-gm-final:not(.nba-gm-final) .gm-final__band-legend { display:none; }
+.football-gm-final:not(.nba-gm-final) .gm-final__outcome-text {
+  width:auto; font-size:9px; letter-spacing:.02em; text-align:center; align-self:center;
+}
+@media(max-width:390px) {
+  .nfl-gm-final__management-stats { gap:6px 12px; font-size:10px; }
+  .football-gm-final:not(.nba-gm-final) .gm-final__player { column-gap:5px; }
+  .football-gm-final:not(.nba-gm-final) .gm-final__player-identity { grid-template-columns:17px 29px 17px minmax(0,1fr); gap:2px; }
+  .football-gm-final:not(.nba-gm-final) .gm-final__player-name strong { font-size:11px; }
+}
