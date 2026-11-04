@@ -4,11 +4,12 @@ Octagon HQ automation can ingest approved binary fighter assets without passing 
 
 ## Contract
 
-1. The automation verifies identity and approved provenance before queueing anything.
-2. It creates a focused branch from fresh `main`.
-3. It writes one JSON manifest under `.asset-ingest/`.
-4. The `Asset Ingest` GitHub Action downloads the official source inside GitHub Actions, validates the source provenance, processes the asset, validates dimensions/transparency, deletes the manifest, and commits the generated WebP back to that branch.
-5. The automation waits for that generated commit, opens/updates the focused PR, explicitly validates the exact generated head, and follows the normal exact-head green/deploy/verify/merge rules.
+1. **Inventory existing assets first.** For UFC fighters, run `python scripts/ufc_prep_asset_inventory.py --slugs fighter-a,fighter-b` (or `--prep-json` on the exported current prep object). It derives existing local thumbs/Spotlights and frontend static remote fallbacks directly from the live repo, including canonical aliases. For a fighter already in HQ, reuse and separately validate official source provenance and live delivery; do not download another copy solely because the new prep package's readiness flag is false. The workflow's UFC preflight also skips existing destinations automatically. A deliberate replacement requires `"replace_existing": true` and a documented `"replacement_reason"`.
+2. The automation verifies identity and approved provenance before queueing anything.
+3. It creates a focused branch from fresh `main`.
+4. It writes one JSON manifest under `.asset-ingest/`.
+5. The `Asset Ingest` GitHub Action downloads the official source inside GitHub Actions, validates the source provenance, processes the asset, validates dimensions/transparency, deletes the manifest, and commits the generated WebP back to that branch.
+6. The automation waits for that generated commit, opens/updates the focused PR, explicitly validates the exact generated head, and follows the normal exact-head green/deploy/verify/merge rules.
 
 Direct-image manifest:
 
