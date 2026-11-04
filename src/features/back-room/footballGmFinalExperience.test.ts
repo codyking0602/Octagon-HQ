@@ -45,18 +45,20 @@ describe("NFL GM final report development outcomes", () => {
   it("keeps numerical individual grades private and draws no franchise line graph", () => {
     const file = readFileSync(resolve(process.cwd(), "src/features/back-room/FootballGmFinalExperience.tsx"), "utf-8");
     expect(file).toContain("footballGmResultDevelopmentBand(player, selectedRun.seed)");
-    expect(file).toContain("Exact grades stay hidden.");
+    expect(file).toContain("Exact grades remain hidden.");
     expect(file).toContain("footballGmDevelopmentProfile(player.id)");
     expect(file).not.toContain("band.final.toFixed");
     expect(file).not.toContain("<svg");
     expect(file).toContain("THREE-YEAR RESULTS");
     expect(file).toContain("RUN HIGHLIGHTS");
     expect(file).toContain("OFFSEASON MOVES");
-    expect(file).toContain("GM SCORE BREAKDOWN");
-    expect(file).toContain("Roster (90%)");
-    expect(file).toContain("Season record (3%)");
-    expect(file).toContain("Playoffs (7%)");
-    expect(file).toContain("Playoffs (10%)");
+    expect(file).toContain("nfl-gm-final__score-components");
+    expect(file).toContain("<small>ROSTER</small>");
+    expect(file).toContain("<small>RECORD</small>");
+    expect(file).toContain("<small>PLAYOFFS</small>");
+    expect(file).toContain("Core retained");
+    expect(file).toContain("Offseason changes");
+    expect(file).not.toContain("GM SCORE BREAKDOWN");
   });
 
   it("keeps three-year outcomes and scoring owned by the existing canonical engine", () => {
@@ -65,6 +67,8 @@ describe("NFL GM final report development outcomes", () => {
     expect(file).toContain("resolvedSeasons: run.resolvedSeasons");
     expect(file).toContain("footballGmSeasonRecordLabel(season)");
     expect(file).toContain("footballGmPlayoffFinishLabel(season.finish)");
-    expect(file).toContain("footballGmAdjustedRosterCap(end, 3");
+    expect(file).toContain("result.rosterManagementScore.toFixed(1)");
+    expect(file).toContain("result.regularSeasonScore.toFixed(1)");
+    expect(file).toContain("result.playoffScore.toFixed(1)");
   });
 });
