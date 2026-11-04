@@ -20,7 +20,7 @@ describe("October 2026 Marvin Harrison Jr. verified ARI -> HOU trade", () => {
   });
   it("keeps 594 GM identities, player grade/salary/term, and original saved playerId", () => {
     expect(contracts.players).toHaveLength(594);
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
     const c = contracts.players.filter(x => x.player === mhj);
     expect(c).toHaveLength(1);
     expect(c[0].team).toBe("HOU");
@@ -33,7 +33,7 @@ describe("October 2026 Marvin Harrison Jr. verified ARI -> HOU trade", () => {
     expect(FOOTBALL_GM_PLAYER_POOL.find(x => x.name === mhj)).toEqual(
       expect.objectContaining({id:"ARI|WR|marvinharrison",team:"HOU",currentGrade:85,salaryApy:8843686})
     );
-    expect(new Set(FOOTBALL_GM_PLAYER_POOL.map(x => x.id)).size).toBe(594);
+    expect(new Set(FOOTBALL_GM_PLAYER_POOL.map(x => x.id)).size).toBe(637);
   });
   it("appends new HOU version without modifying ARI grade or historical results", () => {
     const sql = readFileSync("supabase/migrations/202612310415_nfl_mhj_hou_current_grade_binding.sql","utf8");

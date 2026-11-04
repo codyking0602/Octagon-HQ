@@ -28,8 +28,8 @@ describe("seven additional NFL Week 7 ability revisions, separate from merged fi
   });
   it("leaves the 594 immutable GM identities/projections and merged five-QB revisions untouched",()=>{
     expect(otherQbBatch.changes).toHaveLength(5);
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
-    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(591);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
+    expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
     for(const x of revisions.changes){
       expect(FOOTBALL_GM_PLAYER_POOL.find(p=>p.team===x.team&&p.family===x.family&&p.name===x.player)?.currentGrade).toBe(x.newGrade);
     }

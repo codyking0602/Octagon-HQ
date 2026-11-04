@@ -13,7 +13,7 @@ describe("Stroud Oct 26 current NFL grade and historical GM development continui
     expect(revision).toEqual(expect.objectContaining({team:"HOU",family:"QB",player:"C.J. Stroud",oldGrade:82,newGrade:88}));
     expect(revision.sourceUrls.length).toBeGreaterThanOrEqual(2);
     expect(oldQb.grades.find(x=>x.player==="C.J. Stroud")?.grade).toBe(82);
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
     expect(footballGmPlayerById("HOU|QB|cjstroud")).toEqual(
       expect.objectContaining({team:"HOU",currentGrade:88,position:"QB"}));
   });

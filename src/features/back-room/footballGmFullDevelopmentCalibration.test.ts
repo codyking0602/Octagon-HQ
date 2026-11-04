@@ -20,6 +20,7 @@ function originalResearchGrade(player: { team: string; family: string; name: str
 import { describe, expect, it } from "vitest";
 import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
 import audit from "../../../data/curated/football/gm-nfl-development-review-audit-2026-10-08.json";
+import rosterExpansion from "../../../data/curated/football/nfl/gm-nfl-roster-expansion-2026-11-03.json";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_PLAYER_POOL,
@@ -100,12 +101,12 @@ function playableRoster(i: number, strategy: "balanced" | "upside" | "value"): F
 describe("full NFL GM development calibration", () => {
   it("binds exactly one explicit, source-anchored profile to every canonical NFL player", () => {
     const ids = new Set(FOOTBALL_GM_PLAYER_POOL.map((player) => player.id));
-    const profiles = authority.profiles;
-    expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(594);
+    const profiles = [...authority.profiles, ...rosterExpansion.players.map(player => player.development)];
+    expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(637);
     expect(profiles.length).toBe(ids.size);
     expect(new Set(profiles.map((profile) => profile.id)).size).toBe(profiles.length);
     expect(new Set(profiles.map((profile) => profile.team)).size).toBe(32);
-    expect(profiles.filter((p) => p.calibration === "individual-review").length).toBe(594);
+    expect(profiles.filter((p) => p.calibration === "individual-review").length).toBe(637);
     expect(audit.reviewCount).toBe(594);
     expect(audit.followupReviewCount).toBe(417);
     expect(audit.reviews.filter((p) => p.reviewClass !== "priority-individual")).toHaveLength(417);
@@ -126,7 +127,11 @@ describe("full NFL GM development calibration", () => {
       expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
       expect(profile.name).toBe(player.name);
       expect(profile.ageAtCalibration).toBe(player.age);
-      expect(profile.gradeAtCalibration).toBe(originalResearchGrade(player));
+      expect(profile.gradeAtCalibration).toBe(
+        authority.profiles.some(base => base.id === profile.id)
+          ? originalResearchGrade(player)
+          : player.currentGrade
+      );
       expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
       expect(profile.improvePct).toBeGreaterThanOrEqual(0);
       expect(profile.declinePct).toBeGreaterThanOrEqual(0);

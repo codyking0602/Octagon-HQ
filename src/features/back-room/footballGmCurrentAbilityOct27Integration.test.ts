@@ -35,11 +35,11 @@ describe("current NFL Oct 27 ability reaches new Short and Long GM games",()=>{
    }
  });
  it("updates new candidate strength in both GM modes without changing 594 IDs, 591 eligible or player contracts",()=>{
-   expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
-   expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(591);
+   expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
+   expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(634);
    expect(contracts.players).toHaveLength(594);
    expect(profiles.profiles).toHaveLength(594);
-   expect(NFL_GM_LONG_PLAYER_POOL).toHaveLength(FOOTBALL_GM_PLAYER_POOL.length+179);
+   expect(NFL_GM_LONG_PLAYER_POOL).toHaveLength(FOOTBALL_GM_PLAYER_POOL.length + 179); // Long GM includes the expanded shared Short GM population.
    for(const change of changes){
      const row=gmPlayer(change.team,change.family,change.player);
      const contract=contracts.players.find(c=>c.team===change.team&&c.family===change.family&&c.player===change.player)!;
@@ -63,7 +63,8 @@ describe("current NFL Oct 27 ability reaches new Short and Long GM games",()=>{
      ...oct28.changes.filter(c=>c.family!=="Head Coach").map(c=>c.team+"|"+c.family+"|"+c.subject),
    ]);
    for(const player of FOOTBALL_GM_PLAYER_POOL){
-     const original=profiles.profiles.find(p=>p.id===player.id)!;
+     const original=profiles.profiles.find(p=>p.id===player.id);
+     if(!original) continue;
      if(!changed.has(player.team+"|"+player.family+"|"+player.name)){
        expect(player.currentGrade,player.id).toBe(original.gradeAtCalibration);
      }

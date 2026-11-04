@@ -1,11 +1,15 @@
 import profileAuthority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
+import rosterExpansionArtifact from "../../../data/curated/football/nfl/gm-nfl-roster-expansion-2026-11-03.json";
 import type { FootballGmActualRole } from "./footballGmPositionalValue";
 
 export const WHEEL_FOOTBALL_GM_CAP = 150_000_000;
 
 export type FootballGmDevelopmentProfile = (typeof profileAuthority.profiles)[number];
-const developmentProfiles = new Map(profileAuthority.profiles.map((profile) => [profile.id, profile]));
-export const FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT = profileAuthority.profileCount;
+const developmentProfiles = new Map<string, FootballGmDevelopmentProfile>([
+  ...profileAuthority.profiles,
+  ...rosterExpansionArtifact.players.map((player) => player.development),
+].map((profile) => [profile.id, profile] as const));
+export const FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT = developmentProfiles.size;
 
 /** Identity-bound authored calibration; synthetic grade tests retain the old fallback. */
 export function footballGmDevelopmentProfile(playerId: string): FootballGmDevelopmentProfile | null {
@@ -76,6 +80,15 @@ const MARKET_CURVES: Readonly<Record<WheelFootballGmMarketPosition | Exclude<Foo
     [92, 30_000_000],
     [96, 37_000_000],
     [99, 42_000_000],
+  ],
+  FB: [
+    [75, 1_500_000],
+    [80, 3_750_000],
+    [84, 6_000_000],
+    [88, 9_000_000],
+    [92, 12_000_000],
+    [96, 15_000_000],
+    [99, 18_000_000],
   ],
   FLEX: [
     [75, 2_500_000],
