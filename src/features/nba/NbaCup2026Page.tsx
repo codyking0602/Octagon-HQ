@@ -66,7 +66,7 @@ export function NbaCupGroups(){
     const today=dateParts.year+"-"+dateParts.month+"-"+dateParts.day;
     const interval=window.setInterval(()=>{
       if(document.visibilityState==="visible")refresh();
-    },CUP_NIGHTS.includes(today)?90_000:15*60_000);
+    },CUP_NIGHTS.some(day=>day===today)?90_000:15*60_000);
     const focus=()=>refresh();
     const visible=()=>{if(document.visibilityState==="visible")refresh();};
     window.addEventListener("focus",focus);
