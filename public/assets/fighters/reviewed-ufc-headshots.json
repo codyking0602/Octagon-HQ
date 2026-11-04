@@ -1,0 +1,10 @@
+{
+  "event_id": "ufc-fight-night-waldo-cortes-acosta-vs-johnny-walker-2026-11-07",
+  "headshots": [
+    {
+      "fighter_slug": "johnny-walker",
+      "path": "/assets/fighters/johnny-walker-nov07-thumb.webp",
+      "source": "Owner-provided transparent ESPN-style portrait matching Johnny Walker (ESPN MMA ID 3146944)"
+    }
+  ]
+}
