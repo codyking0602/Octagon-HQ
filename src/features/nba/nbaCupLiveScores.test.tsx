@@ -60,7 +60,7 @@ describe("NBA Cup actual results and Football-like follow-along",()=>{
     expect(html).toContain("Philadelphia 76ers @ Cleveland Cavaliers");
     expect(html).toContain("Oklahoma City Thunder @ Memphis Grizzlies");
     expect(html).toContain("San Antonio Spurs @ Sacramento Kings");
-    expect(html).toContain("OCT 30"); // local label is "Oct 30"
+    expect(html).toContain("Oct 30");
     expect(html).toContain("110");
     expect(html).toContain("94");
     expect(html).toContain("WIN");
