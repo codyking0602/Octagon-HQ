@@ -1540,3 +1540,43 @@
   .nba-gm-final .gm-final__roster-list .gm-final__player-identity { grid-template-columns:17px 29px 17px minmax(0,1fr); gap:2px; }
   .nba-gm-final .gm-final__roster-list .gm-final__player-name strong { font-size:11px; }
 }
+
+
+/* Fix mobile name column: player name and tier share the fourth identity cell. */
+.nba-gm-final .gm-final__roster-list .gm-final__player {
+  grid-template-columns:minmax(0,1.55fr) minmax(0,.85fr);
+  min-height:0;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-identity {
+  grid-template-columns:20px 34px 20px minmax(0,1fr);
+  width:100%;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-name {
+  grid-column:4;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:4px;
+  min-width:0;
+  overflow:visible;
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-name strong {
+  display:block;
+  width:100%;
+  overflow-wrap:normal;
+  word-break:normal;
+  hyphens:none;
+  font-size:clamp(11px,2.9vw,14px);
+}
+.nba-gm-final .gm-final__roster-list .gm-final__player-name .gm-final__tier {
+  grid-column:auto;
+  justify-self:auto;
+  max-width:100%;
+}
+@media(max-width:390px) {
+  .nba-gm-final .gm-final__roster-list .gm-final__player {
+    grid-template-columns:minmax(0,1.55fr) minmax(0,.85fr);
+    column-gap:5px;
+  }
+}
