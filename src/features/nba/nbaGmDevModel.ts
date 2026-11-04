@@ -73,7 +73,7 @@ export function nbaGmDevSeasonPicks(
 ): NbaGmPick[] {
   const saved = season === 1 ? run.yearOnePicks : run.picks;
   if (season === 1 || run.lineupModelVersion !== 1 || !run.development) return saved;
-  const grades = new Map(saved.map(pick => [pick.playerId,
+  const grades = new Map<string, number>(saved.map(pick => [pick.playerId,
     (season === 2 ? run.development?.[pick.playerId]?.year2Grade : run.development?.[pick.playerId]?.year3Grade)
       ?? catalog.find(player => player.id === pick.playerId)?.currentGrade ?? 0,
   ]));
