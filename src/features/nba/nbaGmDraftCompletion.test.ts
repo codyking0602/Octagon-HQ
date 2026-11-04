@@ -69,12 +69,13 @@ describe("NBA GM draft completion from authentic 330-player eligibility bank",()
       expect(new Set(picks!.map(p=>p.slot))).toEqual(new Set(NBA_GM_ROSTER_SLOTS));
       expect(new Set(picks!.map(p=>p.playerId)).size).toBe(7);
       const spent=nbaGmDevSpend(picks!,board);
-      for(let year=0;year<3;year++)expect(spent[year]).toBeLessThanOrEqual(cap[year]);
+      expect(spent[0]).toBeLessThanOrEqual(cap[0]);
     }
   },60_000);
-  it("completes 12 diverse V3 draft wheels under the $155M three-year salary cap",()=>{
+  it("completes 12 diverse V3 draft wheels under the $155M Season 1 cap",()=>{
     const policies=["top","cheap","mid","versatile"] as const;
     const totals:number[]=[];
+    let futureCapCrises=0;
     for(let seed=0;seed<12;seed++){
       let picks:ReturnType<typeof nbaGmDevAssignRoster>=[];
       for(let round=0;round<7;round++){
@@ -95,11 +96,15 @@ describe("NBA GM draft completion from authentic 330-player eligibility bank",()
       }
       expect(new Set(picks!.map(x=>x.slot))).toEqual(new Set(NBA_GM_ROSTER_SLOTS));
       const spends=nbaGmDevSpend(picks!,v3Board);
-      spends.forEach((value,year)=>expect(value).toBeLessThanOrEqual(v3Cap[year]));
+      expect(spends[0]).toBeLessThanOrEqual(v3Cap[0]);
+      // NFL GM allows future repricing pressure in the draft. The offseason
+      // must resolve it before a future season can be played.
+      if(spends[1]>v3Cap[1]||spends[2]>v3Cap[2])futureCapCrises++;
       totals.push(spends[0]);
     }
     // Sanity-check that a tight cap actually produces meaningful payroll variety.
     expect(Math.max(...totals)-Math.min(...totals)).toBeGreaterThan(50_000_000);
+    expect(futureCapCrises).toBeGreaterThan(0);
   },90_000);
 
 });
