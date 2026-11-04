@@ -127,7 +127,11 @@ describe("full NFL GM development calibration", () => {
       expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
       expect(profile.name).toBe(player.name);
       expect(profile.ageAtCalibration).toBe(player.age);
-      expect(profile.gradeAtCalibration).toBe(originalResearchGrade(player));
+      expect(profile.gradeAtCalibration).toBe(
+        authority.profiles.some(base => base.id === profile.id)
+          ? originalResearchGrade(player)
+          : player.currentGrade
+      );
       expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
       expect(profile.improvePct).toBeGreaterThanOrEqual(0);
       expect(profile.declinePct).toBeGreaterThanOrEqual(0);
