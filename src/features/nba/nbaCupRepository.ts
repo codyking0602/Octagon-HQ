@@ -18,3 +18,21 @@ export async function saveCupPreview(picks:CupGroupPicks):Promise<CupPreview>{
   if(!data||!validCupPicks(data.picks))throw new Error("NBA Cup save could not be verified.");
   return data as CupPreview;
 }
+
+export type CupStandingMember={profile_id:string;display_name:string;picks:CupGroupPicks};
+/** The server exposes member cards only after the manual group-picks lock. */
+export async function loadCupStandings():Promise<CupStandingMember[]>{
+  const client=getSupabaseClient();
+  if(!client)throw new Error("NBA Cup standings are not connected.");
+  const {data,error}=await client.rpc("get_nba_cup_group_standings_2026");
+  if(error)throw new Error(error.message);
+  if(!data||data.locked!==true||!Array.isArray(data.entries))
+    throw new Error("NBA Cup standings are not yet available.");
+  const entries=data.entries as unknown[];
+  if(entries.some(entry=>{
+    if(!entry||typeof entry!=="object")return true;
+    const member=entry as Record<string,unknown>;
+    return typeof member.profile_id!=="string"||typeof member.display_name!=="string"||!validCupPicks(member.picks);
+  }))throw new Error("NBA Cup standings could not be verified.");
+  return entries as CupStandingMember[];
+}
