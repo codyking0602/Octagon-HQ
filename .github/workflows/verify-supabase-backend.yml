@@ -127,7 +127,8 @@ jobs:
             supabase/tests/nba_gm_public_v8_calibration.sql \
             supabase/tests/nba_gm_v9_historical_overall.sql \
             supabase/tests/nba_gm_v4_repricing_labels.sql \
-            supabase/tests/nba_gm_nfl_market_repricing.sql
+            supabase/tests/nba_gm_nfl_market_repricing.sql \
+            supabase/tests/nba_gm_nfl_year_one_draft_cap.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"

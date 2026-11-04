@@ -141,8 +141,10 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
   ) : null;
 }
 
-/** Affordable matching with future-slot reserve. Does not claim certainty about
- * future random spins; the server repeats the identical rule at pick commit. */
+/** NFL GM parity: the draft enforces only Year 1's cap, including distinct
+ * inexpensive fillers for unfilled roles. Future repricing is resolved in the
+ * offseason, where Years 2 and 3 must fit before advancing. The server owns
+ * the same rule at pick commit. */
 export function nbaGmDevCanAdd(
   picks:readonly NbaGmPick[], player:NbaGmDevPlayer, catalog:readonly NbaGmDevPlayer[],
   caps:NbaGmSalaryWindow=NBA_GM_DEV_CAPS, phase:NbaGmDevPhase="draft",
@@ -153,23 +155,22 @@ export function nbaGmDevCanAdd(
   const owned=new Set(assigned.map(p=>p.playerId));
   const open=NBA_GM_ROSTER_SLOTS.filter(slot=>!assigned.some(p=>p.slot===slot));
   const spend=nbaGmDevSpend(assigned,catalog);
-  // Distinct reserved players protect against double-counting one versatile
-  // cheap player as the solution to multiple open positions. Reserving each
-  // filler's maximum contracted-year cost guarantees a concrete completion.
+  // Distinct Year 1 reserve players prevent reusing the same cheap
+  // athlete for multiple unfilled positions. Future extensions do not veto
+  // a current-season draft pick, just as in NFL GM.
   const reserved=new Set(owned);
   let safeReserve=0;
   if(phase==="draft"){
     for(const slot of open){
-      const maxCost=(p:NbaGmDevPlayer)=>Math.max(...[0,1,2].map(
-        year=>nbaGmDevSalary(p,year as 0|1|2)));
       const cheapest=catalog.filter(p=>!reserved.has(p.id)&&nbaGmDevEligible(p,slot))
-        .sort((a,b)=>maxCost(a)-maxCost(b)||a.id.localeCompare(b.id))[0];
+        .sort((a,b)=>nbaGmDevSalary(a,0)-nbaGmDevSalary(b,0)||a.id.localeCompare(b.id))[0];
       if(!cheapest)return false;
       reserved.add(cheapest.id);
-      safeReserve+=Math.max(...[0,1,2].map(year=>nbaGmDevSalary(cheapest,year as 0|1|2)));
+      safeReserve+=nbaGmDevSalary(cheapest,0);
     }
   }
-  return [0,1,2].every(year=>(phase==="offseason"&&year===0)||
+  return [0,1,2].every(year=>(phase==="draft"&&year!==0)||
+    (phase==="offseason"&&year===0)||
     spend[year]!+safeReserve<=caps[year]!);
 }
 /** Legacy call signature retained for foundation and migration contract checks. */
