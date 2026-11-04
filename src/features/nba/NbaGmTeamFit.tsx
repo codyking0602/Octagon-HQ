@@ -60,27 +60,27 @@ export function NbaGmTeamFit({ run, catalog, season }: {
   if (data.some(item => !item.fit) || (season === 3 && run.results.length !== 3)) return null;
   return <section className="nba-gm-team-fit surface-card" aria-label="NBA GM team fit by season">
     <header className="nba-gm-team-fit__header">
-      <div><small>{season === 1 ? "AFTER SEASON 1" : "THREE-SEASON RECAP"}</small><h2>TEAM FIT</h2></div>
+      <div><h2>TEAM FIT</h2></div>
+      <small>{season === 1 ? "YEAR 1" : "YEAR 1 → YEAR 3"}</small>
     </header>
-    <div className="nba-gm-team-fit__compact">
+    <div className="nba-gm-team-fit__inline-summary">
       <div className="nba-gm-team-fit__primary">
-        <small>OVERALL TEAM FIT</small>
         <strong>{data[data.length-1]!.fit!.index}</strong>
         <b className={`nba-gm-team-fit__tier is-${tierClass(data[data.length-1]!.fit!.overall)}`}>{data[data.length-1]!.fit!.overall}</b>
       </div>
-      <div className="nba-gm-team-fit__year-values">
-        {data.map(item => <div key={item.year}><small>Y{item.year}</small><strong>{item.fit!.index}</strong></div>)}
+      <div className="nba-gm-team-fit__inline-meter">
+        <div className="nba-gm-team-fit__meter-track">
+          {[...new Set(data.map(item => item.fit!.index))].map(index =>
+            <span key={index} className="nba-gm-team-fit__marker" style={{left: `${index}%`}} title={`Team fit ${index}`}><i/></span>)}
+        </div>
+        <div className="nba-gm-team-fit__meter-ends"><span>DYSFUNCTIONAL</span><span>ELITE</span></div>
       </div>
     </div>
-    <div className="nba-gm-team-fit__meter" aria-label="Overall roster composition index">
-      <div className="nba-gm-team-fit__meter-track">
-        {[...new Set(data.map(item => item.fit!.index))].map(index =>
-          <span key={index} className="nba-gm-team-fit__marker" style={{left: `${index}%`}} title={`Team fit ${index}`}>
-            <i/>
-          </span>)}
-      </div>
-      <div className="nba-gm-team-fit__meter-ends"><span>DYSFUNCTIONAL</span><span>ELITE</span></div>
-    </div>
+    {season === 3 && <p className="nba-gm-team-fit__year-caption">
+      {data.every(item => item.fit!.index === data[0]!.fit!.index)
+        ? "Overall fit unchanged across three seasons"
+        : data.map(item => `Y${item.year} ${item.fit!.index}`).join(" · ")}
+    </p>}
     <div className="nba-gm-team-fit__table" role="table" aria-label="Six basketball fit categories">
       <div className="nba-gm-team-fit__row nba-gm-team-fit__column-head" role="row">
         <span role="columnheader">CATEGORY</span>
