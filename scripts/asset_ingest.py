@@ -8,7 +8,7 @@ import re
 import sys
 from html.parser import HTMLParser
 from io import BytesIO
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageFilter
@@ -259,15 +259,26 @@ def approved_square_thumb_source(spec, source_url, size):
         # It is a real headshot product, not its athlete_bio_full_body pose.
         return (width, height) == (256, 160)
     if host == "a.espncdn.com":
+        parsed = urlparse(source_url)
+        espn_path = parsed.path
+        # ESPN's official combiner endpoint can deliver the same MMA headshot.
+        # It must wrap exactly one original athlete-ID image; no arbitrary art.
+        combiner = parsed.path == "/combiner/i"
+        if combiner:
+            params = parse_qs(parsed.query, keep_blank_values=True)
+            if parsed.fragment or set(params) != {"img"} or len(params["img"]) != 1:
+                return False
+            espn_path = params["img"][0]
         match = re.fullmatch(
             r"/i/headshots/mma/players/full/([0-9]+)[.]png",
-            urlparse(source_url).path,
+            espn_path,
         )
         if not match:
             return False
-        if (width, height) == (600, 436):
+        if combiner or (width, height) == (600, 436):
             return (
-                spec.get("official_headshot_reviewed") is True
+                (width, height) == (600, 436)
+                and spec.get("official_headshot_reviewed") is True
                 and bool(str(spec.get("fighter_name") or "").strip())
                 and str(spec.get("verified_espn_athlete_id") or "") == match.group(1)
             )
