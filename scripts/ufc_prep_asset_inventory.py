@@ -51,7 +51,7 @@ def inventory(slugs, root=ROOT, runtime=None):
         # Runtime photo URLs are the same already-used HQ assets returned by
         # get_ufc_fighter_media_map; never require another provenance audit.
         runtime_photo = runtime.get(canonical)
-        if runtime_photo and not re.fullmatch(r"https://a\\.espncdn\\.com/i/headshots/mma/players/full/[0-9]+\\.png", str(runtime_photo)):
+        if runtime_photo and not re.fullmatch(r"https://a\.espncdn\.com/i/headshots/mma/players/full/[0-9]+\.png", str(runtime_photo)):
             raise ValueError(f"Invalid HQ runtime photo URL for {canonical}")
         photo = remotes.get(canonical) or runtime_photo
         if thumb_name:
