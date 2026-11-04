@@ -18,7 +18,7 @@ export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<WheelFootballGmRoster
 };
 
 export type FootballGmActualRole =
-  | "QB" | "RB" | "WR" | "TE" | "EDGE" | "IDL" | "LB" | "CB" | "S";
+  | "QB" | "RB" | "WR" | "TE" | "FB" | "EDGE" | "IDL" | "LB" | "CB" | "S";
 
 type RoleIdentity = Pick<WheelFootballGmContractRow, "family" | "position"> & {
   player?: string;
@@ -31,7 +31,7 @@ export function footballGmActualRole(player: RoleIdentity): FootballGmActualRole
     case "QB": return "QB";
     case "RB": return "RB";
     case "WR": return "WR";
-    case "TE": return "TE";
+    case "TE": return player.position === "FB" ? "FB" : "TE";
     case "Front Seven":
       if (["ED", "EDGE", "DE"].includes(player.position)) return "EDGE";
       if (["IDL", "DT", "NT"].includes(player.position)) return "IDL";
@@ -47,6 +47,7 @@ export const FOOTBALL_GM_ROLE_MODIFIERS: Readonly<Record<FootballGmActualRole, n
   RB: 0.96, // FLEX only; mandatory RB slot stays at its base weight
   WR: 1.05, // FLEX only; mandatory WR slot stays at its base weight
   TE: 1.03,
+  FB: 0.95, // Genuine fullback contributes blocking-first value in FLEX
   EDGE: 1.13,
   IDL: 1.04,
   LB: 0.93,
