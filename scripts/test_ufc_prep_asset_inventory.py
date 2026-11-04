@@ -51,10 +51,10 @@ class UfcPrepMediaInventoryTests(unittest.TestCase):
         self.assertEqual(rows[0]["thumb_path"], "/assets/fighters/legacy-fighter-thumb.png")
         self.assertEqual(rows[1]["thumb_path"], "/assets/fighters/other-fighter-thumb.jpeg")
 
-    def test_current_frontend_remote_is_reuse_candidate_not_approval(self):
+    def test_current_frontend_remote_is_accepted_hq_photo(self):
         row = inventory(["remote-fighter"], self.root)[0]
         self.assertEqual(row["thumbnail_status"], "existing_remote")
-        self.assertTrue(row["needs_separate_visual_and_provenance_review"])
+        self.assertTrue(row["accepted_existing_hq_photo"])
         self.assertFalse(row["needs_new_thumb"])
         self.assertIsNone(row["thumb_path"])
 
