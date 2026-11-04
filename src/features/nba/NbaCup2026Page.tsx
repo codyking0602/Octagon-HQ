@@ -102,7 +102,7 @@ export function NbaCupGroups(){
     if(scroll)tabsRef.current?.scrollIntoView({behavior:"smooth",block:"start"});
   }
   return <section className="nba-cup" data-testid="nba-cup-picks" aria-label="NBA Cup 2026 group picks">
-    <div className="nba-cup__main">
+    <div className={"nba-cup__main"+(locked?" nba-cup__main--locked":"")}>
       <section className="nba-cup__summary" aria-label="NBA Cup group-pick progress">
         <h1>NBA Cup 2026</h1>
         <div className="nba-cup__summary-title"><strong>GROUP WINNERS</strong><span>OCT 30 – NOV 27</span></div>
