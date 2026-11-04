@@ -52,7 +52,7 @@ def fail(msg):
 def request_bytes(url, max_bytes):
     req = Request(
         url,
-        headers={"User-Agent": "Mozilla/5.0 OctagonHQAssetIngest/1.0"},
+        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},
     )
     with urlopen(req, timeout=30) as response:
         data = response.read(max_bytes + 1)
