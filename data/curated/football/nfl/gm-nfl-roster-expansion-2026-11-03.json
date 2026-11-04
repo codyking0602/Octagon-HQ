@@ -398,8 +398,8 @@
       "draftRound": null,
       "draftOverall": null,
       "salaryApy": 15000000,
-      "realContractEndSeason": 2027,
-      "gameContract": "1YR",
+      "realContractEndSeason": 2028,
+      "gameContract": "3YR",
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
@@ -445,7 +445,7 @@
       "draftRound": null,
       "draftOverall": null,
       "salaryApy": 11000000,
-      "realContractEndSeason": 2027,
+      "realContractEndSeason": 2026,
       "gameContract": "1YR",
       "currentRosterEligible": true,
       "source": {
@@ -774,7 +774,7 @@
       "draftRound": null,
       "draftOverall": null,
       "salaryApy": 4850000,
-      "realContractEndSeason": 2026,
+      "realContractEndSeason": 2027,
       "gameContract": "1YR",
       "currentRosterEligible": true,
       "source": {
@@ -1155,7 +1155,8 @@
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
-        "playerPage": "https://overthecap.com/contracts"
+        "otcId": 5646,
+        "playerPage": "https://overthecap.com/player/chidobe-awuzie/5646"
       },
       "grade": 76,
       "confidence": "high",
@@ -1201,7 +1202,8 @@
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
-        "playerPage": "https://overthecap.com/contracts"
+        "otcId": 6940,
+        "playerPage": "https://overthecap.com/player/donte-jackson/6940"
       },
       "grade": 75,
       "confidence": "high",
@@ -1247,7 +1249,8 @@
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
-        "playerPage": "https://overthecap.com/contracts"
+        "otcId": 10105,
+        "playerPage": "https://overthecap.com/player/cam-taylor-britt/10105"
       },
       "grade": 75,
       "confidence": "medium",
@@ -1387,7 +1390,8 @@
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
-        "playerPage": "https://overthecap.com/contracts"
+        "otcId": 8783,
+        "playerPage": "https://overthecap.com/player/cole-kmet/8783"
       },
       "grade": 78,
       "confidence": "high",
@@ -1482,7 +1486,8 @@
       "currentRosterEligible": true,
       "source": {
         "provider": "OverTheCap",
-        "playerPage": "https://overthecap.com/contracts"
+        "otcId": 11710,
+        "playerPage": "https://overthecap.com/player/troy-franklin/11710"
       },
       "grade": 76,
       "confidence": "medium",
