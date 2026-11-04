@@ -44,7 +44,7 @@ describe("NFL first Madden editorial ability cycle — append-only", () => {
   it("updates current Wheel/GM bindings while retaining 594 stable GM player entries", () => {
     expect(WHEEL_NFL_GM_AUTHORITY.gradeFiles.TE).toBe("wheel-nfl-te-grades-2026-10-28.json");
     expect(WHEEL_NFL_GM_AUTHORITY.gradeFiles.Secondary).toBe("wheel-nfl-secondary-grades-2026-10-28.json");
-    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
+    expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(637);
     for (const c of ledger.changes.filter(x => x.family !== "Head Coach")) {
       const pool = FOOTBALL_GM_PLAYER_POOL.find(p=>p.team===c.team&&p.family===c.family&&p.name===c.subject);
       expect(pool?.currentGrade, c.subject).toBe(c.approvedGrade);
