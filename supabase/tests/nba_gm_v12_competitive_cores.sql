@@ -10,6 +10,7 @@ declare
   v_best jsonb;v_best_power numeric;v_power numeric;
   v_i integer;v_j integer;v_k integer;
   v_state jsonb;v11 jsonb;v12 jsonb;v_payroll numeric;
+  v_year integer;v_results jsonb;v_season jsonb;v_score jsonb;
   n_legal integer:=0;n_cap integer:=0;n_60_11 integer:=0;n_60_12 integer:=0;
   total_w11 numeric:=0;total_w12 numeric:=0;
   cap_w11 numeric:=0;cap_w12 numeric:=0;
@@ -112,6 +113,24 @@ begin
   raise notice 'V12 OWNER CONTENDER: V11 OVR % wins % title % pct, V12 OVR % wins % title % pct',
     v11->>'teamOverall',v11->>'wins',v11->>'titleOdds',
     v12->>'teamOverall',v12->>'wins',v12->>'titleOdds';
+  -- Complete a strong-franchise three-year outcome and grade directly on
+  -- the versioned simulation, independent of the two cheap real-RPC smoke runs.
+  v_results:=jsonb_build_array(v12);
+  for v_year in 2..3 loop
+    v_season:=private.nba_gm_v12_season(v_state,v_year);
+    if v_season->'seasonPicks' is distinct from
+        private.nba_gm_v12_season_lineup(v_state,v_year)
+      or (v_season->>'wins')::integer+(v_season->>'losses')::integer<>82
+      then raise exception 'V12 owner contender Year % roster or outcome drifted',v_year;end if;
+    v_results:=v_results||jsonb_build_array(v_season);
+  end loop;
+  v_state:=jsonb_set(v_state,'{results}',v_results);
+  v_score:=private.nba_gm_v12_final_score(v_state);
+  if v_score is distinct from private.nba_gm_v3_final_score(v_state)
+    or v_score->'weights' is distinct from '[0.9,0.03,0.07]'::jsonb
+    then raise exception 'V12 contender three-year score/dispatch drifted';end if;
+  raise notice 'V12 OWNER CONTENDER THREE SEASONS: Year 1 % wins, Year 2 % wins, Year 3 % wins, GM score %',
+    v_results->0->>'wins',v_results->1->>'wins',v_results->2->>'wins',v_score->>'score';
 end;
 $v12_competitive_cores$;
 rollback;
