@@ -639,6 +639,10 @@ def source_publisher_band(im):
 VISUALLY_REJECTED_THUMB_BLOBS = {
     "64f29f5a3427f390edc15bc07e68b5064768ac36",  # first reviewed official source
     "e6ec8d8e3c9572856bd48bdc5eab3fd2ee3bc117",  # second reviewed official source
+    # UFC 334 direct ESPN headshots, 2026-11-05, visually rejected in PR #2458.
+    "980470d26bea70e9cf8e67363769986a20328005",  # Luis Gurule: yellow rectangle
+    "23a9f2d38f63650da1ab0f68a6e72911e222ab2c",  # Charles Radtke: pink rectangle
+    "3869ee9959066e4f49c2c73f4d1dc94cdef30578",  # Chris Duncan: red-brown rectangle
 }
 
 
