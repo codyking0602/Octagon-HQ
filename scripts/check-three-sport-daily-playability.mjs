@@ -130,6 +130,6 @@ async function run() {
   if (failures.length) throw new Error(`Daily monitor found ${failures.length} production incident(s).`);
 }
 
-if (process.argv[1] && import.meta.url === new URL("file://" + process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === (await import("node:url")).pathToFileURL((await import("node:path")).resolve(process.argv[1])).href) {
   run().catch(error => { console.error(error.message); process.exitCode = 1; });
 }
