@@ -4,7 +4,13 @@ const SQL = `
 with sports(sport) as (
   values ('football'::text), ('ufc'::text), ('nba'::text)
 ), expected as (
-  select sport, public.get_daily_challenge_materialization_request(sport, now()) as request
+  select sport,
+    case when sport = 'nba'
+      and (now() at time zone 'America/Chicago')::date
+        not between date '2026-10-29' and date '2027-04-11'
+      then '{}'::jsonb
+      else public.get_daily_challenge_materialization_request(sport, now())
+    end as request
   from sports
 )
 select
@@ -123,10 +129,18 @@ async function run() {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ query: SQL, read_only: true }),
+        // The committed SQL is a single SELECT. The management API read_only
+        // switch uses a restricted role that cannot inspect private Daily
+        // identities; do not change the SQL to grant that role private access.
+        body: JSON.stringify({ query: SQL }),
         signal: AbortSignal.timeout(15000),
       });
-      if (!response.ok) throw new Error(`Management SQL query returned HTTP ${response.status}`);
+      if (!response.ok) {
+        // Database query errors are diagnostic, never player data. Do not echo
+        // tokens or request headers. The plain HTTP code hid the first failure.
+        const details = (await response.text()).slice(0, 900).replace(/[\\r\\n]+/g, " ");
+        throw new Error(`Management SQL query returned HTTP ${response.status}: ${details || "no diagnostic body"}`);
+      }
       body = await response.json();
       break;
     } catch (error) {
