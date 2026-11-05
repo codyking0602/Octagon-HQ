@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+      - Deploy Supabase Backend
+    types: [completed]
 
 permissions:
   contents: read
@@ -16,6 +21,11 @@ concurrency:
 
 jobs:
   verify-live-boards:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
