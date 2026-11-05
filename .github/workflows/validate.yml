@@ -77,6 +77,9 @@ jobs:
       - name: Probe NBA Cup results sources (read-only, diagnostic)
         run: node scripts/probe-nba-cup-live.mjs
 
+      - name: Verify UFC live-photo delivery safeguards offline
+        run: node --test scripts/verify-live-ufc-media-delivery.test.mjs
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log
