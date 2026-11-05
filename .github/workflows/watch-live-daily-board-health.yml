@@ -1,0 +1,49 @@
+name: Watch Live Daily Board Health
+
+# Independent of the existing five-minute publication scheduler. This is
+# read-only: it cannot stage, reset, replace, answer, or publish a Daily.
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-daily-board-readiness
+  cancel-in-progress: false
+
+jobs:
+  verify-live-boards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - name: Check out current production main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check published game identity and playable board for all three sports
+        run: node scripts/verify-live-daily-board-health.mjs
+
+      - name: Summarize verified Daily health
+        if: success()
+        run: |
+          echo "Football, UFC and NBA current scheduled Daily boards are all published with intact public game state." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Surface production incident on verification failure
+        if: failure()
+        run: |
+          echo "::error title=Daily Challenge production health alert::A scheduled Football, UFC or NBA board is unpublished, malformed or its read-only health endpoint failed."
+          echo "### Production Daily incident" >> "$GITHUB_STEP_SUMMARY"
+          echo "Read the failed board health check. The existing publisher runs every five minutes; this independent watchdog never modifies live data." >> "$GITHUB_STEP_SUMMARY"
