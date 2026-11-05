@@ -73,10 +73,10 @@ begin
    delta:=(v12->>'wins')::numeric-(v11->>'wins')::numeric;
    if delta<worst_delta then worst_delta:=delta;
      worst:='fixture '||v_k||' cost $'||round(v_spent/1000000,1)
-       ||'M / V11 '||v11->>'wins'||' V12 '||v12->>'wins';end if;
+       ||'M / V11 '||(v11->>'wins')||' V12 '||(v12->>'wins');end if;
    if delta>best_delta then best_delta:=delta;
      best:='fixture '||v_k||' cost $'||round(v_spent/1000000,1)
-       ||'M / V11 '||v11->>'wins'||' V12 '||v12->>'wins';end if;
+       ||'M / V11 '||(v11->>'wins')||' V12 '||(v12->>'wins');end if;
  end loop;
  if n<150 then raise exception 'Too few salary-legal V12 draft fixtures: %',n;end if;
  v_avg11:=round(sum11/n,2);
