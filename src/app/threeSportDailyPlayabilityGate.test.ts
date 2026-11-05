@@ -88,7 +88,6 @@ describe("all three official Daily calendars have playable primary routes", () =
     expect(nba).toContain('if (projection.gameType === "higher_lower" && twoGame?.complete');
     expect(nba).toContain("nbaOfficialActiveRound(projection)");
     expect(nba).toContain('<DailyTwoGameLeaderboardResult projection={projection} sport="nba"');
-    expect(nba).toContain('path'); // Route verified separately in nbaOfficialDailyUiIntegration.test.ts.
   });
 
   it("guards production scoring and actively monitors published and playable setups", () => {
