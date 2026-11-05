@@ -633,4 +633,11 @@ export function OfficialTodayChallengeView({
     case "blind_rank_5": return <BlindRankView projection={projection} busy={busy} onAdvance={onAdvance} onNavigate={onNavigate} />;
     case "keep_4_cut_4": return <KeepCutView projection={projection} busy={busy} onAdvance={onAdvance} onNavigate={onNavigate} />;
   }
+  // Never let a newly scheduled Daily game return undefined and produce a
+  // blank page. The schedule-to-route coverage gate must also be updated.
+  return <section className="official-daily-status is-error" role="alert">
+    <strong>Today’s board can’t be displayed</strong>
+    <p>Your official progress is safe. This game needs a supported presentation.</p>
+    <button type="button" onClick={() => onNavigate("/play")}>ALL GAMES</button>
+  </section>;
 }
