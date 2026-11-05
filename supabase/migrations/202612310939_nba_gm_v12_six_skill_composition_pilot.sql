@@ -23,11 +23,30 @@ declare
   v_poor_perim numeric:=0;v_spacing numeric;v_scoring numeric;
   v_playmaking numeric;v_rebounding numeric;v_interior numeric;v_perimeter numeric;
   v_count integer:=0;v_starters integer:=0;
+  v_scorer_ranks numeric[];v_creator_ranks numeric[];
+  v_sc_weight numeric;v_pm_weight numeric;v_sc_base numeric;v_pm_base numeric;
+  v_sc_elastic numeric;v_pm_elastic numeric;
 begin
   if p_year not between 1 and 3
      or jsonb_typeof(p_picks)<>'array'
      or jsonb_array_length(p_picks)<>7 then
     raise exception 'V12 components require a legal seven-player season';
+  end if;
+
+  -- Rank the five starters before applying individual contributions: the
+  -- marginal value of another high-usage scorer or creator is not constant
+  -- when two strong primary/secondary options already share the floor.
+  select array_agg((p.skills->>'scoring')::numeric
+                   order by (p.skills->>'scoring')::numeric desc),
+         array_agg((p.skills->>'playmaking')::numeric
+                   order by (p.skills->>'playmaking')::numeric desc)
+    into v_scorer_ranks,v_creator_ranks
+    from jsonb_array_elements(p_picks) e(value)
+    join private.nba_gm_dev_players p on p.id=e.value->>'playerId'
+    where e.value->>'slot' not in ('GUARD','BIG');
+  if coalesce(array_length(v_scorer_ranks,1),0)<>5
+    or coalesce(array_length(v_creator_ranks,1),0)<>5 then
+      raise exception 'V12 requires five known starters';
   end if;
 
   for v_pick in select value from jsonb_array_elements(p_picks) loop
@@ -52,10 +71,35 @@ begin
       when 'PG' then .36*v_sc+.24*v_sh+.40*v_pm
       when 'SG' then .48*v_sc+.34*v_sh+.18*v_pm
       when 'SF' then .46*v_sc+.34*v_sh+.20*v_pm
-      when 'PF' then .52*v_sc+.23*v_sh+.25*v_pm
-      when 'C' then .57*v_sc+.16*v_sh+.27*v_pm
+      when 'PF' then .54*v_sc+.24*v_sh+.22*v_pm
+      when 'C' then .65*v_sc+.20*v_sh+.15*v_pm
       when 'GUARD' then .43*v_sc+.26*v_sh+.31*v_pm
-      else .54*v_sc+.19*v_sh+.27*v_pm end+v_dev;
+      else .60*v_sc+.22*v_sh+.18*v_pm end+v_dev;
+
+    -- Smoothly taper tertiary scoring/creation value, rather than imposing
+    -- a discontinuity at 80 or blindly valuing a fourth creator like a first.
+    -- Recenter only the marginal deviation from this role's normal skill;
+    -- a weak third scorer should not be double-punished for not being Luka.
+    v_sc_weight:=case v_slot when 'PG' then .36 when 'SG' then .48
+      when 'SF' then .46 when 'PF' then .54 when 'C' then .65
+      when 'GUARD' then .43 else .60 end;
+    v_pm_weight:=case v_slot when 'PG' then .40 when 'SG' then .18
+      when 'SF' then .20 when 'PF' then .22 when 'C' then .15
+      when 'GUARD' then .31 else .18 end;
+    v_sc_base:=case v_slot when 'PG' then 77 when 'SG' then 74
+      when 'SF' then 72 when 'PF' then 70 when 'C' then 64
+      when 'GUARD' then 74 else 65 end;
+    v_pm_base:=case v_slot when 'PG' then 78 when 'SG' then 69
+      when 'SF' then 68 when 'PF' then 65 when 'C' then 58
+      when 'GUARD' then 75 else 60 end;
+    v_sc_elastic:=1-.40
+      *greatest(0,least(1,(v_scorer_ranks[2]-85)/7))
+      *greatest(0,least(1,(v_scorer_ranks[2]-v_sc+8)/16));
+    v_pm_elastic:=1-.40
+      *greatest(0,least(1,(v_creator_ranks[2]-81)/7))
+      *greatest(0,least(1,(v_creator_ranks[2]-v_pm+8)/16));
+    v_oi:=v_oi-v_sc_weight*(1-v_sc_elastic)*(v_sc-v_sc_base)
+      -v_pm_weight*(1-v_pm_elastic)*(v_pm-v_pm_base);
     -- Reuse the sport-appropriate defensive role mix, changing its comparison
     -- baseline by assigned slot instead of treating a PG like a rim protector.
     v_di:=case v_slot
@@ -133,7 +177,8 @@ begin
     'offFit',v_off_fit,'defFit',v_def_fit,
     'spacing',v_spacing,'scoring',v_scoring,'playmaking',v_playmaking,
     'perimeterDefense',v_perimeter,'interiorDefense',v_interior,
-    'rebounding',v_rebounding,'severeNonShooterLoad',v_sh_bad);
+    'rebounding',v_rebounding,'severeNonShooterLoad',v_sh_bad,
+    'lineupFit',greatest(-1.5,least(1.5,v_off_fit+v_def_fit)));
 end;
 $components$;
 
@@ -151,8 +196,7 @@ begin
  v_old:='order by a.bench_cost,a.starter_power desc,a.off_role_cost,a.picks::text limit 1;';
  v_new:='order by a.bench_cost,
     (a.starter_power + 2*(
-      (private.nba_gm_v12_components(p_state,p_year,a.picks)->>''offFit'')::numeric
-      +(private.nba_gm_v12_components(p_state,p_year,a.picks)->>''defFit'')::numeric
+      (private.nba_gm_v12_components(p_state,p_year,a.picks)->>''lineupFit'')::numeric
     )) desc,
     a.starter_power desc,a.off_role_cost,a.picks::text limit 1;';
  if v_def is null
