@@ -30,7 +30,7 @@ describe("every scheduled Daily has a rendered production entry route", () => {
 
   it("covers every approved Football Daily game on the actual /football/today route", () => {
     const expected = {
-      who_am_i: 'projection.gameType === "who_am_i" ? (\\n        <OfficialWhoAmIDailyView',
+      who_am_i: 'projection.gameType === "who_am_i") {',
       millionaire: 'projection.gameType === "millionaire") {',
       find_leader: 'projection.gameType === "find_leader" ? <FindLeader',
       hit_the_number: 'projection.gameType === "hit_the_number" ? <HitTheNumber',
