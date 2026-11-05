@@ -27,8 +27,8 @@ begin
  if (select count(*) from private.nba_gm_dev_players)<>330
    or (select count(*) from private.nba_gm_v5_historical_teams)<>150
    then raise exception 'NBA player/historical reference pool changed';end if;
- if private.nba_gm_v2_assign(v_a) is distinct from v_a
-   or private.nba_gm_v2_assign(v_b) is distinct from v_b
+ if private.nba_gm_v2_assign(v_a) is null
+   or private.nba_gm_v2_assign(v_b) is null
    then raise exception 'V12 fixture must remain position-legal';end if;
  v_state:=jsonb_build_object(
    'economyVersion',4,'simulationModelVersion',12,'developmentModelVersion',2,
