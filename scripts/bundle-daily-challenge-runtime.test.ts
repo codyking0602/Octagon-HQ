@@ -57,7 +57,7 @@ describe("daily challenge runtime bundle prerequisites", () => {
       "utf8",
     );
     const cycleSource = rotation.match(
-      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \\t]*\\[([\\s\\S]*?)\\];/,
+      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \t]*\[([\s\S]*?)\];/,
     );
     expect(cycleSource).not.toBeNull();
     const cycle = [...cycleSource![1]!.matchAll(/"([a-z_]+)"/g)].map((row) => row[1]);
