@@ -85,6 +85,23 @@ export function validateDailyPlayability(rows) {
   return { failures, summaries };
 }
 
+export async function checkEdgeRuntimeReachable(ref, client = fetch) {
+  // A real HTTP request catches a stopped/broken runtime even when an old
+  // immutable Daily setup still exists in Postgres. This mode neither signs
+  // in a player nor creates/advances a challenge.
+  const response = await client(
+    `https://${ref}.supabase.co/functions/v1/daily-challenge-runtime`,
+    { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "deployment-info" }),
+      signal: AbortSignal.timeout(15000) },
+  );
+  if (!response.ok) throw new Error(`Daily Edge runtime health returned HTTP ${response.status}`);
+  const payload = await response.json();
+  if (typeof payload?.deployment_sha !== "string" || !payload.deployment_sha) {
+    throw new Error("Daily Edge runtime did not return a valid deployment identity.");
+  }
+}
+
 function unwrapRows(body) {
   if (Array.isArray(body)) return body;
   if (Array.isArray(body?.result)) return body.result;
@@ -119,6 +136,12 @@ async function run() {
   }
   if (!body) throw lastError ?? new Error("Management SQL query failed.");
   const { failures, summaries } = validateDailyPlayability(unwrapRows(body));
+  try {
+    await checkEdgeRuntimeReachable(ref);
+    summaries.push("Shared Daily Edge HTTP runtime: reachable");
+  } catch (error) {
+    failures.push(`Shared Daily Edge HTTP runtime: ${error instanceof Error ? error.message : String(error)}`);
+  }
   const output = [...summaries, ...failures.map(f => "FAIL " + f)].join("\n");
   console.log(output);
   if (process.env.GITHUB_STEP_SUMMARY) {
