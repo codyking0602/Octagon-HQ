@@ -11,6 +11,15 @@ begin
     into v_def;
   v_old:=$old$'simulationModelVersion',11,'lineupModelVersion',1$old$;
   v_new:=$new$'simulationModelVersion',12,'lineupModelVersion',2$new$;
+  -- On a true release branch, the migration has already activated V12.
+  -- The same smoke test must verify it rather than apply a second patch.
+  if position($needle$'simulationModelVersion',12,'lineupModelVersion',2$needle$ in v_def)>0 then
+    if (length(v_def)-length(replace(v_def,
+          'private.nba_gm_v12_season_lineup(v_next,3)','')))
+          /length('private.nba_gm_v12_season_lineup(v_next,3)')<>2 then
+      raise exception 'V12 public action enabled without both developed lineup paths';end if;
+    return;
+  end if;
   v_lineup_old:=$old$if v_state->>'lineupModelVersion'='1' then
       v_picks:=private.nba_gm_v10_season_lineup(v_next,3);
       v_next:=jsonb_set(v_next,'{picks}',v_picks);
