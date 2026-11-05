@@ -66,6 +66,11 @@ begin
      or (v_new->>'defense')::integer not between 60 and 99
      or (v_new->>'titleOdds')::numeric not between 0 and 49.6
      then raise exception 'V12 Year % invalid: %',v_year,v_new;end if;
+   if v_new->'seasonPicks' is distinct from
+      case when v_year=1 then v_a
+        else private.nba_gm_v12_season_lineup(v_state,v_year) end
+     or jsonb_array_length(v_new->'seasonPicks')<>7
+     then raise exception 'V12 Year % did not snapshot exact server season lineup',v_year;end if;
    v_results:=v_results||jsonb_build_array(v_new);
  end loop;
  v_lineup:=private.nba_gm_v12_season_lineup(v_state,2);
