@@ -5,6 +5,7 @@ import {
   UFC_APPROVED_WEIGHTED_CYCLE,
 } from "../features/play/dailyChallengeRotation";
 import { NBA_DAILY_WEIGHTED_CYCLE } from "../features/nba/nbaDailySchedule";
+import { dailyUsesTwoGameAverage } from "../features/play/dailyTwoGameContract";
 
 const football = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const ufc = readFileSync("src/features/play/OfficialTodayChallengePage.tsx", "utf8");
@@ -27,6 +28,25 @@ describe("every scheduled Daily has a rendered production entry route", () => {
   const footballMain = football.slice(football.indexOf("  if (projection.gameType === \"wavelength\") {"));
   const ufcMain = ufc.slice(ufc.indexOf("export function OfficialTodayChallengeContent("));
   const nbaMain = nba.slice(nba.indexOf("export function NbaOfficialDailyContent("));
+
+  it("keeps the database publisher scoring contract aligned with every scheduled two-game Daily", () => {
+    const publisher = readFileSync(
+      "supabase/migrations/202612310941_football_higher_lower_two_game_publication.sql",
+      "utf8",
+    );
+    const allowlist = publisher.match(
+      /p_game_type in \\(([^)]*)\\)\\s+and p_scoring_version = 'daily-two-game-average-score-v1'/,
+    );
+    expect(allowlist).not.toBeNull();
+    const sqlTypes = [...allowlist![1]!.matchAll(/'([a-z_]+)'/g)].map(match => match[1]);
+    const scheduled = [
+      ...FOOTBALL_APPROVED_WEIGHTED_CYCLE,
+      ...UFC_APPROVED_WEIGHTED_CYCLE,
+      ...NBA_DAILY_WEIGHTED_CYCLE,
+    ];
+    const twoGameTypes = unique(scheduled).filter(game => dailyUsesTwoGameAverage(game, "2026-11-06"));
+    expect(unique(sqlTypes)).toEqual(twoGameTypes);
+  });
 
   it("covers every approved Football Daily game on the actual /football/today route", () => {
     const expected = {
