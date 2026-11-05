@@ -17,7 +17,7 @@ declare
   v_state jsonb;v_skill text;v_player_id text;v_new integer;
   v_orig jsonb;v_before jsonb;v_after jsonb;
   v_pre numeric;v_post numeric;v_difference numeric;
-  v_reference_shoot numeric;v_after_shoot numeric;
+  v_reference_shoot numeric;v_after_shoot numeric;v_mid jsonb;v_mid_net numeric;
   v_seen integer:=0;
 begin
   if (select count(*) from private.nba_gm_dev_players)<>330
@@ -69,9 +69,19 @@ begin
         raise exception '% improved but did not improve team net: %',
           v_skill,v_difference;end if;
     end if;
-    if v_skill='playmaking' and v_new=99 and
-        (v_after->>'eliteBigCreation')::numeric<.60 then
-      raise exception 'Elite passing center bonus missing from V12 starting five';end if;
+    if v_skill='playmaking' and v_new=99 then
+      if (v_after->>'eliteBigCreation')::numeric<.85 then
+        raise exception 'Elite passing center bonus missing from V12 starting five';end if;
+      update private.nba_gm_dev_players set
+        skills=jsonb_set(v_orig,array[v_skill],to_jsonb(80)) where id=v_player_id;
+      v_mid:=private.nba_gm_v12_components(v_state,1,v_picks);
+      v_mid_net:=.75*((v_mid->>'off')::numeric+(v_mid->>'def')::numeric)
+        +(v_mid->>'offFit')::numeric+(v_mid->>'defFit')::numeric;
+      update private.nba_gm_dev_players set skills=v_orig where id=v_player_id;
+      if v_post-v_mid_net<=.05 then
+        raise exception 'V12 playmaking 80 to 99 lowered or flattened team power: %',
+          v_post-v_mid_net;end if;
+    end if;
     if v_skill='shooting' and v_player_id='nba-gm-draft-casonwallace'
         and (v_difference>=.30
           or abs((v_after->>'spacing')::numeric-(v_before->>'spacing')::numeric)>.05)
