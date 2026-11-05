@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { validateDailyPlayability, checkEdgeRuntimeReachable } from "./check-three-sport-daily-playability.mjs";
 
 const today = "2026-11-05";
@@ -96,3 +97,14 @@ test("checks the deployed Edge HTTP runtime without touching a player or game", 
     /deployment identity/,
   );
 });
+
+test("production monitor's privileged management query remains static and SELECT-only", () => {
+  const source = readFileSync("scripts/check-three-sport-daily-playability.mjs", "utf8");
+  const query = source.split("const SQL = `")[1]?.split("`;")[0];
+  assert.ok(query, "Canonical Daily SQL should be a static embedded literal.");
+  assert.match(query, /^\s*with sports\(/i);
+  assert.doesNotMatch(query, /\b(insert|update|delete|truncate|alter|drop|create|grant|revoke)\b/i);
+  assert.match(query, /private\.daily_challenge_setups/);
+  assert.match(source, /read_only:\s*false/);
+});
+
