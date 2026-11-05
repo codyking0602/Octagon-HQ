@@ -1,0 +1,53 @@
+name: NBA GM V12 pilot comparison
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/nba-gm-v12-pilot.yml"
+      - "supabase/migrations/**nba_gm**"
+      - "supabase/tests/nba_gm_v12*.sql"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v12_pilot:
+    name: six-skill and contender server benchmark
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+      - name: Verify source SHA
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v3.0.1
+        with:
+          version: 2.109.1
+      - name: Fresh-database V11/V12 comparisons and isolated release candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase db start
+          trap 'supabase stop --no-backup >/dev/null 2>&1 || true' EXIT
+          db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
+          test -n "$db_url"
+          for test_file in \
+            supabase/tests/nba_gm_v11_175m_five_season_calibration.sql \
+            supabase/tests/nba_gm_v12_six_skill_composition_pilot.sql \
+            supabase/tests/nba_gm_v12_competitive_cores.sql \
+            supabase/tests/nba_gm_v12_175m_competitive_drafts.sql \
+            supabase/tests/nba_gm_v12_wheel_like_drafts.sql \
+            supabase/tests/nba_gm_v12_six_skill_sensitivity.sql \
+            supabase/tests/nba_gm_v12_release_candidate_install.sql \
+            supabase/tests/nba_gm_v12_release_candidate_three_seasons.sql
+          do
+            echo "Executing V12 pilot: $test_file"
+            psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
+          done

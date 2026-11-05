@@ -26,6 +26,8 @@ export interface NbaGmDevSeason {
   /** NFL-style strength and six-finish odds; only V7 new games have these. */
   teamOverall?: number;
   titleOdds?: number; // 0–100, displayed descriptive estimate
+  /** Exact server-owned assignment used for this season in V12. */
+  seasonPicks?: NbaGmPick[];
   outcomeOdds?: Partial<Record<
     "Missed Playoffs"|"First Round"|"Conference Semifinals"|"Conference Finals"|"Finals"|"Champion",number
   >>; // probability 0–1
@@ -35,9 +37,9 @@ export interface NbaGmDevRun {
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
-  simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11;
+  simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   /** Automatic developed best-five lineups for new franchises only. */
-  lineupModelVersion?: 1;
+  lineupModelVersion?: 1 | 2;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
@@ -72,7 +74,12 @@ export function nbaGmDevSeasonPicks(
   run: NbaGmDevRun, catalog: readonly NbaGmDevPlayer[], season: 1 | 2 | 3,
 ): NbaGmPick[] {
   const saved = season === 1 ? run.yearOnePicks : run.picks;
-  if (season === 1 || run.lineupModelVersion !== 1 || !run.development) return saved;
+  if (season === 1) return saved;
+  if (run.lineupModelVersion === 2) {
+    const authoritative = run.results.find(result => result.season === season)?.seasonPicks;
+    return authoritative?.length === 7 ? authoritative : saved;
+  }
+  if (run.lineupModelVersion !== 1 || !run.development) return saved;
   const grades = new Map<string, number>(saved.map(pick => [pick.playerId,
     (season === 2 ? run.development?.[pick.playerId]?.year2Grade : run.development?.[pick.playerId]?.year3Grade)
       ?? catalog.find(player => player.id === pick.playerId)?.currentGrade ?? 0,

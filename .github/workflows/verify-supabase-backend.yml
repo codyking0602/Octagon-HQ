@@ -131,7 +131,10 @@ jobs:
             supabase/tests/nba_gm_nfl_year_one_draft_cap.sql \
             supabase/tests/nba_gm_developed_season_lineup.sql \
             supabase/tests/nba_gm_v10_seven_player_strength.sql \
-            supabase/tests/nba_gm_v11_175m_five_season_calibration.sql
+            supabase/tests/nba_gm_v11_175m_five_season_calibration.sql \
+            supabase/tests/nba_gm_v12_six_skill_composition_pilot.sql \
+            supabase/tests/nba_gm_v12_competitive_cores.sql \
+            supabase/tests/nba_gm_v12_175m_competitive_drafts.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
