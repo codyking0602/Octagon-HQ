@@ -9,6 +9,14 @@ export const DAILY_HEALTH_QUERY = String.raw`
 with target as (
   select sport, public.get_daily_challenge_materialization_request(sport, now()) as request
   from (values ('football'), ('ufc'), ('nba')) as s(sport)
+  union all
+  -- The existing scheduler prepublishes Football and UFC inside the final
+  -- 30 minutes of the Central day. Check tomorrow after the first scheduled
+  -- attempt at 23:30, *before* the board is exposed to players at midnight.
+  select sport || '_next',
+    public.get_daily_challenge_materialization_request(sport, now() + interval '30 minutes')
+  from (values ('football'), ('ufc')) as next(sport)
+  where (now() at time zone 'America/Chicago')::time >= time '23:35'
 ), board as (
   select t.sport, t.request, d.game_type as saved_game,
     d.scoring_version as saved_scoring, s.public_setup as setup
@@ -51,11 +59,14 @@ export function extractDailyHealthRows(payload) {
   const rows = Array.isArray(payload) ? payload
     : Array.isArray(payload?.result) ? payload.result
       : Array.isArray(payload?.data) ? payload.data : null;
-  if (!rows || rows.length !== 3) {
+  if (!rows || (rows.length !== 3 && rows.length !== 5)) {
     throw new Error("The production Daily health query did not return all three sports.");
   }
   const sports = rows.map(row => row?.sport).sort();
-  if (JSON.stringify(sports) !== JSON.stringify(["football", "nba", "ufc"])) {
+  const expected = rows.length === 3
+    ? ["football", "nba", "ufc"]
+    : ["football", "football_next", "nba", "ufc", "ufc_next"];
+  if (JSON.stringify(sports) !== JSON.stringify(expected)) {
     throw new Error("The production Daily health query omitted or duplicated a sport.");
   }
   return rows;
