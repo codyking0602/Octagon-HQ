@@ -7,6 +7,7 @@ import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyVi
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "../play/OfficialAverageFanDailyView";
+import { OfficialTodayChallengeContent } from "../play/OfficialTodayChallengePage";
 import {
   FootballSpecialDailyChrome,
   footballSpecialDailyStyle,
@@ -1032,6 +1033,40 @@ export default function FootballTodayChallengePage() {
           onAdvance={advance}
           onExit={() => navigate("/football")}
         />
+      </div>
+    );
+  }
+
+  // The Football HQ route is the primary Daily entry point. Reuse the
+  // canonical two-game Higher or Lower UI rather than falling through to the
+  // legacy single-game Football switch (which renders an empty board).
+  if (projection.gameType === "higher_lower") {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell">
+          {weeklyEditControl}
+          <header className="football-today-header">
+            <div>
+              <p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p>
+              <h1>HIGHER OR LOWER</h1>
+              <span>{projection.centralDay} · SAME BOARD FOR EVERYONE</span>
+            </div>
+            <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+          </header>
+          {error ? <div className="football-today-error" role="status">{error}</div> : null}
+          <OfficialTodayChallengeContent
+            projection={projection}
+            busy={busy}
+            onAdvance={advance}
+            onNavigate={navigate}
+          />
+          {projection.officialAttempt ? (
+            <div className="football-today-result-actions">
+              <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              {shareStatus ? <span role="status">{shareStatus}</span> : null}
+            </div>
+          ) : null}
+        </section>
       </div>
     );
   }
