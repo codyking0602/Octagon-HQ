@@ -22,8 +22,8 @@ begin
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
 
   v_state:=public.nba_gm_dev_action('start');
-  if v_state->>'simulationModelVersion'<>'11' or v_state->'caps' is distinct from '[175000000,175000000,175000000]'::jsonb then
-    raise exception 'New NBA GM start must use V11 with the approved $175M cap';end if;
+  if v_state->>'simulationModelVersion'<>'12' or v_state->'caps' is distinct from '[175000000,175000000,175000000]'::jsonb then
+    raise exception 'New NBA GM start must use V12 with the approved $175M cap';end if;
   select id into v_id from private.football_gm_runs
     where profile_id=v_owner and game_version='nba-gm-dev-v2'
     order by updated_at desc limit 1;
