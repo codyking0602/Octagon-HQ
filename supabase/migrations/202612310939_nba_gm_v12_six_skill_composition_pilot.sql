@@ -143,8 +143,8 @@ begin
         -- every conventional center to create like a point guard. A small
         -- uncapped lineup bonus preserves elite 95+ passing when the usual
         -- individual offensive rating is already at its role-specific cap.
-        v_big_creator:=greatest(v_big_creator,greatest(0,least(.65,
-          (v_pm-83)*(case when v_slot='C' then .045 else .026 end))));
+        v_big_creator:=greatest(v_big_creator,greatest(0,least(.90,
+          (v_pm-83)*(case when v_slot='C' then .060 else .035 end))));
         if v_id>=v_rim_top then
           v_rim_second:=v_rim_top;v_rim_top:=v_id;
         elsif v_id>v_rim_second then v_rim_second:=v_id;end if;
