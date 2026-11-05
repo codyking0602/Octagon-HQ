@@ -56,9 +56,12 @@ begin
     end loop;
     if v_best is null then continue;end if;
 
-    select sum((p.salaries[1])::numeric)
+    -- Use the game-authoritative signed-window contract average, NOT the
+    -- older p.salaries salary schedule from the player fixture table.
+    select sum(c.provisional_average_salary)
       into v_payroll from jsonb_array_elements(v_best) e(value)
-      join private.nba_gm_dev_players p on p.id=e.value->>'playerId';
+      join private.nba_gm_contract_candidates_2026_27 c
+        on c.player_id=e.value->>'playerId';
     v_state:=jsonb_build_object(
       'economyVersion',4,'simulationModelVersion',12,
       'lineupModelVersion',2,'developmentModelVersion',2,
