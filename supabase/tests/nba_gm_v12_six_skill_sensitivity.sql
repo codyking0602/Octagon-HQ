@@ -35,6 +35,7 @@ begin
       ('scoring','nba-gm-draft-casonwallace',87),
       ('shooting','nba-gm-draft-casonwallace',80),
       ('playmaking','nba-gm-draft-kristapsporzingis',80),
+      ('playmaking','nba-gm-draft-kristapsporzingis',99),
       ('perimeterDefense','nba-gm-draft-casonwallace',70),
       ('interiorDefense','nba-gm-draft-kristapsporzingis',72),
       ('rebounding','nba-gm-draft-kristapsporzingis',59),
@@ -68,6 +69,9 @@ begin
         raise exception '% improved but did not improve team net: %',
           v_skill,v_difference;end if;
     end if;
+    if v_skill='playmaking' and v_new=99 and
+        (v_after->>'eliteBigCreation')::numeric<.60 then
+      raise exception 'Elite passing center bonus missing from V12 starting five';end if;
     if v_skill='shooting' and v_player_id='nba-gm-draft-casonwallace'
         and (v_difference>=.30
           or abs((v_after->>'spacing')::numeric-(v_before->>'spacing')::numeric)>.05)
@@ -81,7 +85,7 @@ begin
       v_skill,v_player_id,v_orig->>v_skill,v_new,
       round(v_difference,3),round(2.2684*v_difference,2);
   end loop;
-  if v_seen<>7 then raise exception 'V12 must test all six skills plus bench shooting';end if;
+  if v_seen<>8 then raise exception 'V12 must test all six skills, elite big creation and bench shooting';end if;
 end;
 $v12_skill_sensitivity$;
 rollback;
