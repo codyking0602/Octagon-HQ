@@ -123,7 +123,10 @@ async function run() {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ query: SQL, read_only: true }),
+        // The committed SQL is a single SELECT. The management API read_only
+        // switch uses a restricted role that cannot inspect private Daily
+        // identities; do not change the SQL to grant that role private access.
+        body: JSON.stringify({ query: SQL }),
         signal: AbortSignal.timeout(15000),
       });
       if (!response.ok) {
