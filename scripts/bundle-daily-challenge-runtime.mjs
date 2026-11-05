@@ -419,7 +419,7 @@ for (const bundle of bundles) {
       resolve(repoRoot, "src/features/play/dailyChallengeRotation.ts"), "utf8",
     );
     const cycleMatch = rotationSource.match(
-      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \\t]*\\[([\\s\\S]*?)\\];/,
+      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \t]*\[([\s\S]*?)\];/,
     );
     if (!cycleMatch) throw new Error("Approved Football Daily calendar cannot be read.");
     const cycle = [...cycleMatch[1].matchAll(/"([a-z_]+)"/g)].map((match) => match[1]);
@@ -469,7 +469,7 @@ for (const bundle of bundles) {
       "  return publication;",
       "}",
       "",
-    ].join("\\n");
+    ].join("\n");
     await writeFile(output, staticModule);
     // Check the exact artifact that Supabase deploys, not just the generator.
     const deployedModule = await import(
