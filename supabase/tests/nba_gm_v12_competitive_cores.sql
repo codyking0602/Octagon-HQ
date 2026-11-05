@@ -83,7 +83,7 @@ begin
       cap_w11:=cap_w11+(v11->>'wins')::numeric;
       cap_w12:=cap_w12+(v12->>'wins')::numeric;
     end if;
-    raise notice 'V12 CORE % Y1 payroll $%M: V11 % OVR / % wins / %%% title -> V12 % OVR / % wins / %%% title',
+    raise notice 'V12 CORE % Y1 payroll $%M: V11 % OVR / % wins / % pct title -> V12 % OVR / % wins / % pct title',
       v_team,round(v_payroll/1000000,1),v11->>'teamOverall',v11->>'wins',v11->>'titleOdds',
       v12->>'teamOverall',v12->>'wins',v12->>'titleOdds';
   end loop;
@@ -102,7 +102,7 @@ begin
   v11:=private.nba_gm_v11_season(
     jsonb_set(v_state,'{simulationModelVersion}','11'::jsonb),1);
   v12:=private.nba_gm_v12_season(v_state,1);
-  raise notice 'V12 OWNER CONTENDER: V11 OVR % wins % title %%, V12 OVR % wins % title %%',
+  raise notice 'V12 OWNER CONTENDER: V11 OVR % wins % title % pct, V12 OVR % wins % title % pct',
     v11->>'teamOverall',v11->>'wins',v11->>'titleOdds',
     v12->>'teamOverall',v12->>'wins',v12->>'titleOdds';
 end;
