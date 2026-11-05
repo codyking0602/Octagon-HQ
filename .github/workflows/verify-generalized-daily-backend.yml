@@ -67,6 +67,8 @@ on:
       - "supabase/migrations/202612310098_reset_football_weekly_titles.sql"
       - "supabase/migrations/202612310099_football_daily_persisted_runtime.sql"
       - "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql"
+      - "supabase/migrations/202612310942_nba_daily_five_minute_prematerialization.sql"
+      - "supabase/tests/nba_daily_scheduler_prematerialization.sql"
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
       - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
       - "supabase/migrations/202612310164_sports_feud_daily_launch.sql"
@@ -268,6 +270,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/locked_three_sport_daily_cadence.sql
 
+      - name: Verify one NBA, Football, UFC and Picks canonical scheduler
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/nba_daily_scheduler_prematerialization.sql
+
       - name: Execute persisted Football Daily runtime proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_daily_persisted_runtime.sql
@@ -319,6 +325,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310098_reset_football_weekly_titles.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310099_football_daily_persisted_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310942_nba_daily_five_minute_prematerialization.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310160_daily_challenge_weekly_recap.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
