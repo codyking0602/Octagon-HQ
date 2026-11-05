@@ -1717,10 +1717,12 @@ Deno.serve(async (request) => {
       // pressure across UFC and Football; unpublished boards still publish.
       const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today");
 
-      // Prepublish tomorrow's immutable board before the Central midnight rollover.
-      // The +30 minute window accommodates DST without assuming a UTC offset.
+      // Prepublish Football twelve hours before Central rollover, giving the
+      // scheduler a recovery window before anyone is asked to play. UFC keeps
+      // its existing thirty-minute window. Never guess a UTC midnight offset.
       const now = new Date();
-      const soon = new Date(now.getTime() + 30 * 60 * 1000);
+      const leadMinutes = scheduledSport === "football" ? 12 * 60 : 30;
+      const soon = new Date(now.getTime() + leadMinutes * 60 * 1000);
       const centralDay = (date: Date) => {
         const parts = new Intl.DateTimeFormat("en-US", {
           timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
@@ -1730,10 +1732,21 @@ Deno.serve(async (request) => {
       };
       let nextDay: { central_day: string; created: boolean } | null = null;
       if (centralDay(now) !== centralDay(soon)) {
-        const next = scheduledSport === "football"
-          ? await materializeFootballToday(admin, soon.toISOString())
-          : await materializeToday(admin, soon.toISOString());
-        nextDay = { central_day: next.centralDay, created: next.created };
+        const upcoming = await admin.rpc("get_daily_challenge_materialization_request", {
+          p_sport: scheduledSport, p_at: soon.toISOString(),
+        });
+        if (upcoming.error) throw new Error("The next Football/UFC Daily publication identity is unavailable.");
+        const descriptor = requiredRecord(upcoming.data, "Next Daily publication identity");
+        if (descriptor.required === true) {
+          const next = scheduledSport === "football"
+            ? await materializeFootballToday(admin, soon.toISOString())
+            : await materializeToday(admin, soon.toISOString());
+          nextDay = { central_day: next.centralDay, created: next.created };
+        } else {
+          // Repeated five-minute scheduled checks must not rerun cutover and
+          // restoration SQL for a tomorrow-board already published in advance.
+          nextDay = { central_day: requiredString(descriptor.central_day, "Next Central day"), created: false };
+        }
       }
       return json({
         status: materialized.created ? "materialized" : "already_materialized",

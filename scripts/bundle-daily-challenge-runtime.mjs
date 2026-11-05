@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFile, rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "vite";
@@ -405,9 +405,75 @@ for (const bundle of bundles) {
         throw new Error(`${bundle.label} failed its deterministic smoke proof for ${smoke.gameType}.`);
       }
     }
+
+    // The canonical Higher or Lower generator builds a large factual pair pool.
+    // It is safe to run during CI, but exceeds the Supabase Edge CPU budget on
+    // first publication. Compile the ENTIRE locked six-month calendar at build
+    // time, carrying the same prior-board exclusion history across appearances.
+    // Edge imports only frozen JSON data, not the expensive question generator.
+    if (bundle.fileName === "football-higher-lower-publication.generated.mjs") {
+      const scheduleVersion = "football-daily-v22-higher-lower-oct27";
+      const anchorUtc = Date.UTC(2026, 9, 27);
+      const lastUtc = Date.UTC(2027, 3, 24);
+      const cycleLength = 28;
+      const higherLowerOffsets = [9, 24]; // Canonical V22 cycle, anchored Oct 27.
+      const frozenPublications = {};
+      let previousQuestions = [];
+      for (let cycle = 0; anchorUtc + cycle * cycleLength * 86_400_000 <= lastUtc; cycle += 1) {
+        for (const offset of higherLowerOffsets) {
+          const at = anchorUtc + (cycle * cycleLength + offset) * 86_400_000;
+          if (at > lastUtc) continue;
+          const day = new Date(at).toISOString().slice(0, 10);
+          const publication = generatedRuntime.buildFootballDailyPersistenceSetup(
+            day, scheduleVersion, "higher_lower", previousQuestions,
+          );
+          const questions = publication.privateSetupEvidence?.rounds?.flatMap(
+            (round) => round.private_setup_evidence?.board?.questions ?? [],
+          );
+          if (!Array.isArray(questions) || questions.length !== 20) {
+            throw new Error(`Higher or Lower prepublication ${day} did not produce 20 verified questions.`);
+          }
+          frozenPublications[day] = publication;
+          previousQuestions = [...previousQuestions, ...questions];
+        }
+      }
+      if (!frozenPublications["2026-11-05"]) {
+        throw new Error("The November 5 Football Daily Higher or Lower recovery board is missing.");
+      }
+      const lightweight = [
+        "// Canonical Higher or Lower boards compiled and validated during deployment.",
+        "// This private Edge module contains answers. Never serve it as a public asset.",
+        `const SCHEDULE_VERSION = ${JSON.stringify(scheduleVersion)};`,
+        `const FROZEN_PUBLICATIONS = ${JSON.stringify(frozenPublications)};`,
+        "export function buildFootballDailyPersistenceSetup(day, scheduleVersion, gameType) {",
+        '  if (gameType !== "higher_lower" || scheduleVersion !== SCHEDULE_VERSION) {',
+        '    throw new Error("Football Higher or Lower schedule identity does not match the compiled release.");',
+        "  }",
+        "  const publication = FROZEN_PUBLICATIONS[day];",
+        '  if (!publication) throw new Error("Football Higher or Lower day is not certified for this release.");',
+        "  return publication;",
+        "}",
+        "",
+      ].join("\n");
+      await writeFile(output, lightweight, "utf8");
+      const compiled = await import(
+        `${pathToFileURL(output).href}?compiled=${createHash("sha256").update(lightweight).digest("hex")}`
+      );
+      const restored = compiled.buildFootballDailyPersistenceSetup(
+        "2026-11-05", scheduleVersion, "higher_lower",
+      );
+      if (JSON.stringify(restored) !== JSON.stringify(frozenPublications["2026-11-05"])) {
+        throw new Error("The private Higher or Lower Edge artifact changed its canonical board.");
+      }
+      console.log(
+        `Compiled ${Object.keys(frozenPublications).length} locked Football Higher or Lower dates without Edge CPU generation.`,
+      );
+    }
   }
 
+  const deployedBundle = await readFile(output, "utf8");
+  const deployedDigest = createHash("sha256").update(deployedBundle).digest("hex");
   console.log(
-    `Generated canonical ${bundle.label} bundle ${digest} (${Buffer.byteLength(bundled).toLocaleString("en-US")} bytes).`,
+    `Generated canonical ${bundle.label} bundle ${deployedDigest} (${Buffer.byteLength(deployedBundle).toLocaleString("en-US")} bytes).`,
   );
 }

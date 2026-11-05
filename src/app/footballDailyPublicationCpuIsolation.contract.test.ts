@@ -48,4 +48,23 @@ describe("Football Daily publication CPU isolation", () => {
     expect(bundler).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
     expect(bundler).toContain("failed its deterministic smoke proof");
   });
+  it("precompiles the six-month Higher or Lower schedule and frozen answer evidence before deployment", () => {
+    expect(bundler).toContain('if (bundle.fileName === "football-higher-lower-publication.generated.mjs")');
+    expect(bundler).toContain("const higherLowerOffsets = [9, 24]");
+    expect(bundler).toContain("const lastUtc = Date.UTC(2027, 3, 24)");
+    expect(bundler).toContain("previousQuestions = [...previousQuestions, ...questions]");
+    expect(bundler).toContain('await writeFile(output, lightweight, "utf8")');
+    expect(bundler).toContain("without Edge CPU generation");
+    expect(bundler).toContain('frozenPublications["2026-11-05"]');
+    // No live request may import the massive canonical question-bank generator.
+    expect(bundler).toContain("FROZEN_PUBLICATIONS[day]");
+  });
+
+  it("starts Football prepublication twelve hours early and skips redundant tomorrow writes", () => {
+    expect(edge).toContain('const leadMinutes = scheduledSport === "football" ? 12 * 60 : 30;');
+    expect(edge).toContain('p_sport: scheduledSport, p_at: soon.toISOString()');
+    expect(edge).toContain("if (descriptor.required === true)");
+    expect(edge).toContain("nextDay = { central_day: requiredString(descriptor.central_day");
+  });
+
 });
