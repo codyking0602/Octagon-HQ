@@ -126,7 +126,12 @@ async function run() {
         body: JSON.stringify({ query: SQL, read_only: true }),
         signal: AbortSignal.timeout(15000),
       });
-      if (!response.ok) throw new Error(`Management SQL query returned HTTP ${response.status}`);
+      if (!response.ok) {
+        // Database query errors are diagnostic, never player data. Do not echo
+        // tokens or request headers. The plain HTTP code hid the first failure.
+        const details = (await response.text()).slice(0, 900).replace(/[\\r\\n]+/g, " ");
+        throw new Error(`Management SQL query returned HTTP ${response.status}: ${details || "no diagnostic body"}`);
+      }
       body = await response.json();
       break;
     } catch (error) {
