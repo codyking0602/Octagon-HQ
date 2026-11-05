@@ -9,21 +9,21 @@ All six authoritative player skills stay exactly as graded.
 
 | Skill | V12 use |
 |---|---|
-| Scoring | Position-aware scoring index plus primary and secondary scorer coverage; diminishing secondary credit |
+| Scoring | Position-aware scoring index, primary/secondary coverage and smoothly diminished individual tertiary usage value |
 | Shooting | Continuous five-man spacing; single traditional center discounted and overlapping poor shooters penalized |
-| Playmaking | Position-aware individual weight, plus first and second creators instead of guard passing expectations for all bigs |
+| Playmaking | Position-aware weights (center 15% vs PG 40%), first/second creators, and diminished overlapping tertiary creation |
 | Perimeter defense | Role-aware index; bounded exposure for multiple truly vulnerable PG/SG/SF defenders |
 | Interior defense | One paint anchor is valuable; a second adds less |
 | Rebounding | Frontcourt coverage adds offensive second-chance and defensive-possession value |
 
 The starter/bench weights remain .63/.50; the 75% offense and defense impact scale, five-season wins/OVR anchors, seeded playoff engine and 90%/3%/7% final grade remain. Role baselines replace flat offense 75 and defense 74.5. This does **not** grant all centers equal performance: weak centers still incur negative contributions.
 
-Year 2/3 optimizer retains exhaustive legal seven-slot assignment and the five-player talent sum, adding a small cohesion credit. Year-one drafted assignments are unchanged. Core talent must remain the principal driver.
+Year 2/3 optimizer retains exhaustive legal seven-slot assignment and the five-player talent sum, adding a small cohesion credit. Year-one drafted assignments are unchanged. Core talent must remain the principal driver: the lineup-fit credit is clamped to ±1.5 before applying its two-overall-point weight, so composition cannot displace a substantially better star.
 
 ## Preliminary paired simulation
 From the live 330-player catalog without editing any player or contract, **984 $175M position-legal seven-player fixtures** were sampled. Each fixture used the same seven players/roles under a reconstructed V11 model and an independently implemented V12 arithmetic proxy, excluding seeded season noise. It is **not** the optimized 2,160-draft V11 cohort, a complete three-season server action, or a regression on actual NBA player minutes.
 
-Raw V12-minus-V11 net shift: mean roughly **+6.01**, median roughly **+6.01**, 10th–90th percentiles **+4.05 to +7.89**. V12 therefore uses a **provisional 6.01-point intercept** (4.80 offense, 1.21 defense for grade presentation). In this intentionally broad, relatively weak sample:
+**The exploratory arithmetic proxy predates the later tertiary-usage weight refinement and must be rerun before calibration approval.** Raw initial V12-minus-V11 net shift: mean roughly **+6.01**, median roughly **+6.01**, 10th–90th percentiles **+4.05 to +7.89**. V12 therefore uses a **provisional 6.01-point intercept** (4.80 offense, 1.21 defense for grade presentation). In this intentionally broad, relatively weak sample:
 - Mean unseeded expected wins: **V11 32.47**, **V12 arithmetic proxy 32.62**.
 - 60-win frequency: **V11 1.63%**, **V12 arithmetic proxy 1.83%**.
 
