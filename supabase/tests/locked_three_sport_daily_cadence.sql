@@ -112,7 +112,7 @@ $test$;
 -- A repeated materialization must resolve one immutable board identity, while
 -- attempting to create an extra board on the intervening day fails closed.
 do $publication$
-declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false; v_fallback_rejected boolean:=false;
+declare v_first jsonb;v_retry jsonb;v_higher jsonb;v_higher_retry jsonb;v_rejected boolean:=false; v_fallback_rejected boolean:=false;
 begin
   v_first:=public.publish_daily_challenge_setup(
     date '2026-10-27','ufc-daily-v21-48h-oct25','sports_feud',
@@ -124,6 +124,27 @@ begin
     '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   if v_first->>'id' is null or v_first->>'id' is distinct from v_retry->>'id' then
     raise exception 'Daily publication retry created a different identity';
+  end if;
+  -- Regression for November 5: the frozen two-game Football Higher or Lower
+  -- board MUST be publishable; this failed in production with HTTP 503 even
+  -- after CPU-safe immutable publication artifacts were deployed.
+  v_higher:=public.publish_daily_challenge_setup(
+    date '2026-11-05','football-daily-v22-higher-lower-oct27','higher_lower',
+    'cadence-proof:football:higher-lower:2026-11-05',
+    'daily-two-game-average-v1:football-higher-lower-official-v1',
+    'daily-two-game-average-score-v1',
+    '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
+  v_higher_retry:=public.publish_daily_challenge_setup(
+    date '2026-11-05','football-daily-v22-higher-lower-oct27','higher_lower',
+    'cadence-proof:football:higher-lower:2026-11-05',
+    'daily-two-game-average-v1:football-higher-lower-official-v1',
+    'daily-two-game-average-score-v1',
+    '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
+  if v_higher->>'id' is null
+    or v_higher_retry->>'id' is distinct from v_higher->>'id'
+    or v_higher->>'scoring_version' <> 'daily-two-game-average-score-v1'
+  then
+    raise exception 'Football Higher or Lower two-game Daily publication or retry failed';
   end if;
   begin
     perform public.publish_daily_challenge_setup(
