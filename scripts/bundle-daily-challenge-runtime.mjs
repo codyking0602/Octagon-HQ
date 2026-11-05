@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFile, rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "vite";
@@ -405,6 +405,87 @@ for (const bundle of bundles) {
         throw new Error(`${bundle.label} failed its deterministic smoke proof for ${smoke.gameType}.`);
       }
     }
+  }
+
+
+  // Higher or Lower is intentionally generated with the complete factual
+  // universe and hundreds of thousands of potential pairs. Even its isolated
+  // Vite module burns the Edge CPU budget during a first-day cold start.
+  // Freeze the approved six-month publication calendar *at build time*; never
+  // import the expensive generator when a player opens an unpublished board.
+  if (bundle.fileName === "football-higher-lower-publication.generated.mjs") {
+    const source = await import(`${pathToFileURL(output).href}?canonical=${digest}`);
+    const rotationSource = await readFile(
+      resolve(repoRoot, "src/features/play/dailyChallengeRotation.ts"), "utf8",
+    );
+    const cycleMatch = rotationSource.match(
+      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \\t]*\\[([\\s\\S]*?)\\];/,
+    );
+    if (!cycleMatch) throw new Error("Approved Football Daily calendar cannot be read.");
+    const cycle = [...cycleMatch[1].matchAll(/"([a-z_]+)"/g)].map((match) => match[1]);
+    if (cycle.length !== 28 || cycle.filter((game) => game === "higher_lower").length !== 2) {
+      throw new Error("Approved Football Daily calendar changed: regenerate and re-audit Higher or Lower.");
+    }
+
+    const scheduleVersion = "football-daily-v22-higher-lower-oct27";
+    const anchor = Date.parse("2026-10-27T00:00:00Z");
+    const first = Date.parse("2026-11-05T00:00:00Z");
+    const last = Date.parse("2027-04-24T00:00:00Z");
+    const dayMs = 86_400_000;
+    const previouslySelectedQuestions = [];
+    const frozen = {};
+    for (let at = first; at <= last; at += dayMs) {
+      const game = cycle[((at - anchor) / dayMs) % cycle.length];
+      if (game !== "higher_lower") continue;
+      const day = new Date(at).toISOString().slice(0, 10);
+      const publication = source.buildFootballDailyPersistenceSetup(
+        day, scheduleVersion, game, previouslySelectedQuestions,
+      );
+      const rounds = publication?.privateSetupEvidence?.rounds;
+      if (!Array.isArray(rounds) || rounds.length !== 2) {
+        throw new Error(`Football Higher or Lower ${day} is missing its two frozen games.`);
+      }
+      for (const round of rounds) {
+        const questions = round?.private_setup_evidence?.board?.questions;
+        if (!Array.isArray(questions) || questions.length !== 10) {
+          throw new Error(`Football Higher or Lower ${day} lost its canonical question evidence.`);
+        }
+        previouslySelectedQuestions.push(...questions);
+      }
+      frozen[day] = publication;
+    }
+    if (!frozen["2026-11-05"] || Object.keys(frozen).length < 12) {
+      throw new Error("Football Higher or Lower has an incomplete six-month publication snapshot.");
+    }
+    const staticModule = [
+      "// Generated at deployment from the approved, audited Football Daily calendar.",
+      "// Do not import the full Football question bank on a live Edge request.",
+      `const frozen = ${JSON.stringify(frozen)};`,
+      "export function buildFootballDailyPersistenceSetup(day, scheduleVersion, gameType) {",
+      `  if (scheduleVersion !== ${JSON.stringify(scheduleVersion)} || gameType !== "higher_lower")`,
+      '    throw new Error("Football Higher or Lower publication schedule mismatch.");',
+      "  const publication = Object.prototype.hasOwnProperty.call(frozen, day) ? frozen[day] : null;",
+      '  if (!publication) throw new Error("Football Higher or Lower date is outside the audited frozen calendar.");',
+      "  return publication;",
+      "}",
+      "",
+    ].join("\\n");
+    await writeFile(output, staticModule);
+    // Check the exact artifact that Supabase deploys, not just the generator.
+    const deployedModule = await import(
+      `${pathToFileURL(output).href}?prebuilt=${createHash("sha256").update(staticModule).digest("hex")}`,
+    );
+    if (JSON.stringify(deployedModule.buildFootballDailyPersistenceSetup(
+      "2026-11-05", scheduleVersion, "higher_lower",
+    )) !== JSON.stringify(frozen["2026-11-05"])) {
+      throw new Error("Frozen Football Higher or Lower deployment artifact failed its live-date smoke.");
+    }
+    if (Buffer.byteLength(staticModule) >= 4_000_000) {
+      throw new Error("Frozen Football Higher or Lower publication is too large for Edge delivery.");
+    }
+    console.log(
+      `Prebuilt ${Object.keys(frozen).length} Football Higher or Lower dates with ${previouslySelectedQuestions.length} audited comparisons (${Buffer.byteLength(staticModule)} bytes).`,
+    );
   }
 
   console.log(
