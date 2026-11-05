@@ -71,6 +71,10 @@ begin
     v11:=private.nba_gm_v11_season(
       jsonb_set(v_state,'{simulationModelVersion}','11'::jsonb),1);
     v12:=private.nba_gm_v12_season(v_state,1);
+    if v_team=any(array['BOS','NYK','OKC','HOU','DEN','SAS']) then
+      raise notice 'V12 DEEP % lineup % / composition %',
+        v_team,v_best,private.nba_gm_v12_components(v_state,1,v_best);
+    end if;
     if (v11->>'wins')::integer+(v11->>'losses')::integer<>82
       or (v12->>'wins')::integer+(v12->>'losses')::integer<>82
       or (v12->>'teamOverall')::integer not between 70 and 99
