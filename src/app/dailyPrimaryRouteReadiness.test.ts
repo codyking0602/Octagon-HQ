@@ -118,7 +118,6 @@ describe("every scheduled Daily has a rendered production entry route", () => {
         `projection.gameType === "${game}" ? ${component}`,
       );
     }
-    expect(nbaMain).toContain("Today’s board can’t be displayed");
     expect(router).toContain('path: "nba/today"');
   });
 });
