@@ -17,6 +17,8 @@ on:
       - main
     paths:
       - ".github/workflows/deploy-cloudflare.yml"
+      - ".github/workflows/verify-live-frontend-delivery.yml"
+      - "scripts/verify-live-ufc-media-delivery.mjs"
       - "src/**"
       - "worker/**"
       - "public/**"
