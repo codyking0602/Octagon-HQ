@@ -1,4 +1,4 @@
-import { advanceFootballHigherLowerDailyRuntime } from "../footballHigherLowerDailyRuntime";
+import { advanceFootballHigherLowerDailyRuntime } from "../footballHigherLowerDailyEvaluation";
 import { advanceTwoGameDailyRuntime, isTwoGameDailyContext } from "../dailyTwoGameRuntime";
 import type { OfficialDailyRuntimeContext, OfficialDailyAdvanceResult } from "../todaysChallengeRuntime";
 function record(value: unknown) {
