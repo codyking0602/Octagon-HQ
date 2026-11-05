@@ -22,8 +22,8 @@ begin
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
 
   v_state:=public.nba_gm_dev_action('start');
-  if v_state->>'simulationModelVersion'<>'9' then
-    raise exception 'Expected current V9 simulation before trade parity test';end if;
+  if v_state->>'simulationModelVersion'<>'10' then
+    raise exception 'Expected current V10 simulation before trade parity test';end if;
   select id into v_id from private.football_gm_runs
     where profile_id=v_owner and game_version='nba-gm-dev-v2'
     order by updated_at desc limit 1;

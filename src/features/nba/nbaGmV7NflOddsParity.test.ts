@@ -40,7 +40,7 @@ describe("NBA GM V7 mirrors NFL's outcome curve without predetermining results",
     expect(sql).toContain("''simulationModelVersion'',7");
     expect(sql).toContain("simulationModelVersion''=''6'' then");
     expect(regression).toContain("V7 changed saved V%");
-    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9;");
+    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10;");
     expect(repository).toContain("z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9)");
   });
   it("shows current team OVR and title odds without excess breakdown while retaining V7 scoring history",()=>{
@@ -48,7 +48,7 @@ describe("NBA GM V7 mirrors NFL's outcome curve without predetermining results",
     expect(page).not.toContain("season.outcomeOdds&&<details");
     expect(page).not.toContain("VIEW PLAYOFF OUTCOME ODDS");
     expect(page).not.toContain("Finals Loss");
-    expect(page).toContain("graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9}");
+    expect(page).toContain("graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9||run.simulationModelVersion===10}");
     expect(final).toContain('season.teamOverall??Math.round((season.offense+season.defense)/2)');
     expect(final).not.toContain('?"OVR"');
     expect(repository).toContain('teamOverall:z.number().int().min(70).max(99).optional()');

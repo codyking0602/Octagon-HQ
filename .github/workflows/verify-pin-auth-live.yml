@@ -33,6 +33,11 @@ jobs:
 
       - name: Install WebKit browser harness
         run: |
+          # Reuse the proven backend WebKit workflow's Ubuntu mirror workaround.
+          # Azure's archive mirror can stall dependency downloads until timeout.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i 's#http://azure.archive.ubuntu.com/ubuntu#http://archive.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
+          fi
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps webkit
 
