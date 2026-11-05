@@ -33,8 +33,11 @@ begin
 
   v_def:=replace(v_def,v_old,v_new);
   v_def:=replace(v_def,v_lineup_old,v_lineup_new);
-  if position(v_old in v_def)>0 or position(v_lineup_old in v_def)>0 then
-    raise exception 'NBA V12 release candidate action replacement incomplete';end if;
+  if position(v_old in v_def)>0
+    or (length(v_def)-length(replace(v_def,
+        'private.nba_gm_v12_season_lineup(v_next,3)','')))
+        /length('private.nba_gm_v12_season_lineup(v_next,3)')<>2 then
+    raise exception 'NBA V12 candidate failed to activate both developed lineup paths';end if;
   execute v_def;
 end;
 $v12_candidate_action$;
