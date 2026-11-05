@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { buildFootballHigherLowerTwoGameDailyPublication, buildFootballHigherLowerDailyPublication, advanceFootballHigherLowerDailyRuntime } from "../footballHigherLowerDailyRuntime";
-import { advanceTwoGameDailyRuntime } from "../dailyTwoGameRuntime";
+import { buildFootballHigherLowerTwoGameDailyPublication, buildFootballHigherLowerDailyPublication, advanceFootballHigherLowerDailyRuntime } from "./footballHigherLowerDailyRuntime";
+import { advanceTwoGameDailyRuntime } from "./dailyTwoGameRuntime";
 import { advanceOfficialDailyGameRuntime as leanAdvance } from "./leanDaily/FootballHigherLowerAdvance";
 import type { OfficialDailyRuntimeContext } from "./todaysChallengeRuntime";
 
