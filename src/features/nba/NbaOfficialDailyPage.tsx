@@ -266,19 +266,6 @@ export function NbaOfficialDailyContent({ projection, advance, busy, onExit }: {
   if (handoff) return <DailyTwoGamePresentationIntermission projection={projection} busy={busy}
     onContinue={() => advance({ type: "next_game" }, { dedupeKey: "nba-wavelength-handoff:" + projection.id })} />;
   if (twoGame?.awaitingNext) return <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />;
-  // Scheduled mode with no renderer must be visible and recoverable, not
-  // an empty NBA Daily shell. The route coverage gate audits this list.
-  const renderedModes: readonly string[] = [
-    "average_fan", "sports_feud", "millionaire", "who_am_i",
-    "find_leader", "wavelength", "bar_trivia", "hit_the_number", "higher_lower",
-  ];
-  if (!renderedModes.includes(projection.gameType)) {
-    return <section className="nba-official-daily__message" role="alert">
-      <h2>Today’s board can’t be displayed</h2>
-      <p>Your official progress is safe. This game needs a supported presentation.</p>
-      <button type="button" onClick={onExit}>BACK TO NBA PLAY</button>
-    </section>;
-  }
   if (projection.gameType === "higher_lower" && twoGame?.complete && projection.officialAttempt) {
     return <DailyTwoGameLeaderboardResult projection={projection} sport="nba" resultDetail={{}} />;
   }
