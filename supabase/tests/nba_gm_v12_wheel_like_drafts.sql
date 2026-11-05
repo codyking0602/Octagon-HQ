@@ -15,7 +15,8 @@ declare
   ovr11 numeric:=0;ovr12 numeric:=0;
   n50_11 integer:=0;n50_12 integer:=0;n60_11 integer:=0;n60_12 integer:=0;
   min_delta integer:=999;max_delta integer:=-999;
-  v_player_score numeric;
+  min_seed integer;max_seed integer;min_picks jsonb;max_picks jsonb;
+  min_fit jsonb;max_fit jsonb;v_player_score numeric;
 begin
  if (select count(*) from private.nba_gm_dev_players)<>330
    then raise exception 'V12 wheel cohort catalog drift';end if;
@@ -82,8 +83,14 @@ begin
    if (v11->>'wins')::integer>=60 then n60_11:=n60_11+1;end if;
    if (v12->>'wins')::integer>=60 then n60_12:=n60_12+1;end if;
    v_win_delta:=(v12->>'wins')::integer-(v11->>'wins')::integer;
-   min_delta:=least(min_delta,v_win_delta);
-   max_delta:=greatest(max_delta,v_win_delta);
+   if v_win_delta<min_delta then
+     min_delta:=v_win_delta;min_seed:=k;min_picks:=v_picks;
+     min_fit:=private.nba_gm_v12_components(v_state,1,v_picks);
+   end if;
+   if v_win_delta>max_delta then
+     max_delta:=v_win_delta;max_seed:=k;max_picks:=v_picks;
+     max_fit:=private.nba_gm_v12_components(v_state,1,v_picks);
+   end if;
  end loop;
  if count_good<90 then
    raise exception 'Too few viable V12 wheel-like drafts: successful %, failed %',
@@ -93,6 +100,20 @@ begin
    round(wins11/count_good,2),round(ovr11/count_good,2),
    round(wins12/count_good,2),round(ovr12/count_good,2),
    n50_11,n50_12,n60_11,n60_12,min_delta,max_delta;
+ raise notice 'V12 WORST COMPOSITION seed % delta % / skill components % / starter lineup %',
+   min_seed,min_delta,min_fit,
+   (select jsonb_agg(jsonb_build_object('slot',e.value->>'slot',
+     'name',p.name,'shooting',p.skills->>'shooting','scoring',p.skills->>'scoring',
+     'playmaking',p.skills->>'playmaking','interiorD',p.skills->>'interiorDefense'))
+     from jsonb_array_elements(min_picks) e(value)
+     join private.nba_gm_dev_players p on p.id=e.value->>'playerId');
+ raise notice 'V12 BEST COMPOSITION seed % delta % / skill components % / starter lineup %',
+   max_seed,max_delta,max_fit,
+   (select jsonb_agg(jsonb_build_object('slot',e.value->>'slot',
+     'name',p.name,'shooting',p.skills->>'shooting','scoring',p.skills->>'scoring',
+     'playmaking',p.skills->>'playmaking','interiorD',p.skills->>'interiorDefense'))
+     from jsonb_array_elements(max_picks) e(value)
+     join private.nba_gm_dev_players p on p.id=e.value->>'playerId');
 end;
 $v12_wheel_cohort$;
 rollback;
