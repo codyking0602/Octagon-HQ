@@ -4,7 +4,7 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9),z.literal(10),z.literal(11)]).optional(),lineupModelVersion:z.literal(1).optional(),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9),z.literal(10),z.literal(11),z.literal(12)]).optional(),lineupModelVersion:z.union([z.literal(1),z.literal(2)]).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
@@ -12,6 +12,7 @@ const run=z.object({
   caps:z.tuple([z.number().int(),z.number().int(),z.number().int()]),
   results:z.array(z.object({season:z.number().int(),wins:z.number().int(),losses:z.number().int(),
     offense:z.number(),defense:z.number(),positionalFit:z.number(),finish:z.string(),
+    seasonPicks:z.array(z.object({slot,playerId:z.string().min(1)})).length(7).optional(),
     teamOverall:z.number().int().min(70).max(99).optional(),titleOdds:z.number().min(0).max(100).optional(),
     outcomeOdds:z.object({
       "Missed Playoffs":z.number().min(0).max(1),
