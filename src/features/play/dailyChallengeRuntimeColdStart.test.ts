@@ -180,7 +180,9 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(ufcPublisher).not.toContain('at ? { p_at: at } : {});');
     expect(runtime).toContain("...(at ? { p_at: at } : {})");
     expect(runtime).toContain('timeZone: "America/Chicago"');
-    expect(runtime).toContain("now.getTime() + 30 * 60 * 1000");
+    expect(runtime).toContain('const leadMinutes = scheduledSport === "football" ? 12 * 60 : 30;');
+    expect(runtime).toContain("now.getTime() + leadMinutes * 60 * 1000");
+    expect(runtime).toContain("if (descriptor.required === true)");
     expect(runtime).toContain("centralDay(now) !== centralDay(soon)");
     expect(runtime).toContain("await materializeFootballToday(admin, soon.toISOString())");
     expect(runtime).toContain("await materializeToday(admin, soon.toISOString())");
