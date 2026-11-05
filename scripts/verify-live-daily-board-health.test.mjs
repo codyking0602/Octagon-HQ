@@ -37,6 +37,22 @@ describe("production Daily 3-sport board health watchdog", () => {
     expect(result.ready[0]).toContain("higher_lower");
   });
 
+  it("preflights the next Football and UFC boards before midnight, not just after launch", () => {
+    expect(DAILY_HEALTH_QUERY).toContain("now() + interval '30 minutes'");
+    expect(DAILY_HEALTH_QUERY).toContain("time '23:35'");
+    const future = [
+      ...published,
+      { ...published[0], sport: "football_next", central_day: "2026-11-06" },
+      { ...published[1], sport: "ufc_next", central_day: "2026-11-06" },
+    ];
+    expect(evaluateDailyHealth(extractDailyHealthRows(future)).failures).toEqual([]);
+    const unpublished = future.map(row => row.sport === "football_next"
+      ? { ...row, required: "true", published_game: null, board_ready: false }
+      : row);
+    expect(evaluateDailyHealth(extractDailyHealthRows(unpublished)).failures)
+      .toEqual(["football_next 2026-11-06: higher_lower has not been published"]);
+  });
+
   it("catches any missed publication, game mismatch, missing scoring or blank board", () => {
     for (const patch of [
       { required: "true", published_game: null },
