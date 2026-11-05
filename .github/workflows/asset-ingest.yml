@@ -10,6 +10,12 @@ permissions:
   contents: write
   pull-requests: write
 
+# Serialize uploads on the same branch. Prior parallel runs raced on git push,
+# losing the later failure receipt with a non-fast-forward rejection.
+concurrency:
+  group: asset-ingest-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   ingest:
     if: github.actor != 'github-actions[bot]'
@@ -28,7 +34,7 @@ jobs:
       - name: Verify Football media processing offline
         run: python -m unittest scripts/test_football_editorial_assets.py
       - name: Verify UFC media processing and inventory reuse offline
-        run: python -m unittest scripts/test_asset_ingest_quality.py scripts/test_ufc_prep_asset_inventory.py
+        run: python -m unittest scripts/test_asset_ingest_quality.py scripts/test_ufc_prep_asset_inventory.py scripts/test_asset_ingest_push_retry.py
       - name: Process queued assets
         id: process
         shell: bash
@@ -113,7 +119,7 @@ jobs:
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
               git add -A -- .asset-ingest
               git commit -m "Retire rejected UFC asset manifests"
-              git push origin "HEAD:${GITHUB_REF_NAME}"
+              bash scripts/asset_ingest_push_retry.sh "$GITHUB_REF_NAME"
             fi
             echo "generated=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -127,7 +133,7 @@ jobs:
           git add -A -- public/assets/fighters .asset-ingest
           if [ -d public/assets/football ]; then git add -A -- public/assets/football; fi
           git commit -m "Generate verified sports editorial images"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          bash scripts/asset_ingest_push_retry.sh "$GITHUB_REF_NAME"
           echo "generated=true" >> "$GITHUB_OUTPUT"
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
