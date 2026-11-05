@@ -152,6 +152,15 @@ class AssetIngestQualityTests(unittest.TestCase):
             "64f29f5a3427f390edc15bc07e68b5064768ac36",
             VISUALLY_REJECTED_THUMB_BLOBS,
         )
+        # These three real generated WebP Git blob IDs were visually reviewed
+        # and rejected in UFC 334 asset PR #2458. No later preflight may certify
+        # their exact unchanged bytes as a clean fighter photograph.
+        for rejected in (
+            "980470d26bea70e9cf8e67363769986a20328005",
+            "23a9f2d38f63650da1ab0f68a6e72911e222ab2c",
+            "3869ee9959066e4f49c2c73f4d1dc94cdef30578",
+        ):
+            self.assertIn(rejected, VISUALLY_REJECTED_THUMB_BLOBS)
         self.assertEqual(len(expected), 40)
 
     def test_gradient_upper_publisher_panel_is_rejected_without_cleanup(self):
