@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateDailyPlayability } from "./check-three-sport-daily-playability.mjs";
+import { validateDailyPlayability, checkEdgeRuntimeReachable } from "./check-three-sport-daily-playability.mjs";
 
 const today = "2026-11-05";
 const good = (sport, game) => ({
@@ -73,4 +73,26 @@ test("fails closed on missing, duplicate, or unauthorized sport records", () => 
   assert.throws(() => validateDailyPlayability(rows), /duplicate or invalid sport/);
   rows[2].sport = "mlb";
   assert.throws(() => validateDailyPlayability(rows), /duplicate or invalid sport/);
+});
+
+test("checks the deployed Edge HTTP runtime without touching a player or game", async () => {
+  const calls = [];
+  const client = async (url, request) => {
+    calls.push({ url, request });
+    return { ok: true, json: async () => ({ deployment_sha: "live-deployment" }) };
+  };
+  await checkEdgeRuntimeReachable("rvbspcjvebgwqzssayts", client);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /functions\/v1\/daily-challenge-runtime$/);
+  assert.deepEqual(JSON.parse(calls[0].request.body), { mode: "deployment-info" });
+  await assert.rejects(
+    checkEdgeRuntimeReachable("rvbspcjvebgwqzssayts",
+      async () => ({ ok: false, status: 503 })),
+    /HTTP 503/,
+  );
+  await assert.rejects(
+    checkEdgeRuntimeReachable("rvbspcjvebgwqzssayts",
+      async () => ({ ok: true, json: async () => ({}) })),
+    /deployment identity/,
+  );
 });
