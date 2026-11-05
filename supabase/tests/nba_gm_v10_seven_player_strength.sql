@@ -115,11 +115,11 @@ begin
       v_score9,v_score10;
   end if;
   if (select count(*) from private.nba_gm_contract_candidates_2026_27)<>330
-    or position($needle$'simulationModelVersion',10,'lineupModelVersion',1$needle$
+    or position($needle$'simulationModelVersion',11,'lineupModelVersion',1$needle$
       in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
-    or position('jsonb_build_array(155000000,155000000,155000000)' in
+    or position('jsonb_build_array(175000000,175000000,175000000)' in
       pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0 then
-    raise exception 'V10 changed or lost game contract/cap/new-run boundary';
+    raise exception 'V10 saved game and V11 new-run contract/cap boundary drifted';
   end if;
 
   raise notice 'V10 original seven: V9 overall % and title %, V10 overall % and title %',

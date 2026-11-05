@@ -35,7 +35,7 @@ export interface NbaGmDevRun {
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3 | 4;
   /** Opt-in competitive impact/series model. Older owner runs stay on saved logic. */
-  simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10;
+  simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11;
   /** Automatic developed best-five lineups for new franchises only. */
   lineupModelVersion?: 1;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
@@ -80,7 +80,7 @@ export function nbaGmDevSeasonPicks(
   return nbaGmDevAssignRoster(saved.map(pick => pick.playerId), catalog, grades) ?? saved;
 }
 
-export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [155_000_000, 155_000_000, 155_000_000];
+export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [175_000_000, 175_000_000, 175_000_000];
 export const NBA_GM_DEV_SKILL_LABELS = {
   scoring: "Scoring", shooting: "Shooting", playmaking: "Playmaking",
   perimeterDefense: "Perimeter D", interiorDefense: "Interior D", rebounding: "Rebounding",

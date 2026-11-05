@@ -1,4 +1,4 @@
--- Public NBA GM V10 per-member lifecycle, preserving all historical V3/V4 contracts and scores. Transactional fixture; no production changes.
+-- Public NBA GM V11 per-member lifecycle, preserving all historical V3/V4 contracts and scores. Transactional fixture; no production changes.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
 do $$
@@ -33,7 +33,7 @@ begin
   end if;
   if v_state->>'version'<>'nba-gm-dev-v2' or v_state->>'economyVersion'<>'4'
     or v_state->>'phase'<>'draft'
-    or v_state->'caps' is distinct from '[155000000,155000000,155000000]'::jsonb
+    or v_state->'caps' is distinct from '[175000000,175000000,175000000]'::jsonb
     or v_state->>'pendingSlot' is not null then raise exception 'V4 owner start invalid'; end if;
   if (select count(*) from private.nba_gm_dev_players where verified_birth_date is not null)<>301
     then raise exception 'Age provenance must be exactly 301 verified birthdates'; end if;
@@ -192,15 +192,15 @@ begin
   if v_state->>'phase'<>'final' or jsonb_array_length(v_state->'results')<>3
     then raise exception 'Replacement did not permit full franchise completion'; end if;
 
-  -- Public V10: a second authenticated member can independently catalog/start.
+  -- Public V11: a second authenticated member can independently catalog/start.
   perform set_config('request.jwt.claim.sub',v_outsider::text,true);
   if jsonb_array_length(public.nba_gm_dev_catalog())<>330
      then raise exception 'NBA GM public member board unavailable'; end if;
   if public.nba_gm_dev_action('load') is not null
      then raise exception 'Public member could read another members saved franchise'; end if;
   v_state:=public.nba_gm_dev_action('start');
-  if v_state->>'simulationModelVersion'<>'10'
-     then raise exception 'NBA GM public members must start on calibrated V10'; end if;
+  if v_state->>'simulationModelVersion'<>'11'
+     then raise exception 'NBA GM public members must start on calibrated V11'; end if;
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
   if (public.nba_gm_dev_action('load')->>'seed')=v_state->>'seed'
      then raise exception 'Public member franchise polluted original owner run'; end if;

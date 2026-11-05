@@ -53,13 +53,16 @@ describe("NBA GM draft matches NFL Year 1 cap eligibility",()=>{
     expect(nbaGmDevCandidates(run,catalog).map(p=>p.id)).toContain("steph");
   });
 
-  it("allows an affordable Year 1 roster but rejects its Year 2/3 cap crisis in offseason",()=>{
+  it("preserves the $155M saved-run cap crisis while a new $175M run absorbs the same roster",()=>{
+    const legacyCaps=[155_000_000,155_000_000,155_000_000] as const;
     expect(nbaGmDevCanAdd(six,big,catalog,NBA_GM_DEV_CAPS,"draft")).toBe(true);
-    expect(nbaGmDevCanAdd(six,big,catalog,NBA_GM_DEV_CAPS,"offseason")).toBe(false);
+    expect(nbaGmDevCanAdd(six,big,catalog,legacyCaps,"offseason")).toBe(false);
+    expect(nbaGmDevCanAdd(six,big,catalog,NBA_GM_DEV_CAPS,"offseason")).toBe(true);
     const y1=catalog.reduce((sum,p)=>sum+p.salaries[0],0);
     const y2=catalog.reduce((sum,p)=>sum+p.salaries[1],0);
     expect(y1).toBeLessThan(NBA_GM_DEV_CAPS[0]);
-    expect(y2).toBeGreaterThan(NBA_GM_DEV_CAPS[1]);
+    expect(y2).toBeGreaterThan(legacyCaps[1]);
+    expect(y2).toBeLessThan(NBA_GM_DEV_CAPS[1]);
   });
 
   it("guards the server contract: reserved fillers and draft cap use Year 1 only",()=>{
