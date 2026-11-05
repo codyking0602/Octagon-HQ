@@ -1699,9 +1699,35 @@ Deno.serve(async (request) => {
         if (!NBA_DAILY_EDGE_RELEASE_READY) {
           return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA scheduled Daily is gated until release verification.");
         }
-        const materialized = await materializeNbaToday(admin);
-        return json({ status: materialized.created ? "materialized" : "already_materialized",
-          sport: "nba", ...materialized, deployment_sha: DEPLOYED_SOURCE_SHA });
+        // NBA runs every 48 hours, with an October-to-April regular-season
+        // release. Keep this in the EXISTING five-minute scheduler, not a
+        // duplicate publication job. On the last run before Central midnight,
+        // build the next immutable board before the first player opens it.
+        const now = new Date();
+        const soon = new Date(now.getTime() + 30 * 60 * 1000);
+        const centralDay = (date: Date) => {
+          const parts = new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+          }).formatToParts(date);
+          const value = (type: string) => parts.find(part => part.type === type)?.value ?? "";
+          return `${value("year")}-${value("month")}-${value("day")}`;
+        };
+        const today = centralDay(now);
+        const upcoming = centralDay(soon);
+        const inSeason = (day: string) => day >= "2026-10-29" && day <= "2027-04-11";
+        if (!inSeason(today) && !inSeason(upcoming)) {
+          return json({ status: "outside_nba_daily_season", sport: "nba", deployment_sha: DEPLOYED_SOURCE_SHA });
+        }
+        const materialized = inSeason(today) ? await materializeNbaToday(admin) : null;
+        let nextDay: { central_day: string; created: boolean } | null = null;
+        if (upcoming !== today && inSeason(upcoming)) {
+          const next = await materializeNbaToday(admin, soon.toISOString());
+          nextDay = { central_day: next.centralDay, created: next.created };
+        }
+        return json({
+          status: materialized ? (materialized.created ? "materialized" : "already_materialized") : "upcoming_prepublication",
+          sport: "nba", ...(materialized ?? {}), next_day: nextDay, deployment_sha: DEPLOYED_SOURCE_SHA,
+        });
       }
       if (scheduledSport !== "ufc" && scheduledSport !== "football") {
         return safeError(400, "INVALID_SPORT", "Scheduled daily materialization sport must be UFC or Football.");
