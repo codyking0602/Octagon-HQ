@@ -1,5 +1,5 @@
 -- V12 six-skill pilot: historical/legacy integrity and deterministic lineup composition.
--- No new public games are routed to V12 by this experiment.
+-- On the release branch, new runs opt in to V12; legacy V11 replay stays valid.
 begin;
 set local statement_timeout='180s';
 do $v12_pilot_test$
@@ -90,12 +90,12 @@ begin
      jsonb_set(v_state,'{simulationModelVersion}','11'::jsonb))
    then raise exception '90/3/7 final score drifted';end if;
 
- -- V12 is intentionally NOT the default; retain existing cap and V11 starts.
- if position($needle$'simulationModelVersion',11,'lineupModelVersion',1$needle$
+ -- Post-release, new starts must use V12 without changing $175M and V11 saves.
+ if position($needle$'simulationModelVersion',12,'lineupModelVersion',2$needle$
      in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
    or position('jsonb_build_array(175000000,175000000,175000000)'
      in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
-   then raise exception 'Experimental V12 must not change current public game';end if;
+   then raise exception 'V12 public release default or cap drifted';end if;
  raise notice 'V12 pilot: two limited big spacing %, one limited big spacing %, V11 % OVR, V12 % OVR',
    v_c_a->>'spacing',v_c_b->>'spacing',v_old->>'teamOverall',v_results->0->>'teamOverall';
 end;
