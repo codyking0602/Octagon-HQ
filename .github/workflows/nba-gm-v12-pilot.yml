@@ -30,7 +30,7 @@ jobs:
         uses: supabase/setup-cli@v3.0.1
         with:
           version: 2.109.1
-      - name: Fresh-database V11/V12 comparisons only
+      - name: Fresh-database V11/V12 comparisons and isolated release candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -44,7 +44,9 @@ jobs:
             supabase/tests/nba_gm_v12_competitive_cores.sql \
             supabase/tests/nba_gm_v12_175m_competitive_drafts.sql \
             supabase/tests/nba_gm_v12_wheel_like_drafts.sql \
-            supabase/tests/nba_gm_v12_six_skill_sensitivity.sql
+            supabase/tests/nba_gm_v12_six_skill_sensitivity.sql \
+            supabase/tests/nba_gm_v12_release_candidate_install.sql \
+            supabase/tests/nba_gm_v12_release_candidate_three_seasons.sql
           do
             echo "Executing V12 pilot: $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
