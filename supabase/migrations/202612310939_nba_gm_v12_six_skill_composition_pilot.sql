@@ -21,6 +21,7 @@ declare
   v_rim_top numeric:=0;v_rim_second numeric:=0;
   v_reb_pf numeric:=70;v_reb_c numeric:=70;
   v_poor_perim numeric:=0;v_spacing numeric;v_scoring numeric;
+  v_big_creator numeric:=0;
   v_playmaking numeric;v_rebounding numeric;v_interior numeric;v_perimeter numeric;
   v_count integer:=0;v_starters integer:=0;
   v_scorer_ranks numeric[];v_creator_ranks numeric[];
@@ -138,6 +139,12 @@ begin
         v_pass_second:=v_pass_top;v_pass_top:=v_pm;
       elsif v_pm>v_pass_second then v_pass_second:=v_pm;end if;
       if v_slot in ('PF','C') then
+        -- Exceptional passing bigs can act as offensive hubs without requiring
+        -- every conventional center to create like a point guard. A small
+        -- uncapped lineup bonus preserves elite 95+ passing when the usual
+        -- individual offensive rating is already at its role-specific cap.
+        v_big_creator:=greatest(v_big_creator,greatest(0,least(.65,
+          (v_pm-83)*(case when v_slot='C' then .045 else .026 end))));
         if v_id>=v_rim_top then
           v_rim_second:=v_rim_top;v_rim_top:=v_id;
         elsif v_id>v_rim_second then v_rim_second:=v_id;end if;
@@ -170,12 +177,13 @@ begin
   -- Multi-weak-link exposure, on top of individual perimeter grade, remains
   -- small and bounded; it is not V9's flat extra defensive tax.
   v_perimeter:=-greatest(0,least(.70,greatest(0,v_poor_perim-.45)*.32));
-  v_off_fit:=v_spacing+v_scoring+v_playmaking+.35*v_rebounding;
+  v_off_fit:=v_spacing+v_scoring+v_playmaking+v_big_creator+.35*v_rebounding;
   v_def_fit:=v_interior+v_perimeter+.65*v_rebounding;
   return jsonb_build_object(
     'off',v_off,'def',greatest(-9,least(6.25,v_def)),
     'offFit',v_off_fit,'defFit',v_def_fit,
     'spacing',v_spacing,'scoring',v_scoring,'playmaking',v_playmaking,
+    'eliteBigCreation',v_big_creator,
     'perimeterDefense',v_perimeter,'interiorDefense',v_interior,
     'rebounding',v_rebounding,'severeNonShooterLoad',v_sh_bad,
     'lineupFit',greatest(-1.5,least(1.5,v_off_fit+v_def_fit)));
