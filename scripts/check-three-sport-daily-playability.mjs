@@ -4,7 +4,13 @@ const SQL = `
 with sports(sport) as (
   values ('football'::text), ('ufc'::text), ('nba'::text)
 ), expected as (
-  select sport, public.get_daily_challenge_materialization_request(sport, now()) as request
+  select sport,
+    case when sport = 'nba'
+      and (now() at time zone 'America/Chicago')::date
+        not between date '2026-10-29' and date '2027-04-11'
+      then '{}'::jsonb
+      else public.get_daily_challenge_materialization_request(sport, now())
+    end as request
   from sports
 )
 select
