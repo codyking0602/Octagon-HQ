@@ -1,0 +1,8 @@
+{
+  "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4867356.png",
+  "destination": "public/assets/fighters/chris-duncan-thumb.webp",
+  "kind": "thumb",
+  "fighter_name": "Chris Duncan",
+  "official_headshot_reviewed": true,
+  "verified_espn_athlete_id": "4867356"
+}
