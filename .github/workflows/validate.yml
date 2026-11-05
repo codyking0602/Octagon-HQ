@@ -78,7 +78,7 @@ jobs:
         run: node scripts/probe-nba-cup-live.mjs
 
       - name: Verify UFC live-photo delivery safeguards offline
-        run: node --test scripts/verify-live-ufc-media-delivery.test.mjs
+        run: node --test scripts/verify-live-ufc-media-delivery.fixtures.mjs
 
       - name: Typecheck
         id: typecheck
