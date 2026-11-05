@@ -51,6 +51,30 @@ describe("daily challenge runtime bundle prerequisites", () => {
       expect(bundlerSource).toContain(`{ day: "${day}", gameType: "${game}" }`);
     }
   });
+  it("prebuilds every approved six-month Higher or Lower Daily rather than generating it on the Edge", () => {
+    const rotation = readFileSync(
+      resolve(process.cwd(), "src/features/play/dailyChallengeRotation.ts"),
+      "utf8",
+    );
+    const cycleSource = rotation.match(
+      /export const FOOTBALL_APPROVED_WEIGHTED_CYCLE:[^=]+=[ \\t]*\\[([\\s\\S]*?)\\];/,
+    );
+    expect(cycleSource).not.toBeNull();
+    const cycle = [...cycleSource![1]!.matchAll(/"([a-z_]+)"/g)].map((row) => row[1]);
+    expect(cycle).toHaveLength(28);
+    expect(cycle.map((game, index) => game === "higher_lower" ? index : -1).filter((index) => index >= 0)).toEqual([9, 24]);
+    expect(bundlerSource).toContain('if (bundle.fileName === "football-higher-lower-publication.generated.mjs")');
+    expect(bundlerSource).toContain('const scheduleVersion = "football-daily-v22-higher-lower-oct27";');
+    expect(bundlerSource).toContain('const first = Date.parse("2026-11-05T00:00:00Z");');
+    expect(bundlerSource).toContain('const last = Date.parse("2027-04-24T00:00:00Z");');
+    expect(bundlerSource).toContain("source.buildFootballDailyPersistenceSetup(");
+    expect(bundlerSource).toContain("previouslySelectedQuestions.push(...questions)");
+    expect(bundlerSource).toContain("await writeFile(output, staticModule)");
+    expect(bundlerSource).toContain("deployedModule.buildFootballDailyPersistenceSetup(");
+    expect(bundlerSource).toContain("Buffer.byteLength(staticModule) >= 4_000_000");
+    expect(bundlerSource).toContain('Object.prototype.hasOwnProperty.call(frozen, day)');
+  });
+
   it("executes every generated Football publication artifact before deployment can accept it", () => {
     expect(bundlerSource).toContain("pathToFileURL(output).href");
     expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
