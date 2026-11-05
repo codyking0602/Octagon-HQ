@@ -3,8 +3,9 @@
 // across Football, UFC and NBA, even if the Edge request returned HTTP 200.
 // Only board metadata is queried; player identities and answers stay private.
 import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
-export const DAILY_HEALTH_QUERY = String.raw\`
+export const DAILY_HEALTH_QUERY = String.raw`
 with target as (
   select sport, public.get_daily_challenge_materialization_request(sport, now()) as request
   from (values ('football'), ('ufc'), ('nba')) as s(sport)
@@ -44,7 +45,7 @@ select sport, request->>'central_day' as central_day,
     else true
   end as board_ready
 from board order by sport
-\`;
+`;
 
 export function extractDailyHealthRows(payload) {
   const rows = Array.isArray(payload) ? payload
@@ -64,20 +65,20 @@ export function evaluateDailyHealth(rows) {
   const failures = [];
   const ready = [];
   for (const row of rows) {
-    const label = \`\${row.sport} \${row.central_day || "unknown date"}\`;
+    const label = `${row.sport} ${row.central_day || "unknown date"}`;
     // NBA has a real offseason. Never demand a board outside its schedule.
     if (!row.expected_game) {
-      if (row.sport !== "nba") failures.push(\`\${label}: no active Daily schedule\`);
+      if (row.sport !== "nba") failures.push(`${label}: no active Daily schedule`);
       continue;
     }
     if (row.required !== "false" && row.required !== false) {
-      failures.push(\`\${label}: \${row.expected_game} has not been published\`);
+      failures.push(`${label}: ${row.expected_game} has not been published`);
     } else if (row.published_game !== row.expected_game || row.saved_game !== row.expected_game) {
-      failures.push(\`\${label}: published game does not match the approved schedule\`);
+      failures.push(`${label}: published game does not match the approved schedule`);
     } else if (!row.saved_scoring || row.board_ready !== true) {
-      failures.push(\`\${label}: published \${row.expected_game} is missing its playable board\`);
+      failures.push(`${label}: published ${row.expected_game} is missing its playable board`);
     } else {
-      ready.push(\`\${label}: \${row.expected_game}\`);
+      ready.push(`${label}: ${row.expected_game}`);
     }
   }
   return { failures, ready };
@@ -91,24 +92,24 @@ export async function checkLiveDailyHealth({
   if (!token || !/^[a-z0-9-]+$/.test(projectId ?? "")) {
     throw new Error("Daily health monitor is missing configured Supabase credentials.");
   }
-  const url = \`https://api.supabase.com/v1/projects/\${projectId}/database/query\`;
+  const url = `https://api.supabase.com/v1/projects/${projectId}/database/query`;
   const response = await fetcher(url, {
     method: "POST",
     headers: {
-      Authorization: \`Bearer \${token}\`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query: DAILY_HEALTH_QUERY, read_only: true }),
     signal: AbortSignal.timeout(20_000),
   });
   if (!response.ok) {
-    throw new Error(\`Daily health read-only database query failed (HTTP \${response.status}).\`);
+    throw new Error(`Daily health read-only database query failed (HTTP ${response.status}).`);
   }
   const rows = extractDailyHealthRows(await response.json());
   return evaluateDailyHealth(rows);
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === fileURLToPath(new URL(\`file://\${process.argv[1]}\`))) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   try {
     // One retry filters transient Management API failures without masking an
     // enduring broken Daily. The job still fails and triggers Actions alerts.
@@ -122,13 +123,13 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fileURLToPath(new URL(
       }
       await new Promise(resolve => setTimeout(resolve, 3000));
     }
-    for (const ready of result.ready) console.log(\`PASS: \${ready}\`);
+    for (const ready of result.ready) console.log(`PASS: ${ready}`);
     if (result.failures.length) throw new Error(result.failures.join("; "));
     console.log("PASS: all three live Daily sports are on schedule with playable public boards.");
   } catch (error) {
     // Deliberately never log access tokens, response payloads, grading
     // evidence, player data or any secret-bearing URL.
-    console.error(\`DAILY HEALTH ALERT: \${error.message}\`);
+    console.error(`DAILY HEALTH ALERT: ${error.message}`);
     process.exitCode = 1;
   }
 }
