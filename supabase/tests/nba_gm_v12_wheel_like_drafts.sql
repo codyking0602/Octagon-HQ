@@ -33,8 +33,9 @@ begin
      -- One uniformly pseudo-random team at a time; skip only teams with no
      -- position-legal, budget-feasible player, as production spin does.
      for v_team in
-       select distinct p.team_code from private.nba_gm_dev_players p
-       order by md5(p.team_code||':'||k::text||':'||round_no::text)
+       select t.team_code from
+         (select distinct team_code from private.nba_gm_dev_players) t
+       order by md5(t.team_code||':'||k::text||':'||round_no::text)
      loop
        select p.id,c.provisional_average_salary
        into v_id,v_salary
