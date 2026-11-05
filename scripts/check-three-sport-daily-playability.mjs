@@ -10,6 +10,7 @@ with sports(sport) as (
 select
   e.sport,
   e.request->>'central_day' as day,
+  (now() at time zone 'America/Chicago')::date::text as central_today,
   e.request->>'expected_game' as expected_game,
   e.request->>'published_game' as published_game,
   coalesce((e.request->>'required')::boolean, true) as required,
@@ -22,7 +23,8 @@ select
     and jsonb_typeof(s.private_grading_evidence)='object') as valid_setup,
   case when c.scoring_version = 'daily-two-game-average-score-v1' then (
     jsonb_typeof(s.public_setup->'rounds')='array'
-    and jsonb_array_length(s.public_setup->'rounds')=2
+    and case when jsonb_typeof(s.public_setup->'rounds')='array'
+      then jsonb_array_length(s.public_setup->'rounds')=2 else false end
     and jsonb_typeof(s.public_setup->'initial_state'->'active_round')='object'
   ) else true end as valid_two_game,
   case when c.game_type='higher_lower' then
@@ -62,9 +64,7 @@ export function validateDailyPlayability(rows) {
       continue;
     }
     const waitingForScheduler = row.required === true && Number(row.central_minutes) < 15
-      && day === new Intl.DateTimeFormat("en-CA", {
-        timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
-      }).format(new Date()).replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$1-$2");
+      && day === row.central_today;
     // The first scheduler invocation occurs shortly after Central midnight.
     // After the 15-minute grace window, missing publication is an incident.
     if (waitingForScheduler) {
