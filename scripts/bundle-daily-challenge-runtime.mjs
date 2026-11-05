@@ -362,6 +362,13 @@ for (const bundle of bundles) {
   });
 
   const bundled = await readFile(output, "utf8");
+  // Answer taps must stay CPU-safe too. Reimporting the candidate bank in an
+  // action-only module silently makes the second request fail after the board loads.
+  if (bundle.fileName === "football-higher-lower-advance.generated.mjs"
+    && Buffer.byteLength(bundled) >= 500_000) {
+    throw new Error("Football Higher or Lower answer runtime pulled in the heavy question bank.");
+  }
+
   for (const requiredExport of bundle.requiredExports) {
     if (!bundled.includes(requiredExport)) {
       throw new Error(`${bundle.label} bundle is missing ${requiredExport}.`);
