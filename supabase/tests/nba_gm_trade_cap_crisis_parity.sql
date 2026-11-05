@@ -22,8 +22,8 @@ begin
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
 
   v_state:=public.nba_gm_dev_action('start');
-  if v_state->>'simulationModelVersion'<>'10' then
-    raise exception 'Expected current V10 simulation before trade parity test';end if;
+  if v_state->>'simulationModelVersion'<>'11' or v_state->'caps' is distinct from '[175000000,175000000,175000000]'::jsonb then
+    raise exception 'New NBA GM start must use V11 with the approved $175M cap';end if;
   select id into v_id from private.football_gm_runs
     where profile_id=v_owner and game_version='nba-gm-dev-v2'
     order by updated_at desc limit 1;
@@ -41,6 +41,9 @@ begin
     jsonb_build_object('slot','BIG','playerId','nba-gm-draft-tristandasilva'));
   if private.nba_gm_v2_assign(v_roster) is null then
     raise exception 'Trade cap fixture lost valid positions';end if;
+  -- Protect the saved V10/$155M cap-crisis behavior separately from new starts.
+  v_state:=jsonb_set(jsonb_set(v_state,'{simulationModelVersion}','10'::jsonb),
+    '{caps}','[155000000,155000000,155000000]'::jsonb);
   v_state:=v_state||jsonb_build_object(
     'seed','nba-gm-nfl-trade-cap-parity',
     'phase','offseason','picks',v_roster,'yearOnePicks',v_roster,
@@ -84,9 +87,9 @@ begin
       x#>>'{}',v_year)),0) from
       jsonb_array_elements(coalesce(v_state->'displacedAssets','[]'::jsonb)) x);
     if v_year=2 then
-      v_over2:=greatest(0,v_spend-155000000);
+      v_over2:=greatest(0,v_spend-(v_state->'caps'->>1)::bigint);
     else
-      v_over3:=greatest(0,v_spend-155000000);
+      v_over3:=greatest(0,v_spend-(v_state->'caps'->>2)::bigint);
     end if;
   end loop;
   if v_over2<1 or v_over3<1
