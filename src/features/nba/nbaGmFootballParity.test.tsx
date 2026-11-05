@@ -93,10 +93,10 @@ describe("NBA GM private Football parity boundary",()=>{
     expect(sql).toContain("82-v_wins");
   });
   it("rejects a superstar overload but keeps seven legal NBA positions fillable",()=>{
-    expect(NBA_GM_DEV_CAPS).toEqual([155_000_000,155_000_000,155_000_000]);
+    expect(NBA_GM_DEV_CAPS).toEqual([175_000_000,175_000_000,175_000_000]);
     expect(nbaGmDevAssignRoster(picks.map(p=>p.playerId),players)).toHaveLength(7);
     expect(nbaGmDevSpend(picks,players)).toEqual([56e6,63e6,70e6]);
-    const expensive={...playerFixture,id:"star",salaries:[156e6,156e6,156e6] as const};
+    const expensive={...playerFixture,id:"star",salaries:[186e6,186e6,186e6] as const};
     expect(nbaGmDevCanAdd([],expensive,[...players,expensive],NBA_GM_DEV_CAPS)).toBe(false);
     expect(nbaGmDevCanAdd([],players[0]!,players,NBA_GM_DEV_CAPS)).toBe(true);
   });
