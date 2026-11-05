@@ -27,7 +27,7 @@ describe("NBA GM V10 seven-man rotation team strength",()=>{
     expect(migration).toContain("private.nba_gm_v10_final_score(p_state)");
     expect(migration).toContain("jsonb_build_array(155000000,155000000,155000000)");
     expect(migration).toContain("v_roster*.90+v_record*.03+v_playoff*.07");
-    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11;");
+    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;");
     expect(repository).toContain("z.literal(9),z.literal(10)");
     expect(page).toContain("graded={run.simulationModelVersion===6||run.simulationModelVersion===7||run.simulationModelVersion===8||run.simulationModelVersion===9||run.simulationModelVersion===10||run.simulationModelVersion===11}");
     expect(regression).toContain("v_score10 is distinct from v_score9");
