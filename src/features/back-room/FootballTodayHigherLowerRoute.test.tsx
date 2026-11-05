@@ -1,8 +1,36 @@
 import { readFileSync } from "node:fs";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { OfficialTodayChallengeContent } from "../play/OfficialTodayChallengePage";
+import FootballTodayChallengePage from "./FootballTodayChallengePage";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
+
+// Exercise the actual /football/today page with a live-shaped Supabase
+// projection. A source-only check missed this outage before launch.
+const runtime = vi.hoisted(() => ({
+  projection: null as unknown,
+  advance: vi.fn(),
+  refresh: vi.fn(),
+}));
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: () => ({
+    status: "ready",
+    profile: { id: "11111111-1111-4111-8111-111111111111" },
+    openDialog: vi.fn(),
+  }),
+}));
+vi.mock("../play/useTodayChallengeRuntime", () => ({
+  useTodayChallengeRuntime: () => ({
+    projection: runtime.projection,
+    busy: false, loading: false, error: null, configured: true,
+    advance: runtime.advance, refresh: runtime.refresh,
+  }),
+}));
+vi.mock("../impostor/hqImpostorSchedule", () => ({
+  hqImpostorV1Window: () => ({ active: false }),
+  hqImpostorDailyGateRequired: () => false,
+}));
 
 function question(index: number) {
   return {
@@ -67,6 +95,24 @@ describe("Football HQ Higher or Lower primary Daily route", () => {
     expect(branch).toBeLessThan(legacyFallback);
     expect(source.slice(branch, legacyFallback)).toContain("<OfficialTodayChallengeContent");
     expect(source).toContain('import { OfficialTodayChallengeContent }');
+  });
+
+  it("renders the actual Football HQ Daily route with a playable question", () => {
+    runtime.projection = projection();
+    runtime.advance.mockClear();
+    render(
+      <MemoryRouter initialEntries={["/football/today"]}>
+        <Routes>
+          <Route path="/football/today" element={<FootballTodayChallengePage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("heading", { name: "HIGHER OR LOWER" })).toBeInTheDocument();
+    expect(screen.getByText("GAME 1 OF 2")).toBeInTheDocument();
+    expect(screen.getByText("Kyler Murray")).toBeInTheDocument();
+    expect(screen.getByText("Cam Newton")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "HIGHER" }));
+    expect(runtime.advance).toHaveBeenCalledWith({ choice: "higher" }, undefined);
   });
 
   it("renders the first stored question and submits through the canonical server action", () => {
