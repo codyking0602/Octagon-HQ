@@ -77,6 +77,16 @@ const GAME_LABELS = {
   higher_lower: "HIGHER OR LOWER",
 } as const;
 
+// Keep the legacy Football renderer limited to modes that actually draw a
+// board there. Unhandled future games must never silently show empty chrome.
+function footballTodayHasLegacyBoard(gameType: TodayChallengeProjection["gameType"]): boolean {
+  return gameType === "find_leader"
+    || gameType === "blind_resume"
+    || gameType === "blind_rank_5"
+    || gameType === "keep_4_cut_4"
+    || gameType === "hit_the_number";
+}
+
 type JsonRecord = Record<string, unknown>;
 type PublicItem = Pick<FootballRankFiveItem, "id" | "name" | "subtitle" | "league">;
 
@@ -1097,6 +1107,18 @@ export default function FootballTodayChallengePage() {
             <p className="game-action-status" role="status">{shareStatus}</p>
           </div>
         ) : null}
+      </div>
+    );
+  }
+
+  if (!footballTodayHasLegacyBoard(projection.gameType)) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell" role="alert">
+          <h2>Today’s board can’t be displayed</h2>
+          <p>Your progress is safe. Refresh the game to retry the official board.</p>
+          <button type="button" onClick={() => void dailyRuntime.refresh()}>REFRESH OFFICIAL GAME</button>
+        </section>
       </div>
     );
   }
