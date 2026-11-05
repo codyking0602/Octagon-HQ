@@ -35,7 +35,7 @@ describe("every scheduled Daily has a rendered production entry route", () => {
       "utf8",
     );
     const allowlist = publisher.match(
-      /p_game_type in \\(([^)]*)\\)\\s+and p_scoring_version = 'daily-two-game-average-score-v1'/,
+      /p_game_type in \(([^)]*)\)\s+and p_scoring_version = 'daily-two-game-average-score-v1'/,
     );
     expect(allowlist).not.toBeNull();
     const sqlTypes = [...allowlist![1]!.matchAll(/'([a-z_]+)'/g)].map(match => match[1]);
