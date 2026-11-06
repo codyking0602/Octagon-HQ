@@ -43,7 +43,7 @@ describe("NBA GM public V8 launch boundaries",()=>{
     expect(migration).toContain("simulationModelVersion'',8");
     expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8");
     expect(repository).toContain("z.literal(8)");
-    expect(page).toContain("run.simulationModelVersion===8");
+    expect(page).toContain("run.simulationModelVersion>=7");
     expect(final).toContain("season.teamOverall??Math.round((season.offense+season.defense)/2)");
   });
   it("keeps the one-screen offseason compact and final recap continuity",()=>{
