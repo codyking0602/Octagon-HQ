@@ -8,6 +8,7 @@ declare
   v_name text; v_picks jsonb; v_state jsonb;
   v_12c jsonb;v_13c jsonb;v_12 jsonb;v_13 jsonb;
   v_results jsonb; v_year integer;v_score jsonb;
+  v_first12 jsonb;v_first13 jsonb;
   v_delta numeric;v_overall_delta integer;v_sum numeric:=0;
   v_count integer:=0;v_improved integer:=0;v_max numeric:=0;
 begin
@@ -17,7 +18,7 @@ begin
   if position($needle$'simulationModelVersion',13,'lineupModelVersion',2$needle$
       in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
     then raise exception 'V13 new-franchise default missing';end if;
-  if position('simulationModelVersion'',12' in
+  if position('return private.nba_gm_v12_season' in
       pg_get_functiondef('private.nba_gm_v2_season(jsonb,integer)'::regprocedure))=0
     or position('nba_gm_v13_season' in
       pg_get_functiondef('private.nba_gm_v2_season(jsonb,integer)'::regprocedure))=0
@@ -89,6 +90,7 @@ begin
         or (v_13->>'teamOverall')::integer not between 70 and 99
         then raise exception 'V13/V12 exact version routing or output failed % Y%',v_name,v_year;end if;
       v_results:=v_results||jsonb_build_array(v_13);
+      if v_year=1 then v_first12:=v_12;v_first13:=v_13;end if;
       if v_year=1 then
         v_overall_delta:=(v_13->>'teamOverall')::integer-(v_12->>'teamOverall')::integer;
         if v_overall_delta>7 or v_overall_delta<(-3) then
@@ -101,8 +103,8 @@ begin
       or v_score->'weights' is distinct from '[0.9,0.03,0.07]'::jsonb
       then raise exception 'V13 90/3/7 final score dispatch failed for %',v_name;end if;
     raise notice 'V13 matched % offense delta % / Y1 OVR delta % / Y1 wins V12 % V13 % / title odds V12 % V13 % / final score %',
-      v_name,round(v_delta,2),v_overall_delta,v_12->>'wins',v_13->>'wins',
-      v_12->>'titleOdds',v_13->>'titleOdds',v_score->>'score';
+      v_name,round(v_delta,2),v_overall_delta,v_first12->>'wins',v_first13->>'wins',
+      v_first12->>'titleOdds',v_first13->>'titleOdds',v_score->>'score';
   end loop;
   -- Same 150 historical opponents for 30 present-day team cores.
   -- These are calibration fixtures, not claims that 2026 rosters are past champions.
