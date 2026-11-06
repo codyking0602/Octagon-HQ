@@ -82,13 +82,13 @@ begin
     or v_score11->'weights' is distinct from '[0.9,0.03,0.07]'::jsonb
     then raise exception 'V11 GM 90/3/7 changed: % versus %',
       v_score11,v_score10;end if;
-  if position($needle$'simulationModelVersion',12,'lineupModelVersion',2$needle$
+  if position($needle$'simulationModelVersion',13,'lineupModelVersion',2$needle$
       in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
     or position('jsonb_build_array(175000000,175000000,175000000)'
       in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
     or position($needle$'repriceModelVersion',2$needle$
       in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
-    then raise exception 'V11 saved-run replay / V12 new-start cap-contract gate drifted';end if;
+    then raise exception 'V11 saved-run replay / V13 new-start cap-contract gate drifted';end if;
   raise notice 'V11 owner benchmark: V10 % OVR / %%% title, V11 % / %%%',
     v_v10->>'teamOverall',v_v10->>'titleOdds',
     v_v11->>'teamOverall',v_v11->>'titleOdds';

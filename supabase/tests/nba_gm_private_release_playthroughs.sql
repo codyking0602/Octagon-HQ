@@ -72,6 +72,8 @@ begin
     v_state:=public.nba_gm_dev_action('start');
     v_seed:=v_state->>'seed';
     if v_state->>'economyVersion'<>'4' or
+       v_state->>'simulationModelVersion'<>'13' or
+       v_state->'caps' is distinct from '[175000000,175000000,175000000]'::jsonb or
        v_state->>'developmentModelVersion'<>'2' then
       raise exception 'Release playthrough did not use opt-in V4 model';end if;
     for v_round in 1..7 loop
@@ -108,12 +110,15 @@ begin
       (select count(*) from jsonb_object_keys(coalesce(v_state->'development','{}'::jsonb)))<>7
       then raise exception 'Development not resolved for %',v_name;end if;
 
-    -- A cap crisis must be recoverable, not trap a real player in offseason.
+    -- Use this franchise's authoritative cap ($175M for V13), rather
+    -- than a legacy $155M ceiling that can force impossible releases.
+    -- A genuine cap crisis must be recoverable in the offseason.
     for v_attempt in 1..5 loop
       select coalesce(sum(private.nba_gm_v3_salary(v_state,pick->>'playerId',2)),0),
              coalesce(sum(private.nba_gm_v3_salary(v_state,pick->>'playerId',3)),0)
         into v_year2,v_year3 from jsonb_array_elements(v_state->'picks') pick;
-      exit when v_year2<=155000000 and v_year3<=155000000 and
+      exit when v_year2<=(v_state->'caps'->>1)::bigint
+        and v_year3<=(v_state->'caps'->>2)::bigint and
         jsonb_array_length(v_state->'picks')=7;
       if jsonb_array_length(v_state->'picks')=7 then
         v_found:=false;
@@ -151,7 +156,8 @@ begin
     select coalesce(sum(private.nba_gm_v3_salary(v_state,pick->>'playerId',2)),0),
            coalesce(sum(private.nba_gm_v3_salary(v_state,pick->>'playerId',3)),0)
       into v_year2,v_year3 from jsonb_array_elements(v_picks) pick;
-    if v_year2>155000000 or v_year3>155000000 then
+    if v_year2>(v_state->'caps'->>1)::bigint
+       or v_year3>(v_state->'caps'->>2)::bigint then
       raise exception 'Unresolved cap % Yr2 % Yr3 %',v_name,v_year2,v_year3; end if;
     v_state:=public.nba_gm_dev_action('advance');
     if v_state->>'phase'<>'final' or

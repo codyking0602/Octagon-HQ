@@ -199,8 +199,8 @@ begin
   if public.nba_gm_dev_action('load') is not null
      then raise exception 'Public member could read another members saved franchise'; end if;
   v_state:=public.nba_gm_dev_action('start');
-  if v_state->>'simulationModelVersion'<>'12'
-     then raise exception 'NBA GM public members must start on calibrated V12'; end if;
+  if v_state->>'simulationModelVersion'<>'13'
+     then raise exception 'NBA GM public members must start on calibrated V13'; end if;
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
   if (public.nba_gm_dev_action('load')->>'seed')=v_state->>'seed'
      then raise exception 'Public member franchise polluted original owner run'; end if;
