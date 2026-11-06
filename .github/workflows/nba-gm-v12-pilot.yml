@@ -45,8 +45,8 @@ jobs:
             supabase/tests/nba_gm_v12_175m_competitive_drafts.sql \
             supabase/tests/nba_gm_v12_wheel_like_drafts.sql \
             supabase/tests/nba_gm_v12_six_skill_sensitivity.sql \
-            supabase/tests/nba_gm_v12_release_candidate_install.sql \
-            supabase/tests/nba_gm_v12_release_candidate_three_seasons.sql
+            supabase/tests/nba_gm_v13_superstar_calibration.sql \
+            supabase/tests/nba_gm_v13_full_action.sql
           do
             echo "Executing V12 pilot: $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
