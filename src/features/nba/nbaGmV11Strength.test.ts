@@ -14,8 +14,8 @@ describe("NBA GM V11 new-run $175M and five-season skill calibration",()=>{
     expect(migration).toContain("'simulationModelVersion',11,'lineupModelVersion',1");
     expect(migration).toContain("jsonb_build_array(175000000,175000000,175000000)");
     expect(repository).toContain("z.literal(10),z.literal(11)");
-    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;");
-    expect(page).toContain("run.simulationModelVersion===11");
+    expect(model).toContain("simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;");
+    expect(page).toContain("run.simulationModelVersion>=7");
     expect(regression).toContain("public.nba_gm_dev_action(text,text,text)");
   });
   it("recalculates strength/side grades but preserves saved V9 and V10 runs",()=>{
