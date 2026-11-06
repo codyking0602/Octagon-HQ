@@ -92,8 +92,18 @@ begin
      jsonb_set(v_state,'{simulationModelVersion}','11'::jsonb))
    then raise exception '90/3/7 final score drifted';end if;
 
- -- Post-release, new starts must use V12 without changing $175M and V11 saves.
- if position($needle$'simulationModelVersion',12,'lineupModelVersion',2$needle$
+ -- Post-release, new starts must use V13 without changing $175M and V11 saves.
+ if position($needle
+     in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
+   or position('jsonb_build_array(175000000,175000000,175000000)'
+     in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
+   then raise exception 'V13 public release default or cap drifted';end if;
+ raise notice 'V12 pilot: two limited big spacing %, one limited big spacing %, V11 % OVR, V12 % OVR',
+   v_c_a->>'spacing',v_c_b->>'spacing',v_old->>'teamOverall',v_results->0->>'teamOverall';
+end;
+$v12_pilot_test$;
+rollback;
+simulationModelVersion',13,'lineupModelVersion',2$needle$
      in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
    or position('jsonb_build_array(175000000,175000000,175000000)'
      in pg_get_functiondef('public.nba_gm_dev_action(text,text,text)'::regprocedure))=0
