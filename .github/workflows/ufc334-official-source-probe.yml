@@ -90,3 +90,4 @@ jobs:
             git commit -m "Stage UFC official fighter source originals for visual review only"
             git push origin HEAD:prep/ufc334-source-probe-20261107
           fi
+# Round two WebP readback from regenerated UFC 334 Spotlight photos.
