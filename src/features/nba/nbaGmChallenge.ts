@@ -3,6 +3,8 @@ import type { NbaGmDevRun } from "./nbaGmDevModel";
 
 /** A compact, immutable snapshot of the server-scored franchise. */
 export function nbaGmChallengeResult(run: NbaGmDevRun): ChallengeJson | null {
+  // Current NBA GM scoring is V13. Do not invite a new V13 opponent to beat a legacy score.
+  if (run.simulationModelVersion !== 13) return null;
   if (run.phase !== "final" || !run.scoreBreakdown || run.results.length !== 3) return null;
   return {
     score: run.scoreBreakdown.score,
