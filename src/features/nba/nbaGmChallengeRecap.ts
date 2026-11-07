@@ -67,9 +67,9 @@ export function nbaGmChallengeInsights(side: NbaGmChallengeSide) {
 
 export function nbaGmDevelopmentLabel(delta: number | null | undefined) {
   if (delta == null) return "UNRECORDED";
-  if (delta >= 3.5) return "BREAKOUT";
+  if (delta >= 3) return "BREAKOUT";
   if (delta >= .85) return "IMPROVED";
-  if (delta <= -3.5) return "MAJOR REGRESSION";
+  if (delta <= -2.5) return "MAJOR REGRESSION";
   if (delta <= -.85) return "REGRESSED";
   return "HELD STEADY";
 }
