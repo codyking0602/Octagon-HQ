@@ -220,7 +220,7 @@ function ComposerDialog({
 
         <p className="challenge-dialog__status" role="status">{status}</p>
         <footer>
-          <button type="button" disabled={busy} onClick={() => void shareExternally()}>TEXT / SHARE LINK</button>
+          {draft.gameId !== "gm-nba" && <button type="button" disabled={busy} onClick={() => void shareExternally()}>TEXT / SHARE LINK</button>}
           <button type="button" className="primary-action" disabled={!recipient || busy} onClick={() => void sendToProfile()}>
             {busy ? "SENDING…" : "SEND TO PROFILE"}
           </button>
@@ -276,7 +276,9 @@ function ResultsDialog({
           <div>
             <p className="eyebrow">CHALLENGE RESULTS</p>
             <h2 id="challenge-results-title">{challenge.gameTitle}</h2>
-            <p>Both profiles completed the exact same challenge.</p>
+            <p>{challenge.gameId === "gm-nba"
+              ? "Both GMs completed independent franchises under the same salary cap and scoring model."
+              : "Both profiles completed the exact same challenge."}</p>
           </div>
           <button type="button" className="challenge-dialog__close" aria-label="Close challenge results" onClick={onClose}>×</button>
         </header>
