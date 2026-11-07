@@ -227,14 +227,43 @@ def visible_subject_box(im):
     return solid.getbbox()
 
 
-def source_looks_clipped(im, kind):
+def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
+    """Allow an individually reviewed UFC profile's natural three-quarter finish.
+
+    The official 460x700 transparent athlete_bio_full_body portrait ends at the
+    thighs/waist by design. This is not a missing or reconstructed limb. Unlike
+    cropped editorial JPEGs, an original reviewed three-quarter UFC cutout is
+    legitimate Spotlight art. Require the exact source URL reviewed by an owner
+    and the source to be resolved from that fighter's official UFC profile.
+    """
+    parsed = urlparse(source_url)
+    page = urlparse(str(spec.get("source_page_url") or ""))
+    expected_slug = re.sub(r"[^a-z0-9]+", "-", str(spec.get("fighter_name") or "").lower()).strip("-")
+    return (
+        spec.get("kind") == "spotlight"
+        and spec.get("official_ufc_three_quarter_reviewed") is True
+        and spec.get("verified_source_url") == source_url
+        and parsed.scheme == "https"
+        and parsed.hostname in {"ufc.com", "www.ufc.com"}
+        and re.fullmatch(r"/images/styles/athlete_bio_full_body/s3/20[0-9]{2}-[0-9]{2}/[A-Za-z0-9_.-]+[.]png", parsed.path) is not None
+        and page.scheme == "https"
+        and page.hostname in UFC_PROFILE_HOSTS
+        and page.path.strip("/") == f"athlete/{expected_slug}"
+        and im.size == (460, 700)
+        and im.getchannel("A").getextrema()[0] == 0
+        and not source_needs_background_removal(im)
+        and not source_publisher_band(im)
+    )
+
+
+def source_looks_clipped(im, kind, allow_reviewed_three_quarter=False):
     """A subject touching the source boundary cannot be restored by padding it."""
     alpha = im.getchannel("A")
     width, height = im.size
     top = alpha.crop((0, 0, width, 1))
     if sum(value >= 48 for value in top.getdata()) > max(3, width * 0.08):
         return "top of fighter is clipped by the source photo"
-    if kind == "spotlight":
+    if kind == "spotlight" and not allow_reviewed_three_quarter:
         bottom = alpha.crop((0, height - 1, width, height))
         if sum(value >= 48 for value in bottom.getdata()) > max(3, width * 0.32):
             return "bottom of fighter is clipped by the source photo"
@@ -747,6 +776,11 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
 
+    reviewed_three_quarter = (
+        reviewed_ufc_three_quarter_spotlight(spec, source_url, im)
+        if kind == "spotlight" else False
+    )
+
     if kind == "thumb":
         if not approved_square_thumb_source(spec, source_url, im.size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
@@ -773,7 +807,7 @@ def ingest_fighter_candidate(spec, kind, dest, size):
             fail("spotlight is a placeholder/silhouette")
 
     im = im.crop(crop_box(im, spec.get("crop")))
-    clipping = source_looks_clipped(im, kind)
+    clipping = source_looks_clipped(im, kind, allow_reviewed_three_quarter=reviewed_three_quarter)
     if clipping:
         fail(clipping)
 

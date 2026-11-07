@@ -18,6 +18,7 @@ from scripts.asset_ingest import (
     remove_horizontal_publisher_strips,
     trim_thumb_publisher_edge_halos,
     source_looks_clipped,
+    reviewed_ufc_three_quarter_spotlight,
     upper_side_background_band,
     validate_asset_quality,
     require_clean_original_thumb,
@@ -409,6 +410,35 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertEqual(source_looks_clipped(image, "thumb"), "")
         cropped = image.crop((0, 55, 160, 480))
         self.assertIn("top", source_looks_clipped(cropped, "thumb"))
+
+    def test_reviewed_official_ufc_three_quarter_source_keeps_natural_bust_crop(self):
+        source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((155, 20, 305, 180), fill=(174, 124, 90, 255))
+        draw.polygon([(135, 195), (325, 195), (390, 699), (70, 699)],
+                     fill=(45, 62, 90, 255))
+        url = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-06/HOKIT_JOSH_L_06-14.png?itok=example"
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Josh Hokit",
+            "source_page_url": "https://www.ufc.com/athlete/josh-hokit",
+            "verified_source_url": url,
+            "official_ufc_three_quarter_reviewed": True,
+        }
+        self.assertTrue(reviewed_ufc_three_quarter_spotlight(spec, url, source))
+        self.assertIn("bottom", source_looks_clipped(source, "spotlight"))
+        self.assertEqual(source_looks_clipped(
+            source, "spotlight", allow_reviewed_three_quarter=True), "")
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "official_ufc_three_quarter_reviewed": False}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "verified_source_url": url + "-other"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "source_page_url": "https://www.ufc.com/athlete/other-fighter"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "kind": "thumb"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            spec, "https://ufc.com/news/cropped-portrait.jpg", source))
 
     def test_spotlight_source_bottom_cutoff_is_detected(self):
         cropped = fake_fighter().crop((0, 0, 160, 180))
