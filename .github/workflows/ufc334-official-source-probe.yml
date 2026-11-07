@@ -53,6 +53,34 @@ jobs:
             backdrop.alpha_composite(im)
             backdrop.convert('RGB').save(dest/(name+'-onwhite.png'))
           PY
+      - uses: actions/checkout@v4
+        with:
+          ref: prep/ufc334-official-7-fighter-assets-20261107
+          path: generated-assets
+      - name: Decode produced WebP files with Pillow and composite against white
+        shell: bash
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          dest=Path('.ufc334-source-probe')
+          for slug,kind in [('luis-gurule','thumb'),('charles-radtke','thumb'),
+                            ('chris-duncan','thumb'),('ciryl-gane','spotlight'),
+                            ('josh-hokit','spotlight'),('kayla-harrison','spotlight'),
+                            ('amanda-nunes','spotlight')]:
+            path=Path('generated-assets/public/assets/fighters')/(slug+'-'+kind+'.webp')
+            if not path.exists():
+              print('MISSING WEBP',slug,kind,flush=True)
+              continue
+            im=Image.open(path).convert('RGBA')
+            back=Image.new('RGBA',im.size,(255,255,255,255))
+            back.alpha_composite(im)
+            back.convert('RGB').save(dest/(slug+'-'+kind+'-render-onwhite.png'))
+            a=im.getchannel('A')
+            for xy in [(im.width-30,im.height//3),(im.width-30,im.height//2),
+                       (im.width//2,im.height//3),(im.width//12,im.height//3)]:
+              print('WEBP',slug,kind,'pixel',xy,'rgba',im.getpixel(xy),flush=True)
+          PY
       - name: Commit source-review originals to disposable probe branch only
         run: |
           git config user.name "github-actions[bot]"
