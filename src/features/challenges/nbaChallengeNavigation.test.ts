@@ -18,6 +18,11 @@ describe("NBA matchup navigation", () => {
     expect(challengePlayRoute(match)).toBe("/nba/hit-the-number?seed=original&match=ABC123");
   });
 
+  it("routes an NBA GM invitation to the franchise screen, not NFL GM", () => {
+    expect(challengePlayRoute(nbaChallenge("gm-nba", "nba-gm-v13", "/nba/gm")))
+      .toBe("/nba/gm?match=ABC123");
+  });
+
   it("preserves all existing NBA matchup routes", () => {
     expect(challengePlayRoute(nbaChallenge("who-am-i", "nba-who-am-i-v1", "/nba/who-am-i")))
       .toBe("/nba/who-am-i?match=ABC123");
