@@ -1620,3 +1620,10 @@
   .nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary > strong { font-size:23px; }
   .nba-gm-team-fit__inline-summary .nba-gm-team-fit__primary > .nba-gm-team-fit__tier { font-size:8px; padding:3px 4px; }
 }
+
+/* The challenge action follows the final franchise recap and remains full-width on phones. */
+.nba-gm-dev__challenge-cta{width:100%;min-height:52px;font-size:14px;letter-spacing:.025em}
+.nba-gm-dev__result-secondary{width:100%;min-height:46px;font-size:12px;border-radius:10px}
+.nba-gm-dev__challenge-banner{display:grid;gap:4px;padding:12px 14px;border:1px solid #6a573f;background:#211e1a;border-radius:12px}
+.nba-gm-dev__challenge-banner strong{font-size:12px;color:#f9bd78;letter-spacing:.08em}
+.nba-gm-dev__challenge-banner span{font-size:12px;color:#ced7e1;line-height:1.5}
