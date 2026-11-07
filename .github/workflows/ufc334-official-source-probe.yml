@@ -49,6 +49,9 @@ jobs:
               print('SOURCE',name,url,'size',im.size,'boundary',border,'fill>=48',round(fill,3),flush=True)
             out=dest/(name+'.png')
             im.save(out)
+            backdrop=Image.new('RGBA',im.size,(255,255,255,255))
+            backdrop.alpha_composite(im)
+            backdrop.convert('RGB').save(dest/(name+'-onwhite.png'))
           PY
       - name: Commit source-review originals to disposable probe branch only
         run: |
