@@ -438,6 +438,48 @@ jobs:
           FRONTEND_DELIVERY_DELAY_MS: 5000
         run: node scripts/verify-live-frontend-delivery.mjs
 
+      - name: Verify approved UFC 334 thumbnails match deployed bytes
+        shell: bash
+        env:
+          OCTAGON_PRODUCTION_ORIGIN: ${{ env.OCTAGON_PRODUCTION_URL }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import crypto from "node:crypto";
+          const origin = process.env.OCTAGON_PRODUCTION_ORIGIN.replace(/\/$/, "");
+          for (const slug of ["yousri-belgaroui", "cesar-almeida"]) {
+            const path = `assets/fighters/${slug}-thumb.webp`;
+            const expected = fs.readFileSync(`dist/${path}`);
+            if (expected.length < 1024 || expected.toString("ascii", 0, 4) !== "RIFF"
+              || expected.toString("ascii", 8, 12) !== "WEBP") {
+              throw new Error(`Invalid bundled UFC image: ${path}`);
+            }
+            let confirmed = false;
+            for (let attempt = 1; attempt <= 4; attempt++) {
+              try {
+                const response = await fetch(`${origin}/${path}?ufc334-verify=${attempt}`, {
+                  signal: AbortSignal.timeout(15000),
+                  headers: { "Cache-Control": "no-cache" },
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const actual = Buffer.from(await response.arrayBuffer());
+                if (actual.length !== expected.length
+                  || !crypto.timingSafeEqual(crypto.createHash("sha256").update(actual).digest(),
+                    crypto.createHash("sha256").update(expected).digest())) {
+                  throw new Error("live image differs from reviewed repository asset");
+                }
+                console.log(`Verified UFC 334 thumbnail: ${path}, ${actual.length} matching bytes`);
+                confirmed = true;
+                break;
+              } catch (error) {
+                console.warn(`UFC 334 thumbnail attempt ${attempt} for ${path}: ${error.message}`);
+                if (attempt < 4) await new Promise((resolve) => setTimeout(resolve, 3000));
+              }
+            }
+            if (!confirmed) throw new Error(`UFC 334 image is not verifiably deployed: ${path}`);
+          }
+          NODE
+
       - name: Validate legacy Octagon redirect Worker bundle
         if: env.SOURCE_PR_NUMBER == '0' && github.ref == 'refs/heads/main'
         shell: bash
