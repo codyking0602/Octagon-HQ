@@ -747,6 +747,7 @@ export default function NbaGmDevPage(){
           {receivingChallenge&&nbaGmCanSubmitChallenge(profileMatch.challenge,run,acceptedChallengeSeed)&&
             <button type="button" className="nba-gm-dev__secondary nba-gm-dev__result-secondary"
               onClick={()=>void retryChallengeSubmission()}>RESEND CHALLENGE SCORE</button>}
+          {run.scoreBreakdown&&!nbaGmChallengeResult(run)&&<p className="nba-gm-dev__notice">Complete a new NBA GM run to challenge a friend on the current scoring model.</p>}
           {nbaGmChallengeResult(run)&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__challenge-cta"
             onClick={()=>void challengeFriend()}>CHALLENGE A FRIEND TO BEAT YOUR SCORE</button>}
           <button type="button" className="nba-gm-dev__secondary nba-gm-dev__result-secondary" disabled={busy}
