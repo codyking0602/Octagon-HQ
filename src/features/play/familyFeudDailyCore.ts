@@ -9,6 +9,7 @@ import {
   FAMILY_FEUD_RAW_MAX,
   FAMILY_FEUD_STRIKES_PER_BOARD,
   assertFamilyFeudPack,
+  normalizeFamilyFeudInput,
   createFamilyFeudState,
   familyFeudScore,
   submitFamilyFeudFastMoneyAnswer,
@@ -456,6 +457,78 @@ function hydrateNbaBirdmanAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
   };
 }
 
+/**
+ * Known factual and semantic omissions in the November 6 NFL Feud boards.
+ * A published setup is immutable: only add eligible unranked candidates and
+ * explicit synonyms at grading time. Never alter its ranked ladder or proof.
+ * The same fix applies if either board is drawn again in a future Daily.
+ */
+export function hydrateFootballFeudFairAnswers(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "football") return pack;
+  const additions: Readonly<Record<string, ReadonlyArray<{
+    name: string; kind: FamilyFeudPack["entities"][number]["kind"]; aliases?: readonly string[];
+  }>>> = {
+    "nfl-feud-r2-main-career-100-sacks": [
+      // Official NFL career sacks (since 1982): Lawrence Taylor 132.5.
+      { name: "Lawrence Taylor", kind: "person", aliases: ["L.T.", "LT"] },
+      { name: "Richard Dent", kind: "person" },
+      { name: "John Abraham", kind: "person" },
+      { name: "Leslie O'Neal", kind: "person" },
+      { name: "Rickey Jackson", kind: "person" },
+      { name: "Derrick Thomas", kind: "person" },
+      { name: "Dwight Freeney", kind: "person" },
+      { name: "Robert Mathis", kind: "person" },
+      { name: "Simeon Rice", kind: "person" },
+      { name: "Clyde Simmons", kind: "person" },
+      { name: "Sean Jones", kind: "person" },
+    ],
+    "nfl-main-11-1": [
+      { name: "Cowboys-Giants", kind: "other",
+        aliases: ["Cowboys Giants", "Giants Cowboys", "Dallas Cowboys New York Giants",
+          "New York Giants Dallas Cowboys", "Dallas Giants", "Dallas Cowboys vs New York Giants"] },
+      { name: "Patriots-Giants", kind: "other",
+        aliases: ["Patriots Giants", "Giants Patriots", "New England Giants",
+          "New England Patriots vs New York Giants", "New York Giants New England Patriots"] },
+      { name: "Jets-Giants", kind: "other",
+        aliases: ["Jets Giants", "Giants Jets", "New York Jets New York Giants",
+          "New York Giants New York Jets", "New York Jets vs New York Giants"] },
+    ],
+  };
+  const entities = pack.entities.map((entity) => ({ ...entity }));
+  let changed = false;
+  const mainBoards = pack.mainBoards.map((board) => {
+    const needed = additions[board.id];
+    if (!needed) return board;
+    const candidateIds = [...board.candidateIds];
+    const alsoAcceptedEntityIds = [...(board.alsoAcceptedEntityIds ?? [])];
+    for (const item of needed) {
+      // Reuse existing identity when a later published pack already has it.
+      const existing = entities.find((entity) => candidateIds.includes(entity.id)
+        && normalizeFamilyFeudInput(entity.displayName) === normalizeFamilyFeudInput(item.name));
+      if (existing) {
+        if (item.aliases?.length) {
+          existing.aliases = [...new Set([...(existing.aliases ?? []), ...item.aliases])];
+          changed = true;
+        }
+        continue;
+      }
+      let suffix = 1;
+      let entityId = `${board.id}:fair${suffix}`;
+      while (entities.some((entity) => entity.id === entityId)) {
+        suffix += 1;
+        entityId = `${board.id}:fair${suffix}`;
+      }
+      entities.push({ id: entityId, displayName: item.name, kind: item.kind,
+        aliases: item.aliases ?? [] });
+      candidateIds.push(entityId);
+      alsoAcceptedEntityIds.push(entityId);
+      changed = true;
+    }
+    return { ...board, candidateIds, alsoAcceptedEntityIds };
+  });
+  return changed ? { ...pack, entities, mainBoards } : pack;
+}
+
 export type FamilyFeudEntityMetadataLookup = (
   id: string,
   displayName: string,
@@ -485,7 +558,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack)));
+  const corrected = hydrateFootballFeudFairAnswers(hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack))));
   assertFamilyFeudPack(corrected);
   return corrected;
 }
