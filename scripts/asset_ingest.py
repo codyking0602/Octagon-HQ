@@ -251,8 +251,6 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
         and page.path.strip("/") == f"athlete/{expected_slug}"
         and im.size == (460, 700)
         and im.getchannel("A").getextrema()[0] == 0
-        and not source_needs_background_removal(im)
-        and not source_publisher_band(im)
     )
 
 
@@ -788,21 +786,27 @@ def ingest_fighter_candidate(spec, kind, dest, size):
             fail("thumbnail source cannot be cropped or background-removed")
         require_clean_original_thumb(im)
     else:
-        if source_needs_background_removal(im):
-            try:
-                im = remove(im).convert("RGBA")
-            except Exception as exc:
-                fail(f"spotlight background removal failed: {exc}")
-            if im.getchannel("A").getextrema() == (255, 255):
-                fail("spotlight background removal produced no transparency")
-        if spec.get("force_background_removal"):
-            try:
-                im = remove(im).convert("RGBA")
-            except Exception as exc:
-                fail(f"spotlight second background removal failed: {exc}")
-        im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-        if inset_side_background_panels(im) or upper_side_background_band(im):
-            fail("spotlight cutout retains publisher panels")
+        if reviewed_three_quarter:
+            # These exact manually reviewed UFC profile PNGs are clean cutouts.
+            # Re-segmentation/strip erasure can remove true belt and arm pixels.
+            if spec.get("force_background_removal") or spec.get("crop"):
+                fail("reviewed UFC portrait must not be resegmented or cropped")
+        else:
+            if source_needs_background_removal(im):
+                try:
+                    im = remove(im).convert("RGBA")
+                except Exception as exc:
+                    fail(f"spotlight background removal failed: {exc}")
+                if im.getchannel("A").getextrema() == (255, 255):
+                    fail("spotlight background removal produced no transparency")
+            if spec.get("force_background_removal"):
+                try:
+                    im = remove(im).convert("RGBA")
+                except Exception as exc:
+                    fail(f"spotlight second background removal failed: {exc}")
+            im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+            if inset_side_background_panels(im) or upper_side_background_band(im):
+                fail("spotlight cutout retains publisher panels")
         if image_looks_like_silhouette(im):
             fail("spotlight is a placeholder/silhouette")
 
@@ -829,7 +833,7 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         canvas = Image.new("RGBA", size, (0, 0, 0, 0))
         canvas.alpha_composite(fitted, ((size[0] - fitted.width) // 2,
                                          max(top_pad, size[1] - fitted.height)))
-        im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(canvas))
+        im = canvas if reviewed_three_quarter else remove_horizontal_publisher_strips(remove_flat_side_backgrounds(canvas))
         im = im.filter(ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2))
     else:
         # Pure fit onto a transparent tile: preserve original fighter pixels.

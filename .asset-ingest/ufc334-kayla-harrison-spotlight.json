@@ -1,0 +1,10 @@
+{
+  "kind": "spotlight",
+  "fighter_name": "Kayla Harrison",
+  "source_page_url": "https://www.ufc.com/athlete/kayla-harrison",
+  "verified_source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-06/HARRISON_KAYLA_L_BELTMOCK.png?itok=goxu4s1i",
+  "official_ufc_three_quarter_reviewed": true,
+  "destination": "public/assets/fighters/kayla-harrison-spotlight.webp",
+  "replace_existing": true,
+  "replacement_reason": "Official source visually clean; trial processor damaged real arm/belt pixels with publisher-strip removal, regenerate without cleanup."
+}

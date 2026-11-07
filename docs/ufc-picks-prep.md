@@ -142,3 +142,14 @@ editorial photos, top-of-head cuts, publisher rectangles, silhouettes,
 unreviewed URLs, and every nonmatching image. UFC 334 Gane, Hokit, Harrison and
 Nunes originals were individually inspected from UFC athlete pages on
 November 7. No synthesized body, limb or face reconstruction is allowed.
+
+
+**Clean-source handling:** Preserve individually reviewed official transparent
+three-quarter UFC portraits directly, fitting and sharpening without applying
+rembg or publisher-strip erasers. The original Gane/Hokit/Harrison/Nunes PNGs
+were visually checked on white backgrounds. The first generated Spotlights
+showed horizontal damage from overly aggressive publisher cleanup, and the
+Hokit output was rejected by a false publisher panel alarm. These first
+outputs are not approved. The exact verified original URLs and matching UFC
+athlete pages are mandatory. Every regenerated transparent WebP still
+requires independent output visual review, exact-head CI and live delivery.
