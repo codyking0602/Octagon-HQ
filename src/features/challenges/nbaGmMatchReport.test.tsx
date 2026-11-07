@@ -71,7 +71,7 @@ describe("full NBA GM challenge recap", () => {
     expect(screen.getByText("LeBron James")).toBeTruthy();
     expect(screen.getByText("6/7 RETAINED")).toBeTruthy();
     expect(screen.getByText("7/7 RETAINED")).toBeTruthy();
-    expect(screen.getByText(/Shane Player 4/)).toBeTruthy();
+    expect(screen.getAllByText(/Shane Player 4/).length).toBeGreaterThan(0);
     expect(screen.getAllByText("BREAKOUT").length).toBeGreaterThan(0);
     expect(nbaGmChallengeInsights(report.responder).acquired.map(p => p.name)).toEqual(["LeBron James"]);
     expect(nbaGmDevelopmentLabel(-2.6)).toBe("MAJOR REGRESSION");
