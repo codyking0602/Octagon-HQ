@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
+import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
+import { nbaGmCanSubmitChallenge, nbaGmChallengeResult, nbaGmChallengeStorageKey } from "./nbaGmChallenge";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import { nbaGmDevelopmentOutcome } from "./NbaGmDevelopmentReport";
@@ -181,9 +184,32 @@ function NbaGmSeasonReveal({run,onReveal}:{run:NbaGmDevRun;onReveal:()=>void}){
 }
 export default function NbaGmDevPage(){
   const identity=useIdentity();
+  const challenges=usePlayChallenges();
+  const profileMatch=useProfileChallengeMatch("gm-nba");
   const signedIn=Boolean(identity.profile?.id);
   const repo=useMemo(()=>createNbaGmDevRepository(),[]);
   const [run,setRun]=useState<NbaGmDevRun|null>(null);
+  const [acceptedChallengeSeed,setAcceptedChallengeSeed]=useState("");
+  const submittedChallengeRef=useRef("");
+  useEffect(()=>{
+    const code=profileMatch.challenge?.code;
+    const profileId=identity.profile?.id;
+    if(!code||!profileId){setAcceptedChallengeSeed("");return;}
+    try{setAcceptedChallengeSeed(window.localStorage.getItem(nbaGmChallengeStorageKey(profileId,code))??"");}
+    catch{setAcceptedChallengeSeed("");}
+  },[identity.profile?.id,profileMatch.challenge?.code]);
+  // A challenge result is tied to the fresh run started for this invitation.
+  // Never submit a prior solo result that was already present on this profile.
+  useEffect(()=>{
+    const challenge=profileMatch.challenge;
+    if(!profileMatch.isRecipient||!nbaGmCanSubmitChallenge(challenge,run,acceptedChallengeSeed))return;
+    const submissionKey=challenge!.code+":"+run!.seed;
+    if(submittedChallengeRef.current===submissionKey)return;
+    const result=nbaGmChallengeResult(run!);
+    if(!result)return;
+    submittedChallengeRef.current=submissionKey;
+    void challenges.submitResult(challenge!.code,result);
+  },[profileMatch.challenge,profileMatch.isRecipient,run,acceptedChallengeSeed,challenges.submitResult]);
   const [catalog,setCatalog]=useState<NbaGmDevPlayer[]>([]);
   const [loading,setLoading]=useState(true);
   const [busy,setBusy]=useState(false);
@@ -252,6 +278,45 @@ export default function NbaGmDevPage(){
       setError(failure instanceof Error?failure.message:"Action rejected by the server.");
     } finally{setBusy(false);}
   }
+  async function startIncomingChallenge(){
+    if(!profileMatch.challenge||!profileMatch.isRecipient||busy)return;
+    if(run&&run.phase!=="final"&&!window.confirm("Starting this challenge replaces your unfinished NBA GM franchise. Continue?"))return;
+    const started=await act("start");
+    if(!started)return;
+    const profileId=identity.profile?.id;
+    if(profileId){
+      try{window.localStorage.setItem(nbaGmChallengeStorageKey(profileId,profileMatch.challenge.code),started.seed);}catch{ /* Run remains active on this device. */ }
+    }
+    setAcceptedChallengeSeed(started.seed);
+    submittedChallengeRef.current="";
+    window.scrollTo({top:0,behavior:"instant"});
+  }
+
+  async function challengeFriend(){
+    if(!run||run.phase!=="final")return;
+    const result=nbaGmChallengeResult(run);
+    if(!result)return;
+    const modelVersion=run.simulationModelVersion??0;
+    await challenges.beginChallenge({
+      gameId:"gm-nba",
+      gameVersion:"nba-gm-v"+modelVersion,
+      gameTitle:"NBA GM",
+      summary:"NBA · Three seasons · $175M cap · one offseason",
+      setup:{modelVersion,cap:run.caps[0],rosterSlots:[...NBA_GM_ROSTER_SLOTS]},
+      creatorResult:result,
+      shareTitle:"NBA GM Challenge",
+      shareText:"I scored "+run.scoreBreakdown!.score.toFixed(1)+" in The GM. Build a seven-player NBA franchise over three seasons and see if you can beat me.",
+      shareUrl:new URL("/nba/gm",window.location.origin).toString(),
+    });
+  }
+
+  async function retryChallengeSubmission(){
+    const challenge=profileMatch.challenge;
+    if(!challenge||!nbaGmCanSubmitChallenge(challenge,run,acceptedChallengeSeed)||!run)return;
+    const result=nbaGmChallengeResult(run);
+    if(result)await challenges.submitResult(challenge.code,result);
+  }
+
   async function chooseTradeTarget(playerId:string){
     if(!repo||offersBusy)return;
     setTradeTarget(playerId);setOffersBusy(true);setTradeOfferError("");setTradeOffers([]);
@@ -477,6 +542,36 @@ export default function NbaGmDevPage(){
           <button className="nba-gm-dev__secondary" disabled={busy||offersBusy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER · END TALKS</button>
         </div>
   </section>:null;
+  const receivingChallenge=Boolean(profileMatch.challenge&&profileMatch.isRecipient
+    &&profileMatch.challenge.responderResult===null&&!profileMatch.challenge.declinedAt);
+  const mustStartChallenge=receivingChallenge&&(!run||run.seed!==acceptedChallengeSeed);
+  if(profileMatch.code&&signedIn&&challenges.loading&&!profileMatch.challenge){
+    return <main className="page nba-gm-dev"><section className="nba-gm-dev__panel">Loading your NBA GM challenge…</section></main>;
+  }
+  if(profileMatch.code&&signedIn&&!challenges.loading&&!profileMatch.challenge){
+    return <main className="page nba-gm-dev"><section className="nba-gm-dev__panel">
+      <strong>CHALLENGE UNAVAILABLE</strong><p>This matchup could not be found for your HQ profile.</p>
+      <Link to="/nba/play">BACK TO BASKETBALL GAMES</Link>
+    </section></main>;
+  }
+  if(mustStartChallenge&&!loading){
+    return <main className="page nba-gm-dev" data-testid="nba-gm-challenge-invitation">
+      <section className="nba-gm-dev__panel nba-gm-dev__intro">
+        <strong>NBA GM · HEAD TO HEAD</strong>
+        <h2>{profileMatch.creator?.displayName??"AN HQ MEMBER"} CHALLENGED YOU.</h2>
+        <p>Build your own seven-player NBA franchise under the same salary cap and scoring model. Your opponent's score and the winner are revealed after you complete all three seasons.</p>
+        {run&&run.phase!=="final"&&<p className="nba-gm-dev__notice">Starting this challenge replaces your current unfinished NBA GM run.</p>}
+        {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
+    {receivingChallenge&&run?.seed===acceptedChallengeSeed&&
+      <section className="nba-gm-dev__challenge-banner" role="status">
+        <strong>NBA GM CHALLENGE IN PROGRESS</strong><span>Finish your three seasons to compare scores with {profileMatch.creator?.displayName??"your opponent"}.</span>
+      </section>}
+        <button type="button" className="nba-gm-dev__primary" disabled={busy||catalog.length!==330}
+          onClick={()=>void startIncomingChallenge()}>{busy?"STARTING…":"ACCEPT · START CHALLENGE"}</button>
+        <Link to="/nba/play">BACK TO MATCHUPS</Link>
+      </section>
+    </main>;
+  }
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
     <header className="football-gm__header nba-gm-dev__header">
       <Link to="/nba" className="nba-gm-dev__back">← BASKETBALL HQ</Link>
@@ -647,7 +742,16 @@ export default function NbaGmDevPage(){
       {run.phase==="final"&&(showSeasonReveal
         ?<NbaGmSeasonReveal run={run} onReveal={()=>{setShowSeasonReveal(false);window.scrollTo({top:0,behavior:"instant"});}}/>
         :<><NbaGmFinalExperience run={run} catalog={catalog}/>
-          <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW GM RUN</button></>)}
+          {profileMatch.isRecipient&&profileMatch.challenge?.responderResult&&
+            <button type="button" className="nba-gm-dev__primary" onClick={()=>challenges.viewResults(profileMatch.challenge!.code)}>VIEW CHALLENGE RESULT</button>}
+          {receivingChallenge&&nbaGmCanSubmitChallenge(profileMatch.challenge,run,acceptedChallengeSeed)&&
+            <button type="button" className="nba-gm-dev__secondary nba-gm-dev__result-secondary"
+              onClick={()=>void retryChallengeSubmission()}>RESEND CHALLENGE SCORE</button>}
+          {run.scoreBreakdown&&!nbaGmChallengeResult(run)&&<p className="nba-gm-dev__notice">Complete a new NBA GM run to challenge a friend on the current scoring model.</p>}
+          {nbaGmChallengeResult(run)&&<button type="button" className="nba-gm-dev__primary nba-gm-dev__challenge-cta"
+            onClick={()=>void challengeFriend()}>CHALLENGE A FRIEND TO BEAT YOUR SCORE</button>}
+          <button type="button" className="nba-gm-dev__secondary nba-gm-dev__result-secondary" disabled={busy}
+            onClick={()=>void act("start")}>NEW GM RUN</button></>)}
       <footer className="nba-gm-dev__disclaimer">Three seasons · Signed NBA salary windows</footer>
     </>}
   </main>;
