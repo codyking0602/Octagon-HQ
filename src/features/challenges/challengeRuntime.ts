@@ -13,6 +13,7 @@ export const PLAY_ROUTE_BY_GAME: Partial<Record<PlayGameId, string>> = {
   auction: "/play/auction",
   "draft-room": "/football/draft-room",
   "gm-football": "/football/gm-mode",
+  "gm-nba": "/nba/gm",
   "wheel-football": "/football/wheel",
   "higher-lower": "/football/higher-lower",
   "wheel-ufc": "/play/wheel",
@@ -41,6 +42,7 @@ export function challengeSport(challenge: PlayChallenge): PlaySport {
 }
 
 function canonicalChallengeRoute(challenge: PlayChallenge) {
+  if (challenge.gameId === "gm-nba") return "/nba/gm";
   // NBA Who Am I shares the authored game and challenge engine, but its full
   // Basketball Games catalog does not go public until after the World Series.
   if (challenge.gameId === "who-am-i" && challenge.gameVersion.startsWith("nba-who-am-i-")) {
