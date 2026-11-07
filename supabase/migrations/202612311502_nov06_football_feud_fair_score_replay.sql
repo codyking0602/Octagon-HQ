@@ -17,6 +17,9 @@ declare
   v_fast_delta integer;
   v_details jsonb;
   v_fast_results jsonb;
+  v_revised_boards jsonb;
+  v_first_board jsonb;
+  v_second_board jsonb;
   v_existing integer;
   v_updated integer;
 begin
@@ -145,9 +148,72 @@ begin
       raise exception 'Nov 6 Feud public fast reveal changed for %',v_row.display_name;
     end if;
 
+
+    -- Show the exact four successful answers and corrected strikes in the
+    -- completed-game result. The original recorded_guesses and engine_state
+    -- remain untouched, with editorial_details disclosing later excluded
+    -- answers after each board was legally full.
+    if v_row.public_state->>'editorial_correction'
+         = '2026-11-06-verified-football-feud-replay' then
+      v_revised_boards := v_row.public_state->'main_boards';
+    else
+      v_first_board := v_row.public_state#>'{main_boards,0}';
+      v_second_board := v_row.public_state#>'{main_boards,1}';
+      if v_row.display_name='CODY' then
+        v_first_board := v_first_board || jsonb_build_object(
+          'strikes',0,
+          'slots',jsonb_build_array(
+            v_first_board#>'{slots,0}',
+            jsonb_build_object(
+              'slot_index',1,'points',2,'found',true,'revealed',true,
+              'entity',jsonb_build_object(
+                'id','nfl-feud-r2-main-career-100-sacks:fair1',
+                'display_name','Lawrence Taylor')),
+            (v_first_board#>'{slots,1}') || jsonb_build_object('slot_index',2),
+            (v_first_board#>'{slots,2}') || jsonb_build_object('slot_index',3)
+          ));
+        v_second_board := jsonb_set(
+          v_second_board,'{answer_reveal,3,found}','true'::jsonb,false);
+        v_second_board := v_second_board || jsonb_build_object(
+          'strikes',0,
+          'slots',jsonb_build_array(
+            v_second_board#>'{slots,0}',
+            v_second_board#>'{slots,1}',
+            v_second_board#>'{slots,2}',
+            jsonb_build_object('slot_index',3,'points',5,'found',true,
+              'revealed',true,'entity',jsonb_build_object(
+                'id','nfl-main-11-1:a4',
+                'display_name','49ers-Cowboys'))
+          ));
+      else
+        v_second_board := v_second_board || jsonb_build_object(
+          'strikes',0,
+          'slots',jsonb_build_array(
+            v_second_board#>'{slots,0}',
+            jsonb_build_object('slot_index',1,'points',2,'found',true,
+              'revealed',true,'entity',jsonb_build_object(
+                'id','nfl-main-11-1:fair1',
+                'display_name','Cowboys-Giants')),
+            jsonb_build_object('slot_index',2,'points',2,'found',true,
+              'revealed',true,'entity',jsonb_build_object(
+                'id','nfl-main-11-1:fair2',
+                'display_name','Patriots-Giants')),
+            jsonb_build_object('slot_index',3,'points',2,'found',true,
+              'revealed',true,'entity',jsonb_build_object(
+                'id','nfl-main-11-1:fair3',
+                'display_name','Jets-Giants'))
+          ));
+      end if;
+      v_revised_boards:=jsonb_build_array(v_first_board,v_second_board);
+    end if;
+    if jsonb_array_length(v_revised_boards)<>2 then
+      raise exception 'Nov 6 Feud corrected board count differs for %',v_row.display_name;
+    end if;
+
     update private.daily_challenge_progress pr set
       public_state=pr.public_state || jsonb_build_object(
         'hq_score',v_target,'raw_points',v_target,'main_points',v_main,
+        'main_boards',v_revised_boards,
         'fast_money',(pr.public_state->'fast_money') ||
           jsonb_build_object('points',v_fast,'results',v_fast_results),
         'editorial_correction','2026-11-06-verified-football-feud-replay'
