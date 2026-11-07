@@ -218,7 +218,7 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
   }
   if (challenge.gameId === "higher-lower") return higherLowerScoreLabel(result);
   if (challenge.gameId === "who-am-i") return score === null ? "DONE" : `${score}/100`;
-  if (challenge.gameId === "gm-football") return score === null ? "DONE" : score.toFixed(1);
+  if (challenge.gameId === "gm-football" || challenge.gameId === "gm-nba") return score === null ? "DONE" : score.toFixed(1);
   return "DONE";
 }
 
@@ -573,6 +573,41 @@ function FootballGmDetails({ challenge, creatorName, responderName }: DetailProp
   );
 }
 
+function NbaGmDetails({ challenge, creatorName, responderName }: DetailProps) {
+  const creator = record(challenge.creatorResult);
+  const responder = record(challenge.responderResult);
+  const creatorSeasons = Array.isArray(creator?.seasons) ? creator.seasons : [];
+  const responderSeasons = Array.isArray(responder?.seasons) ? responder.seasons : [];
+  const season = (rows: ChallengeJson[], index: number) => record(rows[index] ?? null);
+  const overall = (row: ReturnType<typeof record>) => typeof row?.overall === "number" ? row.overall : "—";
+  const recordLine = (row: ReturnType<typeof record>) =>
+    typeof row?.wins === "number" && typeof row?.losses === "number"
+      ? `${row.wins}–${row.losses}` : "—";
+
+  return (
+    <div className="challenge-better-than-comparison">
+      <section className="challenge-game-banner" aria-label="NBA GM head-to-head result">
+        <span>THREE-SEASON NBA GM</span>
+        <strong>{challengeResultVerdict(challenge, creatorName, responderName)}</strong>
+        <small>Each GM builds an independent seven-player franchise under the same salary cap and scoring model. Highest final GM score wins.</small>
+      </section>
+      <div className="challenge-round-comparison">
+        <header><span>YEAR</span><strong>{creatorName}</strong><strong>{responderName}</strong><em>FINISH</em></header>
+        {[0, 1, 2].map(index => {
+          const mine = season(creatorSeasons, index);
+          const theirs = season(responderSeasons, index);
+          return <div key={index}>
+            <span>Y{index + 1}</span>
+            <strong>{overall(mine)} OVR · {recordLine(mine)}</strong>
+            <strong>{overall(theirs)} OVR · {recordLine(theirs)}</strong>
+            <em>{typeof mine?.finish === "string" ? mine.finish : "—"} / {typeof theirs?.finish === "string" ? theirs.finish : "—"}</em>
+          </div>;
+        })}
+      </div>
+    </div>
+  );
+}
+
 interface DetailProps {
   challenge: PlayChallenge;
   creatorName: string;
@@ -591,5 +626,6 @@ export function ChallengeResultDetails(props: DetailProps) {
   if (props.challenge.gameId === "higher-lower") return <HigherLowerDetails {...props} />;
   if (props.challenge.gameId === "who-am-i") return <WhoAmIDetails {...props} />;
   if (props.challenge.gameId === "gm-football") return <FootballGmDetails {...props} />;
+  if (props.challenge.gameId === "gm-nba") return <NbaGmDetails {...props} />;
   return null;
 }
