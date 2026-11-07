@@ -3,50 +3,59 @@ on:
   push:
     branches:
       - prep/ufc334-source-probe-20261107
+    paths:
+      - .github/workflows/ufc334-official-source-probe.yml
 permissions:
-  contents: read
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: prep/ufc334-source-probe-20261107
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install --quiet requests beautifulsoup4 pillow
-      - name: Enumerate official UFC candidate fighter image sources
+      - run: pip install --quiet requests pillow
+      - name: Download only verified fighter-specific UFC official source originals for visual review
         shell: bash
         run: |
           python - <<'PY'
-          import re,requests
-          from bs4 import BeautifulSoup
-          from urllib.parse import urljoin,urlparse
-          from io import BytesIO
+          import os,requests
           from PIL import Image
-          people=['luis-gurule','charles-radtke','chris-duncan','ciryl-gane','josh-hokit','kayla-harrison','amanda-nunes']
-          session=requests.Session()
-          session.headers.update({'User-Agent':'Mozilla/5.0 OctagonHQOfficialSourceProbe/1.0'})
-          for slug in people:
-              url='https://www.ufc.com/athlete/'+slug
-              try:
-                  r=session.get(url,timeout=25)
-                  print('FIGHTER',slug,'PAGE',r.status_code,'LEN',len(r.content),flush=True)
-                  if not r.ok: continue
-                  soup=BeautifulSoup(r.text,'html.parser')
-                  candidate=[]
-                  for img in soup.find_all('img'):
-                      alt=img.get('alt') or ''
-                      src=img.get('data-src') or img.get('src') or ''
-                      if slug.replace('-',' ').lower() in alt.lower() or any(z in str(img).lower() for z in ('athlete_bio_full_body','event_results_athlete_headshot','fighter-profile','athlete-profile')):
-                          candidate.append((alt,src))
-                  for i,(alt,src) in enumerate(candidate[:20]):
-                      full=urljoin(url,src)
-                      try:
-                          rr=session.get(full,timeout=12)
-                          im=Image.open(BytesIO(rr.content))
-                          print('IMG',slug,i,'alt=',alt[:90],'url=',full[:360],'status=',rr.status_code,'size=',im.size,'mode=',im.mode,'alpha=',im.convert('RGBA').getchannel('A').getextrema(),flush=True)
-                      except Exception as exc:
-                          print('IMG_ERROR',slug,i,full[:280],repr(exc)[:130],flush=True)
-              except Exception as exc: print('PAGE_ERROR',slug,repr(exc),flush=True)
+          from io import BytesIO
+          from pathlib import Path
+          sources={
+            'luis-gurule-headshot': 'https://ufc.com/images/styles/event_results_athlete_headshot/s3/2025-09/GURULE_LUIS_09-13.png?itok=LjVEGHm3',
+            'charles-radtke-headshot': 'https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-04/RADTKE_CHARLES_04-11.png?itok=Nhe_0iJj',
+            'chris-duncan-headshot': 'https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-04/DUNCAN_CHRIS_04-04.png?itok=6fevlMi0',
+            'ciryl-gane-fullbody': 'https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-06/GANE_CIRYL_L_BELT_01-22.png?itok=6Dy6iwAT',
+            'josh-hokit-fullbody': 'https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-06/HOKIT_JOSH_L_06-14.png?itok=Es1_9BbW',
+            'kayla-harrison-fullbody': 'https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-06/HARRISON_KAYLA_L_BELTMOCK.png?itok=goxu4s1i',
+            'amanda-nunes-fullbody': 'https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-12/NUNES_AMANDA_R.png?itok=IWn0DcbC',
+          }
+          dest=Path('.ufc334-source-probe')
+          dest.mkdir(exist_ok=True)
+          for name,url in sources.items():
+            res=requests.get(url,headers={'User-Agent':'Mozilla/5.0 OctagonHQSourceReview/1.0'},timeout=20)
+            res.raise_for_status()
+            im=Image.open(BytesIO(res.content)).convert('RGBA')
+            alpha=im.getchannel('A')
+            w,h=im.size
+            for border,values in [('top',list(alpha.crop((0,0,w,1)).getdata())),('bottom',list(alpha.crop((0,h-1,w,h)).getdata()))]:
+              fill=sum(x>=48 for x in values)/len(values)
+              print('SOURCE',name,url,'size',im.size,'boundary',border,'fill>=48',round(fill,3),flush=True)
+            out=dest/(name+'.png')
+            im.save(out)
           PY
+      - name: Commit source-review originals to disposable probe branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .ufc334-source-probe
+          if ! git diff --staged --quiet; then
+            git commit -m "Stage UFC official fighter source originals for visual review only"
+            git push origin HEAD:prep/ufc334-source-probe-20261107
+          fi
