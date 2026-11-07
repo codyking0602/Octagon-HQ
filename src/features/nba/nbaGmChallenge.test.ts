@@ -15,6 +15,8 @@ const run = {
 
 const challenge = {
   code: "ABCD1234", gameId: "gm-nba", gameVersion: "nba-gm-v13",
+  creatorId: "creator", recipientId: "recipient", playUrl: "/nba/gm",
+  openedAt: null, hiddenFor: [],
   gameTitle: "NBA GM", summary: "NBA franchise",
   setup: { modelVersion: 13 }, creatorResult: { score: 92.4 }, responderResult: null,
   createdAt: "2026-11-06", expiresAt: "2026-11-13", completedAt: null, declinedAt: null,
