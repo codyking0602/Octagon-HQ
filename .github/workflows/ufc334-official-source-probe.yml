@@ -1,0 +1,52 @@
+name: UFC 334 Official Photo Source Probe
+on:
+  push:
+    branches:
+      - prep/ufc334-source-probe-20261107
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet requests beautifulsoup4 pillow
+      - name: Enumerate official UFC candidate fighter image sources
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,requests
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin,urlparse
+          from io import BytesIO
+          from PIL import Image
+          people=['luis-gurule','charles-radtke','chris-duncan','ciryl-gane','josh-hokit','kayla-harrison','amanda-nunes']
+          session=requests.Session()
+          session.headers.update({'User-Agent':'Mozilla/5.0 OctagonHQOfficialSourceProbe/1.0'})
+          for slug in people:
+              url='https://www.ufc.com/athlete/'+slug
+              try:
+                  r=session.get(url,timeout=25)
+                  print('FIGHTER',slug,'PAGE',r.status_code,'LEN',len(r.content),flush=True)
+                  if not r.ok: continue
+                  soup=BeautifulSoup(r.text,'html.parser')
+                  candidate=[]
+                  for img in soup.find_all('img'):
+                      alt=img.get('alt') or ''
+                      src=img.get('data-src') or img.get('src') or ''
+                      if slug.replace('-',' ').lower() in alt.lower() or any(z in str(img).lower() for z in ('athlete_bio_full_body','event_results_athlete_headshot','fighter-profile','athlete-profile')):
+                          candidate.append((alt,src))
+                  for i,(alt,src) in enumerate(candidate[:20]):
+                      full=urljoin(url,src)
+                      try:
+                          rr=session.get(full,timeout=12)
+                          im=Image.open(BytesIO(rr.content))
+                          print('IMG',slug,i,'alt=',alt[:90],'url=',full[:360],'status=',rr.status_code,'size=',im.size,'mode=',im.mode,'alpha=',im.convert('RGBA').getchannel('A').getextrema(),flush=True)
+                      except Exception as exc:
+                          print('IMG_ERROR',slug,i,full[:280],repr(exc)[:130],flush=True)
+              except Exception as exc: print('PAGE_ERROR',slug,repr(exc),flush=True)
+          PY
