@@ -447,8 +447,17 @@ jobs:
           import fs from "node:fs";
           import crypto from "node:crypto";
           const origin = process.env.OCTAGON_PRODUCTION_ORIGIN.replace(/\/$/, "");
-          for (const slug of ["yousri-belgaroui", "cesar-almeida"]) {
-            const path = `assets/fighters/${slug}-thumb.webp`;
+          for (const path of [
+            "assets/fighters/yousri-belgaroui-thumb.webp",
+            "assets/fighters/cesar-almeida-thumb.webp",
+            "assets/fighters/luis-gurule-thumb.webp",
+            "assets/fighters/charles-radtke-thumb.webp",
+            "assets/fighters/chris-duncan-thumb.webp",
+            "assets/fighters/ciryl-gane-spotlight.webp",
+            "assets/fighters/josh-hokit-spotlight.webp",
+            "assets/fighters/kayla-harrison-spotlight.webp",
+            "assets/fighters/amanda-nunes-spotlight.webp",
+          ]) {
             const expected = fs.readFileSync(`dist/${path}`);
             if (expected.length < 1024 || expected.toString("ascii", 0, 4) !== "RIFF"
               || expected.toString("ascii", 8, 12) !== "WEBP") {

@@ -126,3 +126,30 @@ The existing preparation/publication flow must not publish verbose previews. Eac
 - Avoid generic filler or fabricated stats. Every numerical edge must be source-verified. SKCS/HQ rankings fighter profiles do not require a fight breakdown.
 - The ufcEditorialIssues/effectiveUfcPrepStatus guard blocks verbose future prepared packages from ready status. The October 31 published main-event Spotlight and all six retained prep Spotlights are explicitly rewritten in the owner-approved editorial migration. Other older published rich breakdowns are compacted at display time.
 - Temporary QA fighters/bouts are not automatically published or retained after owner removal.
+
+
+## November 7: official three-quarter championship photo review
+
+The 460×700 transparent UFC athlete-profile `athlete_bio_full_body` product is
+a real three-quarter fighter photograph, intentionally ending below the waist
+or at the thighs. For these source-reviewed portraits, the lower frame boundary
+is not a failed/accidental crop. A new Spotlight manifest must explicitly
+include `official_ufc_three_quarter_reviewed: true`, the exact
+`verified_source_url`, fighter identity, and the matching official UFC
+`source_page_url`. The processor permits this particular *already transparent*
+portrait product's natural lower boundary, while still rejecting clipped
+editorial photos, top-of-head cuts, publisher rectangles, silhouettes,
+unreviewed URLs, and every nonmatching image. UFC 334 Gane, Hokit, Harrison and
+Nunes originals were individually inspected from UFC athlete pages on
+November 7. No synthesized body, limb or face reconstruction is allowed.
+
+
+**Clean-source handling:** Preserve individually reviewed official transparent
+three-quarter UFC portraits directly, fitting and sharpening without applying
+rembg or publisher-strip erasers. The original Gane/Hokit/Harrison/Nunes PNGs
+were visually checked on white backgrounds. The first generated Spotlights
+showed horizontal damage from overly aggressive publisher cleanup, and the
+Hokit output was rejected by a false publisher panel alarm. These first
+outputs are not approved. The exact verified original URLs and matching UFC
+athlete pages are mandatory. Every regenerated transparent WebP still
+requires independent output visual review, exact-head CI and live delivery.
