@@ -11,6 +11,7 @@ import {
 import { createPortal } from "react-dom";
 import { shareAppLink, shareCanonicalDestination } from "../../app/nativeShare";
 import { useIdentity } from "../identity/IdentityProvider";
+import { loadNbaGmChallengeRecap, type NbaGmChallengeRecap } from "../nba/nbaGmChallengeRecap";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import { MemberAvatarProvider } from "../members/MemberMiniAvatar";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
@@ -243,6 +244,29 @@ function ResultsDialog({
   onClose: () => void;
 }) {
   const [shareStatus, setShareStatus] = useState("");
+  const [nbaRecap, setNbaRecap] = useState<NbaGmChallengeRecap | null>(null);
+  const [nbaRecapLoading, setNbaRecapLoading] = useState(false);
+  const [nbaRecapError, setNbaRecapError] = useState("");
+  useEffect(() => {
+    if (challenge.gameId !== "gm-nba" || !challenge.completedAt) return;
+    let mounted = true;
+    setNbaRecap(null);
+    setNbaRecapError("");
+    setNbaRecapLoading(true);
+    void loadNbaGmChallengeRecap(challenge.code)
+      .then(report => {
+        if (!mounted) return;
+        setNbaRecap(report);
+        if (!report) setNbaRecapError("The original completed franchise details could not be verified.");
+      })
+      .catch(() => {
+        if (mounted) setNbaRecapError("The full franchise comparison could not load.");
+      })
+      .finally(() => {
+        if (mounted) setNbaRecapLoading(false);
+      });
+    return () => { mounted = false; };
+  }, [challenge.code, challenge.completedAt, challenge.gameId]);
   if (!canViewChallengeResults(challenge, activeProfileId) || !challenge.responderResult) return null;
   const creator = profiles.find((profile) => profile.id === challenge.creatorId);
   const responder = profiles.find((profile) => profile.id === challenge.recipientId);
@@ -271,7 +295,7 @@ function ResultsDialog({
     <div className="challenge-overlay" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose();
     }}>
-      <section className="challenge-dialog challenge-results-dialog" role="dialog" aria-modal="true" aria-labelledby="challenge-results-title">
+      <section className={`challenge-dialog challenge-results-dialog${challenge.gameId === "gm-nba" ? " is-nba-gm" : ""}`} role="dialog" aria-modal="true" aria-labelledby="challenge-results-title">
         <header>
           <div>
             <p className="eyebrow">CHALLENGE RESULTS</p>
@@ -300,7 +324,8 @@ function ResultsDialog({
             <b>{responderScore}</b>
           </article>
         </div>
-        <ChallengeResultDetails challenge={challenge} creatorName={creatorName} responderName={responderName} />
+        <ChallengeResultDetails challenge={challenge} creatorName={creatorName} responderName={responderName}
+          nbaGmRecap={nbaRecap} nbaGmLoading={nbaRecapLoading} nbaGmError={nbaRecapError} />
         <p className="challenge-dialog__status" role="status">{shareStatus}</p>
         <footer>
           <button type="button" onClick={() => void shareResults()}>SHARE RESULTS</button>

@@ -1,4 +1,6 @@
 import { type HitTheNumberResultStatus } from "../play/hitTheNumberEngine";
+import { NbaGmMatchReport } from "./NbaGmMatchReport";
+import type { NbaGmChallengeRecap } from "../nba/nbaGmChallengeRecap";
 import { getPlayFighter } from "../play/playFighterPool";
 import { resultScore, type ChallengeJson, type PlayChallenge } from "./challengeModel";
 
@@ -573,45 +575,50 @@ function FootballGmDetails({ challenge, creatorName, responderName }: DetailProp
   );
 }
 
-function NbaGmDetails({ challenge, creatorName, responderName }: DetailProps) {
+function NbaGmDetails({
+  challenge, creatorName, responderName, nbaGmRecap, nbaGmLoading, nbaGmError,
+}: DetailProps) {
+  if (nbaGmRecap) return <NbaGmMatchReport report={nbaGmRecap}
+    creatorName={creatorName} responderName={responderName} />;
+
+  if (nbaGmLoading) return <p className="nba-gm-match__loading" role="status">
+    Loading the complete franchise results…
+  </p>;
+
   const creator = record(challenge.creatorResult);
   const responder = record(challenge.responderResult);
   const creatorSeasons = Array.isArray(creator?.seasons) ? creator.seasons : [];
   const responderSeasons = Array.isArray(responder?.seasons) ? responder.seasons : [];
   const season = (rows: ChallengeJson[], index: number) => record(rows[index] ?? null);
-  const overall = (row: ReturnType<typeof record>) => typeof row?.overall === "number" ? row.overall : "—";
-  const recordLine = (row: ReturnType<typeof record>) =>
-    typeof row?.wins === "number" && typeof row?.losses === "number"
+  const recap = (row: ReturnType<typeof record>) => {
+    const grade = typeof row?.overall === "number" ? row.overall : "—";
+    const recordLine = typeof row?.wins === "number" && typeof row?.losses === "number"
       ? `${row.wins}–${row.losses}` : "—";
-
-  return (
-    <div className="challenge-better-than-comparison">
-      <section className="challenge-game-banner" aria-label="NBA GM head-to-head result">
-        <span>THREE-SEASON NBA GM</span>
-        <strong>{challengeResultVerdict(challenge, creatorName, responderName)}</strong>
-        <small>Each GM builds an independent seven-player franchise under the same salary cap and scoring model. Highest final GM score wins.</small>
-      </section>
-      <div className="challenge-round-comparison">
-        <header><span>YEAR</span><strong>{creatorName}</strong><strong>{responderName}</strong><em>FINISH</em></header>
-        {[0, 1, 2].map(index => {
-          const mine = season(creatorSeasons, index);
-          const theirs = season(responderSeasons, index);
-          return <div key={index}>
-            <span>Y{index + 1}</span>
-            <strong>{overall(mine)} OVR · {recordLine(mine)}</strong>
-            <strong>{overall(theirs)} OVR · {recordLine(theirs)}</strong>
-            <em>{typeof mine?.finish === "string" ? mine.finish : "—"} / {typeof theirs?.finish === "string" ? theirs.finish : "—"}</em>
-          </div>;
-        })}
-      </div>
+    return `${grade} OVR · ${recordLine}`;
+  };
+  return <section className="nba-gm-match__fallback" aria-label="NBA GM summary">
+    <p role="status">{nbaGmError || "Full franchise details are not available for this result."}</p>
+    <div className="challenge-round-comparison">
+      <header><span>YEAR</span><strong>{creatorName}</strong><strong>{responderName}</strong><em>FINISH</em></header>
+      {[0, 1, 2].map(index => {
+        const mine = season(creatorSeasons, index), theirs = season(responderSeasons, index);
+        return <div key={index}>
+          <span>Y{index + 1}</span>
+          <strong>{recap(mine)}</strong><strong>{recap(theirs)}</strong>
+          <em>{typeof mine?.finish === "string" ? mine.finish : "—"} / {typeof theirs?.finish === "string" ? theirs.finish : "—"}</em>
+        </div>;
+      })}
     </div>
-  );
+  </section>;
 }
 
 interface DetailProps {
   challenge: PlayChallenge;
   creatorName: string;
   responderName: string;
+  nbaGmRecap?: NbaGmChallengeRecap | null;
+  nbaGmLoading?: boolean;
+  nbaGmError?: string;
 }
 
 export function ChallengeResultDetails(props: DetailProps) {
