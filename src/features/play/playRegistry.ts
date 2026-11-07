@@ -20,6 +20,7 @@ export type PlayGameId =
   | "draft-room"
   | "wheel-football"
   | "gm-football"
+  | "gm-nba"
   | "higher-lower"
   | "wheel-ufc";
 
