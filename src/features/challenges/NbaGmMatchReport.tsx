@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../../styles/nba-gm-match-recap.css";
 import { nbaTeamLogoSrc } from "../nba/nbaTeamBranding";
 import {
   nbaGmChallengeInsights,
