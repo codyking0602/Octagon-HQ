@@ -24,6 +24,11 @@ export interface SportsFeudQuestionFamily {
 
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Give instructions": ["Advice", "Give advice"],
+  // Contextual football synonyms: do not infer these across unrelated prompts.
+  "Trade a pick": ["Trade", "Trade up", "Trade down", "Trade picks", "Trade draft picks", "Trade a draft pick", "Move up in the draft"],
+  "Drinks": ["Beer", "Beverages", "Beverage", "Soda", "Water", "Soft drinks"],
+  "Fire-zone blitz": ["Fire", "Fire zone", "Fire blitz", "Fire-zone pressure"],
+  "49ers-Cowboys": ["Cowboys 49ers", "49ers Cowboys", "San Francisco Cowboys", "Dallas 49ers", "Dallas vs San Francisco", "San Francisco vs Dallas", "Dallas Cowboys vs San Francisco 49ers", "San Francisco 49ers vs Dallas Cowboys", "Cowboys Niners", "Niners Cowboys"],
   "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City", "Kansas City Chiefs"],
   "Lumen Field": ["Lumen", "Seahawks", "Seattle", "Seattle Seahawks"],
   "Lambeau Field": ["Lambeau", "Lambo Field", "Lambo", "Packers", "Green Bay", "Green Bay Packers"],

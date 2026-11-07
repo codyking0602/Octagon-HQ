@@ -645,7 +645,7 @@ export function OfficialSportsFeudDailyView({
           <div className="feud-intro__eyebrow">{hqName} · {challengeLabel}</div>
           <Brand />
           <h1 id="official-feud-intro-title">Clear the board.</h1>
-          <p>Find four good HQ answers before three strikes. Then finish five Fast Money prompts.</p>
+          <p>Find four answers before three strikes. Ranked answers earn more points, but other valid answers count too. Finish with five Fast Money prompts.</p>
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
             <span><b>4</b> ANSWERS EACH</span>
@@ -878,7 +878,7 @@ export function OfficialSportsFeudDailyView({
                   {row.accepted.slice(0, 4).map((accepted) => (
                     <span key={accepted.name}>{accepted.name} <b>{accepted.points}</b></span>
                   ))}
-                  {row.accepted.length > 4 ? <small>+{row.accepted.length - 4} also accepted</small> : null}
+                  {row.accepted.length > 4 ? <small>+{row.accepted.length - 4} more ranked answers · other valid answers earn 1 point</small> : null}
                 </section>
               </article>
             ))}
