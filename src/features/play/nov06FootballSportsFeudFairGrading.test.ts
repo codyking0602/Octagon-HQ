@@ -32,6 +32,11 @@ describe("November 6 Football Feud fair answer replay", () => {
     const hydrated = hydrateFootballFeudFairAnswers(original);
     expect(hydrated.mainBoards.map((board) => board.answers)).toEqual(original.mainBoards.map((board) => board.answers));
     expect(hydrated.mainBoards[0]!.candidateIds.length).toBeGreaterThan(original.mainBoards[0]!.candidateIds.length);
+    // Entire official 100-sack population through the 2025 season (46),
+    // not a hand-picked subset that wrongly strikes eligible players.
+    expect(hydrated.mainBoards[0]!.candidateIds).toHaveLength(46);
+    expect(matchFamilyFeudAnswer(hydrated, hydrated.mainBoards[0]!, "Andre Tippett").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(hydrated, hydrated.mainBoards[0]!, "Cameron Jordan").status).toBe("matched");
     expect(matchFamilyFeudAnswer(hydrated, hydrated.mainBoards[0]!, "Lawrence Taylor").status).toBe("matched");
     expect(matchFamilyFeudAnswer(hydrated, hydrated.mainBoards[0]!, "Demarcus Lawrence").status).not.toBe("matched");
     expect(matchFamilyFeudAnswer(hydrated, hydrated.mainBoards[0]!, "Max Crosby").status).not.toBe("matched");
