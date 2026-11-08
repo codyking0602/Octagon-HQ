@@ -1214,8 +1214,10 @@ img.pick-fighter-thumbnail--ufc-headshot {
   transform: scale(1.24);
 }
 @media (max-width: 620px) {
-  /* Give numbered PPV artwork a little more of the phone's available width. */
+  /* Expand the numbered PPV to a four-pixel phone gutter while preserving the
+     stored image aspect ratio; no zoom/crop to fill an arbitrary banner height. */
   .picks-page .picks-event-hero.has-poster.is-numbered-event {
-    margin-inline: -7px;
+    margin-inline: -12px;
+    border-radius: 16px;
   }
 }

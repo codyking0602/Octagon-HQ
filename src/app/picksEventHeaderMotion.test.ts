@@ -23,6 +23,22 @@ describe("Picks event header motion", () => {
     expect(motion).not.toContain("pick-event-headers");
   });
 
+  it("shows the entire numbered PPV artwork without cutting off the top during animation", () => {
+    const numbered = motion
+      .split(".picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster {")[1]
+      ?.split("}")[0];
+    expect(numbered).toContain("animation: none;");
+    expect(numbered).toContain("transform: none;");
+    expect(motion).toContain("animation: picks-event-header-particles 14s");
+    expect(motion).toContain("animation: picks-event-header-sheen 6.5s");
+
+    const polished = readFileSync("src/styles/picks-polish.css", "utf8");
+    expect(polished).toContain("aspect-ratio: var(--picks-event-poster-aspect, 480 / 321);");
+    expect(polished).toContain("background-size: cover, contain, cover;");
+    expect(polished).toContain("margin-inline: -12px;");
+    expect(polished).toContain("border-radius: 16px;");
+  });
+
   it("keeps picks-polish as the final player-facing Picks style owner", () => {
     const motionImport = main.indexOf('import "./styles/picks-event-motion.css";');
     const polishImport = main.indexOf('import "./styles/picks-polish.css";');
