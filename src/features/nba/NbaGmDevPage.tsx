@@ -504,7 +504,11 @@ export default function NbaGmDevPage(){
               <TeamMark code={run.tradeTeam}/>
               <span><small>TRADE TALKS</small><strong>{NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}</strong></span>
             </header>
-            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Tap a player to inspect all six scouting grades, then choose VIEW OFFERS when you're ready. Your target locks when you request offers.</p>
+            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Only position-safe trade targets appear below. Inspect a player, then choose VIEW OFFERS.</p>
+              {run.rosterQualityVersion===1&&serverTradeTargets?.key!==tradeKey&&
+                <p className="nba-gm-dev__hint">Checking legal trade targets…</p>}
+              {run.rosterQualityVersion===1&&serverTradeTargets?.key===tradeKey&&eligibleTrade.length===0&&
+                <p className="nba-gm-dev__hint">No position-safe trade packages from this team.</p>
               <div className="nba-gm-dev__trade-candidates">
                 {eligibleTrade.map(player=><article key={player.id}
                   className={"nba-gm-dev__trade-candidate"+(expandedTradeCandidate===player.id?" is-expanded":"")}>
