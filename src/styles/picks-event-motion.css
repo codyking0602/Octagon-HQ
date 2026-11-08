@@ -57,10 +57,14 @@
   animation: picks-event-header-sheen 6.5s ease-in-out infinite;
 }
 
-/* Numbered PPVs get a slower, warmer premium motion pass without changing Fight Night motion. */
+/* Keep the entire numbered-event poster visible, especially the fighters'
+   heads and event lettering at its top edge. The 6% Ken Burns zoom clipped
+   approved artwork. Retain motion only in the independent particles and sheen;
+   Fight Night posters keep their existing animation. */
 .picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster {
-  animation-duration: 20s;
-  animation-timing-function: cubic-bezier(.22, .62, .32, 1);
+  animation: none;
+  transform: none;
+  will-change: auto;
 }
 
 .picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster::before {
