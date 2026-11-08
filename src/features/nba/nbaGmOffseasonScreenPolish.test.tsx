@@ -43,6 +43,8 @@ describe("NBA GM public offseason compact parity",()=>{
     expect(page).not.toContain("<FitReport");
     expect(page).toContain("nba-gm-dev__caps");
     expect(page).toContain("nba-gm-dev__roster-development");
+    expect(page).toContain("UPCOMING YEAR 2 ROTATION · YEAR 1 POSITIONS STAY IN THE SEASON RECAP");
+    expect(page).not.toContain("CURRENT OFFSEASON ROTATION");
     expect(page).toContain("change.year2Grade-change.startingGrade");
     expect(page).not.toContain("CONTINUE TO OFFSEASON MOVES");
     expect(page).not.toContain("retainedCount/7*100");
@@ -83,5 +85,15 @@ describe("NBA GM public offseason compact parity",()=>{
     expect(report).toContain("1YR REPRICE");
     expect(page).not.toContain('OWNER ONLY · NOT PUBLIC');
     expect(page).toContain("SIGN IN TO PLAY");
+  });
+  it("keeps Year 2 visible, preserves the past recap and leaves the GM weights alone",()=>{
+    const migration=readFileSync("supabase/migrations/202612311521_nba_gm_year2_lineup_creation_balance.sql","utf8");
+    expect(migration).toContain("private.nba_gm_v14_season_lineup(v_next,2)");
+    expect(migration).toContain("strengthCalibrationVersion");
+    expect(migration).toContain("private.nba_gm_v15_fair_lineup_exists");
+    expect(migration).not.toContain("create or replace function private.nba_gm_v13_final_score");
+    expect(migration).toContain("Existing");
+    expect(model).toContain("run.yearOnePicks");
+    expect(model).toContain("seasonPicks");
   });
 });
