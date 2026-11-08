@@ -38,7 +38,7 @@ describe("NBA GM positional-integrity release contract",()=>{
   it("does not show forbidden players, warning cards, or fictional slot-based transaction swaps",()=>{
     const page=readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
     const final=readFileSync("src/features/nba/NbaGmFinalExperience.tsx","utf8");
-    const sql=readFileSync("supabase/migrations/202612311503_nba_gm_offseason_position_integrity.sql","utf8");
+    const sql=readFileSync("supabase/migrations/202612311511_nba_gm_offseason_position_integrity.sql","utf8");
     expect(page).toContain("serverPicker?.key===candidateKey");
     expect(page).toContain("projectedById.has(player.id)");
     expect(page).toContain("serverTradeTargets.ids.includes(p.id)");
