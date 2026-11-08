@@ -24,9 +24,9 @@ describe("Picks event header motion", () => {
   });
 
   it("shows the entire numbered PPV artwork without cutting off the top during animation", () => {
-    const numbered = motion.match(
-      /\\.picks-event-hero\\.has-poster\\.is-numbered-event \\.picks-event-hero__poster \\{([^}]*)\\}/,
-    )?.[1];
+    const numbered = motion
+      .split(".picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster {")[1]
+      ?.split("}")[0];
     expect(numbered).toContain("animation: none;");
     expect(numbered).toContain("transform: none;");
     expect(motion).toContain("animation: picks-event-header-particles 14s");
