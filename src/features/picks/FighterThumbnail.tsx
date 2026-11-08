@@ -151,14 +151,17 @@ export function FighterThumbnail({ name, slug, officialHeadshot, suppressContend
       )}
     </i>
   ) : (
-    <img
-      className={`pick-fighter-thumbnail${officialHeadshot?.includes("/images/styles/event_results_athlete_headshot/") ? " pick-fighter-thumbnail--ufc-headshot" : ""}`}
-      src={source}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      onError={() => setFailedSources((current) => new Set(current).add(source))}
-    />
+    <span className="pick-fighter-photo-frame" aria-hidden="true">
+      <img
+        className={`pick-fighter-thumbnail${officialHeadshot?.includes("/images/styles/event_results_athlete_headshot/") ? " pick-fighter-thumbnail--ufc-headshot" : ""}`}
+        data-fighter-slug={canonicalSlug}
+        src={source}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailedSources((current) => new Set(current).add(source))}
+      />
+    </span>
   );
 
   if (!shaneContender || suppressContenderBadge) return photo;
