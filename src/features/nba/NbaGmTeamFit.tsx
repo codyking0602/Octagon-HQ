@@ -61,7 +61,7 @@ export function NbaGmTeamFit({ run, catalog, season }: {
   return <section className="nba-gm-team-fit surface-card" aria-label="NBA GM team fit by season">
     <header className="nba-gm-team-fit__header">
       <div><h2>TEAM FIT</h2></div>
-      <small>{season === 1 ? "YEAR 1" : "YEAR 1 → YEAR 3"}</small>
+      <small>{season === 1 ? (run.phase==="offseason"?"YEAR 1 · COMPLETED":"YEAR 1") : "YEAR 1 → YEAR 3"}</small>
     </header>
     <div className="nba-gm-team-fit__inline-summary">
       <div className="nba-gm-team-fit__primary">
