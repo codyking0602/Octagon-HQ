@@ -1081,12 +1081,23 @@ img.pick-fighter-thumbnail--ufc-headshot {
 }
 
 /* One pick button and independent fighter-profile links per fighter card. */
-.pick-choice-shell {position:relative;min-width:0;display:grid;grid-template-rows:minmax(0,1fr) 40px;}
+/* Keep rank links separate from the pick button, but visually inside its tile.
+   Reserve lateral space instead of layering a badge over the portrait. */
+.pick-choice-shell {position:relative;min-width:0;display:grid;grid-template-rows:minmax(0,1fr);}
 .pick-choice-shell>.pick-choice {width:100%;height:100%;min-width:0;}
-/* Profile badges belong below, never on top of a fighter's portrait or pick button. */
-.pick-fighter-identity {position:relative;z-index:4;display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;gap:4px;width:100%;max-width:100%;min-height:40px;padding:5px 0 0;pointer-events:none;}
-.pick-choice-shell--red .pick-fighter-identity {justify-content:center;}
-.pick-choice-shell--blue .pick-fighter-identity {justify-content:center;}
+.pick-fighter-identity {
+  position:absolute;
+  top:10px;
+  z-index:4;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  width:61px;
+  max-width:61px;
+  pointer-events:none;
+}
+.pick-choice-shell--red .pick-fighter-identity {right:9px;align-items:flex-end;}
+.pick-choice-shell--blue .pick-fighter-identity {left:9px;align-items:flex-start;}
 .pick-fighter-identity a {pointer-events:auto;display:block;min-height:26px;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:950;letter-spacing:.02em;text-decoration:none;line-height:1.2;white-space:nowrap;box-shadow:0 1px 4px #0009;}
 .pick-fighter-identity__hq {color:#cfe8ff;border:1px solid #6695bd;background:#18293b;}
 .pick-fighter-identity__skcs {color:#ffdf8b;border:1px solid #bd933e;background:#342810;}
@@ -1126,15 +1137,14 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .ufc-group-hub__body .picks-group-progress__member>button {padding:10px 14px;min-height:43px;}
 @media(max-width:400px){.ufc-group-hub__summary{padding:10px 11px;}.ufc-group-hub__scorecard{gap:5px;}.ufc-group-hub__foot small{font-size:8px;}}
 
-/* UFC Picks: tappable compact rank links, red HQ and gold SKCS. */
-.pick-fighter-identity { top:auto; gap:4px; max-width:100%; }
-.pick-fighter-identity a { display:inline-flex; align-items:center; justify-content:center; gap:4px; min-height:34px; padding:6px 9px; border-radius:999px; font-size:10px; font-weight:900; line-height:1.15; letter-spacing:.02em; box-shadow:0 1px 4px #0007; }
+/* Compact, tappable badges stay to the side of the portrait, inside the pick tile. */
+.pick-fighter-identity a { display:inline-flex; align-items:center; justify-content:center; gap:2px; min-height:28px; max-width:61px; padding:5px 5px; border-radius:999px; font-size:9px; font-weight:900; line-height:1.1; letter-spacing:0; box-shadow:0 1px 4px #0007; }
 .pick-fighter-identity__hq { color:#ff9ba1; border:1px solid #be414a; background:#36191e; }
 .pick-fighter-identity__skcs { color:#f0d58b; border:1px solid #ae8735; background:#302514; }
 .pick-fighter-identity__hq:hover { background:#4b1c23; border-color:#e8505d; }
 .pick-fighter-identity__skcs:hover { background:#493416; border-color:#d8ac4f; }
 .pick-fighter-identity__chevron { display:inline-block; font-size:16px; font-weight:900; line-height:.75; transform:translateY(-.5px); }
-@media(max-width:420px) { .pick-fighter-identity a { min-height:34px; padding:6px 7px; font-size:9px; gap:3px; } }
+@media(max-width:420px) { .pick-fighter-identity a { min-height:28px; padding:5px 5px; font-size:8.5px; gap:2px; } }
 
 /* Football's compact standings structure with UFC-specific content and red action. */
 .ufc-group-hub { min-height:0; overflow:hidden; padding:0; border-radius:14px; background:#141617; }
@@ -1154,15 +1164,20 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .ufc-group-hub__body { border-top:1px solid #292c2e; }
 @media(max-width:400px) { .ufc-group-hub__summary { padding:9px 11px 7px; } .ufc-group-hub__scorecard { gap:4px; } }
 
-/* A fighter's ranking links need identical, reserved footer space on BOTH
-   sides of the fight. Otherwise an unranked opponent gets a taller pick tile
-   and the ranked pill appears to float between the cards. */
-.pick-bout-card__choices:has(.pick-fighter-identity a:nth-child(2)) > .pick-choice-shell {
-  grid-template-rows: minmax(0, 1fr) 72px;
+/* Ranked fighters keep the same tile height as their opponent.
+   Only the portrait is allowed to shrink to leave room for a real link.
+   This works at narrow phone widths and for a fighter with both badges. */
+.pick-choice-shell:has(.pick-fighter-identity a) .pick-choice > .pick-fighter-photo-frame,
+.pick-choice-shell:has(.pick-fighter-identity a) .pick-choice > .pick-fighter-thumbnail {
+  width: min(var(--picks-thumb-size), calc(100% - 65px));
+  height: auto;
+  aspect-ratio: 1;
 }
-.pick-bout-card__choices:has(.pick-fighter-identity a:nth-child(2)) .pick-fighter-identity {
-  flex-wrap: wrap;
-  align-content: flex-start;
+.pick-bout-card.is-main-event .pick-choice-shell:has(.pick-fighter-identity a) .pick-choice > .pick-fighter-photo-frame,
+.pick-bout-card.is-main-event .pick-choice-shell:has(.pick-fighter-identity a) .pick-choice > .pick-fighter-thumbnail {
+  width: min(var(--picks-main-thumb-size), calc(100% - 65px));
+  height: auto;
+  aspect-ratio: 1;
 }
 
 /* Keep the published portrait bytes intact. Crop only the rendered view so

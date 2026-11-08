@@ -33,13 +33,17 @@ describe("UFC 334 publication repairs", () => {
     expect(migration).not.toContain("select profile.id into");
   });
 
-  it("keeps ranked and unranked fighter pick buttons the same height", () => {
-    expect(presentation).toContain("grid-template-rows:minmax(0,1fr) 40px;");
-    expect(presentation).toContain(".pick-choice-shell--red .pick-fighter-identity {justify-content:center;}");
-    expect(presentation).toContain(".pick-choice-shell--blue .pick-fighter-identity {justify-content:center;}");
-    expect(presentation).toContain("top:auto; gap:4px; max-width:100%");
-    expect(presentation).toContain(":has(.pick-fighter-identity a:nth-child(2))");
-    expect(presentation).not.toContain("top:7px; gap:5px; max-width:87%");
+  it("places fighter rank badges inside the tile beside, rather than on, the photo", () => {
+    expect(presentation).toContain("grid-template-rows:minmax(0,1fr);");
+    expect(presentation).toContain("position:absolute;");
+    expect(presentation).toContain("top:10px;");
+    expect(presentation).toContain(".pick-choice-shell--red .pick-fighter-identity {right:9px;align-items:flex-end;}");
+    expect(presentation).toContain(".pick-choice-shell--blue .pick-fighter-identity {left:9px;align-items:flex-start;}");
+    expect(presentation).toContain(".pick-choice-shell:has(.pick-fighter-identity a) .pick-choice > .pick-fighter-photo-frame");
+    expect(presentation).toContain("calc(100% - 65px)");
+    expect(presentation).toContain("width: min(var(--picks-main-thumb-size), calc(100% - 65px));");
+    expect(presentation).not.toContain("grid-template-rows:minmax(0,1fr) 40px;");
+    expect(presentation).not.toContain("grid-template-rows: minmax(0, 1fr) 72px;");
   });
 
   it("enlarges the rendered fighter inside its square frame without stretching the source", () => {
