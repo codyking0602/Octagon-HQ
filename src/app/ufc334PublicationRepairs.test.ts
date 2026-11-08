@@ -17,7 +17,8 @@ describe("UFC 334 publication repairs", () => {
   it("matches owner-verified saved Spotlight content before the snapshot-only path", () => {
     expect(builder).toContain('from("ufc_pick_prep_packages")');
     expect(builder).toContain('entry?.source === "UFCStats"');
-    expect(builder).toContain("entry?.bout_id === boutId");
+    expect(builder).toContain("matches.length === 1");
+    expect(builder).toContain("boutId,");
     expect(builder).toContain("r?.fighter_slug === redSlug && b?.fighter_slug === blueSlug");
     expect(builder.indexOf("const ufcNumber")).toBeLessThan(builder.indexOf("const red = loadFighter"));
     expect(controlRepository).toContain("pickSetupFunctionErrorMessage(error)");
