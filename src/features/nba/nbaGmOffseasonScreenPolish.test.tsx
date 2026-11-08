@@ -92,7 +92,7 @@ describe("NBA GM public offseason compact parity",()=>{
     expect(migration).toContain("strengthCalibrationVersion");
     expect(migration).toContain("private.nba_gm_v15_fair_lineup_exists");
     expect(migration).not.toContain("create or replace function private.nba_gm_v13_final_score");
-    expect(migration).toContain("Existing");
+    expect(migration).toContain("previous NBA GM V13 saves");
     expect(model).toContain("run.yearOnePicks");
     expect(model).toContain("seasonPicks");
   });
