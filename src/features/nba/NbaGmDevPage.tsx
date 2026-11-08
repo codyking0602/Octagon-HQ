@@ -241,6 +241,7 @@ export default function NbaGmDevPage(){
   const [swapOut,setSwapOut]=useState<string>("");
   const [serverPicker,setServerPicker]=useState<{key:string;rows:Array<{playerId:string;projectedPicks:NbaGmDevRun["picks"]}>}|null>(null);
   const [serverTradeTargets,setServerTradeTargets]=useState<{key:string;ids:string[]}|null>(null);
+  const [tradeTargetsError,setTradeTargetsError]=useState("");
   const [selectedFreeAgentId,setSelectedFreeAgentId]=useState<string|null>(null);
   const candidateKey=run?[run.seed,run.phase,run.pendingTeam,run.freeAgencyTeam,
     run.freeAgencyVisits,run.picks.map(p=>p.playerId).join(","),run.releasedIds.join(",")].join("|"):"";
@@ -265,12 +266,17 @@ export default function NbaGmDevPage(){
   },[repo,candidateKey,run?.rosterQualityVersion]);
   useEffect(()=>{
     if(!repo||run?.rosterQualityVersion!==1||!run.shopPlayerId||!run.tradeTeam){
-      setServerTradeTargets(null);return;
+      setServerTradeTargets(null);setTradeTargetsError("");return;
     }
     let active=true;
+    setTradeTargetsError("");
     void repo.legalTradeTargets().then(ids=>{if(active)setServerTradeTargets({key:tradeKey,ids});})
-      .catch(failure=>{if(active){setServerTradeTargets({key:tradeKey,ids:[]});
-        setError(failure instanceof Error?failure.message:"Trade eligibility unavailable.");}});
+      .catch(()=>{if(active){
+        // Target discovery is advisory; an error must not masquerade as
+        // "no legal trade". The accept path still validates every package.
+        setServerTradeTargets({key:tradeKey,ids:[]});
+        setTradeTargetsError("Trade target scouting is temporarily unavailable. Check each player's offers to see accepted packages.");
+      }});
     return()=>{active=false;};
   },[repo,tradeKey,run?.rosterQualityVersion]);
   useEffect(()=>{
@@ -431,7 +437,7 @@ export default function NbaGmDevPage(){
   // visible, even if an immediate exchange requires another legal structure.
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
     p.teamCode===run.tradeTeam&&!run.picks.some(pick=>pick.playerId===p.id)
-    &&(run.rosterQualityVersion!==1||
+    &&(run.rosterQualityVersion!==1||Boolean(tradeTargetsError)||
       (serverTradeTargets?.key===tradeKey&&serverTradeTargets.ids.includes(p.id)))
   ).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name)):[];
   const emergency=run?.phase==="offseason"&&run.picks.length<7&&
@@ -504,11 +510,12 @@ export default function NbaGmDevPage(){
               <TeamMark code={run.tradeTeam}/>
               <span><small>TRADE TALKS</small><strong>{NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}</strong></span>
             </header>
-            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Only position-safe trade targets appear below. Inspect a player, then choose VIEW OFFERS.</p>
+            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Choose a target to check which position-safe trade packages the other team will accept.</p>
               {run.rosterQualityVersion===1&&serverTradeTargets?.key!==tradeKey&&
-                <p className="nba-gm-dev__hint">Checking legal trade targets…</p>}
-              {run.rosterQualityVersion===1&&serverTradeTargets?.key===tradeKey&&eligibleTrade.length===0&&
-                <p className="nba-gm-dev__hint">No position-safe trade packages from this team.</p>}
+                <p className="nba-gm-dev__hint">Loading trade targets…</p>}
+              {tradeTargetsError&&<p className="nba-gm-dev__hint" role="status">{tradeTargetsError}</p>}
+              {run.rosterQualityVersion===1&&!tradeTargetsError&&serverTradeTargets?.key===tradeKey&&eligibleTrade.length===0&&
+                <p className="nba-gm-dev__hint">No available players to approach on this team.</p>}
               <div className="nba-gm-dev__trade-candidates">
                 {eligibleTrade.map(player=><article key={player.id}
                   className={"nba-gm-dev__trade-candidate"+(expandedTradeCandidate===player.id?" is-expanded":"")}>
