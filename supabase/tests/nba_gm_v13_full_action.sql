@@ -30,6 +30,7 @@ begin
       or v_state->>'lineupModelVersion'<>'2'
       or v_state->>'repriceModelVersion'<>'2'
        or v_state->>'rosterQualityVersion'<>'1'
+      or v_state->>'strengthCalibrationVersion'<>'1'
       or v_state->'caps' is distinct from
           '[175000000,175000000,175000000]'::jsonb
       or v_state->>'phase'<>'draft'
@@ -74,7 +75,7 @@ begin
     if v_state->>'phase'<>'offseason'
       or v_state->'picks' is distinct from
           (case when v_state->>'rosterQualityVersion'='1'
-             then private.nba_gm_v14_season_lineup(v_state,3)
+             then private.nba_gm_v14_season_lineup(v_state,2)
              else private.nba_gm_v12_season_lineup(v_state,3) end)
       or (select count(*) from jsonb_object_keys(
           coalesce(v_state->'development','{}'::jsonb)))<>7
@@ -124,6 +125,8 @@ begin
       v_state:=public.nba_gm_dev_action('sign',null,v_new);
       if jsonb_array_length(v_state->'picks')<>7 then
         raise exception 'V13 free agent did not restore seven positions';end if;
+       if v_state->'picks' is distinct from private.nba_gm_v14_season_lineup(v_state,2)
+         then raise exception 'NBA offseason signing did not show Year 2 positions';end if;
     end if;
     for v_yr in 2..3 loop
       select coalesce(sum(private.nba_gm_v3_salary(v_state,e.value->>'playerId',v_yr)),0)
