@@ -164,7 +164,7 @@ Deno.serve(async (request) => {
     // UFC Prep already contains editorially reviewed UFCStats packages. Reuse a
     // matching bout only after the owner and current event have been verified.
     // The prep event ID can differ from the published ID after canonical import.
-    const ufcNumber = /^UFC\\s+(\\d+)\\b/i.exec(String(source.name ?? ""))?.[1];
+    const ufcNumber = /^UFC\s+(\d+)\b/i.exec(String(source.name ?? ""))?.[1];
     if (ufcNumber) {
       const { data: prep, error: prepError } = await admin
         .from("ufc_pick_prep_packages")
