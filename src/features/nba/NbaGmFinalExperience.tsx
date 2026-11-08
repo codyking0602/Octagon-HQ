@@ -71,6 +71,14 @@ export function NbaGmFinalExperience({
     return [{slot,player,starting,delta,report:d,retained:originalIds.has(player.id)}];
   });
   const arrivals=finalRows.filter(row=>!row.retained);
+  // Count real player movement, never slot-to-slot reassignments.
+  const finalIds=new Set(finalRows.map(row=>row.player.id));
+  const departureRows=run.yearOnePicks.flatMap(pick=>{
+    if(finalIds.has(pick.playerId))return [];
+    const player=byId.get(pick.playerId);
+    return player?[{player,slot:pick.slot}]:[];
+  });
+  const originalSlotById=new Map(run.yearOnePicks.map(pick=>[pick.playerId,pick.slot]));
   const retained=finalRows.length-arrivals.length;
   const biggestJump=[...finalRows].sort((a,b)=>b.delta-a.delta)[0];
   const biggestDrop=[...finalRows].sort((a,b)=>a.delta-b.delta)[0];
@@ -159,9 +167,14 @@ export function NbaGmFinalExperience({
     {arrivals.length>0&&<section className="gm-final__section surface-card" aria-label="NBA offseason transactions">
       <header className="gm-final__heading"><h2>OFFSEASON MOVES</h2><small>{arrivals.length} CHANGED</small></header>
       {arrivals.length?<div className="gm-final__transactions">
-        {arrivals.map(row=><div className="gm-final__transaction" key={row.slot}>
-          <b>{NBA_GM_DEV_SLOT_LABELS[row.slot]}</b>
-          <span><strong>{row.starting?.name??"OPEN"}</strong><small>→</small><strong>{row.player.name}</strong></span>
+        {departureRows.map(row=><div className="gm-final__transaction" key={"out-"+row.player.id}>
+          <b>OUT</b>
+          <span><strong>{row.player.name}</strong></span>
+          <em>DEPARTED</em>
+        </div>)}
+        {arrivals.map(row=><div className="gm-final__transaction" key={"in-"+row.player.id}>
+          <b>IN</b>
+          <span><strong>{row.player.name}</strong></span>
           <em>ACQUIRED</em>
         </div>)}
       </div>:<p className="gm-final__hint">You kept the entire original rotation.</p>}
@@ -170,11 +183,12 @@ export function NbaGmFinalExperience({
     <details className="gm-final__disclosure gm-final__evolution-panel surface-card">
         <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y3</span></summary>
         <div className="gm-final__evolution">
-          {finalRows.map(row=><div key={row.slot}>
-            <b>{NBA_GM_DEV_SLOT_LABELS[row.slot]}</b>
-            <span><small>YEAR 1</small><strong>{row.starting?.name??"—"}</strong></span>
+          {finalRows.map(row=><div key={row.player.id}>
+            <b>{row.player.name}</b>
+            <span><small>YEAR 1 ROLE</small><strong>{originalSlotById.has(row.player.id)
+              ?NBA_GM_DEV_SLOT_LABELS[originalSlotById.get(row.player.id)!]:"NEW ARRIVAL"}</strong></span>
             <span aria-hidden="true">→</span>
-            <span><small>YEAR 3</small><strong>{row.player.name}</strong></span>
+            <span><small>YEAR 3 ROLE</small><strong>{NBA_GM_DEV_SLOT_LABELS[row.slot]}</strong></span>
           </div>)}
         </div>
       </details>
