@@ -131,7 +131,11 @@ describe("NBA GM locked NFL-player-card parity", () => {
     expect(fa).toContain('aria-label="SIGN Anthony Davis"');
     expect(fa).toContain("YEAR 2");
     expect(fa).toContain("$62.0M");
-    expect(page).toContain('action="SIGN" salaryYear={1}');
-    expect(page).toContain('action="SIGN DEPTH"');
+    // Current franchises preview a server-vetted lineup before signing.
+    // Older saved franchises retain their original direct-SIGN action.
+    expect(page).toContain('action={run.rosterQualityVersion===1?"PREVIEW":"SIGN"} salaryYear={1}');
+    expect(page).toContain('action={run.rosterQualityVersion===1?"PREVIEW":"SIGN DEPTH"}');
+    expect(page).toContain('onClick={()=>void act("sign",selectedFreeAgentId)}');
+    expect(page).toContain('onClick={()=>void act("emergency-sign",selectedFreeAgentId)}');
   });
 });
