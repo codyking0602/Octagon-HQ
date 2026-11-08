@@ -160,6 +160,63 @@ Deno.serve(async (request) => {
       throw new SpotlightBuildError("SPOTLIGHT_FIGHTER_IDENTITY_MISSING", "Both fighter identities are required before building a Spotlight.");
     }
 
+
+    // UFC Prep already contains editorially reviewed UFCStats packages. Reuse a
+    // matching bout only after the owner and current event have been verified.
+    // The prep event ID can differ from the published ID after canonical import.
+    const ufcNumber = /^UFC\s+(\d+)\b/i.exec(String(source.name ?? ""))?.[1];
+    if (ufcNumber) {
+      const { data: prep, error: prepError } = await admin
+        .from("ufc_pick_prep_packages")
+        .select("starts_at,payload")
+        .eq("source_event_key", `event/ufc-${ufcNumber}`)
+        .maybeSingle();
+      const prepStart = Date.parse(typeof prep?.starts_at === "string" ? prep.starts_at : "");
+      const prepPayload = asRecord(prep?.payload);
+      const candidates = Array.isArray(prepPayload?.spotlights) ? prepPayload.spotlights : [];
+      if (!prepError && Number.isFinite(prepStart) && Math.abs(prepStart - Date.parse(startsAt)) < 6 * 60 * 60 * 1000) {
+        // Import normalizes bout IDs (e.g. main-event-*), so the prepared
+        // package's source bout ID is not a stable published key. Match exactly
+        // one fighter pair within this verified event, then rekey to boutId.
+        const matches = candidates.map(asRecord).filter((entry) => {
+          const r = asRecord(entry?.red);
+          const b = asRecord(entry?.blue);
+          return entry?.source === "UFCStats"
+            && r?.fighter_slug === redSlug && b?.fighter_slug === blueSlug;
+        });
+        const saved = matches.length === 1 ? matches[0] : null;
+        const redStats = asRecord(saved?.red);
+        const blueStats = asRecord(saved?.blue);
+        if (saved && redStats && blueStats && typeof saved.preview === "string"
+          && saved.preview.trim().length >= 20
+          && typeof saved.generated_at === "string") {
+          const fighter = (value: Record<string, unknown>) => ({
+            fighterSlug: value.fighter_slug,
+            record: value.record,
+            age: value.age,
+            height: value.height,
+            reach: value.reach,
+            stance: value.stance,
+            edges: value.edges,
+          });
+          const watches = Array.isArray(saved.watch_spotlights) ? saved.watch_spotlights : [];
+          const spotlight = {
+            boutId,
+            preview: saved.preview,
+            red: fighter(redStats),
+            blue: fighter(blueStats),
+            watchSpotlights: watches.map(asRecord).filter((watch): watch is Record<string, unknown> => Boolean(watch)).map((watch) => ({
+              fighterSlug: watch.fighter_slug,
+              url: watch.url,
+            })),
+            source: "UFCStats",
+            generatedAt: saved.generated_at,
+          };
+          return json({ spotlight, deployment_sha: DEPLOYED_SOURCE_SHA });
+        }
+      }
+    }
+
     const red = loadFighter(redName, redSlug);
     const blue = loadFighter(blueName, blueSlug);
     const spotlight = buildPickSpotlightContent({

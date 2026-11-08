@@ -1081,11 +1081,12 @@ img.pick-fighter-thumbnail--ufc-headshot {
 }
 
 /* One pick button and independent fighter-profile links per fighter card. */
-.pick-choice-shell {position:relative;min-width:0;display:grid;}
+.pick-choice-shell {position:relative;min-width:0;display:grid;grid-template-rows:minmax(0,1fr) auto;}
 .pick-choice-shell>.pick-choice {width:100%;height:100%;min-width:0;}
-.pick-fighter-identity {position:absolute;top:10px;z-index:4;display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:80%;pointer-events:none;}
-.pick-choice-shell--red .pick-fighter-identity {right:7px;}
-.pick-choice-shell--blue .pick-fighter-identity {left:7px;align-items:flex-start;}
+/* Profile badges belong below, never on top of a fighter's portrait or pick button. */
+.pick-fighter-identity {position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:4px;max-width:100%;padding:5px 3px 0;pointer-events:none;}
+.pick-choice-shell--red .pick-fighter-identity {justify-content:flex-end;}
+.pick-choice-shell--blue .pick-fighter-identity {justify-content:flex-start;}
 .pick-fighter-identity a {pointer-events:auto;display:block;min-height:26px;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:950;letter-spacing:.02em;text-decoration:none;line-height:1.2;white-space:nowrap;box-shadow:0 1px 4px #0009;}
 .pick-fighter-identity__hq {color:#cfe8ff;border:1px solid #6695bd;background:#18293b;}
 .pick-fighter-identity__skcs {color:#ffdf8b;border:1px solid #bd933e;background:#342810;}
@@ -1152,3 +1153,44 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .ufc-group-hub__foot span::after { margin-left:7px; color:#9ca6ae; }
 .ufc-group-hub__body { border-top:1px solid #292c2e; }
 @media(max-width:400px) { .ufc-group-hub__summary { padding:9px 11px 7px; } .ufc-group-hub__scorecard { gap:4px; } }
+
+/* UFC 334: display full-size, intact portrait files within a predictable
+   clipped square. Visual zoom never edits the canonical source photography. */
+.pick-bout-card .pick-choice > .pick-fighter-photo-frame,
+.pick-bout-card.is-main-event .pick-choice > .pick-fighter-photo-frame {
+  display: block;
+  flex: none;
+  min-height: 0;
+  width: var(--picks-thumb-size);
+  height: var(--picks-thumb-size);
+  overflow: hidden;
+  border-radius: 16px;
+  -webkit-line-clamp: unset;
+}
+.pick-bout-card.is-main-event .pick-choice > .pick-fighter-photo-frame {
+  width: var(--picks-main-thumb-size);
+  height: var(--picks-main-thumb-size);
+  border-radius: 19px;
+}
+.pick-fighter-photo-frame > img.pick-fighter-thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  margin: 0;
+}
+.pick-fighter-photo-frame > img.pick-fighter-thumbnail:is(
+  [data-fighter-slug="yousri-belgaroui"],
+  [data-fighter-slug="cesar-almeida"],
+  [data-fighter-slug="chris-duncan"]
+) {
+  transform: scale(1.13);
+  transform-origin: center 28%;
+}
+@media (max-width: 620px) {
+  /* Give numbered PPV artwork a little more of the phone's available width. */
+  .picks-page .picks-event-hero.has-poster.is-numbered-event {
+    margin-inline: -7px;
+  }
+}
