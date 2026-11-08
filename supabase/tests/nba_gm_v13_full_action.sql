@@ -73,9 +73,9 @@ begin
     v_state:=public.nba_gm_dev_action('offseason');
     if v_state->>'phase'<>'offseason'
       or v_state->'picks' is distinct from
-          case when v_state->>'rosterQualityVersion'='1'
+          (case when v_state->>'rosterQualityVersion'='1'
              then private.nba_gm_v14_season_lineup(v_state,3)
-             else private.nba_gm_v12_season_lineup(v_state,3) end
+             else private.nba_gm_v12_season_lineup(v_state,3) end)
       or (select count(*) from jsonb_object_keys(
           coalesce(v_state->'development','{}'::jsonb)))<>7
       then raise exception 'V13 offseason developed lineup mismatch';end if;
@@ -144,9 +144,9 @@ begin
       or v_state->'results'->1 is distinct from v_result2
       or v_state->'results'->2 is distinct from v_result3
       or v_state->'picks' is distinct from
-          case when v_state->>'rosterQualityVersion'='1'
+          (case when v_state->>'rosterQualityVersion'='1'
              then private.nba_gm_v14_season_lineup(v_state,3)
-             else private.nba_gm_v12_season_lineup(v_state,3) end
+             else private.nba_gm_v12_season_lineup(v_state,3) end)
       then raise exception 'V13 three-season action/lineup inconsistency';end if;
     if exists(select 1 from jsonb_array_elements(v_state->'results') e(value)
       where (e.value->>'wins')::integer+(e.value->>'losses')::integer<>82
