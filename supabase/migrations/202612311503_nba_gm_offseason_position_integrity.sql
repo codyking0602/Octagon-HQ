@@ -171,8 +171,15 @@ begin
    or st->>'phase' not in ('draft','offseason') then return '[]'::jsonb;end if;
  team:=case when st->>'phase'='draft' then st->>'pendingTeam'
             else st->>'freeAgencyTeam' end;
- if team is null then return '[]'::jsonb;end if;
- for p in select id from private.nba_gm_dev_players where team_code=team order by overall desc,name loop
+ -- After three visits, the emergency depth list also obeys the same
+ -- server-owned positional filter, not a locally guessed eligibility list.
+ if team is null and not(st->>'phase'='offseason'
+    and (st->>'freeAgencyVisits')::integer>=3
+    and jsonb_array_length(st->'picks')<7
+    and st->>'shopPlayerId' is null) then return '[]'::jsonb;end if;
+ for p in select id from private.nba_gm_dev_players
+   where (team is null or team_code=team)
+     and (team is not null or overall<=78) order by overall desc,name loop
    if st->>'phase'='offseason' and
      (private.nba_gm_v3_contract_for_state(st,p.id)<>'1YR'
        or coalesce(st->'releasedIds','[]'::jsonb) ? p.id) then continue;end if;
