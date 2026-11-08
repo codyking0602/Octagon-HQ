@@ -68,7 +68,8 @@ describe("UFC 331 Picks fight-week polish", () => {
 
     expect(page).toContain('"MAIN + PRELIMS"');
     expect(page).toContain("is-numbered-event");
-    expect(motion).toContain("animation-duration: 20s");
+    expect(motion).toContain(".picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster {\n  animation: none;");
+    expect(motion).toContain("animation-duration: 22s;");
     expect(motion).toContain("rgba(202, 150, 59, .62)");
 
     for (const [, redSlug, , blueSlug] of pairs) {
