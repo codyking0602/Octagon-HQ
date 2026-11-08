@@ -1081,12 +1081,12 @@ img.pick-fighter-thumbnail--ufc-headshot {
 }
 
 /* One pick button and independent fighter-profile links per fighter card. */
-.pick-choice-shell {position:relative;min-width:0;display:grid;grid-template-rows:minmax(0,1fr) auto;}
+.pick-choice-shell {position:relative;min-width:0;display:grid;grid-template-rows:minmax(0,1fr) 40px;}
 .pick-choice-shell>.pick-choice {width:100%;height:100%;min-width:0;}
 /* Profile badges belong below, never on top of a fighter's portrait or pick button. */
-.pick-fighter-identity {position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:4px;max-width:100%;padding:5px 3px 0;pointer-events:none;}
-.pick-choice-shell--red .pick-fighter-identity {justify-content:flex-end;}
-.pick-choice-shell--blue .pick-fighter-identity {justify-content:flex-start;}
+.pick-fighter-identity {position:relative;z-index:4;display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;gap:4px;width:100%;max-width:100%;min-height:40px;padding:5px 0 0;pointer-events:none;}
+.pick-choice-shell--red .pick-fighter-identity {justify-content:center;}
+.pick-choice-shell--blue .pick-fighter-identity {justify-content:center;}
 .pick-fighter-identity a {pointer-events:auto;display:block;min-height:26px;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:950;letter-spacing:.02em;text-decoration:none;line-height:1.2;white-space:nowrap;box-shadow:0 1px 4px #0009;}
 .pick-fighter-identity__hq {color:#cfe8ff;border:1px solid #6695bd;background:#18293b;}
 .pick-fighter-identity__skcs {color:#ffdf8b;border:1px solid #bd933e;background:#342810;}
@@ -1127,7 +1127,7 @@ img.pick-fighter-thumbnail--ufc-headshot {
 @media(max-width:400px){.ufc-group-hub__summary{padding:10px 11px;}.ufc-group-hub__scorecard{gap:5px;}.ufc-group-hub__foot small{font-size:8px;}}
 
 /* UFC Picks: tappable compact rank links, red HQ and gold SKCS. */
-.pick-fighter-identity { top:7px; gap:5px; max-width:87%; }
+.pick-fighter-identity { top:auto; gap:4px; max-width:100%; }
 .pick-fighter-identity a { display:inline-flex; align-items:center; justify-content:center; gap:4px; min-height:34px; padding:6px 9px; border-radius:999px; font-size:10px; font-weight:900; line-height:1.15; letter-spacing:.02em; box-shadow:0 1px 4px #0007; }
 .pick-fighter-identity__hq { color:#ff9ba1; border:1px solid #be414a; background:#36191e; }
 .pick-fighter-identity__skcs { color:#f0d58b; border:1px solid #ae8735; background:#302514; }
@@ -1154,8 +1154,19 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .ufc-group-hub__body { border-top:1px solid #292c2e; }
 @media(max-width:400px) { .ufc-group-hub__summary { padding:9px 11px 7px; } .ufc-group-hub__scorecard { gap:4px; } }
 
-/* UFC 334: display full-size, intact portrait files within a predictable
-   clipped square. Visual zoom never edits the canonical source photography. */
+/* A fighter's ranking links need identical, reserved footer space on BOTH
+   sides of the fight. Otherwise an unranked opponent gets a taller pick tile
+   and the ranked pill appears to float between the cards. */
+.pick-bout-card__choices:has(.pick-fighter-identity a:nth-child(2)) > .pick-choice-shell {
+  grid-template-rows: minmax(0, 1fr) 72px;
+}
+.pick-bout-card__choices:has(.pick-fighter-identity a:nth-child(2)) .pick-fighter-identity {
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+/* Keep the published portrait bytes intact. Crop only the rendered view so
+   transparent padding within the source no longer makes the fighter look tiny. */
 .pick-bout-card .pick-choice > .pick-fighter-photo-frame,
 .pick-bout-card.is-main-event .pick-choice > .pick-fighter-photo-frame {
   display: block;
@@ -1164,7 +1175,10 @@ img.pick-fighter-thumbnail--ufc-headshot {
   width: var(--picks-thumb-size);
   height: var(--picks-thumb-size);
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .15);
   border-radius: 16px;
+  background: #242427;
+  box-shadow: 0 7px 16px rgba(0, 0, 0, .24);
   -webkit-line-clamp: unset;
 }
 .pick-bout-card.is-main-event .pick-choice > .pick-fighter-photo-frame {
@@ -1172,21 +1186,32 @@ img.pick-fighter-thumbnail--ufc-headshot {
   height: var(--picks-main-thumb-size);
   border-radius: 19px;
 }
-.pick-fighter-photo-frame > img.pick-fighter-thumbnail {
+.pick-bout-card .pick-fighter-photo-frame > img.pick-fighter-thumbnail {
   display: block;
   width: 100%;
   height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   object-fit: cover;
   object-position: center top;
-  margin: 0;
+  transform: scale(1.16);
+  transform-origin: center top;
 }
-.pick-fighter-photo-frame > img.pick-fighter-thumbnail:is(
+.pick-bout-card.is-main-event .pick-fighter-photo-frame > img.pick-fighter-thumbnail {
+  transform: scale(1.04);
+}
+/* Some approved square originals include additional empty breathing room. */
+.pick-bout-card:not(.is-main-event) .pick-fighter-photo-frame > img.pick-fighter-thumbnail:is(
   [data-fighter-slug="yousri-belgaroui"],
   [data-fighter-slug="cesar-almeida"],
-  [data-fighter-slug="chris-duncan"]
+  [data-fighter-slug="chris-duncan"],
+  [data-fighter-slug="luis-gurule"],
+  [data-fighter-slug="charles-radtke"],
+  [data-fighter-slug="drew-dober"]
 ) {
-  transform: scale(1.13);
-  transform-origin: center 28%;
+  transform: scale(1.24);
 }
 @media (max-width: 620px) {
   /* Give numbered PPV artwork a little more of the phone's available width. */
