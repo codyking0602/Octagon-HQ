@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { fighterOddsIdentity, fightOddsMatchupIdentity } from "../features/picks-monitoring/oddsModel.ts";
 
 const builder = readFileSync("supabase/functions/build-pick-spotlight/index.ts", "utf8");
-const migration = readFileSync("supabase/migrations/202612311502_ufc_named_manual_event_push.sql", "utf8");
+const migration = readFileSync("supabase/migrations/202612311520_ufc_named_manual_event_push.sql", "utf8");
 const controlRepository = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
 const presentation = readFileSync("src/styles/picks-polish.css", "utf8");
 
