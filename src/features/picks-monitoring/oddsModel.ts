@@ -66,6 +66,7 @@ export interface OddsAdapterResult {
 
 const fighterOddsIdentityAliases = new Map([
   ["lupita godinez", "loopy godinez"],
+  ["charlie radtke", "charles radtke"],
   ["mehemmedeli osmanli", "mahammadali osmanli"],
   ["valesca machado", "tina black"],
 ]);
