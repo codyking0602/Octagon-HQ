@@ -175,12 +175,16 @@ Deno.serve(async (request) => {
       const prepPayload = asRecord(prep?.payload);
       const candidates = Array.isArray(prepPayload?.spotlights) ? prepPayload.spotlights : [];
       if (!prepError && Number.isFinite(prepStart) && Math.abs(prepStart - Date.parse(startsAt)) < 6 * 60 * 60 * 1000) {
-        const saved = candidates.map(asRecord).find((entry) => {
+        // Import normalizes bout IDs (e.g. main-event-*), so the prepared
+        // package's source bout ID is not a stable published key. Match exactly
+        // one fighter pair within this verified event, then rekey to boutId.
+        const matches = candidates.map(asRecord).filter((entry) => {
           const r = asRecord(entry?.red);
           const b = asRecord(entry?.blue);
-          return entry?.bout_id === boutId && entry?.source === "UFCStats"
+          return entry?.source === "UFCStats"
             && r?.fighter_slug === redSlug && b?.fighter_slug === blueSlug;
         });
+        const saved = matches.length === 1 ? matches[0] : null;
         const redStats = asRecord(saved?.red);
         const blueStats = asRecord(saved?.blue);
         if (saved && redStats && blueStats && typeof saved.preview === "string"
