@@ -508,7 +508,7 @@ export default function NbaGmDevPage(){
               {run.rosterQualityVersion===1&&serverTradeTargets?.key!==tradeKey&&
                 <p className="nba-gm-dev__hint">Checking legal trade targets…</p>}
               {run.rosterQualityVersion===1&&serverTradeTargets?.key===tradeKey&&eligibleTrade.length===0&&
-                <p className="nba-gm-dev__hint">No position-safe trade packages from this team.</p>
+                <p className="nba-gm-dev__hint">No position-safe trade packages from this team.</p>}
               <div className="nba-gm-dev__trade-candidates">
                 {eligibleTrade.map(player=><article key={player.id}
                   className={"nba-gm-dev__trade-candidate"+(expandedTradeCandidate===player.id?" is-expanded":"")}>
