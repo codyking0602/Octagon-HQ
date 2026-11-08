@@ -668,7 +668,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
-        {run.phase==="offseason"&&<p className="nba-gm-dev__lineup-context">CURRENT OFFSEASON ROTATION · YEAR 1 POSITIONS ARE PRESERVED IN THE SEASON RECAP</p>}
+        {run.phase==="offseason"&&<p className="nba-gm-dev__lineup-context">UPCOMING YEAR 2 ROTATION · YEAR 1 POSITIONS STAY IN THE SEASON RECAP</p>}
         <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
             const pick=run.picks.find(p=>p.slot===slot);
