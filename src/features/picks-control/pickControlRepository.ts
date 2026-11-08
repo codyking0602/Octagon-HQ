@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import { pickSetupFunctionErrorMessage } from "../picks-setup/pickSetupRepository";
 import type { PickBoutResultStatus } from "../picks/picksModel";
 import type { PickSpotlight } from "../picks/spotlightModel";
 import type { PickControlEvent } from "./pickControlModel";
@@ -375,7 +376,7 @@ export function createPickControlRepository(): PickControlRepository | null {
       const { data, error } = await client.functions.invoke("build-pick-spotlight", {
         body: { event_id: eventId, bout_id: boutId },
       });
-      if (error) throw new Error(error.message || "The published Fight Spotlight could not be rebuilt.");
+      if (error) throw new Error(await pickSetupFunctionErrorMessage(error));
       const raw = data && typeof data === "object" ? (data as Record<string, unknown>).spotlight : null;
       return spotlightSchema.parse(raw);
     },
