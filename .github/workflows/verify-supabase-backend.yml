@@ -136,7 +136,8 @@ jobs:
             supabase/tests/nba_gm_v12_competitive_cores.sql \
             supabase/tests/nba_gm_v12_175m_competitive_drafts.sql \
             supabase/tests/nba_gm_v13_superstar_calibration.sql \
-            supabase/tests/nba_gm_v13_full_action.sql
+            supabase/tests/nba_gm_v13_full_action.sql \
+            supabase/tests/nba_gm_offseason_position_integrity.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"

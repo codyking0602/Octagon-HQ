@@ -149,6 +149,17 @@ function TradeOfferPlayer({id,run,byId}:{id:string;run:NbaGmDevRun;byId:Map<stri
   </details>;
 }
 
+/** Server-owned future-year positions; never manufacture slot changes from names. */
+function PositionPreview({picks,byId,title}:{picks:NbaGmDevRun["picks"]|undefined;byId:Map<string,NbaGmDevPlayer>;title:string}){
+  if(!picks?.length)return null;
+  return <section className="nba-gm-dev__position-preview" aria-label={title}>
+    <small>{title}</small>
+    <div>{NBA_GM_ROSTER_SLOTS.map(slot=>{
+      const id=picks.find(p=>p.slot===slot)?.playerId;
+      return <span key={slot}><b>{NBA_GM_DEV_SLOT_LABELS[slot]}</b><strong>{id?byId.get(id)?.name??"Unknown":"OPEN"}</strong></span>;
+    })}</div>
+  </section>;
+}
 function tradeYearTwoSkillLetter(player:NbaGmDevPlayer,run:NbaGmDevRun,key:keyof typeof NBA_GM_DEV_SKILL_LABELS){
   const {currentGrade:baseGrade}=player;
   const adjustedGrade=run.development?.[player.id]?.year2Grade;
@@ -228,6 +239,40 @@ export default function NbaGmDevPage(){
   const [offersBusy,setOffersBusy]=useState(false);
   const [tradeOfferError,setTradeOfferError]=useState("");
   const [swapOut,setSwapOut]=useState<string>("");
+  const [serverPicker,setServerPicker]=useState<{key:string;rows:Array<{playerId:string;projectedPicks:NbaGmDevRun["picks"]}>}|null>(null);
+  const [serverTradeTargets,setServerTradeTargets]=useState<{key:string;ids:string[]}|null>(null);
+  const [selectedFreeAgentId,setSelectedFreeAgentId]=useState<string|null>(null);
+  const candidateKey=run?[run.seed,run.phase,run.pendingTeam,run.freeAgencyTeam,
+    run.freeAgencyVisits,run.picks.map(p=>p.playerId).join(","),run.releasedIds.join(",")].join("|"):"";
+  const tradeKey=run?[run.seed,run.phase,run.shopPlayerId,run.tradeTeam,
+    run.picks.map(p=>p.playerId).join(","),run.displacedAssets?.join(",")].join("|"):"";
+  useEffect(()=>{
+    setSelectedFreeAgentId(null);
+  },[run?.picks,run?.freeAgencyTeam,run?.phase]);
+  // Server-side eligibility is mandatory on new franchises. Never flash
+  // locally guessed options while the authoritative filter is being loaded.
+  useEffect(()=>{
+    const needed=run?.rosterQualityVersion===1&&
+      ((run.phase==="draft"&&Boolean(run.pendingTeam))||
+       (run.phase==="offseason"&&(Boolean(run.freeAgencyTeam)||
+         (run.picks.length<7&&run.freeAgencyVisits>=3&&!run.shopPlayerId))));
+    if(!repo||!needed){setServerPicker(null);return;}
+    let active=true;
+    void repo.legalCandidates().then(rows=>{if(active)setServerPicker({key:candidateKey,rows});})
+      .catch(failure=>{if(active){setServerPicker({key:candidateKey,rows:[]});
+        setError(failure instanceof Error?failure.message:"Position eligibility unavailable.");}});
+    return()=>{active=false;};
+  },[repo,candidateKey,run?.rosterQualityVersion]);
+  useEffect(()=>{
+    if(!repo||run?.rosterQualityVersion!==1||!run.shopPlayerId||!run.tradeTeam){
+      setServerTradeTargets(null);return;
+    }
+    let active=true;
+    void repo.legalTradeTargets().then(ids=>{if(active)setServerTradeTargets({key:tradeKey,ids});})
+      .catch(failure=>{if(active){setServerTradeTargets({key:tradeKey,ids:[]});
+        setError(failure instanceof Error?failure.message:"Trade eligibility unavailable.");}});
+    return()=>{active=false;};
+  },[repo,tradeKey,run?.rosterQualityVersion]);
   useEffect(()=>{
     setTradeTarget(null);setExpandedTradeCandidate(null);setTradeOffers([]);setTradeOfferError("");
   },[run?.shopPlayerId,run?.tradeTeam]);
@@ -364,20 +409,6 @@ export default function NbaGmDevPage(){
     }
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
-  // Historical completed sessions remain immutable. Surface old accidental
-  // superstar bench assignments rather than silently rewriting their records.
-  const benchAlert=run?.picks.some(bench=>{
-    if(bench.slot!=="GUARD"&&bench.slot!=="BIG")return false;
-    const p=byId.get(bench.playerId);
-    if(!p)return false;
-    return run.picks.some(starter=>{
-      if(starter.slot==="BIG"||starter.slot==="GUARD")return false;
-      const sp=byId.get(starter.playerId);
-      return sp&&p.currentGrade>=sp.currentGrade+5&&
-        (bench.slot==="BIG"?["PF","C"].includes(starter.slot):["PG","SG"].includes(starter.slot))&&
-        p.positions.includes(starter.slot as "PG"|"SG"|"SF"|"PF"|"C");
-    });
-  })??false;
   // NFL-parity held assets remain on the cap until released/traded, even when
   // outside the active seven. They must never silently become free salaries.
   const heldPlayers=run?.displacedAssets??[];
@@ -388,7 +419,11 @@ export default function NbaGmDevPage(){
   },0)) as [number,number,number]:null;
   const displaySalaryYear=run?nbaGmDevDisplaySalaryYear(run.phase):0;
   const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
-  const candidates=run?nbaGmDevCandidates(run,catalog):[];
+  const candidateRows=serverPicker?.key===candidateKey?serverPicker.rows:[];
+  const projectedById=new Map(candidateRows.map(candidate=>[candidate.playerId,candidate.projectedPicks]));
+  const candidates=run?.rosterQualityVersion===1
+    ? catalog.filter(player=>projectedById.has(player.id)).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name))
+    :run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
   const currentTeam=run?.phase==="draft"?run.pendingTeam:run?.tradeTeam??run?.freeAgencyTeam;
   const wheelTeam=currentTeam?wheelTeams.find(team=>team.code===currentTeam)??null:null;
@@ -396,12 +431,15 @@ export default function NbaGmDevPage(){
   // visible, even if an immediate exchange requires another legal structure.
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
     p.teamCode===run.tradeTeam&&!run.picks.some(pick=>pick.playerId===p.id)
+    &&(run.rosterQualityVersion!==1||
+      (serverTradeTargets?.key===tradeKey&&serverTradeTargets.ids.includes(p.id)))
   ).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name)):[];
   const emergency=run?.phase==="offseason"&&run.picks.length<7&&
     run.freeAgencyVisits>=3&&!run.freeAgencyTeam&&!run.shopPlayerId
     ?catalog.filter(p=>p.gameContract==="1YR"&&p.currentGrade<=78
       &&!run.picks.some(pick=>pick.playerId===p.id)&&!run.releasedIds.includes(p.id)
-      &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
+      &&(run.rosterQualityVersion===1?projectedById.has(p.id):
+        nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason")))
       .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
     :[];
   // A release budget is constrained by BOTH remaining seasons, exactly as the
@@ -466,7 +504,11 @@ export default function NbaGmDevPage(){
               <TeamMark code={run.tradeTeam}/>
               <span><small>TRADE TALKS</small><strong>{NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}</strong></span>
             </header>
-            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Tap a player to inspect all six scouting grades, then choose VIEW OFFERS when you're ready. Your target locks when you request offers.</p>
+            {!tradeTarget?<><p className="nba-gm-dev__hint">Shopping <b>{byId.get(run.shopPlayerId)?.name}</b>. Only position-safe trade targets appear below. Inspect a player, then choose VIEW OFFERS.</p>
+              {run.rosterQualityVersion===1&&serverTradeTargets?.key!==tradeKey&&
+                <p className="nba-gm-dev__hint">Checking legal trade targets…</p>}
+              {run.rosterQualityVersion===1&&serverTradeTargets?.key===tradeKey&&eligibleTrade.length===0&&
+                <p className="nba-gm-dev__hint">No position-safe trade packages from this team.</p>}
               <div className="nba-gm-dev__trade-candidates">
                 {eligibleTrade.map(player=><article key={player.id}
                   className={"nba-gm-dev__trade-candidate"+(expandedTradeCandidate===player.id?" is-expanded":"")}>
@@ -524,6 +566,9 @@ export default function NbaGmDevPage(){
                       {offer.incomingPlayerIds.map(id=><TradeOfferPlayer key={id} id={id} byId={byId} run={run}/>)}
                     </div>
                   </div>
+                  {run.rosterQualityVersion===1&&<PositionPreview
+                    picks={offer.projectedPicks} byId={byId}
+                    title="AFTER TRADE · PROJECTED YEAR 2"/>}
                   {offer.requiresFreeAgency?<p>Leaves an open slot for your three-visit free-agent market.</p>:null}
                   {offer.requiresRosterMove?<p>One acquired asset will be held outside your seven-player rotation until you resolve it.</p>:null}
                   {((offer.capOverYear2??0)>0||(offer.capOverYear3??0)>0)&&<p className="nba-gm-dev__cap-crisis" role="status">
@@ -616,7 +661,7 @@ export default function NbaGmDevPage(){
       {run.phase==="draft"&&run.picks.length===0&&draftStage}
       {(run.phase==="draft"||run.phase==="year1"||run.phase==="offseason")&&!isTradeStage&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
-        {benchAlert&&<p className="nba-gm-dev__notice" role="status">Older saved rotation: a higher-rated eligible player is on your bench. New franchises optimize starters. Your saved result is unchanged.</p>}
+        {run.phase==="offseason"&&<p className="nba-gm-dev__lineup-context">CURRENT OFFSEASON ROTATION · YEAR 1 POSITIONS ARE PRESERVED IN THE SEASON RECAP</p>}
         <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
             const pick=run.picks.find(p=>p.slot===slot);
@@ -714,8 +759,21 @@ export default function NbaGmDevPage(){
               <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
               <div className="nba-gm-dev__candidate-grid">
                 {candidates.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
-                  action="SIGN" salaryYear={1} onPick={()=>void act("sign",player.id)}/>)}
+                  action={run.rosterQualityVersion===1?"PREVIEW":"SIGN"} salaryYear={1}
+                  onPick={()=>run.rosterQualityVersion===1?setSelectedFreeAgentId(player.id):void act("sign",player.id)}/>)}
               </div>
+              {run.rosterQualityVersion===1&&serverPicker?.key!==candidateKey&&
+                <p className="nba-gm-dev__hint">Checking position-safe signings…</p>}
+              {run.rosterQualityVersion===1&&serverPicker?.key===candidateKey&&candidates.length===0&&
+                <p className="nba-gm-dev__hint">No position-safe players from this team.</p>}
+              {run.rosterQualityVersion===1&&selectedFreeAgentId&&projectedById.has(selectedFreeAgentId)&&
+                <div className="nba-gm-dev__preview-confirm">
+                  <PositionPreview picks={projectedById.get(selectedFreeAgentId)} byId={byId} title="AFTER SIGNING · PROJECTED YEAR 2"/>
+                  <button className="nba-gm-dev__primary" disabled={busy}
+                    onClick={()=>void act("sign",selectedFreeAgentId)}>
+                    SIGN {byId.get(selectedFreeAgentId)?.name}
+                  </button>
+                </div>}
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
             </>}
           </div>}
@@ -724,8 +782,15 @@ export default function NbaGmDevPage(){
           <p className="nba-gm-dev__hint">All three visits used. Only affordable depth players may fill an open position. No rerolls.</p>
           <div className="nba-gm-dev__candidate-grid">
             {emergency.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
-              salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
+              salaryYear={1} action={run.rosterQualityVersion===1?"PREVIEW":"SIGN DEPTH"}
+              onPick={()=>run.rosterQualityVersion===1?setSelectedFreeAgentId(player.id):void act("emergency-sign",player.id)}/>)}
           </div>
+          {run.rosterQualityVersion===1&&selectedFreeAgentId&&projectedById.has(selectedFreeAgentId)&&
+            <div className="nba-gm-dev__preview-confirm">
+              <PositionPreview picks={projectedById.get(selectedFreeAgentId)} byId={byId} title="AFTER SIGNING · PROJECTED YEAR 2"/>
+              <button className="nba-gm-dev__primary" disabled={busy}
+                onClick={()=>void act("emergency-sign",selectedFreeAgentId)}>SIGN {byId.get(selectedFreeAgentId)?.name}</button>
+            </div>}
         </div>}
         {releasePanel}
       </section>}

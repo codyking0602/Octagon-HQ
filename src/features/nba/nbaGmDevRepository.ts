@@ -4,7 +4,7 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9),z.literal(10),z.literal(11),z.literal(12),z.literal(13)]).optional(),lineupModelVersion:z.union([z.literal(1),z.literal(2)]).optional(),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.union([z.literal(3),z.literal(4)]).optional(),developmentModelVersion:z.literal(2).optional(),simulationModelVersion:z.union([z.literal(5),z.literal(6),z.literal(7),z.literal(8),z.literal(9),z.literal(10),z.literal(11),z.literal(12),z.literal(13)]).optional(),lineupModelVersion:z.union([z.literal(1),z.literal(2)]).optional(),rosterQualityVersion:z.literal(1).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
@@ -52,13 +52,24 @@ const player=z.object({
 });
 type RpcClient={rpc:(name:string,args?:Record<string,unknown>)=>
   PromiseLike<{data:unknown,error:{message?:string}|null}>};
-export interface NbaGmTradeOffer { outgoingPlayerIds: string[]; incomingPlayerIds: string[]; shape: string; requiresFreeAgency: boolean; requiresRosterMove: boolean; capOverYear2?: number; capOverYear3?: number; }
+export interface NbaGmTradeOffer { outgoingPlayerIds: string[]; incomingPlayerIds: string[]; shape: string; requiresFreeAgency: boolean; requiresRosterMove: boolean; capOverYear2?: number; capOverYear3?: number; projectedPicks?: NbaGmDevRun["picks"]; }
+export interface NbaGmLegalCandidate { playerId: string; projectedPicks: NbaGmDevRun["picks"]; }
 export type NbaGmDevOperation="load"|"start"|"spin"|"pick"|"offseason"|
  "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"emergency-sign"|"advance"|"promote-displaced"|"release-displaced";
 export function createNbaGmDevRepository(supplied?:RpcClient|null){
   const client=supplied===undefined?getSupabaseClient() as unknown as RpcClient|null:supplied;
   if(!client)return null;
   return {
+    async legalCandidates():Promise<NbaGmLegalCandidate[]>{
+      const {data,error}=await client.rpc("nba_gm_dev_legal_candidates");
+      if(error)throw Error(error.message||"Available NBA GM players could not be verified.");
+      return z.array(z.object({playerId:z.string().min(1),projectedPicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7)})).parse(data);
+    },
+    async legalTradeTargets():Promise<string[]>{
+      const {data,error}=await client.rpc("nba_gm_dev_legal_trade_targets");
+      if(error)throw Error(error.message||"Available NBA GM trades could not be verified.");
+      return z.array(z.string().min(1)).parse(data);
+    },
     async tradeOffers(targetId:string):Promise<NbaGmTradeOffer[]>{
       const {data,error}=await client.rpc("nba_gm_dev_trade_offers",{p_target_id:targetId});
       if(error)throw Error(error.message||"Trade offers unavailable.");
@@ -72,6 +83,7 @@ export function createNbaGmDevRepository(supplied?:RpcClient|null){
         // owns future-year cap overages, including displaced assets.
         capOverYear2:z.number().int().nonnegative().optional(),
         capOverYear3:z.number().int().nonnegative().optional(),
+        projectedPicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7).optional(),
       })).max(5).parse(data);
     },
     async catalog():Promise<NbaGmDevPlayer[]>{

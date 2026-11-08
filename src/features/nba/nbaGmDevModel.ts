@@ -40,6 +40,8 @@ export interface NbaGmDevRun {
   simulationModelVersion?: 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
   /** Automatic developed best-five lineups for new franchises only. */
   lineupModelVersion?: 1 | 2;
+  /** New-run backend-filtered positions, legal trades and V13 lineup integrity. */
+  rosterQualityVersion?: 1;
   /** New franchises only; missing keeps V2 and original V3 development unchanged. */
   developmentModelVersion?: 2;
   seed: string;
