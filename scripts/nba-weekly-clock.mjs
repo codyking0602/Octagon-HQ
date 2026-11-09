@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-/** Scheduled GitHub runs can start hours late. Gate on Central calendar day,
- * never on an exact execution hour; manual/push recovery is always permitted. */
+/** GitHub cron may be delayed or dropped entirely. Scheduled and independent
+ * workflow_run recovery use the actual Central calendar day/hour; manual/push
+ * recovery is permitted immediately. Publication remains idempotent. */
 import fs from "node:fs";
 import { pathToFileURL } from "node:url";
 
