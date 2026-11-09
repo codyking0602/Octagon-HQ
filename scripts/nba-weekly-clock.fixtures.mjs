@@ -36,8 +36,9 @@ test("successful independent monitor triggers provide Monday recovery after 8 AM
 });
 test("publisher has off-hour cron plus independent existing monitor fallbacks", () => {
   const workflow = readFileSync(new URL("../.github/workflows/nba-weekly-spotlights.yml", import.meta.url), "utf8");
-  assert.match(workflow, /cron: '7 13,14,16,19 \\* \\* \\*'/);
-  assert.match(workflow, /workflow_run:[\\s\\S]*Monitor Three-Sport Daily Playability/);
-  assert.match(workflow, /workflow_run:[\\s\\S]*Sync Canonical What's New Models/);
-  assert.match(workflow, /github\\.event\\.workflow_run\\.conclusion == 'success'/);
+  assert.ok(workflow.includes("cron: '7 13,14,16,19 * * *'"));
+  assert.ok(workflow.includes("workflow_run:"));
+  assert.ok(workflow.includes("Monitor Three-Sport Daily Playability"));
+  assert.ok(workflow.includes("Sync Canonical What's New Models"));
+  assert.ok(workflow.includes("github.event.workflow_run.conclusion == 'success'"));
 });
