@@ -1,0 +1,51 @@
+{
+  "weekStart": "2026-11-02",
+  "weekEnd": "2026-11-08",
+  "publishedAt": "2026-11-09T16:39:49.178Z",
+  "player": {
+    "name": "Luka Doncic",
+    "team": "Los Angeles Lakers",
+    "teamId": "LAL",
+    "position": "G",
+    "gamesPlayed": 3,
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/3945274.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Luka%20Doncic",
+    "highlightUrl": "https://www.youtube.com/watch?v=30O4NgfgSP0",
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "45.0"
+      },
+      {
+        "label": "APG",
+        "value": "8.3"
+      },
+      {
+        "label": "RPG",
+        "value": "7.0"
+      },
+      {
+        "label": "FG%",
+        "value": "52.5"
+      }
+    ]
+  },
+  "team": {
+    "name": "Oklahoma City Thunder",
+    "teamId": "OKC",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/OKC/2027.html",
+    "record": "4-0",
+    "ppg": "120.8",
+    "oppPpg": "100.0",
+    "netMargin": "+20.8",
+    "fgPct": "48.2",
+    "threePct": "40.8",
+    "seasonRecord": "8-2",
+    "conference": "WEST",
+    "conferenceSeed": 2,
+    "standingsAsOf": "2026-11-09T16:39:49.231Z"
+  }
+}
