@@ -17,7 +17,10 @@ describe("NBA unattended editorial safeguards", () => {
     expect(script).toContain("Missing complete boxscore");
   });
   it("runs at local Monday 8 AM with retries and merges only after exact-head green checks", () => {
-    expect(flow).toContain("cron: '0 13,14 * * *'");
+    expect(flow).toContain("cron: '7 13,14,16,19 * * *'");
+    expect(flow).toContain("workflow_run:");
+    expect(flow).toContain("Monitor Three-Sport Daily Playability");
+    expect(flow).toContain("Sync Canonical What's New Models");
     expect(flow).toContain("actions/cache/restore@v4");
     expect(flow).toContain("actions/cache/save@v4");
     expect(flow).toContain("--collect-only");
