@@ -2,9 +2,16 @@ name: NBA Weekly Spotlight Auto-Publisher
 
 on:
   schedule:
-    # Collect official video feeds daily; Monday 8 AM Central publication and daily recovery.
-    # GitHub can delay scheduled jobs; eligibility uses actual Central date, not exact 5 AM.
-    - cron: '0 13,14 * * *'
+    # GitHub drops/delays top-of-hour cron runs. Offset from :00 and add recovery slots.
+    # Eligibility still follows the actual Central day/hour; duplicate runs are idempotent.
+    - cron: '7 13,14,16,19 * * *'
+  # Independent, already-running production monitors provide a second path if cron is missed.
+  workflow_run:
+    workflows:
+      - Monitor Three-Sport Daily Playability
+      - Sync Canonical What's New Models
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
   pull_request:
     paths:
@@ -31,7 +38,7 @@ concurrency:
 
 jobs:
   research-validate-publish:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
