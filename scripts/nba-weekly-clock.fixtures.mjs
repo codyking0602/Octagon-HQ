@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { nbaWeeklyGate } from "./nba-weekly-clock.mjs";
 
 test("late Monday GitHub schedule remains eligible to publish", () => {
@@ -25,4 +26,18 @@ test("manual dispatch and repair-push recover immediately", () => {
   for (const event of ["workflow_dispatch", "push"])
     assert.deepEqual(nbaWeeklyGate(new Date("2026-10-26T02:00:00Z"), event),
       { run: true, publish: true });
+});
+
+test("successful independent monitor triggers provide Monday recovery after 8 AM Central", () => {
+  assert.deepEqual(nbaWeeklyGate(new Date("2026-11-09T16:22:00Z"), "workflow_run"),
+    {run:true,publish:true});
+  assert.deepEqual(nbaWeeklyGate(new Date("2026-11-09T13:22:00Z"), "workflow_run"),
+    {run:true,publish:false});
+});
+test("publisher has off-hour cron plus independent existing monitor fallbacks", () => {
+  const workflow = readFileSync(new URL("../.github/workflows/nba-weekly-spotlights.yml", import.meta.url), "utf8");
+  assert.match(workflow, /cron: '7 13,14,16,19 \\* \\* \\*'/);
+  assert.match(workflow, /workflow_run:[\\s\\S]*Monitor Three-Sport Daily Playability/);
+  assert.match(workflow, /workflow_run:[\\s\\S]*Sync Canonical What's New Models/);
+  assert.match(workflow, /github\\.event\\.workflow_run\\.conclusion == 'success'/);
 });
