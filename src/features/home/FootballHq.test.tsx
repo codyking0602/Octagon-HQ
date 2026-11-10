@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import type { PlayChallenge } from "../challenges/challengeModel";
 import { parsePublishedFootballWeek } from "./footballWeeklyPublication";
-import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, footballSpotlightKindAt, footballOutstandingChallengeCount } from "./FootballHq";
+import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, playerSpotlightSecondaryColor, footballSpotlightKindAt, footballOutstandingChallengeCount } from "./FootballHq";
+import type { FootballPlayerSpotlight } from "./footballPlayerSpotlightSchedule";
 
 // These legacy presentation tests intentionally exercise the static fallback
 // when no published weekly editorial is available.
@@ -224,6 +225,18 @@ describe("Football HQ team logo presentation", () => {
     expect(footballHqTeamPresentationFor("Texas")).toMatchObject({
       color: "#BF5700", secondaryColor: null,
     });
+  });
+});
+
+describe("canonical Football Spotlight dual-color identity", () => {
+  const spotlight = (team: string, teamColor: string) => ({ team, teamColor }) as FootballPlayerSpotlight;
+  it("uses Giants red and Steelers gold as secondary hues for blue and black primaries", () => {
+    expect(playerSpotlightSecondaryColor(spotlight("New York Giants", "#0B2265"))).toBe("#A71930");
+    expect(playerSpotlightSecondaryColor(spotlight("Pittsburgh Steelers", "#101820"))).toBe("#FFB612");
+  });
+  it("keeps Texas as single-color while resolving LSU's purple second hue", () => {
+    expect(playerSpotlightSecondaryColor(spotlight("Texas", "#BF5700"))).toBe("#BF5700");
+    expect(playerSpotlightSecondaryColor(spotlight("LSU", "#FDD023"))).toBe("#461D7C");
   });
 });
 
