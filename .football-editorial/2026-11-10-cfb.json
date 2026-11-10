@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-10",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "cj-carr",
+        "name": "CJ Carr",
+        "team": "Notre Dame",
+        "position": "QB",
+        "summary": "Threw for 319 yards and three touchdowns in Notre Dame's 31-24 upset of No. 1 Miami on November 7."
+      },
+      {
+        "id": "devon-dampier",
+        "name": "Devon Dampier",
+        "team": "Utah",
+        "position": "QB",
+        "summary": "Passed for 177 yards and two touchdowns and rushed for 87 yards and two scores in Utah's 28-20 Holy War win over BYU on November 7."
+      },
+      {
+        "id": "dylan-raiola",
+        "name": "Dylan Raiola",
+        "team": "Oregon",
+        "position": "QB",
+        "summary": "Completed 25 of 40 for 257 yards and two touchdowns as Oregon rallied from 14-0 down to beat Ohio State 41-28 on November 7."
+      },
+      {
+        "id": "dylan-riley",
+        "name": "Dylan Riley",
+        "team": "Boise State",
+        "position": "RB",
+        "summary": "Recorded 300 all-purpose yards in Boise State's 64-38 win over its November 7 opponent."
+      },
+      {
+        "id": "steele-pizzella",
+        "name": "Steele Pizzella",
+        "team": "Wake Forest",
+        "position": "QB",
+        "summary": "Threw for 432 yards and three touchdowns in his first start during Wake Forest's 77-0 win over Merrimack on November 7."
+      }
+    ],
+    "games": [
+      {
+        "id": "texas-at-lsu",
+        "away_team": "Texas",
+        "home_team": "LSU",
+        "kickoff_at": "2026-11-14T18:30:00-06:00",
+        "summary": "Texas heads into Tiger Stadium at night after a 34-20 win at Missouri; LSU seeks a rebound from its 31-13 Alabama loss. ABC prime time."
+      },
+      {
+        "id": "utah-at-arizona",
+        "away_team": "Utah",
+        "home_team": "Arizona",
+        "kickoff_at": "2026-11-14T18:30:00-06:00",
+        "summary": "Unbeaten 9-0 Utah travels to 7-2 Arizona in a ranked Big 12 contest on FOX."
+      },
+      {
+        "id": "michigan-at-oregon",
+        "away_team": "Michigan",
+        "home_team": "Oregon",
+        "kickoff_at": "2026-11-14T14:30:00-06:00",
+        "summary": "Michigan visits Oregon at Autzen after the Ducks' 41-28 upset of Ohio State; FS1 matchup of national brands."
+      },
+      {
+        "id": "alabama-at-vanderbilt",
+        "away_team": "Alabama",
+        "home_team": "Vanderbilt",
+        "kickoff_at": "2026-11-14T11:45:00-06:00",
+        "summary": "Alabama enters 7-2 after beating LSU 31-13, facing Vanderbilt in an SEC road test."
+      },
+      {
+        "id": "ole-miss-at-oklahoma",
+        "away_team": "Ole Miss",
+        "home_team": "Oklahoma",
+        "kickoff_at": "2026-11-14T15:15:00-06:00",
+        "summary": "No. 19 Ole Miss (6-3) visits Oklahoma (5-4) after a lopsided Georgia loss; SEC Network."
+      }
+    ]
+  }
+}
