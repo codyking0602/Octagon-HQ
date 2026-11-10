@@ -197,18 +197,33 @@ describe("weekly owner-selected Games of the Week", () => {
 
 describe("Football HQ team logo presentation", () => {
   it("uses the opposite meaningful team color when available and white only for explicit silhouette exceptions", () => {
-    expect(footballHqTeamPresentationFor("LSU")).toEqual({ color: "#FDD023", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Ole Miss")).toEqual({ color: "#14213D", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Buffalo Bills")).toEqual({ color: "#C60C30", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Detroit Lions")).toEqual({ color: "#0076B6", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Alabama")).toEqual({ color: "#9E1B32", logoTreatment: "white" });
-    expect(footballHqTeamPresentationFor("Mississippi State")).toEqual({ color: "#5D1725", logoTreatment: "white" });
-    expect(footballHqTeamPresentationFor("Texas")).toEqual({ color: "#BF5700", logoTreatment: "white" });
-    expect(footballHqTeamPresentationFor("Oregon")).toEqual({ color: "#044520", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("USC")).toEqual({ color: "#990000", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Kansas City Chiefs")).toEqual({ color: "#E31837", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("Las Vegas Raiders")).toEqual({ color: "#000000", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("New Orleans Saints")).toEqual({ color: "#D3BC8D", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("LSU")).toMatchObject({ color: "#FDD023", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Ole Miss")).toMatchObject({ color: "#14213D", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Buffalo Bills")).toMatchObject({ color: "#C60C30", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Detroit Lions")).toMatchObject({ color: "#0076B6", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Alabama")).toMatchObject({ color: "#9E1B32", logoTreatment: "white" });
+    expect(footballHqTeamPresentationFor("Mississippi State")).toMatchObject({ color: "#5D1725", logoTreatment: "white" });
+    expect(footballHqTeamPresentationFor("Texas")).toMatchObject({ color: "#BF5700", logoTreatment: "white" });
+    expect(footballHqTeamPresentationFor("Oregon")).toMatchObject({ color: "#044520", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("USC")).toMatchObject({ color: "#990000", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Kansas City Chiefs")).toMatchObject({ color: "#E31837", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Las Vegas Raiders")).toMatchObject({ color: "#000000", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("New Orleans Saints")).toMatchObject({ color: "#D3BC8D", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Pittsburgh Steelers")).toMatchObject({
+      color: "#FFB612", secondaryColor: "#101820", foregroundColor: "#101418",
+    });
+    expect(footballHqTeamPresentationFor("Cincinnati Bengals")).toMatchObject({
+      color: "#171717", secondaryColor: "#FB4F14", foregroundColor: "#FFFFFF",
+    });
+    expect(footballHqTeamPresentationFor("New York Giants")).toMatchObject({
+      color: "#A71930", secondaryColor: "#0B2265", foregroundColor: "#FFFFFF",
+    });
+    expect(footballHqTeamPresentationFor("LSU")).toMatchObject({
+      color: "#FDD023", secondaryColor: "#461D7C", foregroundColor: "#101418",
+    });
+    expect(footballHqTeamPresentationFor("Texas")).toMatchObject({
+      color: "#BF5700", secondaryColor: null,
+    });
   });
 });
 
