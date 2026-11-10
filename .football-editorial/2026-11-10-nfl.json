@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-10",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "jordan-love",
+        "name": "Jordan Love",
+        "team": "Green Bay Packers",
+        "position": "QB",
+        "summary": "Passed for 372 yards as Green Bay defeated New England 45-27 on November 8."
+      },
+      {
+        "id": "cj-stroud",
+        "name": "C.J. Stroud",
+        "team": "Houston Texans",
+        "position": "QB",
+        "summary": "Passed for 384 yards in Houston's 44-22 victory over the Chargers on November 8."
+      },
+      {
+        "id": "ceedee-lamb",
+        "name": "CeeDee Lamb",
+        "team": "Dallas Cowboys",
+        "position": "WR",
+        "summary": "Caught 10 passes for 195 yards and a touchdown in Dallas' 27-23 win over Indianapolis on November 8."
+      },
+      {
+        "id": "arvell-reese",
+        "name": "Arvell Reese",
+        "team": "New York Giants",
+        "position": "LB",
+        "summary": "Recorded three sacks, 12 tackles, three tackles for loss and a forced fumble in the Giants' 19-11 win at Philadelphia on November 8."
+      },
+      {
+        "id": "ja-marr-chase",
+        "name": "Ja'Marr Chase",
+        "team": "Cincinnati Bengals",
+        "position": "WR",
+        "summary": "Recorded 155 receiving yards as Cincinnati defeated Atlanta 34-17 on November 8."
+      }
+    ],
+    "games": [
+      {
+        "id": "vikings-at-packers",
+        "away_team": "Minnesota Vikings",
+        "home_team": "Green Bay Packers",
+        "kickoff_at": "2026-11-15T12:00:00-06:00",
+        "summary": "NFC North rivalry at Lambeau after Green Bay scored 45 points against New England."
+      },
+      {
+        "id": "patriots-vs-lions-munich",
+        "away_team": "New England Patriots",
+        "home_team": "Detroit Lions",
+        "kickoff_at": "2026-11-15T08:30:00-06:00",
+        "summary": "Munich international game between New England and Detroit, broadcast nationally by FOX."
+      },
+      {
+        "id": "49ers-at-cowboys",
+        "away_team": "San Francisco 49ers",
+        "home_team": "Dallas Cowboys",
+        "kickoff_at": "2026-11-15T15:25:00-06:00",
+        "summary": "Late-window matchup in Dallas after CeeDee Lamb's 195-yard performance against Indianapolis."
+      },
+      {
+        "id": "steelers-at-bengals",
+        "away_team": "Pittsburgh Steelers",
+        "home_team": "Cincinnati Bengals",
+        "kickoff_at": "2026-11-15T19:20:00-06:00",
+        "summary": "AFC North rivalry in the Sunday Night Football window."
+      },
+      {
+        "id": "chargers-at-ravens",
+        "away_team": "Los Angeles Chargers",
+        "home_team": "Baltimore Ravens",
+        "kickoff_at": "2026-11-16T19:15:00-06:00",
+        "summary": "Monday Night Football AFC showdown in Baltimore."
+      }
+    ]
+  }
+}
