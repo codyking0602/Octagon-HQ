@@ -76,5 +76,9 @@
         "summary": "Monday Night Football AFC showdown in Baltimore."
       }
     ]
+  },
+  "selection": {
+    "player_id": "arvell-reese",
+    "game_id": "steelers-at-bengals"
   }
 }
