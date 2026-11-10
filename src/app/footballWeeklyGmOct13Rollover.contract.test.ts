@@ -16,7 +16,7 @@ describe("October 13 Football Weekly GM rollover", () => {
     expect(center).toContain('gmWeek ? "results" : "week"');
     expect(center).toContain("(impostorWindow.active || gmWeek)");
     expect(center).toContain('navigate("/football/weekly-gm")');
-    expect(center).toContain("Last week's Auction is complete.");
+    expect(center).toContain("Past Auction results remain under Results.");
   });
 
   it("preserves full Auction finals in the Auction Center while GM has its own closed-week history", () => {

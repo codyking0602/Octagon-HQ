@@ -150,6 +150,11 @@ function freshSeed() {
   return `${id}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 }
 
+function isStandardWeeklyGmSeed(seed: string): boolean {
+  const match = /^weekly-gm:(\d{4}-\d{2}-\d{2}):/.exec(seed);
+  return Boolean(match && match[1] >= "2026-11-03");
+}
+
 export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRules = "three-plus-one"): PersistedRun {
   return {
     version: FOOTBALL_GM_VERSION,
@@ -1589,8 +1594,8 @@ export default function FootballGmModePage({
         return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft", spinIndex: 1,
           roster: [{ slot: chosen.family, playerId: chosen.id, acquired: "draft" }] };
       }
-      // Nov 3 standard featured GM mirrors Casual: seven wheel picks, no forced starter.
-      if (weeklyRun.seed.startsWith("weekly-gm:2026-11-03:")) {
+      // Standard Weekly GM is permanent from Nov 3 onward: seven picks, no forced starter.
+      if (isStandardWeeklyGmSeed(weeklyRun.seed)) {
         return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft" };
       }
       const qbId = weeklyRun.seed.startsWith("weekly-gm:2026-10-20:")

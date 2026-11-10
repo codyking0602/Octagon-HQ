@@ -14,16 +14,17 @@ describe("November 3 standard Weekly NFL GM", () => {
     expect(migration).toContain("'nfl-gm-championship'");
     expect(migration).toContain("'featured_challenge', 'nfl-gm'");
     expect(migration).toContain("'required', false, 'available', false");
-    expect(play).toContain('Date.parse("2026-11-10T06:00:00Z")');
-    expect(archive).toContain('Date.parse("2026-11-10T06:00:00Z")');
+    expect(play).toContain('to="/football/weekly-gm"');
+    expect(play).not.toContain('Date.parse("2026-11-10T06:00:00Z")');
+    expect(archive).not.toContain('Date.parse("2026-11-10T06:00:00Z")');
   });
 
   it("starts both official runs with standard seven-spin wheel and an empty roster", () => {
-    expect(weeklyPage).toContain('weekStart === "2026-11-03"');
+    expect(weeklyPage).toContain('weekStart >= "2026-11-03"');
     expect(weeklyPage).toContain('title: "FRANCHISE 1"');
     expect(weeklyPage).toContain('title: "FRANCHISE 2"');
     expect(weeklyPage).toContain('isStandardWeek ? "Seven" : "Six"');
-    expect(gmPage).toContain('weeklyRun.seed.startsWith("weekly-gm:2026-11-03:")');
+    expect(gmPage).toContain("isStandardWeeklyGmSeed(weeklyRun.seed)");
     expect(gmPage).toContain('return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft" };');
     expect(migration).toContain("Standard Weekly GM must begin with an empty roster");
     expect(migration).toContain("Standard GM must draft all seven wheel picks");

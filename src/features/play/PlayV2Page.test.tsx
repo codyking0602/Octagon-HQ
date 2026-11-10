@@ -85,14 +85,11 @@ describe("public Football/UFC Play 2.0 release", () => {
     });
     preview("football");
     const hub = screen.getByTestId("play-v2-hub");
-    // October 13 through November 3 feature consecutive two-franchise GM weeks.
-    // Keep the UTC boundary aligned with the November 10 Central midnight rollover (CST).
-    const inGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
-      && Date.now() < Date.parse("2026-11-10T06:00:00Z");
+    // Weekly Football is permanently the two-franchise GM championship.
     expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" }))
-      .toHaveTextContent(inGmWeek ? "NFL GM CHAMPIONSHIP" : "AUCTION CENTER");
+      .toHaveTextContent("NFL GM CHAMPIONSHIP");
     expect(within(hub).getByRole("link", { name: /play this week/i }))
-      .toHaveAttribute("href", inGmWeek ? "/football/weekly-gm" : "/football/weekly-auction");
+      .toHaveAttribute("href", "/football/weekly-gm");
     expect(within(hub).getByRole("region", { name: "Today's Challenge" })).toHaveTextContent("Sports Feud");
     expect(within(hub).getByText("DAILY AVERAGE")).toBeInTheDocument();
     expect(within(hub).getByText("81.3")).toBeInTheDocument();
