@@ -225,6 +225,11 @@ describe("Football HQ team logo presentation", () => {
     expect(footballHqTeamPresentationFor("Texas")).toMatchObject({
       color: "#BF5700", secondaryColor: null,
     });
+    expect(footballHqTeamPresentationFor("Kansas City Chiefs").secondaryColor).toBe("#FFB81C");
+    expect(footballHqTeamPresentationFor("Oregon").secondaryColor).toBe("#FEE123");
+    expect(footballHqTeamPresentationFor("USC").secondaryColor).toBe("#FFC72C");
+    expect(footballHqTeamPresentationFor("Dallas Cowboys").secondaryColor).toBe("#A5ACAF");
+    expect(footballHqTeamPresentationFor("Detroit Lions").secondaryColor).toBe("#A5ACAF");
   });
 });
 
