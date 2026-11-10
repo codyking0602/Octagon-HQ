@@ -6,6 +6,43 @@ import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEng
  * Each story has a short explicit window. Expired stories are never playable.
  */
 export const NBA_BAR_TRIVIA_CURRENT_EVENTS: readonly BarTriviaQuestion[] = [
+  // November 10 editorial rerun; timed to the first November 19 NBA Bar Trivia appearance.
+  barTriviaQuestion({
+    id: "nba-current-2026-11-04-wembanyama-52-24",
+    league: "nba",
+    round: "round1",
+    difficulty: "easy",
+    category: "Star Performances",
+    prompt: "Which NBA star put up 52 points, 24 rebounds and eight blocks in a November 4 win over Dallas?",
+    choices: ["Victor Wembanyama","Giannis Antetokounmpo","Nikola Jokić","Joel Embiid"],
+    answer: "Victor Wembanyama",
+    explanation: "Victor Wembanyama set career highs with 52 points and 24 rebounds, adding eight blocks as San Antonio beat Dallas 112–111 on November 4, 2026.",
+    contentType: "current-event",
+    activeFrom: "2026-11-10T00:00:00-06:00",
+    expiresAt: "2026-11-25T23:59:59-06:00",
+    sourceId: "nba-2026-11-04-wembanyama-mavs-52-24",
+    sourceUrl: "https://www.nba.com/game/DAL-vs-SAS-0022600184",
+    verifiedAt: "2026-11-10",
+  }),
+
+  barTriviaQuestion({
+    id: "nba-current-2026-11-07-warriors-seven-straight",
+    league: "nba",
+    round: "round2",
+    difficulty: "medium",
+    category: "Early-Season Turnarounds",
+    prompt: "Which NBA team followed an 0–3 start to 2026–27 by winning seven consecutive games by November 7?",
+    choices: ["Golden State Warriors","New York Knicks","Miami Heat","Phoenix Suns"],
+    answer: "Golden State Warriors",
+    explanation: "Golden State rebounded from an 0–3 start with seven consecutive wins, capped by Stephen Curry's 41-point overtime performance against Orlando on November 7, 2026.",
+    contentType: "current-event",
+    activeFrom: "2026-11-10T00:00:00-06:00",
+    expiresAt: "2026-11-25T23:59:59-06:00",
+    sourceId: "nba-2026-11-07-gsw-seven-after-zero-three",
+    sourceUrl: "https://www.nba.com/warriors/news/gameday-recap-20261107",
+    verifiedAt: "2026-11-10",
+  }),
+
   barTriviaQuestion({
     id: "nba-current-2026-sixers-29-point-comeback",
     league: "nba",
