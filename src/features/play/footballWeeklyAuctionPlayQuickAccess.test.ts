@@ -8,12 +8,13 @@ const router = readFileSync("src/app/router.tsx", "utf8");
 const styles = readFileSync("src/styles/play-v2.css", "utf8");
 
 describe("Football Weekly Auction Play quick access", () => {
-  it("rotates the approved Weekly Featured Play 2.0 card between GM and Auction without layout changes", () => {
+  it("keeps the approved Weekly Featured Play 2.0 card permanently on GM without layout changes", () => {
     expect(footballPlay).toContain('<PlayV2Page sport="football" />');
     expect(playV2).toContain("<WeeklyCurrent />");
     expect(playV2).toContain("WEEKLY FEATURED");
-    expect(playV2).toContain("AUCTION CENTER");
-    expect(playV2).toContain('"/football/weekly-gm" : "/football/weekly-auction"');
+    expect(playV2).toContain("NFL GM CHAMPIONSHIP");
+    expect(playV2).not.toContain("AUCTION CENTER");
+    expect(playV2).toContain('to="/football/weekly-gm"');
     expect(playV2).toContain("PLAY THIS WEEK →");
     expect(playV2).not.toContain('to="/championship/football?tab=play"');
     expect(playV2).not.toContain("EDIT BIDS");
