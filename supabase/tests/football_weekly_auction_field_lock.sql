@@ -154,7 +154,10 @@ begin
   exception
     when others then
       if sqlerrm='post-Day-1 player bid was accepted'
-        or position('Weekly Auction field is locked for this week' in sqlerrm)=0
+        or (
+          position('Weekly Auction field is locked for this week' in sqlerrm)=0
+          and position('Weekly Auction participant is unavailable for this week' in sqlerrm)=0
+        )
       then
         raise;
       end if;
