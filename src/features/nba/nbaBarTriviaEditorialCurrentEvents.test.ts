@@ -44,7 +44,7 @@ describe("NBA Bar Trivia semantic duplicates and difficulty calibration", () => 
 
 describe("NBA Bar Trivia current-event editorial publishing", () => {
   it("only stages verified, bounded and sourced NBA current events", () => {
-    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(6);
+    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(8);
     expect(() => validateNbaBarTriviaCurrentEvents(NBA_BAR_TRIVIA_CURRENT_EVENTS)).not.toThrow();
     for (const q of NBA_BAR_TRIVIA_CURRENT_EVENTS) {
       expect(q.contentType).toBe("current-event");
@@ -61,7 +61,7 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
     ])).toThrow();
   });
 
-  it("never inserts expired launch-week stories into the Nov–Apr 20-board public rotation", () => {
+  it("uses two eligible November stories but never resurrects expired launch-week news", () => {
     const seen = new Set<string>();
     let newsCount = 0;
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
@@ -74,9 +74,9 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
         seen.add(q.id);
       }
     }
-    // All six currently vetted launch-week stories expire by Nov 7, before
-    // the first scheduled post-launch Bar Trivia appearance on Nov 19.
-    expect(newsCount).toBe(0);
+    // The six launch-week stories expired before Nov 19. Two fresh Nov 4–7
+    // stories qualify for the Nov 19 board, then expire before Dec 3.
+    expect(newsCount).toBe(2);
     expect(seen.size).toBe(200);
   });
 
@@ -93,21 +93,33 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
       }
     }
     expect(seen.size).toBe(200);
-    expect(news.size).toBe(0);
+    expect(news).toEqual(new Set([
+      "nba-current-2026-11-04-wembanyama-52-24",
+      "nba-current-2026-11-07-warriors-seven-straight",
+    ]));
     expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
   });
 
-  it("preserves all 200 evergreen questions in the canonical first 20-board season rotation", () => {
+  it("keeps all 200 evergreen questions available while maintaining 20 unique mixed boards", () => {
     const seen = new Set<string>();
+    const seenEvergreen = new Set<string>();
+    const news = new Set<string>();
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
       const board = buildNbaBarTriviaDailyBoard(slot, "2026-11-15");
-      expect(board.questions.every(q => q.contentType === "evergreen")).toBe(true);
+      const dated = board.questions.filter(q => q.contentType === "current-event");
+      expect(dated.length).toBeLessThanOrEqual(2);
       for (const q of board.questions) {
         expect(seen.has(q.id)).toBe(false);
         seen.add(q.id);
+        if (q.contentType === "current-event") news.add(q.id);
+        else seenEvergreen.add(q.id);
       }
     }
-    expect(seen).toEqual(new Set(questions.map(q => q.id)));
+    expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
+    expect([...seenEvergreen].every(id => questions.some(q => q.id === id))).toBe(true);
+    expect(seenEvergreen.size).toBe(198);
+    expect(news.size).toBe(2);
+    expect(seen.size).toBe(200);
     expect(() => buildNbaBarTriviaDailyBoard(0, "not-a-date")).toThrow();
   });
 });
