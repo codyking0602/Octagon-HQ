@@ -51,9 +51,11 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   brown: "#311D00",
   burgundy: "#5A1414",
   cardinal: "#8C1515",
+  cream: "#F5F1E8",
   crimson: "#9E1B32",
   garnet: "#73000A",
   gold: "#D4A72C",
+  gray: "#8A8D8F",
   green: "#0B5D3B",
   maroon: "#5D1725",
   navy: "#041E42",
@@ -61,7 +63,9 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   purple: "#4F2683",
   red: "#BA0C2F",
   scarlet: "#BB0000",
+  silver: "#A5ACAF",
   teal: "#006D75",
+  yellow: "#F9D84A",
 };
 
 const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
@@ -84,6 +88,14 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
+// Silver, gray and cream still belong to a team’s palette even if they should
+// not drive the fill; only white is ignored for the accent/Spotlight bar.
+const HOME_ACCENT_NEUTRALS = new Set(["white"]);
+const FEATURED_SECONDARY_OVERRIDES: Readonly<Record<string, string>> = {
+  "Kansas City Chiefs": "#FFB81C",
+  Oregon: "#FEE123",
+  USC: "#FFC72C",
+};
 const HOME_WHITE_LOGO_TEAMS = new Set(["Alabama", "Mississippi State", "Texas"]);
 const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
   Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
@@ -96,7 +108,7 @@ function footballPaletteColor(team: string, token: string): string {
 function footballMeaningfulPalette(name: string): string[] {
   const metadata = footballTeamSchoolMetadataFor(name);
   return (metadata?.colors ?? [])
-    .filter((token) => !HOME_LOGO_NEUTRALS.has(token))
+    .filter((token) => !HOME_ACCENT_NEUTRALS.has(token))
     .map((token) => footballPaletteColor(metadata!.name, token));
 }
 
@@ -123,8 +135,9 @@ export function footballHqTeamPresentationFor(name: string) {
     ?? colors[0]
     ?? "blue";
   const color = footballPaletteColor(canonicalName, backgroundToken);
-  const secondaryToken = colors.find((token) => token !== backgroundToken && !HOME_LOGO_NEUTRALS.has(token));
-  const secondaryColor = secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null;
+  const secondaryToken = colors.find((token) => token !== backgroundToken && !HOME_ACCENT_NEUTRALS.has(token));
+  const secondaryColor = FEATURED_SECONDARY_OVERRIDES[canonicalName]
+    ?? (secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null);
 
   return {
     color,
