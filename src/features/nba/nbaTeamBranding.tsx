@@ -22,7 +22,20 @@ const NBA_BRAND_COLORS: Record<string,string> = {
   POR:"#E03A3E",SAC:"#5A2D81",SAS:"#C4CED4",TOR:"#CE1141",
   UTA:"#753BBD",WAS:"#E31837"
 };
+// Distinct secondary team hues are used by the shared Spotlight photo bar and fade.
+// Neutral black/silver secondaries are intentional for one-color NBA wordmarks.
+const NBA_SECONDARY_COLORS: Record<string,string> = {
+  ATL:"#C1D32F",BOS:"#BA9653",BKN:"#000000",CHA:"#00788C",
+  CHI:"#000000",CLE:"#FDBB30",DAL:"#B8C4CA",DEN:"#0E2240",
+  DET:"#006BB6",GSW:"#1D428A",HOU:"#000000",IND:"#002D62",
+  LAC:"#1D428A",LAL:"#552583",MEM:"#12173F",MIA:"#F9A01B",
+  MIL:"#EEE1C6",MIN:"#0C2340",NOP:"#0C2340",NYK:"#006BB6",
+  OKC:"#EF3B24",ORL:"#000000",PHI:"#ED174C",PHX:"#1D1160",
+  POR:"#000000",SAC:"#63727A",SAS:"#000000",TOR:"#000000",
+  UTA:"#0C2340",WAS:"#002B5C",
+};
 export const nbaTeamColor = (id:string) => NBA_BRAND_COLORS[id] ?? "#c48d4a";
+export const nbaTeamSecondaryColor = (id:string) => NBA_SECONDARY_COLORS[id] ?? nbaTeamColor(id);
 export const nbaTeamLogoSrc = (id:string) => NBA_IDS[id]
   ? `https://cdn.nba.com/logos/nba/${NBA_IDS[id]}/primary/L/logo.svg`
   : "";
