@@ -67,6 +67,12 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
 const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Buffalo Bills:red": "#C60C30",
   "Detroit Lions:blue": "#0076B6",
+  "New York Giants:blue": "#0B2265",
+  "New York Giants:red": "#A71930",
+  "Pittsburgh Steelers:black": "#101820",
+  "Pittsburgh Steelers:gold": "#FFB612",
+  "Cincinnati Bengals:orange": "#FB4F14",
+  "LSU:purple": "#461D7C",
   "LSU:gold": "#FDD023",
   "Kansas City Chiefs:gold": "#E31837",
   "Las Vegas Raiders:black": "#000000",
@@ -83,19 +89,47 @@ const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
   Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
 };
 
+function footballPaletteColor(team: string, token: string): string {
+  return TEAM_COLOR_OVERRIDES[`${team}:${token}`] ?? SEMANTIC_TEAM_COLORS[token] ?? "#1F4E79";
+}
+
+function footballMeaningfulPalette(name: string): string[] {
+  const metadata = footballTeamSchoolMetadataFor(name);
+  return (metadata?.colors ?? [])
+    .filter((token) => !HOME_LOGO_NEUTRALS.has(token))
+    .map((token) => footballPaletteColor(metadata!.name, token));
+}
+
+// CSS color-mix keeps the full official fill; choose a readable foreground
+// instead of forcing white lettering onto gold/yellow teams.
+function teamPillForeground(hex: string): string {
+  const match = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!match) return "#FFFFFF";
+  const n = parseInt(match[1], 16);
+  const channels = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => {
+    const value = c / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+  return luminance > 0.179 ? "#101418" : "#FFFFFF";
+}
+
 export function footballHqTeamPresentationFor(name: string) {
   const metadata = footballTeamSchoolMetadataFor(name);
   const canonicalName = metadata?.name ?? name;
   const colors = metadata?.colors ?? [];
-  const backgroundToken = colors.slice(1).find((color) => !HOME_LOGO_NEUTRALS.has(color))
+  // Preserve the established team fill (e.g. Steelers gold, LSU gold).
+  const backgroundToken = colors.slice(1).find((token) => !HOME_LOGO_NEUTRALS.has(token))
     ?? colors[0]
     ?? "blue";
-  const color = TEAM_COLOR_OVERRIDES[`${canonicalName}:${backgroundToken}`]
-    ?? SEMANTIC_TEAM_COLORS[backgroundToken]
-    ?? "#1F4E79";
+  const color = footballPaletteColor(canonicalName, backgroundToken);
+  const secondaryToken = colors.find((token) => token !== backgroundToken && !HOME_LOGO_NEUTRALS.has(token));
+  const secondaryColor = secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null;
 
   return {
     color,
+    secondaryColor,
+    foregroundColor: teamPillForeground(color),
     logoTreatment: HOME_WHITE_LOGO_TEAMS.has(canonicalName) ? "white" as const : "full-color" as const,
   };
 }
@@ -176,14 +210,26 @@ function featuredGameTeamLabel(fullName: string, canonicalName: string) {
   return { name: full, nickname: "" };
 }
 
-/** Retain both parts of the club identity, not only the server's primary color.
- * Conservative defaults keep historically approved single-color spotlights intact. */
-function playerSpotlightSecondaryColor(spotlight: FootballPlayerSpotlight): string {
-  const team = spotlight.team.toLowerCase();
-  if (team.includes("chicago bears")) return "#C83803";
-  if (team.includes("new england patriots")) return "#C60C30";
-  if (team === "byu" || team.includes("byu cougars")) return "#FFFFFF";
-  return spotlight.teamColor;
+/** Resolve the secondary hue from canonical NFL/CFB metadata for every club.
+ * Match against the server's player primary so the photo bar never repeats it. */
+export function playerSpotlightSecondaryColor(spotlight: FootballPlayerSpotlight): string {
+  const palette = footballMeaningfulPalette(spotlight.team);
+  if (palette.length < 2) return spotlight.teamColor;
+  const rgb = (hex: string) => {
+    const value = /^#([0-9a-f]{6})$/i.exec(hex)?.[1];
+    return value ? [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16)) : null;
+  };
+  const primary = rgb(spotlight.teamColor);
+  if (!primary) return palette[1];
+  let nearest = 0;
+  let shortest = Number.POSITIVE_INFINITY;
+  palette.forEach((color, index) => {
+    const candidate = rgb(color);
+    if (!candidate) return;
+    const distance = candidate.reduce((sum, value, channel) => sum + (value - primary[channel]) ** 2, 0);
+    if (distance < shortest) { nearest = index; shortest = distance; }
+  });
+  return palette.find((_, index) => index !== nearest) ?? spotlight.teamColor;
 }
 
 function PlayerSpotlight({
@@ -316,7 +362,8 @@ function FeaturedGameTeamPill({
   const url = footballTeamSportsReferenceUrl(team.name, level, season);
   const style = {
     "--team-color": presentation.color,
-    "--team-accent": team.name === "Green Bay Packers" ? "#156342" : presentation.color,
+    "--team-secondary": presentation.secondaryColor ?? presentation.color,
+    "--team-foreground": presentation.foregroundColor,
   } as CSSProperties;
   const contents = (
     <>
