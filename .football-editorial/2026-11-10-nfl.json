@@ -80,5 +80,73 @@
   "selection": {
     "player_id": "arvell-reese",
     "game_id": "steelers-at-bengals"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Arvell Reese",
+      "team": "New York Giants",
+      "position": "LB",
+      "stats": [
+        {
+          "label": "TACKLES",
+          "value": "12"
+        },
+        {
+          "label": "SACKS",
+          "value": "3"
+        },
+        {
+          "label": "TFL",
+          "value": "3"
+        },
+        {
+          "label": "FORCED FUMBLE",
+          "value": "1"
+        }
+      ],
+      "result": "W 19–11 at Philadelphia",
+      "measurements": "6 ft 4 in · 243 lbs",
+      "team_color": "#0B2265",
+      "highlight_url": "https://www.youtube.com/watch?v=znF3q5lZYC4",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/4950400.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-10/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Pittsburgh Steelers",
+      "home_team": "Cincinnati Bengals",
+      "kickoff_at": "2026-11-15T19:20:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.giants.com/news/game-balls-key-performances-from-week-9-win-philadelphia-eagles-john-harbaugh-arvell-reese-micah-mcfadden-isaiah-likely-dj-reader",
+        "https://www.giants.com/news/notes-stats-defense-dominates-with-7-sacks-arvell-reese-eagles",
+        "https://www.nfl.com/players/arvell-reese/",
+        "https://www.bengals.com/news/quick-hits-joe-burrow-s-mvp-numbers-get-steelers-next-amarius-mims-jamarr-chase",
+        "https://www.steelers.com/news/good-to-get-away-but-time-to-re-activate",
+        "https://www.steelers.com/schedule/2026/",
+        "https://www.steelers.com/news/wake-up-call"
+      ],
+      "breakdown": {
+        "setup": [
+          "Pittsburgh (6–2) travels to Cincinnati (6–2) for a Sunday night AFC North meeting between division contenders. The Steelers are coming off their bye after a 27–6 win over Cleveland, while the Bengals just beat Atlanta 34–17 in Madrid. Joe Burrow's efficiency has driven Cincinnati's offense; Pittsburgh's preparation and ability to disrupt his timing loom large."
+        ],
+        "things": [
+          {
+            "title": "Can Pittsburgh slow Burrow?",
+            "body": "Burrow enters the game leading the NFL in passer rating, passing touchdowns and passing yards per game, while completing 74 percent of his attempts. The Steelers must contest short throws without allowing Ja'Marr Chase and Tee Higgins room to turn them into explosive gains."
+          },
+          {
+            "title": "Steelers arrive refreshed",
+            "body": "Pittsburgh finished its pre-bye stretch with a 27–6 win over Cleveland and used the open week to reset. The challenge is transferring that defensive discipline into a road rivalry against a Cincinnati attack that moves the chains at an exceptional rate."
+          },
+          {
+            "title": "Third-down control",
+            "body": "Before the Bengals' Madrid win, Cincinnati was converting 52.9 percent of third downs, according to the Steelers' own preview. Pittsburgh cannot allow Burrow repeated manageable situations; Cincinnati must protect its quarterback when the Steelers force longer downs."
+          }
+        ],
+        "bottom_line": "Both teams enter at 6–2, but with different preparation rhythms: Pittsburgh is rested, and Cincinnati's offense is rolling. Burrow's precision against Pittsburgh's pressure and each team's ability to win third downs should decide which side controls this rivalry game."
+      }
+    }
   }
 }
