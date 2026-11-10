@@ -6,6 +6,7 @@ const play = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
 const archive = readFileSync("src/features/back-room/FootballWeeklyAuctionCenterPage.tsx", "utf8");
 const weekly = readFileSync("src/features/back-room/FootballWeeklyGmPage.tsx", "utf8");
 const gm = readFileSync("src/features/back-room/FootballGmModePage.tsx", "utf8");
+const daily = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 
 describe("Permanent Tuesday NFL GM featured championship", () => {
   it("never routes the featured football game back to Auction", () => {
@@ -13,6 +14,8 @@ describe("Permanent Tuesday NFL GM featured championship", () => {
     expect(play).not.toContain('to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}');
     expect(archive).toContain('return now.getTime() >= Date.parse("2026-10-13T05:00:00Z");');
     expect(archive).toContain("repository.loadHistory()");
+    expect(daily).toContain('const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z");');
+    expect(daily).not.toContain('Date.parse("2026-10-20T05:00:00Z")');
   });
 
   it("automatically creates the next Chicago-time Tuesday GM event without an Auction Daily gate", () => {

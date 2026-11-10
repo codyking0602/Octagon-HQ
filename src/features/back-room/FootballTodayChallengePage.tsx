@@ -646,8 +646,7 @@ export default function FootballTodayChallengePage() {
   const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const impostorRepository = useMemo(() => createHqImpostorRepository(), []);
   const impostorWindow = hqImpostorV1Window();
-  const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
-    && Date.now() < Date.parse("2026-10-20T05:00:00Z");
+  const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z");
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
