@@ -80,5 +80,77 @@
   "selection": {
     "player_id": "cj-carr",
     "game_id": "texas-at-lsu"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "CJ Carr",
+      "team": "Notre Dame",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "319"
+        },
+        {
+          "label": "PASS TD",
+          "value": "3"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "29/40"
+        },
+        {
+          "label": "INT",
+          "value": "0"
+        }
+      ],
+      "result": "W 31–24 vs No. 1 Miami",
+      "measurements": "6 ft 2 in · 215 lbs",
+      "team_color": "#0C2340",
+      "highlight_url": "https://www.youtube.com/watch?v=2qfxJ3WRy9I",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/5079369.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-10/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Texas",
+      "home_team": "LSU",
+      "kickoff_at": "2026-11-14T18:30:00-06:00",
+      "ranking_source": "AP",
+      "away_rank": 8,
+      "home_rank": 24,
+      "away_record": "7-2",
+      "home_record": "6-3"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://fightingirish.com/news/2026/11/7/irish-triumph-over-miami-fl-31-24",
+        "https://fightingirish.com/news/2026/11/9/carr-earns-ap-player-of-the-week",
+        "https://fightingirish.com/sports/football/roster/player/cj-carr",
+        "https://texaslonghorns.com/news/2026/11/9/no-8-8-7-footballs-manning-named-sec-offensive-player-of-the-week-manning-award-star-of-the-week",
+        "https://lsusports.net/news/2026/11/8/nov-8-10-2026-football-national-rankings",
+        "https://lsusports.net/sports/fb/schedule/season/2026"
+      ],
+      "breakdown": {
+        "setup": [
+          "No. 8 Texas (7–2) travels to No. 24 LSU (6–3) for a Saturday night SEC matchup in Baton Rouge. The Longhorns bring a three-game winning streak after Arch Manning threw three touchdowns in a 34–20 road victory at Missouri. LSU is looking for a response after falling 31–13 to Alabama. The matchup hinges on whether Texas can keep its passing rhythm against a motivated home side."
+        ],
+        "things": [
+          {
+            "title": "Manning's downfield rhythm",
+            "body": "Manning completed 28 of 38 passes for 297 yards and three touchdowns at Missouri, with every touchdown covering more than 20 yards. In Texas' three-game winning streak he has 729 passing yards and seven touchdowns. LSU must limit explosive completions and make Texas earn long drives."
+          },
+          {
+            "title": "LSU's offensive response",
+            "body": "The Tigers managed 13 points in their loss to Alabama. Facing a Texas offense that has been finishing drives with explosive passes, LSU needs steadier early-down production and sustained possessions rather than repeatedly asking its defense to defend a short field."
+          },
+          {
+            "title": "Turnovers and late-game execution",
+            "body": "Manning threw six touchdowns without an interception in his last two games, including the go-ahead score late at Missouri. LSU's best chance to control the tempo is to create difficult passing downs and avoid the mistakes that let Texas finish drives quickly."
+          }
+        ],
+        "bottom_line": "Texas arrives with an increasingly efficient quarterback and timely explosive plays, while LSU has the environment and urgency to challenge that momentum. Sustained Tiger possessions, limiting Texas' downfield passes and fourth-quarter execution will determine the shape of this SEC showdown."
+      }
+    }
   }
 }
