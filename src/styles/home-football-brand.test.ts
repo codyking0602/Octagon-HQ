@@ -20,7 +20,9 @@ describe("Football powder-blue brand", () => {
   });
 
   it("keeps Football HQ logos full color by default with a targeted white fallback", () => {
-    expect(homeFootballCss).toContain("color-mix(in srgb, var(--team-accent, var(--team-color)) 30%, #101922)");
+    expect(homeFootballCss).toContain("background: var(--team-color);");
+    expect(homeFootballCss).toContain("background: var(--team-secondary, var(--team-color));");
+    expect(homeFootballCss).toContain("color: var(--team-foreground, #fff);");
     expect(homeFootballCss).toContain(".football-hq-team-mark img");
     expect(homeFootballCss).toContain("filter: none;");
     expect(homeFootballCss).toContain(".football-hq-team-mark.is-white-logo img");

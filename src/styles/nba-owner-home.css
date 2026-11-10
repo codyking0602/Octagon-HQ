@@ -470,10 +470,12 @@
   border: 1px solid color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 45%, #314557);
   border-radius: 16px;
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 34%, transparent) 0 3px, transparent 3px),
-    radial-gradient(circle at 14% 32%, color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 28%, transparent), transparent 38%),
-    radial-gradient(circle at 95% 110%, color-mix(in srgb, var(--nba-player-primary, #c48d4a) 45%, transparent), transparent 63%),
-    linear-gradient(135deg, #07111a, #090b0f 66%);
+    linear-gradient(90deg, var(--nba-player-secondary, #c48d4a) 0 3px, transparent 3px),
+    radial-gradient(ellipse at 95% 80%, color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 52%, transparent), transparent 62%),
+    linear-gradient(113deg,
+      color-mix(in srgb, var(--nba-player-primary, #c48d4a) 28%, #080c11) 0%,
+      #080c11 46%,
+      color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 42%, #080c11) 100%);
 }
 .nba-hq-owner__photo {
   position: relative;
@@ -493,7 +495,7 @@
   right: 0;
   bottom: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--nba-player-secondary, #c48d4a), var(--nba-player-primary, #c48d4a));
+  background: var(--nba-player-secondary, #c48d4a);
   pointer-events: none;
 }
 .nba-hq-owner__photo::after {
@@ -525,7 +527,7 @@
   padding: 11px 11px 11px 8px;
 }
 .nba-hq-owner__player-copy > span {
-  color: color-mix(in srgb, var(--nba-player-primary, #c48d4a) 70%, #f4f5f6);
+  color: color-mix(in srgb, var(--nba-player-secondary, #c48d4a) 70%, #f4f5f6);
   font-size: 8px;
   font-weight: 950;
   letter-spacing: .13em;

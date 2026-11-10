@@ -8,7 +8,7 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
-import { nbaTeamColor } from "./nbaTeamBranding";
+import { nbaTeamColor, nbaTeamSecondaryColor } from "./nbaTeamBranding";
 import { NBA_TEAMS } from "./nbaFutures";
 import type { CSSProperties } from "react";
 import "../../styles/nba-owner-home.css";
@@ -17,11 +17,10 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const playerTeamId = weekly?.player.teamId ?? NBA_TEAMS.find(team=>team.name===weekly?.player.team)?.id;
-  // Same two-color identity contract as Football Spotlight. Use a second
-  // Lakers color without turning the entire card into a purple backdrop.
+  // Team branding is shared across all NBA Spotlights, not a Lakers-only exception.
   const playerBrandStyle = weekly ? {
     "--nba-player-primary": nbaTeamColor(playerTeamId ?? ""),
-    "--nba-player-secondary": playerTeamId === "LAL" ? "#552583" : nbaTeamColor(playerTeamId ?? ""),
+    "--nba-player-secondary": nbaTeamSecondaryColor(playerTeamId ?? ""),
     "--nba-player-button": playerTeamId === "LAL" ? "#b4932b" : nbaTeamColor(playerTeamId ?? ""),
   } as CSSProperties : undefined;
   const day = nbaCentralDay();

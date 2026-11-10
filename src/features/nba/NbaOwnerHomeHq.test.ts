@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { readVerifiedNbaWeekly } from "./nbaWeeklySpotlight";
+import { nbaTeamColor, nbaTeamSecondaryColor } from "./nbaTeamBranding";
 const homepage = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const owner = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
@@ -61,6 +62,16 @@ describe("NBA HQ released regular-season presentation", () => {
     expect(css).toContain(".nba-hq-owner__championship");
   });
 });
+describe("standardized NBA two-color Spotlight branding", () => {
+  it("uses secondary team hues, including purple for Lakers and blue for Knicks", () => {
+    expect(nbaTeamColor("LAL")).toBe("#FDB927");
+    expect(nbaTeamSecondaryColor("LAL")).toBe("#552583");
+    expect(nbaTeamSecondaryColor("NYK")).toBe("#006BB6");
+    expect(nbaTeamSecondaryColor("BKN")).toBe("#000000");
+    expect(nbaTeamSecondaryColor("UNKNOWN")).toBe(nbaTeamColor("UNKNOWN"));
+  });
+});
+
 describe("NBA weekly feed safety", () => {
   const valid = {
     weekStart:"2026-10-19", weekEnd:"2026-10-25", publishedAt:"2026-10-27T13:00:00Z",
@@ -112,14 +123,14 @@ describe("locked NBA / Football Spotlight presentation parity", () => {
     expect(locked).toContain("object-position: 50% 35%;");
     expect(locked).toContain("min-height: 176px;");
     expect(locked).toContain("transparent 58%, rgba(7, 11, 15, .9)");
-    expect(locked).toContain("linear-gradient(90deg, var(--nba-player-secondary");
+    expect(locked).toContain("background: var(--nba-player-secondary, #c48d4a);");
     expect(locked).not.toContain("object-fit: contain;");
   });
   it("reuses Football's neutral card, gold Lakers raised CTA and mobile-safe framing", () => {
-    expect(locked).toContain("linear-gradient(135deg, #07111a, #090b0f 66%)");
+    expect(locked).toContain("radial-gradient(ellipse at 95% 80%");
     expect(locked).toContain("box-shadow: inset 0 -3px 0");
     expect(locked).toContain("@media (max-width: 430px)");
-    expect(owner).toContain('playerTeamId === "LAL" ? "#552583"');
+    expect(owner).toContain("nbaTeamSecondaryColor(playerTeamId ??");
     expect(owner).toContain('playerTeamId === "LAL" ? "#b4932b"');
   });
   it("keeps NBA weekly averages while moving season context beside the team name", () => {
