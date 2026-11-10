@@ -42,7 +42,7 @@ const NOV03_STANDARD_SCENARIOS: typeof OCT13_SCENARIOS = [
 ];
 
 function scenariosForWeek(weekStart: string, preview: boolean) {
-  if (!preview && weekStart === "2026-11-03") return NOV03_STANDARD_SCENARIOS;
+  if (!preview && weekStart >= "2026-11-03") return NOV03_STANDARD_SCENARIOS;
   if (!preview && weekStart === OCT27_WEEKLY_GM_START) return OCT27_SCENARIOS;
   if (!preview && weekStart === "2026-10-20") return OCT20_SCENARIOS;
   return OCT13_SCENARIOS;
@@ -158,7 +158,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   if (preview && !isOwner) return <div className="page football-gm-page"><section className="surface-card"><h1>OWNER-ONLY PLAYTEST</h1><p>This production test is reserved for the Octagon HQ owner.</p><Link to="/football/weekly-gm">Weekly GM Championship</Link></section></div>;
 
   const isOct27Week = !preview && state?.week_start === OCT27_WEEKLY_GM_START;
-  const isStandardWeek = !preview && state?.week_start === "2026-11-03";
+  const isStandardWeek = !preview && Boolean(state?.week_start && state.week_start >= "2026-11-03");
   const scenarios = scenariosForWeek(state?.week_start ?? "2026-10-13", preview);
   const attempt = playing ? state?.attempts[playing] : null;
   if (playing && state && attempt && state.status === "active") {

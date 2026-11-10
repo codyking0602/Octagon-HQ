@@ -15,9 +15,7 @@ import "../../styles/football-weekly-auction-center.css";
 type CenterTab = "week" | "results";
 
 function gmFeaturedWeek(now = new Date()) {
-  const time = now.getTime();
-  return time >= Date.parse("2026-10-13T05:00:00Z")
-    && time < Date.parse("2026-11-10T06:00:00Z");
+  return now.getTime() >= Date.parse("2026-10-13T05:00:00Z");
 }
 
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
@@ -160,12 +158,12 @@ export default function FootballWeeklyAuctionCenterPage() {
           <section className="football-weekly-auction-center__current surface-card">
             <div className="football-weekly-auction-center__current-title">
               <div>
-                <small>{Date.now() >= Date.parse("2026-11-03T06:00:00Z") ? "NOV 3–9" : Date.now() >= Date.parse("2026-10-27T05:00:00Z") ? "OCT 27–NOV 2" : Date.now() >= Date.parse("2026-10-20T05:00:00Z") ? "OCT 20–26" : "OCT 13–19"} · FEATURED CHALLENGE</small>
+                <small>THIS WEEK · FEATURED CHALLENGE</small>
                 <strong>NFL GM CHAMPIONSHIP</strong>
               </div>
               <span>THIS WEEK</span>
             </div>
-            <p>{Date.now() >= Date.parse("2026-11-03T06:00:00Z") ? "This week is standard NFL GM: two regular seven-spin franchise runs. No themed starters or Auction." : Date.now() >= Date.parse("2026-10-27T05:00:00Z") ? "Choose your franchise WR and RB, then build two complete seven-player cores through six wheel picks each." : "Last week's Auction is complete. Its winner, Wildcard wheel, collections and all grades are under Results. This week's featured competition is Weekly GM."}</p>
+            <p>Weekly GM is the ongoing featured Football championship: two standard seven-spin franchise runs, with no Auction prerequisite. Past Auction results remain under Results.</p>
             <button
               className="football-weekly-auction-center__primary"
               type="button"
