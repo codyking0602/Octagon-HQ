@@ -32,6 +32,11 @@ begin
     'nov03-weekly-gm-'||v_profile::text||'@test.octagon-hq.app','',now(),now(),now(),
     jsonb_build_object('display_name','NOV03 WEEKLY GM TEST','historical_unclaimed',true));
   perform public.register_unclaimed_pin_profile(v_profile,'NOV03 WEEKLY GM TEST','NG');
+  -- Isolate the historical Nov 3 GM fixture from the permanent current week.
+  perform private.ensure_current_football_weekly_gm();
+  update private.football_weekly_gm_events
+    set opens_at=now()+interval '10 days',closes_at=now()+interval '17 days'
+    where week_start >= date '2026-11-10';
   update private.football_weekly_gm_events
     set opens_at=now()-interval '1 hour',closes_at=now()+interval '1 day'
     where week_start=date '2026-11-03';
