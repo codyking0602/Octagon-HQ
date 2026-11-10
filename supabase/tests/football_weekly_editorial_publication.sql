@@ -115,6 +115,16 @@ begin
 
   perform set_config('request.jwt.claim.role','service_role',true);
   perform set_config('request.jwt.claim.sub','',true);
+  -- The one-time Nov 10 correction must not weaken any future armed-content
+  -- immutability. Even service_role cannot directly rewrite a published video.
+  v_failed := false;
+  begin
+    update public.football_weekly_content_packages
+      set cfb_spotlight = jsonb_set(cfb_spotlight,'{highlight_url}',
+        to_jsonb('https://youtu.be/unauthorized'::text),false)
+    where week_of = v_nov;
+  exception when others then v_failed := true; end;
+  if not v_failed then raise exception 'Armed Spotlight video unexpectedly mutable'; end if;
   v_projection := public.live_football_weekly_editorial_at('2034-11-07T13:59:59Z'::timestamptz);
   if v_projection->'cfb'->'spotlight'->>'name' <> 'Last week CFB'
     or v_projection->'nfl' is distinct from 'null'::jsonb then
