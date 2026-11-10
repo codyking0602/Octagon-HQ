@@ -86,7 +86,7 @@ begin
     ),'[]'::jsonb)
   );
 end;
-$function$
+$function$;
 
 CREATE OR REPLACE FUNCTION public.start_my_football_weekly_gm(p_scenario text)
  RETURNS jsonb
