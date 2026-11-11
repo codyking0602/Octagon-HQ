@@ -65,6 +65,7 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   scarlet: "#BB0000",
   silver: "#A5ACAF",
   teal: "#006D75",
+  white: "#FFFFFF",
   yellow: "#F9D84A",
 };
 
@@ -88,9 +89,8 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
-// Silver, gray and cream still belong to a team’s palette even if they should
-// not drive the fill; only white is ignored for the accent/Spotlight bar.
-const HOME_ACCENT_NEUTRALS = new Set(["white"]);
+// Neutral colors remain eligible secondary accents: Texas orange gets a white
+// stripe, just as the Cowboys get silver, without turning the pill background white.
 const FEATURED_SECONDARY_OVERRIDES: Readonly<Record<string, string>> = {
   "Kansas City Chiefs": "#FFB81C",
   Oregon: "#FEE123",
@@ -108,7 +108,6 @@ function footballPaletteColor(team: string, token: string): string {
 function footballMeaningfulPalette(name: string): string[] {
   const metadata = footballTeamSchoolMetadataFor(name);
   return (metadata?.colors ?? [])
-    .filter((token) => !HOME_ACCENT_NEUTRALS.has(token))
     .map((token) => footballPaletteColor(metadata!.name, token));
 }
 
@@ -135,7 +134,7 @@ export function footballHqTeamPresentationFor(name: string) {
     ?? colors[0]
     ?? "blue";
   const color = footballPaletteColor(canonicalName, backgroundToken);
-  const secondaryToken = colors.find((token) => token !== backgroundToken && !HOME_ACCENT_NEUTRALS.has(token));
+  const secondaryToken = colors.find((token) => token !== backgroundToken);
   const secondaryColor = FEATURED_SECONDARY_OVERRIDES[canonicalName]
     ?? (secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null);
 
