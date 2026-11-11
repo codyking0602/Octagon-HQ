@@ -41,15 +41,15 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain("plan.configurationLabel");
   });
 
-  it("advances Build the Team through the five canonical metric tiers in order", () => {
+  it("advances Build the Team through four tiers with an optional fifth wild card", () => {
     const plan = planForFormat("build-the-team") as FootballHitTheNumberPlan;
     expect(plan.slots.map((slot) => slot.label)).toEqual([
-      "Tier 1",
-      "Tier 2",
-      "Tier 3",
-      "Tier 4",
+      "Highest Tier",
+      "High Tier",
+      "Middle Tier",
+      "Lower Tier",
       "Wild Card",
-    ]);
+    ].slice(0, plan.pickCount));
 
     const selectedIds: string[] = [];
     for (let index = 0; index < plan.slots.length; index += 1) {
@@ -75,7 +75,7 @@ describe("Football Hit the Number slot progression", () => {
       "2009-14",
       "2015-22",
       "wild-card",
-    ]);
+    ].slice(0, plan.pickCount));
 
     const seasons = plan.solutionSubjectIds.map((subjectId) => getFootballHitTheNumberSubject(subjectId)?.season ?? null);
     expect(seasons[0]).toBeGreaterThanOrEqual(1995);
@@ -86,7 +86,7 @@ describe("Football Hit the Number slot progression", () => {
     expect(seasons[2]).toBeLessThanOrEqual(2014);
     expect(seasons[3]).toBeGreaterThanOrEqual(2015);
     expect(seasons[3]).toBeLessThanOrEqual(2022);
-    expect(seasons[4]).not.toBeNull();
+    if (plan.pickCount === 5) expect(seasons[4]).not.toBeNull();
     expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
   });
 
