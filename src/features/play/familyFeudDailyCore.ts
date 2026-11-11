@@ -543,7 +543,51 @@ export function hydrateFootballFeudFairAnswers(pack: FamilyFeudPack): FamilyFeud
     }
     return { ...board, candidateIds, alsoAcceptedEntityIds };
   });
-  return changed ? { ...pack, entities, mainBoards } : pack;
+  // November 11 CFB Fast Money: do not treat the same pregame picks
+  // as a ranked eight-point answer AND a separate one-point answer.
+  // Hydrate already-published, immutable packs as well as future publications.
+  const fastCorrections: Readonly<Record<string, {
+    rankedName: string;
+    aliases: readonly string[];
+    duplicateName?: string;
+  }>> = {
+    "cfb-feud-r2-fast-cfb-pregame-segments": {
+      rankedName: "Game predictions",
+      aliases: ["Picks", "Analyst picks", "Game picks", "Pregame picks", "Predictions"],
+      duplicateName: "Analyst picks",
+    },
+    "cfb-feud-r2-fast-college-injury-sideline": {
+      rankedName: "Wrap injury",
+      aliases: ["Tape", "Tape up", "Apply tape", "Tape ankle", "Taping"],
+    },
+  };
+  const fastMoney = pack.fastMoney.map((question) => {
+    const correction = fastCorrections[question.id];
+    if (!correction) return question;
+    const ranked = question.answers.find((answer) =>
+      entities.some((entity) => entity.id === answer.entityId
+        && entity.displayName === correction.rankedName));
+    if (!ranked) throw new Error("Football Feud ranked identity changed: " + question.id);
+    const entity = entities.find((candidate) => candidate.id === ranked.entityId)!;
+    const aliases = [...new Set([...(entity.aliases ?? []), ...correction.aliases])];
+    if (aliases.length !== (entity.aliases ?? []).length) {
+      entity.aliases = aliases;
+      changed = true;
+    }
+    const duplicateIds = new Set(entities
+      .filter((candidate) => (question.alsoAcceptedEntityIds ?? []).includes(candidate.id)
+        && candidate.displayName === correction.duplicateName)
+      .map((candidate) => candidate.id));
+    if (!duplicateIds.size) return question;
+    changed = true;
+    return {
+      ...question,
+      candidateIds: question.candidateIds.filter((id) => !duplicateIds.has(id)),
+      alsoAcceptedEntityIds: (question.alsoAcceptedEntityIds ?? [])
+        .filter((id) => !duplicateIds.has(id)),
+    };
+  });
+  return changed ? { ...pack, entities, mainBoards, fastMoney } : pack;
 }
 
 export type FamilyFeudEntityMetadataLookup = (
