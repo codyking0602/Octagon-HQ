@@ -127,9 +127,10 @@ describe("locked NBA / Football Spotlight presentation parity", () => {
     expect(locked).not.toContain("object-fit: contain;");
   });
   it("locks the same two-color fade, border, bar, label and primary-to-secondary CTA for both sports", () => {
-    const rule = (sheet: string, selector: string) => sheet.split(selector + " {").at(-1)?.split("}")[0] ?? "";
-    const declaration = (block: string, property: string) =>
-      block.match(new RegExp(property + ":\\s*([^;]+);"))?.[1] ?? "";
+    const declaration = (sheet: string, selector: string, property: string) =>
+      sheet.split(selector + " {").slice(1)
+        .map((part) => part.split("}")[0]?.match(new RegExp(property + ":\\s*([^;]+);"))?.[1] ?? "")
+        .filter(Boolean).at(-1) ?? "";
     const normalize = (value: string) => value
       .replaceAll("var(--nba-player-primary, #c48d4a)", "PRIMARY")
       .replaceAll("var(--player-team-color)", "PRIMARY")
@@ -146,8 +147,8 @@ describe("locked NBA / Football Spotlight presentation parity", () => {
       [".football-player-spotlight__copy a", ".nba-hq-owner__watch", "box-shadow"],
     ];
     for (const [footballSelector, nbaSelector, property] of pairs) {
-      const footballValue = normalize(declaration(rule(footballCss, footballSelector), property));
-      const nbaValue = normalize(declaration(rule(locked, nbaSelector), property));
+      const footballValue = normalize(declaration(footballCss, footballSelector, property));
+      const nbaValue = normalize(declaration(locked, nbaSelector, property));
       expect(footballValue, footballSelector + " " + property).not.toBe("");
       expect(nbaValue, nbaSelector + " " + property).toBe(footballValue);
     }
