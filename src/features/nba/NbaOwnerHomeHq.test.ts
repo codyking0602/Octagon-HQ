@@ -126,12 +126,34 @@ describe("locked NBA / Football Spotlight presentation parity", () => {
     expect(locked).toContain("background: var(--nba-player-secondary, #c48d4a);");
     expect(locked).not.toContain("object-fit: contain;");
   });
-  it("reuses Football's neutral card, gold Lakers raised CTA and mobile-safe framing", () => {
-    expect(locked).toContain("radial-gradient(ellipse at 95% 80%");
-    expect(locked).toContain("box-shadow: inset 0 -3px 0");
+  it("locks the same two-color fade, border, bar, label and primary-to-secondary CTA for both sports", () => {
+    const rule = (sheet: string, selector: string) => sheet.split(selector + " {").at(-1)?.split("}")[0] ?? "";
+    const declaration = (block: string, property: string) =>
+      block.match(new RegExp(property + ":\\\\s*([^;]+);"))?.[1] ?? "";
+    const normalize = (value: string) => value
+      .replaceAll("var(--nba-player-primary, #c48d4a)", "PRIMARY")
+      .replaceAll("var(--player-team-color)", "PRIMARY")
+      .replaceAll("var(--nba-player-secondary, #c48d4a)", "SECONDARY")
+      .replaceAll("var(--player-team-secondary)", "SECONDARY")
+      .replace(/\\s+/g, "");
+    const pairs: Array<[string, string, string]> = [
+      [".football-player-spotlight", ".nba-hq-owner__player", "background"],
+      [".football-player-spotlight", ".nba-hq-owner__player", "border"],
+      [".football-player-spotlight__media::before", ".nba-hq-owner__photo::before", "background"],
+      [".football-player-spotlight__copy > span", ".nba-hq-owner__player-copy > span", "color"],
+      [".football-player-spotlight__copy a", ".nba-hq-owner__watch", "background"],
+      [".football-player-spotlight__copy a", ".nba-hq-owner__watch", "border"],
+      [".football-player-spotlight__copy a", ".nba-hq-owner__watch", "box-shadow"],
+    ];
+    for (const [footballSelector, nbaSelector, property] of pairs) {
+      const footballValue = normalize(declaration(rule(footballCss, footballSelector), property));
+      const nbaValue = normalize(declaration(rule(locked, nbaSelector), property));
+      expect(footballValue, footballSelector + " " + property).not.toBe("");
+      expect(nbaValue, nbaSelector + " " + property).toBe(footballValue);
+    }
     expect(locked).toContain("@media (max-width: 430px)");
     expect(owner).toContain("nbaTeamSecondaryColor(playerTeamId ??");
-    expect(owner).toContain('playerTeamId === "LAL" ? "#b4932b"');
+    expect(owner).not.toContain("--nba-player-button");
   });
   it("keeps NBA weekly averages while moving season context beside the team name", () => {
     expect(owner).toContain("nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)");
