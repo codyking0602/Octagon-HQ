@@ -21,7 +21,6 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const playerBrandStyle = weekly ? {
     "--nba-player-primary": nbaTeamColor(playerTeamId ?? ""),
     "--nba-player-secondary": nbaTeamSecondaryColor(playerTeamId ?? ""),
-    "--nba-player-button": playerTeamId === "LAL" ? "#b4932b" : nbaTeamColor(playerTeamId ?? ""),
   } as CSSProperties : undefined;
   const day = nbaCentralDay();
   const publishedDaily = nbaCanAccessReleasedGames(day);
