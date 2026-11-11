@@ -223,7 +223,16 @@ describe("Football HQ team logo presentation", () => {
       color: "#FDD023", secondaryColor: "#461D7C", foregroundColor: "#101418",
     });
     expect(footballHqTeamPresentationFor("Texas")).toMatchObject({
-      color: "#BF5700", secondaryColor: null,
+      color: "#BF5700", secondaryColor: "#FFFFFF", foregroundColor: "#FFFFFF",
+    });
+    expect(footballHqTeamPresentationFor("Alabama")).toMatchObject({
+      color: "#9E1B32", secondaryColor: "#FFFFFF",
+    });
+    expect(footballHqTeamPresentationFor("Tennessee")).toMatchObject({
+      secondaryColor: "#FFFFFF",
+    });
+    expect(footballHqTeamPresentationFor("Indianapolis Colts")).toMatchObject({
+      secondaryColor: "#FFFFFF",
     });
     expect(footballHqTeamPresentationFor("Kansas City Chiefs").secondaryColor).toBe("#FFB81C");
     expect(footballHqTeamPresentationFor("Oregon").secondaryColor).toBe("#FEE123");
@@ -239,8 +248,9 @@ describe("canonical Football Spotlight dual-color identity", () => {
     expect(playerSpotlightSecondaryColor(spotlight("New York Giants", "#0B2265"))).toBe("#A71930");
     expect(playerSpotlightSecondaryColor(spotlight("Pittsburgh Steelers", "#101820"))).toBe("#FFB612");
   });
-  it("keeps Texas as single-color while resolving LSU's purple second hue", () => {
-    expect(playerSpotlightSecondaryColor(spotlight("Texas", "#BF5700"))).toBe("#BF5700");
+  it("recognizes white as Texas and Alabama's true second color, and LSU's purple", () => {
+    expect(playerSpotlightSecondaryColor(spotlight("Texas", "#BF5700"))).toBe("#FFFFFF");
+    expect(playerSpotlightSecondaryColor(spotlight("Alabama", "#9E1B32"))).toBe("#FFFFFF");
     expect(playerSpotlightSecondaryColor(spotlight("LSU", "#FDD023"))).toBe("#461D7C");
   });
 });
