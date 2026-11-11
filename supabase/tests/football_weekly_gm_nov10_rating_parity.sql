@@ -21,6 +21,8 @@ declare
   ]'::jsonb;
   v_score numeric;
   v_rejected boolean := false;
+  v_dynasty jsonb;
+  v_prior_week jsonb;
 begin
   v_state := jsonb_build_object(
     'seed','weekly-gm:2026-11-10:elite:rating-parity-fixture',
@@ -51,6 +53,29 @@ begin
   v_legacy := jsonb_set(v_legacy,'{seed}','"weekly-gm:2026-11-03:elite:historical-fixture"'::jsonb);
   if private.football_weekly_gm_verified_score(v_legacy) <> 96.0 then
     raise exception 'Nov 3 historic grade-to-OVR mapping was changed';
+  end if;
+
+  -- Screenshot regression: 2 championships plus a Divisional result, with
+  -- a 97 OVR franchise and 44 regular-season wins, reveals 97.1 (not 96.8).
+  v_dynasty := jsonb_build_object(
+    'seed','weekly-gm:2026-11-10:young:dynasty-regression',
+    'ratingScaleVersion',2,'playoffScoringVersion',2,
+    'resolvedSeasons',jsonb_build_array(
+      jsonb_build_object('year',1,'teamGrade',94,'rawTeamGrade',94,'weakLinkPenalty',0,'wins',15,'losses',2,'finish','Champion'),
+      jsonb_build_object('year',2,'teamGrade',94,'rawTeamGrade',94,'weakLinkPenalty',0,'wins',15,'losses',2,'finish','Champion'),
+      jsonb_build_object('year',3,'teamGrade',94,'rawTeamGrade',94,'weakLinkPenalty',0,'wins',14,'losses',3,'finish','Divisional')
+    )
+  );
+  if private.football_weekly_gm_verified_score(v_dynasty) <> 97.1 then
+    raise exception 'Nov 10 dynasty client 97.1 must pass exact server parity';
+  end if;
+  v_prior_week := jsonb_set(v_dynasty,'{seed}',to_jsonb('weekly-gm:2026-11-03:young:historical'::text));
+  if private.football_weekly_gm_verified_score(v_prior_week) <> 96.8 then
+    raise exception 'Prior Nov 3 week must keep published pre-dynasty score';
+  end if;
+  v_prior_week := v_dynasty - 'playoffScoringVersion';
+  if private.football_weekly_gm_verified_score(v_prior_week) <> 96.8 then
+    raise exception 'Non-V2 scoring must not silently inherit dynasty bonus';
   end if;
 
   -- Test an authenticated official completion, not only the private calculation.
@@ -94,6 +119,31 @@ begin
     where profile_id=v_player and seed=v_seed
       and completed_at is not null and score=91.5
   ) then raise exception 'New-rating official GM completion did not persist'; end if;
+
+  -- Exercise the actual authenticated save RPC on the dynasty-franchise run.
+  v_start := public.start_my_football_weekly_gm('young');
+  v_seed := v_start->>'seed';
+  perform public.save_my_football_weekly_gm('young',v_seed,jsonb_build_object(
+    'seed',v_seed,'version','football-gm-v11-seeded-development',
+    'phase','draft','spinIndex',0,'roster','[]'::jsonb,
+    'finalRoster','[]'::jsonb,'resolvedSeasons','[]'::jsonb,
+    'ratingScaleVersion',2,'playoffScoringVersion',2
+  ),false,null);
+  v_dynasty := jsonb_set(v_dynasty,'{seed}',to_jsonb(v_seed)) || jsonb_build_object(
+    'version','football-gm-v11-seeded-development','phase','final',
+    'spinIndex',7,'roster',v_roster,'finalRoster',v_roster
+  );
+  v_rejected := false;
+  begin
+    perform public.save_my_football_weekly_gm('young',v_seed,v_dynasty,true,96.8);
+  exception when others then v_rejected := sqlerrm like '%server verification%'; end;
+  if not v_rejected then raise exception 'Missing-dynasty official score was incorrectly accepted'; end if;
+  perform public.save_my_football_weekly_gm('young',v_seed,v_dynasty,true,97.1);
+  if not exists (
+    select 1 from private.football_weekly_gm_attempts
+    where profile_id=v_player and seed=v_seed
+      and completed_at is not null and score=97.1
+  ) then raise exception '97.1 official dynasty result did not persist'; end if;
 end;
 $weekly_gm_rating_parity$;
 
