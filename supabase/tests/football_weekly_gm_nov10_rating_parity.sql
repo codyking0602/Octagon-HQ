@@ -66,7 +66,7 @@ begin
   perform set_config('request.jwt.claim.sub',v_player::text,true);
   v_start := public.start_my_football_weekly_gm('elite');
   v_seed := v_start->>'seed';
-  if v_seed !~ '^weekly-gm:2026-11-' and v_seed !~ '^weekly-gm:2027-' then
+  if split_part(v_seed,':',2)::date < date '2026-11-10' then
     raise exception 'Unexpected standard GM competition seed %',v_seed;
   end if;
 
@@ -84,7 +84,7 @@ begin
   );
   v_rejected := false;
   begin
-    perform public.save_my_football_weekly_gm('elite',v_seed,v_state,true,95.9);
+    perform public.save_my_football_weekly_gm('elite',v_seed,v_state,true,96.0);
   exception when others then v_rejected := sqlerrm like '%server verification%'; end;
   if not v_rejected then raise exception 'Old-rating forged GM score was accepted'; end if;
 
