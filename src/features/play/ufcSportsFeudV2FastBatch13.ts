@@ -154,6 +154,13 @@ const ROWS=[
       "Fighter defended punches": [
         "Blocking punches"
       ],
+      "Fighter stood back up": [
+        "Got Up Quick",
+        "Got Back Up",
+        "Stood Up Quickly",
+        "Back On Their Feet",
+        "Got Up Immediately"
+      ],
       "Fighter protested": [
         "Protested"
       ],

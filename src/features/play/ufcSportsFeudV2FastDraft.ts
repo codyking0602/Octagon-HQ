@@ -109,7 +109,7 @@ const ROWS = [
     "prompt": "Name something you might hear during a UFC fight.",
     "kind": "other",
     "ranked": "Crowd cheering|Commentators talking|Referee instructions|Corner shouting|Round horn|Crowd booing|Fans chanting|Punches landing",
-    "extras": "Fighter grunting|Applause|Announcer|Coaches yelling|Warning from referee|Music|Gasp from crowd|Crowd screaming|Bell|Stadium noise",
+    "extras": "Fighter grunting|Applause|Announcer|Coaches yelling|Warning from referee|Music|Gasp from crowd|Crowd screaming|Bell|Stadium noise|Kick landing",
     "aliases": {
       "Round horn": [
         "Horn",
@@ -124,6 +124,12 @@ const ROWS = [
       ],
       "Corner shouting": [
         "Coaches shouting"
+      ],
+      "Kick landing": [
+        "Kick",
+        "Kicking",
+        "Kick impact",
+        "Sound of a kick"
       ]
     }
   },

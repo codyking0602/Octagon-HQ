@@ -407,6 +407,75 @@ function hydrateUfcGrapplingAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
 }
 
 
+/**
+ * Correct two November 12 UFC Fast Money omissions without rewriting the
+ * published answer ladder or proof. These IDs recur in future UFC rotations.
+ * "Got Up Quick" means the ranked "Fighter stood back up" (6), while a kick
+ * landing is a distinct valid fight sound worth the off-board minimum (1).
+ * Keep this specific to the two audited UFC question identities.
+ */
+export function hydrateUfcFeudFairAnswers(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "ufc" || !pack.fastMoney.some(
+    (question) => question.id === "ufc-v2-fast13-close-stoppage-debate"
+      || question.id === "ufc-v2-fast-fight-sounds",
+  )) return pack;
+
+  const entities = pack.entities.map((entity) => ({ ...entity }));
+  let changed = false;
+  const addAliases = (entityId: string, aliases: readonly string[]) => {
+    const target = entities.find((entity) => entity.id === entityId);
+    if (!target) throw new Error("UFC Feud fair-answer identity is missing: " + entityId);
+    const merged = [...new Set([...(target.aliases ?? []), ...aliases])];
+    if (merged.length !== (target.aliases ?? []).length) {
+      target.aliases = merged;
+      changed = true;
+    }
+  };
+
+  const fastMoney = pack.fastMoney.map((question) => {
+    if (question.id === "ufc-v2-fast13-close-stoppage-debate") {
+      const ranked = question.answers.find((answer) =>
+        entities.some((entity) => entity.id === answer.entityId
+          && entity.displayName === "Fighter stood back up"));
+      if (!ranked || ranked.points !== 6) {
+        throw new Error("UFC Feud stoppage ranked answer has changed");
+      }
+      addAliases(ranked.entityId, [
+        "Got Up Quick", "Got Back Up", "Stood Up Quickly",
+        "Back On Their Feet", "Got Up Immediately",
+      ]);
+      return question;
+    }
+    if (question.id !== "ufc-v2-fast-fight-sounds") return question;
+
+    const aliases = ["Kick", "Kicking", "Kick impact", "Sound of a kick"];
+    const existing = entities.find((entity) =>
+      question.candidateIds.includes(entity.id) && entity.displayName === "Kick landing");
+    if (existing) {
+      if (!(question.alsoAcceptedEntityIds ?? []).includes(existing.id)) {
+        throw new Error("UFC Feud kick sound must remain an off-board answer");
+      }
+      addAliases(existing.id, aliases);
+      return question;
+    }
+
+    let suffix = 1;
+    let id = question.id + ":fair" + suffix;
+    while (entities.some((entity) => entity.id === id)) {
+      suffix += 1;
+      id = question.id + ":fair" + suffix;
+    }
+    entities.push({ id, displayName: "Kick landing", kind: "other", aliases });
+    changed = true;
+    return {
+      ...question,
+      candidateIds: [...question.candidateIds, id],
+      alsoAcceptedEntityIds: [...(question.alsoAcceptedEntityIds ?? []), id],
+    };
+  });
+  return changed ? { ...pack, entities, fastMoney } : pack;
+}
+
 /** Supply fair off-board answers to already-published NBA broadcast boards.
  * The official board/proof/ranked top eight remain untouched. */
 function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
@@ -619,7 +688,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateFootballFeudFairAnswers(hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack))));
+  const corrected = hydrateFootballFeudFairAnswers(hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcFeudFairAnswers(hydrateUfcGrapplingAcceptance(pack)))));
   assertFamilyFeudPack(corrected);
   return corrected;
 }
