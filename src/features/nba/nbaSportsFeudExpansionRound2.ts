@@ -1,4 +1,5 @@
 import type { NbaFeudEditorialQuestion } from "./nbaSportsFeudExpansion";
+import { NBA_FEUD_CELEBRATION_RANKED, NBA_FEUD_CELEBRATION_UNRANKED } from "./nbaSportsFeudIconicCelebrations";
 
 /**
  * Second editorial pass: expand with recognisable history and true Feud-style
@@ -81,9 +82,10 @@ export const NBA_SPORTS_FEUD_FAST_ROUND2: NbaFeudEditorialQuestion[] = [
   q("nba-arenas","nba-arenas","Name a famous arena where NBA basketball has been played.",
     "Madison Square Garden|Crypto.com Arena|Chase Center|TD Garden|United Center|Barclays Center|American Airlines Center|Kaseya Center",
     "Ball Arena|Intuit Dome|Golden 1 Center|Scotiabank Arena|Mortgage Matchup Center|Rocket Arena|FedExForum|Frost Bank Center|Target Center|Fiserv Forum|Moda Center|Gainbridge Fieldhouse|Xfinity Mobile Arena|State Farm Arena|Little Caesars Arena|Smoothie King Center|Delta Center|Spectrum Center|Paycom Center|Toyota Center|Capital One Arena|Kia Center","other"),
+  // Ranked by recognizable signature celebrations, not by overall player fame.
   q("famous-celebrations","celebrations","Name an NBA player with a famous on-court celebration.",
-    "Stephen Curry|LeBron James|Damian Lillard|Michael Jordan|Carmelo Anthony|James Harden|Russell Westbrook|D'Angelo Russell",
-    "Trae Young|Joel Embiid|Kobe Bryant|Shaquille O'Neal|Anthony Edwards|Giannis Antetokounmpo|Dwyane Wade|Draymond Green|Kyrie Irving"),
+    NBA_FEUD_CELEBRATION_RANKED.join("|"),
+    NBA_FEUD_CELEBRATION_UNRANKED.join("|")),
   q("masked-players","player-appearance","Name an NBA player remembered for wearing a protective face mask.",
     "Richard Hamilton|LeBron James|Kyrie Irving|Joel Embiid|Kobe Bryant|Russell Westbrook|Jaylen Brown|Chris Paul",
     "Dwyane Wade|Anthony Davis|Paul George|Bradley Beal|Carmelo Anthony|Jimmy Butler","person"),
