@@ -21,6 +21,12 @@ import {
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
 import { standardSportsFeudAliases } from "./sportsFeudAuthoredHelpers";
+import {
+  NBA_FEUD_CELEBRATION_QUESTION_ID,
+  NBA_FEUD_CELEBRATION_RANKED,
+  NBA_FEUD_CELEBRATION_UNRANKED,
+  NBA_FEUD_CELEBRATION_ALIASES,
+} from "../nba/nbaSportsFeudIconicCelebrations";
 
 
 export const FAMILY_FEUD_DAILY_CONTENT_VERSION = "family-feud-daily-v2" as const;
@@ -508,6 +514,52 @@ function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
   return { ...pack, entities, fastMoney };
 }
 
+/**
+ * Retain the historical published eight and proof for games already underway,
+ * while accepting overlooked signature celebrations as unranked valid answers.
+ * The new top eight is authored separately for future publications. Never
+ * reassign signed ranked slots on previously published official challenges.
+ */
+export function hydrateNbaIconicCelebrations(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "nba" || !pack.fastMoney.some(
+    (question) => question.id === NBA_FEUD_CELEBRATION_QUESTION_ID,
+  )) return pack;
+
+  const entities = pack.entities.map((entity) => ({ ...entity }));
+  let changed = false;
+  const fastMoney = pack.fastMoney.map((question) => {
+    if (question.id !== NBA_FEUD_CELEBRATION_QUESTION_ID) return question;
+    const candidateIds = [...question.candidateIds];
+    const alsoAcceptedEntityIds = [...(question.alsoAcceptedEntityIds ?? [])];
+    for (const name of [...NBA_FEUD_CELEBRATION_RANKED, ...NBA_FEUD_CELEBRATION_UNRANKED]) {
+      const existingIndex = entities.findIndex((entity) =>
+        candidateIds.includes(entity.id) && entity.displayName === name);
+      const aliases = NBA_FEUD_CELEBRATION_ALIASES[name] ?? [];
+      if (existingIndex >= 0) {
+        const existing = entities[existingIndex]!;
+        const nextAliases = [...new Set([...(existing.aliases ?? []), ...aliases])];
+        if (nextAliases.length !== (existing.aliases ?? []).length) {
+          entities[existingIndex] = { ...existing, aliases: nextAliases };
+          changed = true;
+        }
+        continue;
+      }
+      let suffix = 1;
+      let entityId = question.id + ":fair" + suffix;
+      while (entities.some((entity) => entity.id === entityId)) {
+        suffix += 1;
+        entityId = question.id + ":fair" + suffix;
+      }
+      entities.push({ id: entityId, displayName: name, kind: "person", aliases });
+      candidateIds.push(entityId);
+      alsoAcceptedEntityIds.push(entityId);
+      changed = true;
+    }
+    return changed ? { ...question, candidateIds, alsoAcceptedEntityIds } : question;
+  });
+  return changed ? { ...pack, entities, fastMoney } : pack;
+}
+
 /** Restore the well-established nickname in already-published NBA Daily packs.
  * The server's lean runtime intentionally does not load the full NBA alias bank. */
 function hydrateNbaBirdmanAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
@@ -688,7 +740,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateFootballFeudFairAnswers(hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcFeudFairAnswers(hydrateUfcGrapplingAcceptance(pack)))));
+  const corrected = hydrateFootballFeudFairAnswers(hydrateNbaIconicCelebrations(hydrateNbaBirdmanAcceptance(hydrateNbaBroadcastAnswers(hydrateUfcFeudFairAnswers(hydrateUfcGrapplingAcceptance(pack))))));
   assertFamilyFeudPack(corrected);
   return corrected;
 }
