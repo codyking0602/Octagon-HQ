@@ -8,6 +8,7 @@ import { NBA_SPORTS_FEUD_ROUND3_ALIASES } from "./nbaSportsFeudExpansionRound3Al
 import { NBA_FEUD_MAIN_ROUND4 } from "./nbaSportsFeudExpansionRound4Main";
 import { NBA_FEUD_FAST_ROUND4 } from "./nbaSportsFeudExpansionRound4Fast";
 import { NBA_FEUD_ROUND4_ALIASES } from "./nbaSportsFeudExpansionRound4Aliases";
+import { NBA_FEUD_CELEBRATION_ALIASES } from "./nbaSportsFeudIconicCelebrations";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -1955,7 +1956,9 @@ function makeQuestion(authored: Authored, ladder: readonly number[], entities: F
   const ids = names.map((name, index) => {
     const id = namespace + ":" + (index < 8 ? "a" : "v") + (index + 1);
     entities.push({ id, displayName: name, kind: authored.kind,
-      aliases: BANK.alias[name] ?? [] });
+      aliases: authored.id === "famous-celebrations"
+        ? [...new Set([...(BANK.alias[name] ?? []), ...(NBA_FEUD_CELEBRATION_ALIASES[name] ?? [])])]
+        : BANK.alias[name] ?? [] });
     return id;
   });
   return { id: namespace, prompt: authored.prompt, candidateIds: ids,
