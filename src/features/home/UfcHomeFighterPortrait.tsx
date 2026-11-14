@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { RankingFighter } from "../rankings/rankingModel";
 
