@@ -1,0 +1,50 @@
+name: Build UFC Home portrait preview
+
+on:
+  push:
+    branches:
+      - feat/ufc-home-headshot-preview-20261114
+    paths:
+      - scripts/generate_ufc_home_portrait_preview.py
+      - .github/workflows/build-ufc-home-portrait-preview.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ufc-home-portrait-preview-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image processing library
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - name: Generate three preview portraits
+        run: python scripts/generate_ufc_home_portrait_preview.py
+      - name: Commit .home assets to the preview branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- \
+            public/assets/fighters/ciryl-gane-home.webp \
+            public/assets/fighters/kayla-harrison-home.webp \
+            public/assets/fighters/amanda-nunes-home.webp
+          if git diff --cached --quiet; then
+            echo "Three preview assets already match source."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "assets(ufc): add three approved-pose Home portrait previews"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
