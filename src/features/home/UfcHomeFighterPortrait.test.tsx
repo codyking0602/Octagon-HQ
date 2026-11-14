@@ -24,8 +24,8 @@ describe("UFC Home-only ranked fighter portrait proofs", () => {
   });
 
   it("loads the dedicated 4x Home asset without altering the standard thumbnails", () => {
-    render(<UfcHomeFighterPortrait fighter={fighter("ciryl-gane")} />);
-    const home = screen.getByRole("img", { hidden: true });
+    const view = render(<UfcHomeFighterPortrait fighter={fighter("ciryl-gane")} />);
+    const home = view.container.querySelector("img")!;
     expect(home).toHaveAttribute("src", "/assets/fighters/ciryl-gane.home.webp");
     expect(screen.queryByTestId("canonical-thumb-fallback")).not.toBeInTheDocument();
     fireEvent.error(home);
@@ -35,9 +35,9 @@ describe("UFC Home-only ranked fighter portrait proofs", () => {
 
   it("does not let a failed photo for one fighter block the next rotated fighter", () => {
     const view = render(<UfcHomeFighterPortrait fighter={fighter("ciryl-gane")} />);
-    fireEvent.error(screen.getByRole("img", { hidden: true }));
+    fireEvent.error(view.container.querySelector("img")!);
     view.rerender(<UfcHomeFighterPortrait fighter={fighter("kayla-harrison")} />);
-    expect(screen.getByRole("img", { hidden: true }))
+    expect(view.container.querySelector("img"))
       .toHaveAttribute("src", "/assets/fighters/kayla-harrison.home.webp");
   });
 
