@@ -8,7 +8,7 @@ import crypto from "node:crypto";
 const manifest = JSON.parse(
   fs.readFileSync("src/features/home/ufcHomeEspnSources.json", "utf8"),
 );
-const origin = process.env.OCTAGON_PRODUCTION_ORIGIN ?? "https://octagon.hq-app.workers.dev";
+const origin = process.env.OCTAGON_PRODUCTION_ORIGIN ?? "https://the.hq-app.workers.dev";
 if (!/^https:\/\/[a-z0-9.-]+\/?$/.test(origin)) {
   throw new Error("Trusted HTTPS production origin is required");
 }
