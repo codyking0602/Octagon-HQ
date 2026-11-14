@@ -48,8 +48,8 @@ ALIASES = {
     "cris-cyborg": ("Cris Cyborg", "Cristiane Justino"),
     "rose-namajunas": ("Rose Namajunas",),
     "andrei-arlovski": ("Andrei Arlovski",),
-    "bj-penn": ("B.J. Penn",),
-    "tj-dillashaw": ("T.J. Dillashaw",),
+    "bj-penn": ("B.J. Penn", "BJ Penn"),
+    "tj-dillashaw": ("T.J. Dillashaw", "TJ Dillashaw"),
     "sean-omalley": ("Sean O'Malley",),
     "dricus-du-plessis": ("Dricus du Plessis",),
     "stipe-miocic": ("Stipe Miocic",),
@@ -155,6 +155,7 @@ def create_home(slug: str, athlete_id: str) -> list[int]:
 def main() -> None:
     fighters = roster()
     sources: dict[str, dict] = {}
+    previous = json.loads(MANIFEST.read_text(encoding="utf-8"))["sources"] if MANIFEST.exists() else {}
     blockers = []
     for slug, name in fighters.items():
         print(f"Checking {slug} ({name})", flush=True)
@@ -164,6 +165,10 @@ def main() -> None:
             athlete_id = ORIGINALS[slug]
             dimensions = [600, 436]
             source_name = name
+        elif slug in previous and previous[slug].get("name") == name and (ASSETS / f"{slug}.home.webp").is_file():
+            sources[slug] = previous[slug]
+            print(f"  REUSE previously verified official ESPN source {previous[slug]['espnId']}", flush=True)
+            continue
         else:
             try:
                 athlete_id, source_name = espn_id(slug, name)
