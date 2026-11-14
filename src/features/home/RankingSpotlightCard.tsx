@@ -5,7 +5,7 @@ import type { RankingFighter } from "../rankings/rankingModel";
 import { resolveWatchMomentAction } from "../rankings/rankingPresentation";
 
 
-export function RankingSpotlightCard({ fighter, compact = false }: { fighter: RankingFighter; compact?: boolean }) {
+export function RankingSpotlightCard({ fighter, compact = false, eventOpponent, eventWeightClass }: { fighter: RankingFighter; compact?: boolean; eventOpponent?: string; eventWeightClass?: string }) {
   const watchAction = resolveWatchMomentAction(fighter.slug);
   const divisionLabel = [fighter.primaryDivision, fighter.secondaryDivision]
     .map((division) => division?.trim())
@@ -24,19 +24,19 @@ export function RankingSpotlightCard({ fighter, compact = false }: { fighter: Ra
         to={`/fighters/${fighter.slug}`}
         aria-label={`View ${fighter.displayName} profile photo`}
       >
-        <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.thumbUrl} />
+        <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.profileUrl} />
       </Link>
       <div className="football-player-spotlight__copy">
         <span>FIGHTER SPOTLIGHT</span>
         <h3><Link className="ufc-fighter-spotlight__name-link" to={`/fighters/${fighter.slug}`}>{fighter.displayName}</Link></h3>
-        <strong>{divisionLabel}</strong>
+        <strong>{eventWeightClass || divisionLabel}</strong>
         <div className="football-player-spotlight__stats" aria-label="Fighter ranking and statistics">
           <span><b>#{fighter.rank}</b><small>ALL-TIME</small></span>
           <span><b>{fighter.visibleStats.ufcRecord}</b><small>UFC RECORD</small></span>
           <span><b>{fighter.visibleStats.titleFightWins}</b><small>TITLE FIGHT WINS</small></span>
           <span><b>{fighter.ovr}</b><small>OVR</small></span>
         </div>
-        <p className="football-player-spotlight__meta">{fighter.resumeTag}</p>
+        <p className="football-player-spotlight__meta">{eventOpponent ? "VS " + eventOpponent : fighter.resumeTag}</p>
         {watchAction ? (
           <a className="ufc-fighter-spotlight__watch" href={watchAction.url} target="_blank" rel="noopener noreferrer">
             WATCH MOMENT ↗
