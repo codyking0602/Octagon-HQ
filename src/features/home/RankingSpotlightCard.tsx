@@ -24,7 +24,7 @@ export function RankingSpotlightCard({ fighter, compact = false, eventOpponent, 
         to={`/fighters/${fighter.slug}`}
         aria-label={`View ${fighter.displayName} profile photo`}
       >
-        <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.profileUrl} />
+        <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.thumbUrl} />
       </Link>
       <div className="football-player-spotlight__copy">
         <span>FIGHTER SPOTLIGHT</span>
