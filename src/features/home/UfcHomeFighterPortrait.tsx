@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { RankingFighter } from "../rankings/rankingModel";
+import { UFC_HOME_PORTRAIT_SLUGS } from "./ufcHomePortraitSlugs";
 
-/** Independently sourced Home-only ESPN headshots; never replace the canonical ranked thumbnails. */
-export const UFC_HOME_PORTRAIT_PROOFS = new Set([
-  "ciryl-gane",
-  "kayla-harrison",
-  "amanda-nunes",
-]);
+/** Independently sourced Home-only ESPN headshots; never replace canonical ranked thumbnails. */
+export const UFC_HOME_PORTRAIT_PROOFS: ReadonlySet<string> = new Set(UFC_HOME_PORTRAIT_SLUGS);
 
 export function UfcHomeFighterPortrait({ fighter }: { fighter: RankingFighter }) {
   const [failedSlug, setFailedSlug] = useState<string | null>(null);
