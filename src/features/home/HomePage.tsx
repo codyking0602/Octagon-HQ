@@ -38,7 +38,7 @@ import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
-import { RankingSpotlightCard } from "./RankingSpotlightCard";
+import { UfcEventDaySpotlight } from "./UfcEventDaySpotlight";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
 import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
@@ -380,7 +380,7 @@ export default function HomePage() {
       </section>
 
       {ufcDailyChallenge}
-      {spotlight ? <RankingSpotlightCard fighter={spotlight} compact /> : null}
+      <UfcEventDaySpotlight event={currentEvent} history={picks.history} fighters={allTime} fallback={spotlight} />
       <ShanesWatchlistCard compact />
     </section>
   );
