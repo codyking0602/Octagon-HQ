@@ -1,0 +1,832 @@
+{
+  "rankedTotal": 84,
+  "sources": {
+    "alex-pantoja": {
+      "name": "Alexandre Pantoja",
+      "espnName": "Alexandre Pantoja",
+      "espnId": "2560746",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2560746.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "alex-pereira": {
+      "name": "Alex Pereira",
+      "espnName": "Alex Pereira",
+      "espnId": "4705658",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4705658.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "alexa-grasso": {
+      "name": "Alexa Grasso",
+      "espnName": "Alexa Grasso",
+      "espnId": "3136287",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3136287.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "alexander-volkanovski": {
+      "name": "Alexander Volkanovski",
+      "espnName": "Alexander Volkanovski",
+      "espnId": "3949584",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3949584.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "aljamain-sterling": {
+      "name": "Aljamain Sterling",
+      "espnName": "Aljamain Sterling",
+      "espnId": "3031559",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3031559.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "amanda-nunes": {
+      "name": "Amanda Nunes",
+      "espnName": "Amanda Nunes",
+      "espnId": "2516131",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2516131.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "anderson-silva": {
+      "name": "Anderson Silva",
+      "espnName": "Anderson Silva",
+      "espnId": "2335447",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335447.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "anthony-pettis": {
+      "name": "Anthony Pettis",
+      "espnName": "Anthony Pettis",
+      "espnId": "2504171",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2504171.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "benson-henderson": {
+      "name": "Benson Henderson",
+      "espnName": "Benson Henderson",
+      "espnId": "2487019",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2487019.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "brandon-moreno": {
+      "name": "Brandon Moreno",
+      "espnName": "Brandon Moreno",
+      "espnId": "3027545",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3027545.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "brock-lesnar": {
+      "name": "Brock Lesnar",
+      "espnName": "Brock Lesnar",
+      "espnId": "2335298",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335298.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "cain-velasquez": {
+      "name": "Cain Velasquez",
+      "espnName": "Cain Velasquez",
+      "espnId": "2335654",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335654.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "carla-esparza": {
+      "name": "Carla Esparza",
+      "espnName": "Carla Esparza",
+      "espnId": "2559934",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2559934.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "chael-sonnen": {
+      "name": "Chael Sonnen",
+      "espnName": "Chael Sonnen",
+      "espnId": "2335796",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335796.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "charles-oliveira": {
+      "name": "Charles Oliveira",
+      "espnName": "Charles Oliveira",
+      "espnId": "2504169",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2504169.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "chris-weidman": {
+      "name": "Chris Weidman",
+      "espnName": "Chris Weidman",
+      "espnId": "2553993",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2553993.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "chuck-liddell": {
+      "name": "Chuck Liddell",
+      "espnName": "Chuck Liddell",
+      "espnId": "2335464",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335464.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "ciryl-gane": {
+      "name": "Ciryl Gane",
+      "espnName": "Ciryl Gane",
+      "espnId": "4426000",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4426000.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "conor-mcgregor": {
+      "name": "Conor McGregor",
+      "espnName": "Conor McGregor",
+      "espnId": "3022677",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3022677.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "cris-cyborg": {
+      "name": "Cris Cyborg",
+      "espnName": "Cris Cyborg",
+      "espnId": "2354564",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2354564.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "dan-henderson": {
+      "name": "Dan Henderson",
+      "espnName": "Dan Henderson",
+      "espnId": "2335497",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335497.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "daniel-cormier": {
+      "name": "Daniel Cormier",
+      "espnName": "Daniel Cormier",
+      "espnId": "2509290",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2509290.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "deiveson-figueiredo": {
+      "name": "Deiveson Figueiredo",
+      "espnName": "Deiveson Figueiredo",
+      "espnId": "4189320",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4189320.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "demetrious-johnson": {
+      "name": "Demetrious Johnson",
+      "espnName": "Demetrious Johnson",
+      "espnId": "2512089",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2512089.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "dominick-cruz": {
+      "name": "Dominick Cruz",
+      "espnName": "Dominick Cruz",
+      "espnId": "2335888",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335888.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "dricus-du-plessis": {
+      "name": "Dricus du Plessis",
+      "espnName": "Dricus Du Plessis",
+      "espnId": "3166126",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3166126.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "dustin-poirier": {
+      "name": "Dustin Poirier",
+      "espnName": "Dustin Poirier",
+      "espnId": "2506549",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2506549.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "fabricio-werdum": {
+      "name": "Fabricio Werdum",
+      "espnName": "Fabricio Werdum",
+      "espnId": "2354533",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2354533.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "forrest-griffin": {
+      "name": "Forrest Griffin",
+      "espnName": "Forrest Griffin",
+      "espnId": "2335522",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335522.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "francis-ngannou": {
+      "name": "Francis Ngannou",
+      "espnName": "Francis Ngannou",
+      "espnId": "3933168",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3933168.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "frankie-edgar": {
+      "name": "Frankie Edgar",
+      "espnName": "Frankie Edgar",
+      "espnId": "2335694",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335694.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "georges-st-pierre": {
+      "name": "Georges St-Pierre",
+      "espnName": "Georges St-Pierre",
+      "espnId": "2335659",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335659.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "glover-teixeira": {
+      "name": "Glover Teixeira",
+      "espnName": "Glover Teixeira",
+      "espnId": "2504929",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2504929.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "henry-cejudo": {
+      "name": "Henry Cejudo",
+      "espnName": "Henry Cejudo",
+      "espnId": "3023388",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3023388.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "holly-holm": {
+      "name": "Holly Holm",
+      "espnName": "Holly Holm",
+      "espnId": "3028404",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3028404.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "ilia-topuria": {
+      "name": "Ilia Topuria",
+      "espnName": "Ilia Topuria",
+      "espnId": "4350812",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4350812.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "islam-makhachev": {
+      "name": "Islam Makhachev",
+      "espnName": "Islam Makhachev",
+      "espnId": "3332412",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3332412.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "israel-adesanya": {
+      "name": "Israel Adesanya",
+      "espnName": "Israel Adesanya",
+      "espnId": "4285679",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4285679.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "jessica-andrade": {
+      "name": "Jessica Andrade",
+      "espnName": "Jessica Andrade",
+      "espnId": "3024395",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3024395.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "joanna-jedrzejczyk": {
+      "name": "Joanna Jedrzejczyk",
+      "espnName": "Joanna Jedrzejczyk",
+      "espnId": "3106617",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3106617.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "jon-jones": {
+      "name": "Jon Jones",
+      "espnName": "Jon Jones",
+      "espnId": "2335639",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335639.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "jose-aldo": {
+      "name": "Jose Aldo",
+      "espnName": "José Aldo",
+      "espnId": "2447641",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2447641.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "joshua-van": {
+      "name": "Joshua Van",
+      "espnName": "Joshua Van",
+      "espnId": "5120301",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/5120301.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "julianna-pena": {
+      "name": "Julianna Peña",
+      "espnName": "Julianna Peña",
+      "espnId": "2951361",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2951361.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "junior-dos-santos": {
+      "name": "Junior dos Santos",
+      "espnName": "Junior Dos Santos",
+      "espnId": "2335725",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335725.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "justin-gaethje": {
+      "name": "Justin Gaethje",
+      "espnName": "Justin Gaethje",
+      "espnId": "3022345",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3022345.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "kamaru-usman": {
+      "name": "Kamaru Usman",
+      "espnName": "Kamaru Usman",
+      "espnId": "3088812",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3088812.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "kayla-harrison": {
+      "name": "Kayla Harrison",
+      "espnName": "Kayla Harrison",
+      "espnId": "4332765",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4332765.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "khabib-nurmagomedov": {
+      "name": "Khabib Nurmagomedov",
+      "espnName": "Khabib Nurmagomedov",
+      "espnId": "2611557",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2611557.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "khamzat-chimaev": {
+      "name": "Khamzat Chimaev",
+      "espnName": "Khamzat Chimaev",
+      "espnId": "4684751",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4684751.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "leon-edwards": {
+      "name": "Leon Edwards",
+      "espnName": "Leon Edwards",
+      "espnId": "3152929",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3152929.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "lyoto-machida": {
+      "name": "Lyoto Machida",
+      "espnName": "Lyoto Machida",
+      "espnId": "2335524",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335524.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "mackenzie-dern": {
+      "name": "Mackenzie Dern",
+      "espnName": "Mackenzie Dern",
+      "espnId": "4021217",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4021217.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "matt-hughes": {
+      "name": "Matt Hughes",
+      "espnName": "Matt Hughes",
+      "espnId": "2335661",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335661.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "max-holloway": {
+      "name": "Max Holloway",
+      "espnName": "Max Holloway",
+      "espnId": "2614933",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2614933.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "merab-dvalishvili": {
+      "name": "Merab Dvalishvili",
+      "espnName": "Merab Dvalishvili",
+      "espnId": "3948572",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3948572.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "michael-bisping": {
+      "name": "Michael Bisping",
+      "espnName": "Michael Bisping",
+      "espnId": "2335602",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335602.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "miesha-tate": {
+      "name": "Miesha Tate",
+      "espnName": "Miesha Tate",
+      "espnId": "2553021",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2553021.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "natalia-silva": {
+      "name": "Natalia Silva",
+      "espnName": "Natalia Silva",
+      "espnId": "4054605",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4054605.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "paddy-pimblett": {
+      "name": "Paddy Pimblett",
+      "espnName": "Paddy Pimblett",
+      "espnId": "4008549",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4008549.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "petr-yan": {
+      "name": "Petr Yan",
+      "espnName": "Petr Yan",
+      "espnId": "4293517",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4293517.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "quinton-jackson": {
+      "name": "Quinton Jackson",
+      "espnName": "Quinton Jackson",
+      "espnId": "2335470",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335470.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "rafael-dos-anjos": {
+      "name": "Rafael dos Anjos",
+      "espnName": "Rafael Dos Anjos",
+      "espnId": "2335687",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335687.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "randy-couture": {
+      "name": "Randy Couture",
+      "espnName": "Randy Couture",
+      "espnId": "2335338",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335338.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "rashad-evans": {
+      "name": "Rashad Evans",
+      "espnName": "Rashad Evans",
+      "espnId": "2335465",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335465.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "robbie-lawler": {
+      "name": "Robbie Lawler",
+      "espnName": "Robbie Lawler",
+      "espnId": "2431258",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2431258.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "robert-whittaker": {
+      "name": "Robert Whittaker",
+      "espnName": "Robert Whittaker",
+      "espnId": "3009717",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3009717.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "ronda-rousey": {
+      "name": "Ronda Rousey",
+      "espnName": "Ronda Rousey",
+      "espnId": "2563796",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2563796.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "rose-namajunas": {
+      "name": "Rose Namajunas",
+      "espnName": "Rose Namajunas",
+      "espnId": "3032973",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3032973.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "royce-gracie": {
+      "name": "Royce Gracie",
+      "espnName": "Royce Gracie",
+      "espnId": "2335697",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335697.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "sean-omalley": {
+      "name": "Sean O'Malley",
+      "espnName": "Sean O'Malley",
+      "espnId": "4205093",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4205093.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "sean-strickland": {
+      "name": "Sean Strickland",
+      "espnName": "Sean Strickland",
+      "espnId": "3093653",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/3093653.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "shogun-rua": {
+      "name": "Mauricio \"Shogun\" Rua",
+      "espnName": "Mauricio Rua",
+      "espnId": "2335514",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335514.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "stipe-miocic": {
+      "name": "Stipe Miocic",
+      "espnName": "Stipe Miocic",
+      "espnId": "2504951",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2504951.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "tito-ortiz": {
+      "name": "Tito Ortiz",
+      "espnName": "Tito Ortiz",
+      "espnId": "2335472",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335472.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "tom-aspinall": {
+      "name": "Tom Aspinall",
+      "espnName": "Tom Aspinall",
+      "espnId": "4010976",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4010976.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "tony-ferguson": {
+      "name": "Tony Ferguson",
+      "espnName": "Tony Ferguson",
+      "espnId": "2560085",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2560085.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "tyron-woodley": {
+      "name": "Tyron Woodley",
+      "espnName": "Tyron Woodley",
+      "espnId": "2501926",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2501926.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "valentina-shevchenko": {
+      "name": "Valentina Shevchenko",
+      "espnName": "Valentina Shevchenko",
+      "espnId": "2554705",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2554705.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "vitor-belfort": {
+      "name": "Vitor Belfort",
+      "espnName": "Vitor Belfort",
+      "espnId": "2354057",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2354057.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
+    "zhang-weili": {
+      "name": "Zhang Weili",
+      "espnName": "Zhang Weili",
+      "espnId": "4350762",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/4350762.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    }
+  },
+  "blocked": [
+    {
+      "name": "B.J. Penn",
+      "slug": "bj-penn",
+      "reason": "no exact verified ESPN MMA athlete search match for B.J. Penn: {}"
+    },
+    {
+      "name": "Frank Shamrock",
+      "slug": "frank-shamrock",
+      "reason": "no exact verified ESPN MMA athlete search match for Frank Shamrock: {}"
+    },
+    {
+      "name": "T.J. Dillashaw",
+      "slug": "tj-dillashaw",
+      "reason": "no exact verified ESPN MMA athlete search match for T.J. Dillashaw: {}"
+    }
+  ]
+}
