@@ -43,3 +43,5 @@ jobs:
           fi
           git -c user.name='octagon-hq-automation[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'assets: add verified ESPN portraits for HQ-ranked UFC Home spotlight'
           git push origin HEAD:feat/ufc-home-ranked-espn-portraits-20261114
+
+# Rerun for ESPN verified punctuation/initials aliases only.
