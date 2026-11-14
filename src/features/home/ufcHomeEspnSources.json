@@ -91,6 +91,16 @@
         436
       ]
     },
+    "bj-penn": {
+      "name": "B.J. Penn",
+      "espnName": "BJ Penn",
+      "espnId": "2335629",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2335629.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
     "brandon-moreno": {
       "name": "Brandon Moreno",
       "espnName": "Brandon Moreno",
@@ -751,6 +761,16 @@
         436
       ]
     },
+    "tj-dillashaw": {
+      "name": "T.J. Dillashaw",
+      "espnName": "TJ Dillashaw",
+      "espnId": "2611719",
+      "url": "https://a.espncdn.com/i/headshots/mma/players/full/2611719.png",
+      "sourceDimensions": [
+        600,
+        436
+      ]
+    },
     "tom-aspinall": {
       "name": "Tom Aspinall",
       "espnName": "Tom Aspinall",
@@ -814,19 +834,9 @@
   },
   "blocked": [
     {
-      "name": "B.J. Penn",
-      "slug": "bj-penn",
-      "reason": "no exact verified ESPN MMA athlete search match for B.J. Penn: {}"
-    },
-    {
       "name": "Frank Shamrock",
       "slug": "frank-shamrock",
       "reason": "no exact verified ESPN MMA athlete search match for Frank Shamrock: {}"
-    },
-    {
-      "name": "T.J. Dillashaw",
-      "slug": "tj-dillashaw",
-      "reason": "no exact verified ESPN MMA athlete search match for T.J. Dillashaw: {}"
     }
   ]
 }
