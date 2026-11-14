@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import type { PlayChallenge } from "../challenges/challengeModel";
@@ -36,6 +36,10 @@ describe("UFC HQ finishing refinements", () => {
     const spotlight = screen.getByRole("article", { name: "UFC Fighter Spotlight" });
     expect(within(spotlight).getByRole("link", { name: "View Islam Makhachev profile photo" }))
       .toHaveAttribute("href", "/fighters/islam-makhachev");
+    const homePortrait = within(spotlight)
+      .getByRole("link", { name: "View Islam Makhachev profile photo" }).querySelector("img")!;
+    expect(homePortrait).toHaveAttribute("src", "/assets/fighters/islam-makhachev.home.webp");
+    fireEvent.error(homePortrait);
     expect(within(spotlight).getByRole("img", { name: "Islam Makhachev" }))
       .toHaveAttribute("src", fighter.thumbUrl);
     expect(within(spotlight).getByRole("link", { name: "Islam Makhachev" }))
