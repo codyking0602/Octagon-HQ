@@ -44,7 +44,7 @@ ALIASES = {
     "julianna-pena": ("Julianna Pena",),
     "zhang-weili": ("Weili Zhang",),
     "quinton-jackson": ("Quinton Jackson", "Rampage Jackson"),
-    "antonio-rodrigo-nogueira": ("Antonio Rodrigo Nogueira", "Antonio Rogerio Nogueira"),
+    "antonio-rodrigo-nogueira": ("Antonio Rodrigo Nogueira", "Minotauro Nogueira"),
     "cris-cyborg": ("Cris Cyborg", "Cristiane Justino"),
     "rose-namajunas": ("Rose Namajunas",),
     "andrei-arlovski": ("Andrei Arlovski",),
