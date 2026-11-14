@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
+import { UfcHomeFighterPortrait } from "./UfcHomeFighterPortrait";
 import type { RankingFighter } from "../rankings/rankingModel";
 import { resolveWatchMomentAction } from "../rankings/rankingPresentation";
 
@@ -24,7 +25,7 @@ export function RankingSpotlightCard({ fighter, compact = false, eventOpponent, 
         to={`/fighters/${fighter.slug}`}
         aria-label={`View ${fighter.displayName} profile photo`}
       >
-        <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.thumbUrl} />
+        <UfcHomeFighterPortrait fighter={fighter} />
       </Link>
       <div className="football-player-spotlight__copy">
         <span>FIGHTER SPOTLIGHT</span>
