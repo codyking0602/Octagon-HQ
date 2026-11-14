@@ -1,4 +1,4 @@
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 function dimensions(file: Buffer) {
@@ -19,9 +19,17 @@ function dimensions(file: Buffer) {
   throw new Error("Unknown WebP codec " + type);
 }
 
-describe("UFC Home high-density portrait proofs", () => {
+describe("UFC Home portraits from independently sourced ESPN originals", () => {
+  it("records real ESPN source IDs and forbids the old thumbnail-upscale generator", () => {
+    const script = readFileSync("scripts/generate-ufc-home-from-espn.py", "utf8");
+    expect(script).toContain("4426000.png");
+    expect(script).toContain("4332765.png");
+    expect(script).toContain("2516131.png");
+    expect(script).toContain("Source was a thumbnail, not a genuine source");
+    expect(existsSync("scripts/generate-ufc-home-portrait-proofs.py")).toBe(false);
+  });
   it.each(["ciryl-gane", "kayla-harrison", "amanda-nunes"])(
-    "%s ships a real 640x640 Home-only WebP and preserves the compact 160px thumbnail",
+    "%s ships a genuine-source 640x640 Home WebP and preserves the compact 160px thumb",
     (slug) => {
       const path = "public/assets/fighters/" + slug;
       const home = readFileSync(path + ".home.webp");

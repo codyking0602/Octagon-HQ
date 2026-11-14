@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { RankingFighter } from "../rankings/rankingModel";
 
-/** Owner-approved Home-only portrait proofs; never replace the canonical thumbs. */
+/** Independently sourced Home-only ESPN headshots; never replace the canonical ranked thumbnails. */
 export const UFC_HOME_PORTRAIT_PROOFS = new Set([
   "ciryl-gane",
   "kayla-harrison",

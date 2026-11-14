@@ -16,14 +16,14 @@ function fighter(slug: string): RankingFighter {
   } as RankingFighter;
 }
 
-describe("UFC Home-only ranked fighter portrait proofs", () => {
+describe("UFC Home-only ranked fighter sourced portraits", () => {
   it("features only the approved three slugs before expanding the complete ranked roster", () => {
     expect([...UFC_HOME_PORTRAIT_PROOFS].sort()).toEqual(
       ["amanda-nunes", "ciryl-gane", "kayla-harrison"],
     );
   });
 
-  it("loads the dedicated 4x Home asset without altering the standard thumbnails", () => {
+  it("loads the independently sourced Home asset without altering the standard thumbnails", () => {
     const view = render(<UfcHomeFighterPortrait fighter={fighter("ciryl-gane")} />);
     const home = view.container.querySelector("img")!;
     expect(home).toHaveAttribute("src", "/assets/fighters/ciryl-gane.home.webp");
