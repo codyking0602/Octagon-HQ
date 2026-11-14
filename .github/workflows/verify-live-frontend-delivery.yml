@@ -63,6 +63,11 @@ jobs:
       - name: Verify real deployed UFC fighter photos match reviewed repository WebPs
         run: node scripts/verify-live-ufc-media-delivery.mjs
 
+      - name: Verify every ranked UFC Home ESPN portrait on Octagon production
+        env:
+          OCTAGON_PRODUCTION_ORIGIN: https://octagon.hq-app.workers.dev
+        run: node scripts/verify-live-ufc-home-portraits.mjs
+
       - name: Verify live NBA Cup score endpoint and actual results
         run: node scripts/verify-live-nba-cup-scoreboard.mjs
 
