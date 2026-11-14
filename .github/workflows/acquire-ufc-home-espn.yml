@@ -1,0 +1,47 @@
+name: Acquire real UFC Home ESPN portraits
+
+on:
+  push:
+    branches:
+      - fix/ufc-home-espn-source-headshots-20261114
+    paths:
+      - scripts/generate-ufc-home-from-espn.py
+      - .github/workflows/acquire-ufc-home-espn.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ufc-home-acquisition-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  acquire-three:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - name: Download verified ESPN athlete PNGs and crop three genuine Home headshots
+        run: python scripts/generate-ufc-home-from-espn.py
+      - name: Commit real-source portraits to this review branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- public/assets/fighters/ciryl-gane.home.webp public/assets/fighters/kayla-harrison.home.webp public/assets/fighters/amanda-nunes.home.webp
+          if git diff --cached --quiet; then
+            echo "Real ESPN Home portraits match existing assets."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "assets(ufc): replace upscaled proofs with genuine ESPN headshots"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
