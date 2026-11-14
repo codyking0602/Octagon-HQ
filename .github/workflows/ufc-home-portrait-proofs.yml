@@ -1,0 +1,47 @@
+name: Generate 3 UFC Home portrait proofs
+
+on:
+  push:
+    branches:
+      - feat/ufc-home-portraits-preview-3-20261114
+    paths:
+      - scripts/generate-ufc-home-portrait-proofs.py
+      - .github/workflows/ufc-home-portrait-proofs.yml
+
+permissions:
+  contents: write
+
+jobs:
+  create-home-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned image processing dependencies
+        run: python -m pip install pillow==11.2.1 numpy==1.26.4 opencv-contrib-python-headless==4.10.0.84
+      - name: Generate reviewed headshot proofs with EDSR 4x
+        run: python scripts/generate-ufc-home-portrait-proofs.py
+      - name: Commit generated three-image proof set
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            public/assets/fighters/ciryl-gane.home.webp \
+            public/assets/fighters/kayla-harrison.home.webp \
+            public/assets/fighters/amanda-nunes.home.webp
+          if git diff --cached --quiet; then
+            echo "Generated images unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "assets(ufc): add three 4x Home-only headshot proofs"
+          git push origin "HEAD:feat/ufc-home-portraits-preview-3-20261114"
