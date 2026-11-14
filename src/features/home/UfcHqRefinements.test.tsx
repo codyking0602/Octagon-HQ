@@ -12,15 +12,16 @@ vi.mock("../rankings/rankingPresentation", () => ({
   resolveWatchMomentAction: () => ({ url: "https://www.youtube.com/watch?v=abc123" }),
 }));
 vi.mock("../rankings/FighterPhoto", () => ({
-  FighterPhoto: ({ name, className }: { name: string; className?: string }) =>
-    <img className={className} src="/fighter.webp" alt={name} />,
+  FighterPhoto: ({ name, className, src }: { name: string; className?: string; src: string }) =>
+    <img className={className} src={src} alt={name} />,
 }));
 
 describe("UFC HQ finishing refinements", () => {
   const fighter = {
     displayName: "Islam Makhachev",
     slug: "islam-makhachev",
-    thumbUrl: "/fighter.webp",
+    thumbUrl: "/assets/fighters/islam-makhachev-thumb.webp",
+    profileUrl: "/assets/fighters/islam-makhachev.webp",
     rank: 5,
     division: "LW / WW",
     primaryDivision: "Lightweight",
@@ -35,6 +36,8 @@ describe("UFC HQ finishing refinements", () => {
     const spotlight = screen.getByRole("article", { name: "UFC Fighter Spotlight" });
     expect(within(spotlight).getByRole("link", { name: "View Islam Makhachev profile photo" }))
       .toHaveAttribute("href", "/fighters/islam-makhachev");
+    expect(within(spotlight).getByRole("img", { name: "Islam Makhachev" }))
+      .toHaveAttribute("src", fighter.thumbUrl);
     expect(within(spotlight).getByRole("link", { name: "Islam Makhachev" }))
       .toHaveAttribute("href", "/fighters/islam-makhachev");
     expect(within(spotlight).getByRole("link", { name: "WATCH MOMENT ↗" }))
