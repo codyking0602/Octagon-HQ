@@ -1,0 +1,8 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/jiri-prochazka",
+  "fighter_name": "Jiri Prochazka",
+  "verified_source_url": "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-04/PROCHAZKA_JIRI_L_04-11.png?itok=gJ5V0bVR",
+  "official_ufc_three_quarter_reviewed": true,
+  "destination": "public/assets/fighters/jiri-prochazka-spotlight.webp",
+  "kind": "spotlight"
+}
