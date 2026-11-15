@@ -889,6 +889,10 @@ def ingest_fighter_candidate(spec, kind, dest, size):
                 fail("invalid reviewed Spotlight background polygon")
             artist.polygon([tuple(point) for point in polygon], fill=0)
         im.putalpha(alpha)
+        # Zero RGB beneath erased alpha. Otherwise lossless WebP can preserve
+        # publisher colors inside fully transparent pixels and previews may
+        # reveal ghost rectangles even though the alpha channel is cleared.
+        im = Image.alpha_composite(Image.new("RGBA", im.size, (0, 0, 0, 0)), im)
 
     # Validate *before* writing. A failed candidate must never leave an
     # unreviewed WebP in the working tree (which a later successful batchmate
