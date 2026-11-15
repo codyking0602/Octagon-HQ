@@ -80,6 +80,9 @@ jobs:
       - name: Verify UFC live-photo delivery safeguards offline
         run: node --test scripts/verify-live-ufc-media-delivery.fixtures.mjs
 
+      - name: Test future numbered UFC poster source verification
+        run: node --test scripts/numbered-ufc-countdown-poster-source.test.mjs
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log
