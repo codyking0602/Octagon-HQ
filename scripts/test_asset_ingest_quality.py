@@ -540,7 +540,7 @@ class AssetIngestQualityTests(unittest.TestCase):
                                     removed.assert_called_once()
             actual = Image.open(dest).convert("RGBA")
             self.assertEqual(actual.size, (626, 800))
-            self.assertEqual(actual.getpixel((250, 500))[3], 0)
+            self.assertEqual(actual.getpixel((250, 500)), (0, 0, 0, 0))
 
     def test_spotlight_source_bottom_cutoff_is_detected(self):
         cropped = fake_fighter().crop((0, 0, 160, 180))
