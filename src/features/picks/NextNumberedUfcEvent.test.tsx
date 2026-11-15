@@ -57,6 +57,27 @@ describe("NextNumberedUfcEvent", () => {
     expect(screen.getByText("COUNTDOWN TO FIGHT NIGHT")).toBeInTheDocument();
   });
 
+  it("displays the UFC 335 photo with a second image fallback rather than a generic arena", async () => {
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-11-15T13:00:00Z"));
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ event: {
+        name: "UFC 335", matchup: "Oliveira vs. Lopes",
+        startsAt: "2026-12-13T02:00:00.000Z",
+        venue: "T-Mobile Arena", location: "Las Vegas",
+        imageUrl: null,
+      } }),
+    })));
+    const { container } = render(<MemoryRouter><NextNumberedUfcEvent canControl={false} /></MemoryRouter>);
+    await screen.findByRole("heading", { name: "UFC 335" });
+    expect(screen.getByText("Oliveira vs. Lopes")).toBeInTheDocument();
+    const poster = container.querySelector<HTMLImageElement>(".ufc-next-event__poster");
+    expect(poster?.src).toContain("d6isf1yxni2j5.cloudfront.net");
+    expect(container.querySelector(".ufc-next-event__art")).toHaveClass("has-artwork");
+    fireEvent.error(poster!);
+    await waitFor(() => expect(container.querySelector<HTMLImageElement>(".ufc-next-event__poster")?.src).toContain("s.yimg.com/"));
+  });
+
   it("keeps owner controls discreet and handles missing official data without fictional dates", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => ({ event: null }) })));
     render(<MemoryRouter><NextNumberedUfcEvent canControl /></MemoryRouter>);
