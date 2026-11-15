@@ -503,6 +503,35 @@ class AssetIngestQualityTests(unittest.TestCase):
                                 ingest_fighter_candidate(spec, "spotlight", dest, (626, 800))
             self.assertEqual(Image.open(dest).size, (626, 800))
 
+    def test_reviewed_ufc_spotlight_can_explicitly_clean_bad_background(self):
+        import tempfile
+        from io import BytesIO
+        from pathlib import Path
+        from unittest.mock import patch
+
+        source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        ImageDraw.Draw(source).rectangle((350, 100, 459, 650), fill=(240, 170, 180, 255))
+        raw = BytesIO()
+        source.save(raw, "PNG")
+        url = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png"
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Navajo Stirling",
+            "source_url": url,
+            "verified_source_url": url,
+            "verified_profile_url": "https://www.ufc.com/athlete/navajo-stirling",
+            "official_ufc_three_quarter_reviewed": True,
+            "force_background_removal": True,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = str(Path(tmp) / "stirling-spotlight.webp")
+            with patch("scripts.asset_ingest.resolve_source", return_value=(url, raw.getvalue())):
+                with patch("scripts.asset_ingest.remove", return_value=fake_fighter(460, 700)) as removed:
+                    with patch("scripts.asset_ingest.validate_asset_quality", return_value={"alpha_coverage": .4, "visible_bbox": [0, 10, 460, 700]}):
+                        ingest_fighter_candidate(spec, "spotlight", dest, (626, 800))
+                        removed.assert_called_once()
+            self.assertEqual(Image.open(dest).size, (626, 800))
+
     def test_spotlight_source_bottom_cutoff_is_detected(self):
         cropped = fake_fighter().crop((0, 0, 160, 180))
         self.assertIn("bottom", source_looks_clipped(cropped, "spotlight"))
