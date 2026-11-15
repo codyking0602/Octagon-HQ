@@ -54,7 +54,7 @@ describe("next numbered UFC Picks artwork", () => {
     }];
     expect(numberedUfcCountdownArtworkCandidates(event, published))
       .toEqual(["https://platform.mmamania.com/wp-content/uploads/2027/01/ufc-336.jpeg"]);
-    expect(numberedUfcCountdownArtworkCandidates({ ...event, matchup: "Alex Example vs. Another Opponent" }, published)).toEqual([]);
+    expect(numberedUfcCountdownArtworkCandidates({ ...event, matchup: "Alex Example vs. Another Fighter" }, published)).toEqual([]);
     expect(numberedUfcCountdownArtworkCandidates({ ...event, name: "UFC 337" }, published)).toEqual([]);
     expect(numberedUfcCountdownArtworkCandidates({ ...event, startsAt: "2027-02-07T02:00:00Z" }, published)).toEqual([]);
     expect(numberedUfcCountdownArtworkCandidates(event, [{ ...published[0], source: "https://fake.example/ufc-336" }])).toEqual([]);
