@@ -3,8 +3,8 @@ name: Refresh MMA Mania UFC Poster
 on:
   workflow_dispatch:
   schedule:
-    # Poster archives sometimes publish after Tuesday: check each weekday.
-    - cron: "17 12 * * 1-5"
+    # Catch numbered-event announcements and poster releases on weekends too.
+    - cron: "17 12 * * *"
 
 permissions:
   actions: write
@@ -29,6 +29,11 @@ jobs:
         with:
           node-version-file: .nvmrc
 
+      - name: Discover source-verified next numbered UFC countdown poster
+        run: node scripts/refresh-numbered-ufc-countdown-poster.mjs
+        # A third-party/ESPN outage must not interrupt the existing weekly art owner.
+        continue-on-error: true
+
       - name: Read live UFC event and verify MMA Mania poster
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -42,21 +47,22 @@ jobs:
         run: |
           set -euo pipefail
           ledger=src/features/picks/ufcMmaManiaWeeklyPosters.json
-          if git diff --quiet -- "$ledger"; then
-            echo "No new source-verified MMA Mania poster."
+          numbered_ledger=src/features/picks/ufcNumberedCountdownPosters.json
+          if git diff --quiet -- "$ledger" "$numbered_ledger"; then
+            echo "No new source-verified UFC event poster."
             exit 0
           fi
           branch="automation/ufc-poster-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add -- "$ledger"
-          git commit -m "Publish verified MMA Mania UFC fight-week poster"
+          git add -- "$ledger" "$numbered_ledger"
+          git commit -m "Publish verified UFC event poster artwork"
           head_sha=$(git rev-parse HEAD)
           git push origin "$branch"
           gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" \
-            --title "Publish verified MMA Mania UFC event poster" \
-            --body "Automatic verified source: MMA Mania UFC Posters archive. Exact event identity, headliners, publisher image domain, dimensions and Tuesday fight-week time gate validated. No synthetic artwork."
+            --title "Publish verified UFC event poster artwork" \
+            --body "Automatic verified source: MMA Mania UFC Posters archive. Exact event identity, headliners, publisher image domain and dimensions validated. Numbered countdown posters are published independently of staged Picks; weekly live Picks art retains its Tuesday fight-week gate. No synthetic artwork."
           pr_number=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state open --json number --jq '.[0].number')
           if [ -z "$pr_number" ]; then
             echo "Poster publisher PR creation failed."

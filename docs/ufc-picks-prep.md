@@ -10,6 +10,28 @@ UFC Prep is a pre-staging package for the next UFC Picks event. It does **not** 
 - UFC.com is the canonical staging importer, but Monday prep must cross-check the card against at least one independent current card source and betting-odds availability.
 - Missing/disappearing odds are a warning signal, not proof that a fight changed.
 
+## Automatic numbered UFC Picks countdown artwork
+
+The inactive numbered-event countdown is **not** the published Picks card. It
+uses the live read-only ESPN/UFC numbered-event calendar, independently of
+staging, to show the announced headliner and date.
+
+The existing UFC poster refresh workflow also checks the next numbered card
+**daily**, including weekends. When the trusted MMA Mania poster archive
+publishes a suitable horizontal image, the existing PR-and-exact-head-CI
+pipeline updates `ufcNumberedCountdownPosters.json` and verifies deployment.
+The displayed fallback must match the exact UFC event number, both main-event
+surnames, and the Chicago event date. UFC.com's event-specific `og:image`
+remains first priority. Previously reviewed one-off art remains a fallback.
+
+Only accept images on the approved publisher CDN with source identity and
+dimensions verified; no synthetic fighter imagery, random photos, or
+cross-event reuse. If no valid poster has been published or the source is
+unavailable, keep the atmospheric placeholder and retry at the next scheduled
+check. This is a **conditional automated source workflow**, not a guarantee that
+a source-approved poster exists for every future card. The monitoring workflow
+must not stage or publish Picks or alter completed results.
+
 ## Fighter asset contract
 
 Real fighter photography only. Do not generate UFC fighter images.
