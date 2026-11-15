@@ -274,7 +274,7 @@ describe("PicksPage", () => {
     expect(savePick).toHaveBeenCalledWith(qaEvent.eventId, testBout.boutId, "quillan-salkilld");
   });
 
-  it("shows the frozen bonus in the event summary and selected lock action", async () => {
+  it("preserves frozen lock bonuses with Football-style event lock status", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
       boutId: "ankalaev-guskov",
@@ -296,7 +296,7 @@ describe("PicksPage", () => {
       </IdentityProvider></MemoryRouter>,
     );
 
-    expect(await screen.findByText("SET")).toBeInTheDocument();
+    expect(await screen.findByText("1 / 1 UNDERDOG LOCK SET")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 
