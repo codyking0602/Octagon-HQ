@@ -244,12 +244,22 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
     and the source to be resolved from that fighter's official UFC profile.
     """
     parsed = urlparse(source_url)
-    page = urlparse(str(spec.get("source_page_url") or ""))
+    # A previously indexed official UFC portrait can be verified directly when
+    # the athlete page changes its featured image. Keep identity and exact URL
+    # verification as strict as for page-resolved images.
+    direct = bool(spec.get("source_url"))
+    page = urlparse(str(spec.get("source_page_url") or (
+        spec.get("verified_profile_url") if direct else ""
+    ) or ""))
     expected_slug = re.sub(r"[^a-z0-9]+", "-", str(spec.get("fighter_name") or "").lower()).strip("-")
+    source_name = parsed.path.rsplit("/", 1)[-1].lower()
+    identity_tokens = [part for part in expected_slug.split("-") if part]
+    identity_matches_direct = (not direct or all(part in source_name for part in identity_tokens))
     return (
         spec.get("kind") == "spotlight"
         and spec.get("official_ufc_three_quarter_reviewed") is True
         and spec.get("verified_source_url") == source_url
+        and identity_matches_direct
         and parsed.scheme == "https"
         and parsed.hostname in {"ufc.com", "www.ufc.com"}
         and re.fullmatch(r"/images/styles/athlete_bio_full_body/s3/20[0-9]{2}-[0-9]{2}/[A-Za-z0-9_.-]+[.]png", parsed.path) is not None
