@@ -113,6 +113,7 @@ jobs:
             supabase/tests/sport_championship_weekly_winners.sql \
             supabase/tests/sport_championship_2026_season_starts.sql \
             supabase/tests/nba_cup_public_release.sql \
+            supabase/tests/nba_average_fan_official_grader.sql \
             supabase/tests/nba_gm_private_playtest.sql \
             supabase/tests/nba_gm_development_profiles.sql \
             supabase/tests/nba_gm_scouting_reprice.sql \
