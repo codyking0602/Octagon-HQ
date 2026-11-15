@@ -3,8 +3,8 @@ name: Refresh MMA Mania UFC Poster
 on:
   workflow_dispatch:
   schedule:
-    # Poster archives sometimes publish after Tuesday: check each weekday.
-    - cron: "17 12 * * 1-5"
+    # Catch numbered-event announcements and poster releases on weekends too.
+    - cron: "17 12 * * *"
 
 permissions:
   actions: write
@@ -31,6 +31,8 @@ jobs:
 
       - name: Discover source-verified next numbered UFC countdown poster
         run: node scripts/refresh-numbered-ufc-countdown-poster.mjs
+        # A third-party/ESPN outage must not interrupt the existing weekly art owner.
+        continue-on-error: true
 
       - name: Read live UFC event and verify MMA Mania poster
         env:
