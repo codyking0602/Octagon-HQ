@@ -81,7 +81,7 @@ jobs:
         run: node --test scripts/verify-live-ufc-media-delivery.fixtures.mjs
 
       - name: Test future numbered UFC poster source verification
-        run: node --test scripts/numbered-ufc-countdown-poster-source.test.mjs
+        run: node --test scripts/numbered-ufc-countdown-poster-source.fixtures.mjs
 
       - name: Typecheck
         id: typecheck
