@@ -452,6 +452,26 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(reviewed_ufc_three_quarter_spotlight(
             spec, "https://ufc.com/news/cropped-portrait.jpg", source))
 
+    def test_archived_official_ufc_three_quarter_requires_exact_fighter_identity(self):
+        source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        url = ("https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/"
+               "STIRLING_NAVAJO_L_09-27.png?itok=old")
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Navajo Stirling",
+            "source_url": url,
+            "verified_source_url": url,
+            "verified_profile_url": "https://www.ufc.com/athlete/navajo-stirling",
+            "official_ufc_three_quarter_reviewed": True,
+        }
+        self.assertTrue(reviewed_ufc_three_quarter_spotlight(spec, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "fighter_name": "Jiri Prochazka"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "verified_profile_url": "https://www.ufc.com/athlete/other-fighter"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "verified_source_url": url + "-other"}, url, source))
+
     def test_reviewed_three_quarter_is_not_resegmented_or_stripped(self):
         import tempfile
         from io import BytesIO
