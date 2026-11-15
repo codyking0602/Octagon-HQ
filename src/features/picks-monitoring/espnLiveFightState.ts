@@ -17,6 +17,8 @@ export interface EspnLiveFightObservation {
   source_event_id: string;
   source_competition_id: string;
   winner_fighter_slug: string | null;
+  /** Only populated when ESPN explicitly identifies a no-winner verdict. */
+  explicit_result_status?: "draw" | "no_contest";
   observed_at: string;
 }
 
@@ -85,6 +87,30 @@ function winnerSlug(competition: UnknownRecord, bout: MonitoringBout, state: Esp
   const name = competitorName(winners[0]);
   if (fighterMatch(bout.red_fighter_name, name)) return bout.red_fighter_slug;
   if (fighterMatch(bout.blue_fighter_name, name)) return bout.blue_fighter_slug;
+  return null;
+}
+
+/**
+ * ESPN marks draws and no contests as final without a winner. A missing
+ * winner alone is ambiguous, so only trust an explicit provider verdict.
+ * Generic "Final" statuses and opaque scorecards must stay unresolved.
+ */
+function explicitNonWinnerVerdict(competition: UnknownRecord): "draw" | "no_contest" | null {
+  const status = asRecord(competition.status);
+  const type = asRecord(status?.type);
+  const result = asRecord(competition.result);
+  const detail = [
+    type?.description, type?.detail, type?.shortDetail,
+    result?.description, result?.detail, result?.name,
+  ].map(text).filter(Boolean);
+  const normalize = (value: string) => value.toLowerCase()
+    .replace(/^(?:final|official(?: result)?|result)\\s*[:–—-]\\s*/, "")
+    .trim();
+  const draw = /^(?:(?:majority|split|unanimous|technical)\\s+)?draw$/;
+  const noContest = /^(?:no[\\s-]?contest|nc)$/;
+  const explicit = detail.map(normalize);
+  if (explicit.some((value) => draw.test(value)) && !explicit.some((value) => noContest.test(value))) return "draw";
+  if (explicit.some((value) => noContest.test(value)) && !explicit.some((value) => draw.test(value))) return "no_contest";
   return null;
 }
 
@@ -185,6 +211,9 @@ export function adaptEspnUfcLiveFightState(input: {
       source_event_id: sourceEventId,
       source_competition_id: sourceCompetitionId,
       winner_fighter_slug: winnerSlug(competition, bout, state),
+      ...(state === "final" && !winnerSlug(competition, bout, state) && explicitNonWinnerVerdict(competition)
+        ? { explicit_result_status: explicitNonWinnerVerdict(competition)! }
+        : {}),
       observed_at: new Date(observedAtMs).toISOString(),
     }];
   });
