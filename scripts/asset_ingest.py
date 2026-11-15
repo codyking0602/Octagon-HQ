@@ -818,8 +818,13 @@ def ingest_fighter_candidate(spec, kind, dest, size):
             if spec.get("crop"):
                 fail("reviewed UFC portrait must not be cropped")
             if spec.get("force_background_removal"):
+                # UFC's older PNG can have transparent *and* opaque publisher
+                # panels. Flatten intentionally before the foreground model;
+                # otherwise it trusts existing alpha and retains the panels.
+                flattened = Image.new("RGB", im.size, (248, 248, 248))
+                flattened.paste(im, (0, 0), im.getchannel("A"))
                 try:
-                    im = remove(im).convert("RGBA")
+                    im = remove(flattened).convert("RGBA")
                 except Exception as exc:
                     fail(f"reviewed UFC spotlight background removal failed: {exc}")
                 if im.getchannel("A").getextrema() == (255, 255):
