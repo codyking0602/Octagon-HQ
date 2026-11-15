@@ -169,7 +169,14 @@ def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
     parser = UfcProfileImageParser(fighter_name)
     parser.feed(page.decode("utf-8", errors="replace"))
 
-    for candidate in parser.candidates:
+    # Spotlight requests should resolve the actual UFC three-quarter portrait,
+    # not an event-results 256x160 headshot that happens to appear first.
+    candidates = parser.candidates
+    if kind == "spotlight":
+        candidates = sorted(candidates, key=lambda candidate: (
+            "/athlete_bio_full_body/" not in urlparse(urljoin(page_url, candidate)).path
+        ))
+    for candidate in candidates:
         image_url = urljoin(page_url, candidate)
         if not is_public_https(image_url) or source_url_looks_like_placeholder(image_url):
             continue
