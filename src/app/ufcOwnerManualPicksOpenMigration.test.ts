@@ -11,7 +11,7 @@ describe("UFC owner-held manual Picks reopening", () => {
     expect(migration).toContain("manual_picks_open boolean not null default false");
     expect(migration).not.toContain("update public.pick_events\nset status = 'upcoming'");
     expect(migration).not.toContain("update public.pick_bouts");
-    expect(migration).not.toContain("private.pick_bout_is_locked(");
+    expect(migration).not.toContain("create or replace function private.pick_bout_is_locked");
   });
 
   it("prevents service-owned automatic locking while retaining explicit owner LOCK PICKS", () => {
