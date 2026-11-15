@@ -9,7 +9,8 @@ describe("Picks group progress presentation", () => {
   it("stays collapsed by default and shows scannable completion states", () => {
     expect(component).toContain('<details className="surface-card picks-group-progress" open={embedded ? true : undefined}>');
     expect(component).toContain("embedded = false");
-    expect(component).toContain("`${completedMembers}/${visibleMembers.length} COMPLETE`");
+    expect(component).toContain("ufcLiveStandings?.current");
+    expect(component).toContain("ufcLive.estimatedPoints} EST. PTS");
     expect(component).toContain("{member.completed}/{member.total}");
     expect(component).toContain("const isComplete = member.completed === member.total && member.total > 0");
     // Profile photos now replace the single-letter completion icon; preserve the checkmark overlay.
