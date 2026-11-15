@@ -526,10 +526,17 @@ class AssetIngestQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             dest = str(Path(tmp) / "stirling-spotlight.webp")
             with patch("scripts.asset_ingest.resolve_source", return_value=(url, raw.getvalue())):
-                with patch("scripts.asset_ingest.remove", return_value=fake_fighter(460, 700)) as removed:
-                    with patch("scripts.asset_ingest.validate_asset_quality", return_value={"alpha_coverage": .4, "visible_bbox": [0, 10, 460, 700]}):
-                        ingest_fighter_candidate(spec, "spotlight", dest, (626, 800))
-                        removed.assert_called_once()
+                centered = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+                painter = ImageDraw.Draw(centered)
+                painter.ellipse((155, 20, 305, 180), fill=(170, 100, 80, 255))
+                painter.polygon([(130, 200), (330, 200), (380, 699), (80, 699)], fill=(45, 62, 90, 255))
+                with patch("scripts.asset_ingest.remove", return_value=centered) as removed:
+                    with patch("scripts.asset_ingest.upper_side_background_band", return_value=False):
+                        with patch("scripts.asset_ingest.inset_side_background_panels", return_value=[]):
+                            with patch("scripts.asset_ingest.horizontal_publisher_strips", return_value=[]):
+                                with patch("scripts.asset_ingest.validate_asset_quality", return_value={"alpha_coverage": .4, "visible_bbox": [0, 10, 460, 700]}):
+                                    ingest_fighter_candidate(spec, "spotlight", dest, (626, 800))
+                                    removed.assert_called_once()
             self.assertEqual(Image.open(dest).size, (626, 800))
 
     def test_spotlight_source_bottom_cutoff_is_detected(self):
