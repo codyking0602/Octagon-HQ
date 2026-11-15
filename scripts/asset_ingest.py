@@ -804,10 +804,21 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
-            # These exact manually reviewed UFC profile PNGs are clean cutouts.
-            # Re-segmentation/strip erasure can remove true belt and arm pixels.
-            if spec.get("force_background_removal") or spec.get("crop"):
-                fail("reviewed UFC portrait must not be resegmented or cropped")
+            # Preserve clean reviewed UFC portraits. If visual review instead
+            # identifies retained publisher rectangles, permit an explicit
+            # Spotlight-only segmentation pass, never an automatic thumb edit.
+            if spec.get("crop"):
+                fail("reviewed UFC portrait must not be cropped")
+            if spec.get("force_background_removal"):
+                try:
+                    im = remove(im).convert("RGBA")
+                except Exception as exc:
+                    fail(f"reviewed Spotlight background removal failed: {exc}")
+                if im.getchannel("A").getextrema() == (255, 255):
+                    fail("reviewed Spotlight background removal produced no transparency")
+                if (inset_side_background_panels(im) or upper_side_background_band(im)
+                        or horizontal_publisher_strips(im)):
+                    fail("reviewed Spotlight still retains publisher panels after background removal")
         else:
             if source_needs_background_removal(im):
                 try:
