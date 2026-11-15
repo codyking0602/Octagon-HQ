@@ -11,7 +11,7 @@ from io import BytesIO
 from urllib.parse import parse_qs, urljoin, urlparse
 from urllib.request import Request, urlopen
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 from rembg import remove
 
 ALLOWED_HOSTS = {
@@ -866,6 +866,29 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     else:
         # Pure fit onto a transparent tile: preserve original fighter pixels.
         im = render_thumb(im, size)
+
+    # Explicitly hand-reviewed Spotlight-only background masks. Some official
+    # UFC athlete images contain opaque publisher rectangles beside the actual
+    # photographed fighter even after segmentation. The mask only makes those
+    # documented external regions transparent; it cannot create fighter pixels.
+    erase_polygons = spec.get("spotlight_erase_polygons")
+    if erase_polygons is not None:
+        if not (kind == "spotlight" and reviewed_three_quarter
+                and spec.get("force_background_removal") is True):
+            fail("manual background masks require reviewed UFC Spotlight cleanup")
+        if (not isinstance(erase_polygons, list) or not 1 <= len(erase_polygons) <= 4):
+            fail("invalid Spotlight background polygon count")
+        alpha = im.getchannel("A")
+        artist = ImageDraw.Draw(alpha)
+        for polygon in erase_polygons:
+            if (not isinstance(polygon, list) or not 3 <= len(polygon) <= 32
+                    or any(not isinstance(point, list) or len(point) != 2
+                           or any(type(coord) is not int or coord < 0 or coord > limit
+                                  for coord, limit in zip(point, size))
+                           for point in polygon)):
+                fail("invalid reviewed Spotlight background polygon")
+            artist.polygon([tuple(point) for point in polygon], fill=0)
+        im.putalpha(alpha)
 
     # Validate *before* writing. A failed candidate must never leave an
     # unreviewed WebP in the working tree (which a later successful batchmate
