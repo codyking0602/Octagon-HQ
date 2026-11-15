@@ -19,9 +19,9 @@ describe("UFC manual-open all nine fights", () => {
   });
 
   it("accepts picks and Underdog Lock edits for all eligible, manually reopened fights", () => {
-    expect(migration).toContain("create or replace function public.save_my_event_pick(");
-    expect(migration).toContain("create or replace function public.set_my_event_underdog_lock(");
-    expect(migration).toContain("create or replace function public.clear_my_event_underdog_lock(");
+    expect(migration.toLowerCase()).toContain("create or replace function public.save_my_event_pick(");
+    expect(migration.toLowerCase()).toContain("create or replace function public.set_my_event_underdog_lock(");
+    expect(migration.toLowerCase()).toContain("create or replace function public.clear_my_event_underdog_lock(");
     expect((migration.match(/if not private.pick_bout_player_submission_open\(v_event, v_bout\) then/g) ?? []).length).toBe(3);
     expect(migration).toContain("coalesce(p_bout.result_status, 'pending') <> 'cancelled'");
   });
