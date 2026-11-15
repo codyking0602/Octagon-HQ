@@ -1,0 +1,10 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/navajo-stirling",
+  "fighter_name": "Navajo Stirling",
+  "verified_source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+  "official_ufc_three_quarter_reviewed": true,
+  "destination": "public/assets/fighters/navajo-stirling-spotlight.webp",
+  "kind": "spotlight",
+  "replace_existing": true,
+  "replacement_reason": "Previously generated 2026-03 photo contains a large opaque pink publisher rectangle behind fighter. Visually rejected."
+}
