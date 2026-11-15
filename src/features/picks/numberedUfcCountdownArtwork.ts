@@ -1,3 +1,5 @@
+import numberedPublisherPosters from "./ufcNumberedCountdownPosters.json";
+
 /**
  * The countdown is NOT a published Picks card. Its artwork is allowed only
  * when the source is associated with the exact upcoming numbered event.
@@ -45,6 +47,53 @@ const REVIEWED_COUNTDOWN_ART = [
   },
 ] as const;
 
+interface PublisherNumberedPoster {
+  name: string;
+  firstName: string;
+  secondName: string;
+  date: string;
+  source: string;
+  src: string;
+}
+
+function centralEventDate(iso: string) {
+  const time = Date.parse(iso);
+  if (!Number.isFinite(time)) return "";
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date(time));
+  const part = (name: string) => parts.find((p) => p.type === name)?.value ?? "";
+  return [part("year"), part("month"), part("day")].join("-");
+}
+
+function verifiedPublisherNumberedPoster(
+  event: CountdownArtworkEvent,
+  records: readonly PublisherNumberedPoster[],
+) {
+  const matchup = event.matchup.toLowerCase().split(/\s+vs\.?\s+/);
+  if (matchup.length !== 2) return null;
+  const surnames = matchup.map((part) => part.trim().split(/\s+/).at(-1) ?? "");
+  const date = centralEventDate(event.startsAt);
+  for (const record of records) {
+    if (record.name !== event.name || record.date !== date
+      || !/^[a-z'-]{3,}$/i.test(record.firstName)
+      || !/^[a-z'-]{3,}$/i.test(record.secondName)
+      || surnames[0] !== record.firstName && surnames[1] !== record.firstName
+      || surnames[0] !== record.secondName && surnames[1] !== record.secondName) continue;
+    try {
+      const source = new URL(record.source);
+      const image = new URL(record.src);
+      const number = event.name.match(/^UFC (\d{3})$/)?.[1];
+      if (!number || source.protocol !== "https:" || source.hostname !== "www.mmamania.com"
+        || !new RegExp("^/ufc-strikeforce-posters/\\d+/.*\\bufc-" + number + "\\b", "i").test(source.pathname)
+        || image.protocol !== "https:" || image.hostname !== "platform.mmamania.com"
+        || !/\.(?:jpe?g|png|webp)$/i.test(image.pathname)) continue;
+      return image.href;
+    } catch { /* Invalid or untrusted generated source: ignore it. */ }
+  }
+  return null;
+}
+
 function validatedHttpsArtwork(value: string | null | undefined) {
   if (!value) return null;
   try {
@@ -52,14 +101,17 @@ function validatedHttpsArtwork(value: string | null | undefined) {
     // Allow only the UFC's official media origins from the backend, or
     // the narrowly reviewed promotional source listed above.
     if (url.protocol !== "https:") return null;
-    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com", "d6isf1yxni2j5.cloudfront.net", "s.yimg.com"].includes(url.hostname)) {
+    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com", "d6isf1yxni2j5.cloudfront.net", "s.yimg.com, "platform.mmamania.com""].includes(url.hostname)) {
       return url.toString();
     }
   } catch { /* Fallback below. */ }
   return null;
 }
 
-export function numberedUfcCountdownArtworkCandidates(event: CountdownArtworkEvent | null): string[] {
+export function numberedUfcCountdownArtworkCandidates(
+  event: CountdownArtworkEvent | null,
+  published: readonly PublisherNumberedPoster[] = numberedPublisherPosters as PublisherNumberedPoster[],
+): string[] {
   if (!event || !/^UFC \d{3,4}$/.test(event.name)) return [];
 
   const official = validatedHttpsArtwork(event.imageUrl);
@@ -72,7 +124,8 @@ export function numberedUfcCountdownArtworkCandidates(event: CountdownArtworkEve
     matchup.includes(poster.secondName)
   ));
 
-  const sources = [official, ...(reviewed?.src ?? [])]
+  const publisher = verifiedPublisherNumberedPoster(event, published);
+  const sources = [official, ...(reviewed?.src ?? []), publisher]
     .map(validatedHttpsArtwork)
     .filter((url): url is string => Boolean(url));
   return [...new Set(sources)];
