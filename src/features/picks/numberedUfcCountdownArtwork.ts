@@ -101,7 +101,7 @@ function validatedHttpsArtwork(value: string | null | undefined) {
     // Allow only the UFC's official media origins from the backend, or
     // the narrowly reviewed promotional source listed above.
     if (url.protocol !== "https:") return null;
-    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com", "d6isf1yxni2j5.cloudfront.net", "s.yimg.com, "platform.mmamania.com""].includes(url.hostname)) {
+    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com", "d6isf1yxni2j5.cloudfront.net", "s.yimg.com", "platform.mmamania.com"].includes(url.hostname)) {
       return url.toString();
     }
   } catch { /* Fallback below. */ }
