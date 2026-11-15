@@ -1,0 +1,10 @@
+{
+  "kind": "spotlight",
+  "destination": "public/assets/fighters/navajo-stirling-spotlight.webp",
+  "fighter_name": "Navajo Stirling",
+  "source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+  "official_ufc_three_quarter_reviewed": true,
+  "verified_source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+  "verified_profile_url": "https://www.ufc.com/athlete/navajo-stirling",
+  "force_background_removal": true
+}
