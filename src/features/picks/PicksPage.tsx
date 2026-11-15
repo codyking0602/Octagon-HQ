@@ -231,7 +231,7 @@ export default function PicksPage() {
                     <strong>{liveBoard?.current && liveBoard.resolved > 0 ? `${liveBoard.current.correct}-${liveBoard.current.incorrect}` : "0-0"}</strong>
                     <small>PICK RECORD</small>
                   </div>
-                  <div><strong>{livePlacement}</strong><small>GROUP RANK</small></div>
+                  <div><strong>{livePlacement}</strong><small>{liveBoard?.resolved ? "LIVE EST. RANK" : "GROUP RANK"}</small></div>
                   <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
                 </div>
                 <div className="ufc-group-hub__foot">
