@@ -108,6 +108,18 @@ class AssetIngestQualityTests(unittest.TestCase):
         promotional = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/DURDEN_CODY_L_03-07.png"
         self.assertFalse(approved_square_thumb_source({"source_url": promotional}, promotional, (256, 160)))
 
+    def test_ufc_spotlight_prefers_full_body_even_when_event_headshot_is_first(self):
+        from unittest.mock import patch
+        page = "https://www.ufc.com/athlete/jiri-prochazka"
+        html = b"""<img alt="Jiri Prochazka" src="/images/styles/event_results_athlete_headshot/s3/2026-04/PROCHAZKA.png">
+        <img alt="Jiri Prochazka" src="https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_L.png?itok=reviewed">"""
+        with patch("scripts.asset_ingest.request_bytes", return_value=html):
+            spotlight = resolve_ufc_profile_source(page, "Jiri Prochazka", "spotlight")
+            thumb = resolve_ufc_profile_source(page, "Jiri Prochazka", "thumb")
+        self.assertEqual(spotlight,
+                         "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_L.png?itok=reviewed")
+        self.assertIn("/event_results_athlete_headshot/", thumb)
+
     def test_ufc_profile_thumb_discovery_ignores_full_body_promotional_images(self):
         from unittest.mock import patch
         html = b"""
