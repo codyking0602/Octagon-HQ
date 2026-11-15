@@ -28,6 +28,21 @@ const REVIEWED_COUNTDOWN_ART = [
       "https://ringside24.com/media/post/b034e2ed7b228c0041519c9da5e5721exl_slug.jpg",
     ],
   },
+  {
+    name: "UFC 335",
+    firstName: "oliveira",
+    secondName: "lopes",
+    // The main-card start is Dec 12 in Las Vegas, Dec 13 in UTC.
+    date: "2026-12-13",
+    // Official UFC 335 promotional poster featuring Oliveira/Lopes and
+    // Pavlovich/Pereira, reproduced by this independent publisher.
+    source: "https://www.info7.mx/deportes/confirman-los-primeros-combates-para-ufc-335-en-las-vegas/2692211111",
+    src: [
+      "https://d6isf1yxni2j5.cloudfront.net/large_INFO_7_DOS_FOTOS_70_c0cb9dd7bc.jpg",
+      // Second independently published crop of the official Oliveira/Lopes promo.
+      "https://s.yimg.com/lo/mysterio/api/d86b92104cdac02cd640b46e33bc0f6cf4f632d5d66d17cf5f7886253407f4b0/lightyear_networkapi/resizefill_w1080_h1350%3Bquality_80%3Bformat_webp/https%3A/media.zenfs.com/en/sb_nation_articles_115/db0a2fd4d9ae8e37d73518befd341cea.jpg",
+    ],
+  },
 ] as const;
 
 function validatedHttpsArtwork(value: string | null | undefined) {
@@ -37,7 +52,7 @@ function validatedHttpsArtwork(value: string | null | undefined) {
     // Allow only the UFC's official media origins from the backend, or
     // the narrowly reviewed promotional source listed above.
     if (url.protocol !== "https:") return null;
-    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com"].includes(url.hostname)) {
+    if (["ufc.com", "www.ufc.com", "dmxg5wxfqgb4u.cloudfront.net", "fighttime.ru", "ringside24.com", "d6isf1yxni2j5.cloudfront.net", "s.yimg.com"].includes(url.hostname)) {
       return url.toString();
     }
   } catch { /* Fallback below. */ }
