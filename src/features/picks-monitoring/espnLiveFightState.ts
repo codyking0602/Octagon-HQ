@@ -104,10 +104,10 @@ function explicitNonWinnerVerdict(competition: UnknownRecord): "draw" | "no_cont
     result?.description, result?.detail, result?.name,
   ].map(text).filter(Boolean);
   const normalize = (value: string) => value.toLowerCase()
-    .replace(/^(?:final|official(?: result)?|result)\\s*[:–—-]\\s*/, "")
+    .replace(/^(?:final|official(?: result)?|result)\s*[:–—-]\s*/, "")
     .trim();
-  const draw = /^(?:(?:majority|split|unanimous|technical)\\s+)?draw$/;
-  const noContest = /^(?:no[\\s-]?contest|nc)$/;
+  const draw = /^(?:(?:majority|split|unanimous|technical)\s+)?draw$/;
+  const noContest = /^(?:no[\s-]?contest|nc)$/;
   const explicit = detail.map(normalize);
   if (explicit.some((value) => draw.test(value)) && !explicit.some((value) => noContest.test(value))) return "draw";
   if (explicit.some((value) => noContest.test(value)) && !explicit.some((value) => draw.test(value))) return "no_contest";
@@ -204,16 +204,17 @@ export function adaptEspnUfcLiveFightState(input: {
       diagnostics.push(`ESPN competition for ${bout.bout_id} did not expose a supported live state and stable id.`);
       return [];
     }
+    const winner = winnerSlug(competition, bout, state);
+    const verdict = state === "final" && winner === null
+      ? explicitNonWinnerVerdict(competition) : null;
     return [{
       bout_id: bout.bout_id,
       state,
       provider: "espn" as const,
       source_event_id: sourceEventId,
       source_competition_id: sourceCompetitionId,
-      winner_fighter_slug: winnerSlug(competition, bout, state),
-      ...(state === "final" && !winnerSlug(competition, bout, state) && explicitNonWinnerVerdict(competition)
-        ? { explicit_result_status: explicitNonWinnerVerdict(competition)! }
-        : {}),
+      winner_fighter_slug: winner,
+      ...(verdict ? { explicit_result_status: verdict } : {}),
       observed_at: new Date(observedAtMs).toISOString(),
     }];
   });
