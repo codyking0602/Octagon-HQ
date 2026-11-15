@@ -122,7 +122,7 @@ AS $function$
     ), '[]'::jsonb)
   )
   from selected_event event;
-$function$
+$function$;
 
 -- Do not indirectly disclose results through current-season scoring totals
 -- before the owner has closed the manually reopened UFC card.
@@ -226,7 +226,7 @@ begin
     totals.base_points, totals.lock_bonus, totals.base_points + totals.lock_bonus
   from totals;
 end;
-$function$
+$function$;
 
 -- Public table reads otherwise bypass the safe member-facing projection.
 -- Hide manually open UFC bouts from direct REST reads; the security-definer
