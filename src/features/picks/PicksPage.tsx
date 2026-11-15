@@ -17,8 +17,8 @@ import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
 import { approvedUfcPicksHeadshot } from "./officialUfcPicksHeadshots";
 import { GroupPickProgress } from "./GroupPickProgress";
-import type { PickEventMemberProgress } from "./groupProgressModel";
-import type { PickEvent } from "./picksModel";
+import { footballStandingRankLabel } from "./footballGroupLiveStandings";
+import { ufcLiveStandingsForMembers } from "./ufcGroupLiveStandings";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
@@ -105,40 +105,6 @@ function savedPickLabel(completed: number) {
   return `${completed} ${completed === 1 ? "PICK" : "PICKS"} SAVED`;
 }
 
-/** Live group placement, based only on resolved picks. Underdog bonuses
- * remain explicit estimates until the server settles each member's frozen lock. */
-function ufcLiveBoard(
-  event: PickEvent,
-  members: readonly PickEventMemberProgress[],
-  selections: Readonly<Record<string,string>>,
-  lock: {boutId:string;fighterSlug:string;frozenAmericanOdds:number|null}|null,
-) {
-  const resolved = event.bouts.filter(b => b.includedInPicks !== false && (b.resultStatus === "red_win" || b.resultStatus === "blue_win"));
-  const eligible = members.filter(m => m.completed > 0);
-  const rows = eligible.map(member => {
-    let correct = 0, lockBonus = 0;
-    for (const bout of resolved) {
-      const selection = member.isCurrentUser
-        ? selections[bout.boutId] ?? null
-        : bout.groupPicks?.find(p => p.displayName === member.displayName)?.pickedFighterSlug ?? null;
-      if (!selection || selection !== bout.winnerFighterSlug) continue;
-      correct++;
-      if (member.underdogLockBoutId === bout.boutId && member.underdogLockFighterSlug === selection) {
-        const currentOdds = selection === bout.redFighterSlug ? bout.redAmericanOdds : bout.blueAmericanOdds;
-        const odds = member.isCurrentUser && lock?.boutId === bout.boutId
-          ? lock.frozenAmericanOdds ?? currentOdds : currentOdds;
-        lockBonus += underdogBonusForOdds(odds);
-      }
-    }
-    return {member, correct, estimatedPoints:correct * 4 + lockBonus};
-  });
-  rows.sort((a,b) => b.estimatedPoints-a.estimatedPoints || b.correct-a.correct);
-  const current=rows.find(row => row.member.isCurrentUser);
-  const rank=current ? rows.findIndex(row => row.estimatedPoints===current.estimatedPoints && row.correct===current.correct)+1 : 0;
-  const tied = rank > 0 && rows.filter(row => row.estimatedPoints===current?.estimatedPoints && row.correct===current?.correct).length > 1;
-  return {resolved:resolved.length,current,rank,tied,active:eligible.length};
-}
-
 export default function PicksPage() {
   const identity = useIdentity();
   const picks = usePicks();
@@ -147,9 +113,11 @@ export default function PicksPage() {
   const activeEvent = lifecycle?.state === "complete" ? null : event;
   const activeLifecycle = activeEvent ? lifecycle : null;
   const progress = pickProgress(activeEvent, picks.selections);
-  const liveBoard = activeEvent ? ufcLiveBoard(activeEvent, picks.groupProgress ?? [], picks.selections, picks.underdogLock) : null;
-  const lockName = picks.underdogLock ? "SET" : "NONE";
-  const livePlacement = liveBoard?.rank ? `${liveBoard.tied ? "T-" : ""}${liveBoard.rank}` : "—";
+  const liveBoard = activeEvent
+    ? ufcLiveStandingsForMembers(activeEvent, picks.groupProgress ?? [], picks.selections, picks.underdogLock)
+    : null;
+  const livePlacement = liveBoard?.current && liveBoard.resolved > 0
+    ? footballStandingRankLabel(liveBoard.current.rank, liveBoard.current.tied) : "—";
   const locked = activeLifecycle ? activeLifecycle.state !== "upcoming" : false;
   const orderedBouts = useMemo(
     () => activeEvent?.bouts
@@ -256,28 +224,25 @@ export default function PicksPage() {
               <summary className="ufc-group-hub__summary">
                 <div className="ufc-group-hub__heading">
                   <strong>PICKS &amp; STANDINGS</strong>
-                  <small>{progress.total} FIGHTS</small>
+                  <small>{liveBoard?.finalCount ?? 0} FINAL · {liveBoard?.remainingCount ?? progress.total} REMAINING</small>
                 </div>
-                {liveBoard && liveBoard.resolved > 0 ? (
-                  <div className="ufc-group-hub__scorecard">
-                    <div><strong>{liveBoard.current?.correct ?? 0}/{liveBoard.resolved}</strong><small>CORRECT PICKS</small></div>
-                    <div><strong>{liveBoard.current?.estimatedPoints ?? 0}</strong><small>LIVE EST. PTS</small></div>
-                    <div><strong>{livePlacement}</strong><small>LIVE EST. RANK</small></div>
+                <div className="ufc-group-hub__scorecard">
+                  <div>
+                    <strong>{liveBoard?.current && liveBoard.resolved > 0 ? `${liveBoard.current.correct}-${liveBoard.current.incorrect}` : "0-0"}</strong>
+                    <small>PICK RECORD</small>
                   </div>
-                ) : (
-                  <div className="ufc-group-hub__scorecard">
-                    <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
-                    <div><strong>{lockName}</strong><small>UNDERDOG LOCK</small></div>
-                    <div><strong>{liveBoard?.active ?? 0}</strong><small>GROUP ENTERED</small></div>
-                  </div>
-                )}
+                  <div><strong>{livePlacement}</strong><small>{liveBoard?.resolved ? "LIVE EST. RANK" : "GROUP RANK"}</small></div>
+                  <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
+                </div>
                 <div className="ufc-group-hub__foot">
-                  <small>{liveBoard?.resolved ? "LIVE · ESTIMATES UNTIL RESULTS SETTLE" : progress.total-progress.completed+" PICKS REMAINING"}</small>
+                  <small>{picks.underdogLock ? "1 / 1 UNDERDOG LOCK SET" : "0 / 1 UNDERDOG LOCK SET"}</small>
                   <span>VIEW STANDINGS</span>
                 </div>
               </summary>
               <div className="ufc-group-hub__body">
-                <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} embedded />
+                <section className="ufc-group-hub__week" aria-label="UFC event group picks">
+                  <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} embedded />
+                </section>
               </div>
             </details>
           ) : null}

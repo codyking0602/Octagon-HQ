@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { footballLiveStandingsForMembers } from "./footballGroupLiveStandings";
+import { ufcLiveStandingsForMembers } from "./ufcGroupLiveStandings";
 import type { PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
@@ -40,7 +41,6 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
     [members],
   );
   const selected = visibleMembers.find((member) => member.displayName === selectedName) ?? null;
-  const completedMembers = visibleMembers.filter((member) => member.completed === member.total && member.total > 0).length;
   const eligibleBouts = useMemo(() => event.bouts
     .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
     .slice()
@@ -49,6 +49,13 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
   const footballLiveStandings = useMemo(
     () => isFootball ? footballLiveStandingsForMembers(visibleMembers, eligibleBouts) : new Map(),
     [eligibleBouts, isFootball, visibleMembers],
+  );
+
+  const ufcLiveStandings = useMemo(
+    () => !isFootball
+      ? ufcLiveStandingsForMembers(event, visibleMembers, mySelections, picks.underdogLock)
+      : null,
+    [event, isFootball, mySelections, picks.underdogLock, visibleMembers],
   );
 
   const selectedPicks = useMemo(() => {
@@ -101,7 +108,9 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
     ? currentFootballLive && currentFootballLive.settled > 0
       ? `${ordinalPlace(currentFootballLive.rank, currentFootballLive.tied)} · ${liveRecord(currentFootballLive.wins, currentFootballLive.losses, currentFootballLive.pushes)}`
       : `${visibleMembers.length} ENTERED`
-    : `${completedMembers}/${visibleMembers.length} COMPLETE`;
+    : ufcLiveStandings?.current && ufcLiveStandings.resolved > 0
+      ? `${ordinalPlace(ufcLiveStandings.current.rank, ufcLiveStandings.current.tied)} · ${liveRecord(ufcLiveStandings.current.correct, ufcLiveStandings.current.incorrect, 0)}`
+      : `${visibleMembers.length} ENTERED`;
 
   return (
     <details className="surface-card picks-group-progress" open={embedded ? true : undefined}>
@@ -117,7 +126,9 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
             .filter(Boolean)
             .join(" ");
           const live = isFootball ? footballLiveStandings.get(member.profileId) ?? null : null;
+          const ufcLive = !isFootball ? ufcLiveStandings?.standings.get(member.profileId) ?? null : null;
           const lockSettled = live ? live.lockWins + live.lockLosses + live.lockPushes : 0;
+          const ufcLockSettled = ufcLive ? ufcLive.lockWins + ufcLive.lockLosses : 0;
           return (
             <div className="picks-group-progress__member" key={member.profileId}>
               <button
@@ -136,6 +147,11 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                     <b>{liveRecord(live.wins, live.losses, live.pushes)} · {ordinalPlace(live.rank, live.tied)}</b>
                     <small>{live.points} PTS · LOCKS {lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}</small>
                   </span>
+                ) : !isFootball && ufcLive && ufcLiveStandings && ufcLiveStandings.resolved > 0 ? (
+                  <span className="football-group-live">
+                    <b>{liveRecord(ufcLive.correct, ufcLive.incorrect, 0)} · {ordinalPlace(ufcLive.rank, ufcLive.tied)}</b>
+                    <small>{ufcLive.estimatedPoints} EST. PTS · LOCK {ufcLockSettled ? liveRecord(ufcLive.lockWins, ufcLive.lockLosses, 0) : "—"}</small>
+                  </span>
                 ) : (
                   <b>{member.completed}/{member.total}</b>
                 )}
@@ -148,7 +164,9 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                       <strong>
                         {isFootball && live && live.settled > 0
                           ? `${liveRecord(live.wins, live.losses, live.pushes)} · ${ordinalPlace(live.rank, live.tied)} · ${live.points} PTS · LOCKS ${lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}`
-                          : `${member.completed}/${member.total} COMPLETE`}
+                          : !isFootball && ufcLive && ufcLiveStandings && ufcLiveStandings.resolved > 0
+                            ? `${liveRecord(ufcLive.correct, ufcLive.incorrect, 0)} · ${ordinalPlace(ufcLive.rank, ufcLive.tied)} · ${ufcLive.estimatedPoints} EST. PTS · LOCK ${ufcLockSettled ? liveRecord(ufcLive.lockWins, ufcLive.lockLosses, 0) : "—"}`
+                            : `${member.completed}/${member.total} COMPLETE`}
                       </strong>
                     </div>
                     {!isFootball && !masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}
