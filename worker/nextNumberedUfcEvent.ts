@@ -17,6 +17,44 @@ const UFC_HEADERS = {
 const MAX_CANDIDATES = 12;
 const MAX_HTML_LENGTH = 3_000_000;
 
+const UNANNOUNCED_MATCHUP = "Main event to be announced";
+
+function normalizeOfficialMatchup(value: string) {
+  const text = value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\s*\|\s*UFC(?:\s+.*)?$/i, "")
+    .trim();
+  const pair = /^(.{2,90}?)\s+vs\.?\s+(.{2,90}?)$/i.exec(text);
+  return pair ? pair[1]!.trim() + " vs. " + pair[2]!.trim() : "";
+}
+
+/**
+ * UFC's numbered event pages sometimes show "UFC 335" in the H1, with
+ * "Oliveira vs Lopes" only in the SEO title or hero. Read those official
+ * event-scoped titles even when the full fight-card parser cannot run.
+ */
+function officialNumberedMatchup(html: string, number: string) {
+  const metaTitles = (html.match(/<meta\b[^>]*>/gi) ?? [])
+    .filter((tag) => /\b(?:property|name)\s*=\s*["'](?:og:title|twitter:title)["']/i.test(tag))
+    .map((tag) => tag.match(/\bcontent\s*=\s*["']([^"']+)["']/i)?.[1] ?? "");
+  const headings = [
+    html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "",
+    ...metaTitles,
+    html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? "",
+  ];
+  for (const heading of headings) {
+    const text = heading.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    const eventSubtitle = new RegExp("\\bUFC\\s*" + number + "\\s*(?::|\\||[–—-])\\s*(.+)$", "i").exec(text)?.[1] ?? "";
+    const matchup = normalizeOfficialMatchup(eventSubtitle);
+    if (matchup) return matchup;
+  }
+  const hero = html.match(/<[^>]*class\s*=\s*["'][^"']*c-hero__headline(?:\s|["'])[^>]*>([\s\S]*?)<\/[^>]+>/i)?.[1] ?? "";
+  return normalizeOfficialMatchup(hero);
+}
+
 export interface NextNumberedUfcEvent {
   name: string;
   matchup: string;
@@ -74,13 +112,12 @@ export function numberedEventScheduleFallback(html: string, url: string, now = n
   } catch {
     return null;
   }
-  const hero = html.match(/<[^>]*class\s*=\s*["'][^"']*c-hero__headline(?:\s|["'])[^>]*>([\s\S]*?)<\/[^>]+>/i)?.[1] ?? "";
-  const matchup = hero.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const matchup = officialNumberedMatchup(html, number);
   const venue = html.match(/<[^>]*class\s*=\s*["'][^"']*field--name-venue(?:\s|["'])[^>]*>([\s\S]*?)<\/[^>]+>/i)?.[1]
     ?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() ?? "";
   return {
     name: "UFC " + number,
-    matchup: /\bvs\.?\b/i.test(matchup) ? matchup : "Main event to be announced",
+    matchup: matchup || UNANNOUNCED_MATCHUP,
     startsAt,
     venue,
     location: "",
@@ -150,7 +187,7 @@ export function numberedEventsFromEspnCalendar(value: unknown): NextNumberedUfcE
         name: "UFC " + match[1],
         matchup: matchup && /\bvs\.?\b/i.test(matchup)
           ? matchup.replace(/\s+vs\.?\s+/i, " vs. ")
-          : "Main event to be announced",
+          : UNANNOUNCED_MATCHUP,
         startsAt: new Date(row.startDate).toISOString(),
         venue: "",
         location: "",
@@ -198,7 +235,12 @@ async function officialCardEnrichment(event: NextNumberedUfcEvent, fetchImpl: ty
       } satisfies NextNumberedUfcEvent;
     } catch {
       const fallback = numberedEventScheduleFallback(html, url, now);
-      return fallback?.name === event.name ? { ...event, ...fallback } : event;
+      return fallback?.name === event.name ? {
+        ...event,
+        ...fallback,
+        // Never replace ESPN's verified headliner with an incomplete official fallback.
+        matchup: fallback.matchup !== UNANNOUNCED_MATCHUP ? fallback.matchup : event.matchup,
+      } : event;
     }
   } catch {
     // ESPN's verified future schedule is enough to show a countdown, even if
@@ -282,7 +324,8 @@ export async function serveNextNumberedUfcEvent(request: Request, context?: { wa
   if (cached) return cached;
   try {
     const event = await discoverNextNumberedUfcEvent();
-    const response = jsonResponse({ event }, 200, event ? 1800 : 300);
+    const response = jsonResponse({ event }, 200,
+      event?.matchup && event.matchup !== UNANNOUNCED_MATCHUP ? 1800 : 300);
     if (event && cache && context) context.waitUntil(cache.put(request, response.clone()));
     return response;
   } catch {
