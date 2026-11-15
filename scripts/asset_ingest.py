@@ -244,7 +244,24 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
     and the source to be resolved from that fighter's official UFC profile.
     """
     parsed = urlparse(source_url)
-    page = urlparse(str(spec.get("source_page_url") or ""))
+    # A small reviewed archive exception: the older, official UFC three-quarter
+    # PNGs were previously linked from each fighter's official athlete page.
+    # UFC rotates its on-page image; these exact historic originals remain
+    # UFC-hosted and were separately visually reviewed. No arbitrary source
+    # can use the reference-page route.
+    legacy_reviewed = {
+        "public/assets/fighters/jiri-prochazka-spotlight.webp":
+            "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
+        "public/assets/fighters/navajo-stirling-spotlight.webp":
+            "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+    }
+    legacy_reference = bool(spec.get("source_page_reference_url")) and (
+        spec.get("source_url") == source_url
+        and spec.get("destination") in legacy_reviewed
+        and legacy_reviewed[spec["destination"]] == source_url
+        and not spec.get("source_page_url")
+    )
+    page = urlparse(str(spec.get("source_page_reference_url") if legacy_reference else spec.get("source_page_url") or ""))
     expected_slug = re.sub(r"[^a-z0-9]+", "-", str(spec.get("fighter_name") or "").lower()).strip("-")
     return (
         spec.get("kind") == "spotlight"
