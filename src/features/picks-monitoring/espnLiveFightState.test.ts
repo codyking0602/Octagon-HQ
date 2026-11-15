@@ -123,6 +123,37 @@ describe("ESPN UFC live fight state", () => {
     expect(result.observations).toEqual([]);
   });
 
+  it("only accepts explicit draw and no-contest verdicts, never a missing winner alone", () => {
+    const draw = {
+      ...competition("401911626", "Anthony Wint", "Terrance Chatman", "post"),
+      status: { type: { state: "post", completed: true, detail: "Final - Majority Draw" } },
+    };
+    const noContest = {
+      ...competition("401911627", "Anthony Wint", "Terrance Chatman", "post"),
+      status: { type: { state: "post", completed: true, description: "No Contest" } },
+    };
+    const plainFinal = competition("401911628", "Anthony Wint", "Terrance Chatman", "post");
+    const inputEvent = { ...event, bouts: [event.bouts[0]] };
+
+    const observe = (comp: unknown) => adaptEspnUfcLiveFightState({
+      event: inputEvent,
+      observedAt: "2026-08-23T01:00:00Z",
+      body: { events: [sourceEvent("600060493", [comp])] },
+    }).observations[0];
+
+    expect(observe(draw)).toMatchObject({
+      state: "final",
+      winner_fighter_slug: null,
+      explicit_result_status: "draw",
+    });
+    expect(observe(noContest)).toMatchObject({
+      state: "final",
+      winner_fighter_slug: null,
+      explicit_result_status: "no_contest",
+    });
+    expect(observe(plainFinal)).not.toHaveProperty("explicit_result_status");
+  });
+
   it("keeps a final draw or no-contest observation final without inventing a winner", () => {
     const result = adaptEspnUfcLiveFightState({
       event: { ...event, bouts: [event.bouts[0]] },
