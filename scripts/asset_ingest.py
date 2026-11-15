@@ -157,7 +157,7 @@ def official_ufc_event_headshot_url(url):
     )
 
 
-def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
+def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight", verified_source_url=None):
     parsed_page = urlparse(page_url)
     host = (parsed_page.hostname or "").lower()
     if host not in UFC_PROFILE_HOSTS or parsed_page.scheme != "https":
@@ -175,8 +175,15 @@ def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
             continue
         if kind == "thumb" and not official_ufc_event_headshot_url(image_url):
             continue
+        # The profile can contain several portraits for the same fighter.
+        # A visually reviewed Spotlight original must match the exact
+        # UFC-hosted image shown on that athlete's own profile.
+        if verified_source_url and image_url != verified_source_url:
+            continue
         return image_url
 
+    if verified_source_url:
+        fail(f"reviewed fighter photo was not found on official profile for {fighter_name}")
     if kind == "thumb":
         fail(f"official UFC profile has no real event-results headshot for {fighter_name}")
     fail(f"official UFC profile has no safe fighter photo matching {fighter_name}")
@@ -196,7 +203,7 @@ def resolve_source(spec):
     if not fighter_name:
         fail("fighter_name is required with source_page_url")
 
-    image_url = resolve_ufc_profile_source(source_page_url, fighter_name, spec.get("kind"))
+    image_url = resolve_ufc_profile_source(source_page_url, fighter_name, spec.get("kind"), spec.get("verified_source_url"))
     return image_url, request_bytes(image_url, MAX_BYTES)
 
 
@@ -237,7 +244,24 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
     and the source to be resolved from that fighter's official UFC profile.
     """
     parsed = urlparse(source_url)
-    page = urlparse(str(spec.get("source_page_url") or ""))
+    # A small reviewed archive exception: the older, official UFC three-quarter
+    # PNGs were previously linked from each fighter's official athlete page.
+    # UFC rotates its on-page image; these exact historic originals remain
+    # UFC-hosted and were separately visually reviewed. No arbitrary source
+    # can use the reference-page route.
+    legacy_reviewed = {
+        "public/assets/fighters/jiri-prochazka-spotlight.webp":
+            "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
+        "public/assets/fighters/navajo-stirling-spotlight.webp":
+            "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+    }
+    legacy_reference = bool(spec.get("source_page_reference_url")) and (
+        spec.get("source_url") == source_url
+        and spec.get("destination") in legacy_reviewed
+        and legacy_reviewed[spec["destination"]] == source_url
+        and not spec.get("source_page_url")
+    )
+    page = urlparse(str(spec.get("source_page_reference_url") if legacy_reference else spec.get("source_page_url") or ""))
     expected_slug = re.sub(r"[^a-z0-9]+", "-", str(spec.get("fighter_name") or "").lower()).strip("-")
     return (
         spec.get("kind") == "spotlight"
@@ -787,10 +811,24 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
-            # These exact manually reviewed UFC profile PNGs are clean cutouts.
-            # Re-segmentation/strip erasure can remove true belt and arm pixels.
-            if spec.get("force_background_removal") or spec.get("crop"):
-                fail("reviewed UFC portrait must not be resegmented or cropped")
+            # A source-reviewed UFC portrait can have a legitimate lower-frame
+            # boundary, but a newer/recovered publisher PNG may still include
+            # nonfighter colored panels. Explicit background removal is allowed
+            # for those VISUALLY REJECTED originals; never crop or reconstruct.
+            if spec.get("crop"):
+                fail("reviewed UFC portrait must not be cropped")
+            if spec.get("force_background_removal"):
+                # UFC's older PNG can have transparent *and* opaque publisher
+                # panels. Flatten intentionally before the foreground model;
+                # otherwise it trusts existing alpha and retains the panels.
+                flattened = Image.new("RGB", im.size, (248, 248, 248))
+                flattened.paste(im, (0, 0), im.getchannel("A"))
+                try:
+                    im = remove(flattened).convert("RGBA")
+                except Exception as exc:
+                    fail(f"reviewed UFC spotlight background removal failed: {exc}")
+                if im.getchannel("A").getextrema() == (255, 255):
+                    fail("reviewed UFC spotlight background removal left an opaque image")
         else:
             if source_needs_background_removal(im):
                 try:
