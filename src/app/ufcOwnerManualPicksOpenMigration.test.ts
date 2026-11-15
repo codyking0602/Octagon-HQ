@@ -28,4 +28,9 @@ describe("UFC owner-held manual Picks reopening", () => {
     expect(migration).toContain("pending.result_status = 'pending'");
     expect(migration).toContain("perform public.transition_pick_event(v_event.event_id, 'complete')");
   });
+  it("does not reveal anyone else's future picks just because their old deadline passed", () => {
+    expect(migration).toContain("create or replace function public.resolved_bout_group_picks");
+    expect(migration).toContain("event.manual_picks_open");
+    expect(migration).toContain("and not private.pick_bout_is_locked(event, bout)");
+  });
 });
