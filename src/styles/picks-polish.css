@@ -1236,3 +1236,36 @@ img.pick-fighter-thumbnail--ufc-headshot {
     border-radius: 16px;
   }
 }
+
+/* UFC's event leaderboard uses the same compact expanded rows as Football. */
+.ufc-group-hub__week .picks-group-progress {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.ufc-group-hub__week .picks-group-progress > summary {
+  display: flex;
+  min-height: 42px;
+  padding: 0 8px;
+}
+.ufc-group-hub__week .picks-group-progress__members {
+  padding: 0 8px 8px;
+}
+.ufc-group-hub .picks-group-progress__member > button {
+  grid-template-columns: 24px minmax(0, 1fr) auto 12px;
+  gap: 7px;
+  padding: 4px 11px;
+}
+.ufc-group-hub .football-group-live { min-width: 94px; }
+.ufc-group-hub .picks-group-progress__member > button .football-group-live b {
+  color: #f5f6f4;
+  font-size: 10px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+@media (max-width: 430px) {
+  .ufc-group-hub__summary { gap: 6px; padding: 9px 11px 7px; }
+  .ufc-group-hub__week .picks-group-progress__members { padding: 0 8px 8px; }
+}
