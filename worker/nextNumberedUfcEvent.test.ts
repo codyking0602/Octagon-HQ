@@ -68,6 +68,62 @@ describe("public numbered UFC Picks calendar", () => {
     expect(selected?.name).toBe("UFC 334");
   });
 
+  it("reads an announced UFC matchup from official SEO title when the full card is not parseable", async () => {
+    const official = [
+      "<title>UFC 335: Oliveira vs Lopes | UFC</title>",
+      '<h1>UFC 335</h1>',
+      '<time data-timestamp="2026-12-13T02:00:00Z">Sat, Dec 12 / 9:00 PM EST / Main Card</time>',
+      "<p>Main Card 9:00 PM EST</p>",
+    ].join("");
+    const mockFetch = (async (url: string | URL | Request) => {
+      if (String(url).includes("site.api.espn.com")) return new Response(JSON.stringify({
+        leagues: [{ calendar: [{ label: "UFC 335", startDate: "2026-12-13T01:00:00Z" }] }],
+      }));
+      return new Response(official);
+    }) as typeof fetch;
+    const event = await discoverNextNumberedUfcEvent(new Date("2026-11-15T13:00:00Z"), mockFetch);
+    expect(event).toMatchObject({
+      name: "UFC 335",
+      matchup: "Oliveira vs. Lopes",
+      startsAt: "2026-12-13T02:00:00.000Z",
+    });
+  });
+
+  it("reads UFC social metadata if the official H1 and title only contain an event number", () => {
+    const official = [
+      "<title>UFC 335 | UFC</title>",
+      '<meta property="og:title" content="UFC 335: Oliveira vs Lopes">',
+      '<h1>UFC 335</h1>',
+      '<div data-timestamp="2026-12-13T02:00:00Z">Main Card 9:00 PM EST</div>',
+    ].join("");
+    const event = numberedEventScheduleFallback(official, "https://www.ufc.com/event/ufc-335");
+    expect(event?.matchup).toBe("Oliveira vs. Lopes");
+    expect(numberedEventScheduleFallback(
+      official.replace("UFC 335: Oliveira vs Lopes", "UFC 336: Other vs Other"),
+      "https://www.ufc.com/event/ufc-335",
+    )?.matchup).toBe("Main event to be announced");
+  });
+
+  it("never downgrades a verified ESPN matchup to the official schedule placeholder", async () => {
+    const mockFetch = (async (url: string | URL | Request) => {
+      if (String(url).includes("site.api.espn.com")) return new Response(JSON.stringify({
+        leagues: [{ calendar: [{ label: "UFC 335: Oliveira vs Lopes", startDate: "2026-12-13T01:00:00Z" }] }],
+      }));
+      return new Response([
+        "<title>UFC 335 | UFC</title>",
+        "<h1>UFC 335</h1>",
+        '<time data-timestamp="2026-12-13T02:00:00Z">Sat, Dec 12 / 9:00 PM EST / Main Card</time>',
+        "<p>Main Card 9:00 PM EST</p>",
+      ].join(""));
+    }) as typeof fetch;
+    const event = await discoverNextNumberedUfcEvent(new Date("2026-11-15T13:00:00Z"), mockFetch);
+    expect(event).toMatchObject({
+      name: "UFC 335",
+      matchup: "Oliveira vs. Lopes",
+      startsAt: "2026-12-13T02:00:00.000Z",
+    });
+  });
+
   it("discovers only numbered UFC event URLs and deduplicates index links", () => {
     const html = [
       '<a href="/event/ufc-fight-night-november-7-2026">Fight Night</a>',
