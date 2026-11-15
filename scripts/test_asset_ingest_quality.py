@@ -133,6 +133,19 @@ class AssetIngestQualityTests(unittest.TestCase):
             (256, 160),
         ))
 
+    def test_reviewed_spotlight_selects_exact_profile_original_not_first_fighter_image(self):
+        from unittest.mock import patch
+        page = "https://www.ufc.com/athlete/navajo-stirling"
+        headshot = "https://www.ufc.com/images/styles/event_results_athlete_headshot/s3/2026-03/STIRLING.png"
+        reviewed = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/STIRLING_NAVAJO_L_03-28.png?itok=BVUQTbQ5"
+        html = (f'<img alt="Navajo Stirling" src="{headshot}">'
+                f'<img alt="Navajo Stirling" src="{reviewed}">').encode()
+        with patch("scripts.asset_ingest.request_bytes", return_value=html):
+            self.assertEqual(resolve_ufc_profile_source(page, "Navajo Stirling", "spotlight", reviewed), reviewed)
+            self.assertEqual(resolve_ufc_profile_source(page, "Navajo Stirling", "spotlight"), headshot)
+            with self.assertRaises(SystemExit):
+                resolve_ufc_profile_source(page, "Navajo Stirling", "spotlight", reviewed + "-other")
+
     def test_ufc_page_missing_event_headshot_fails_instead_of_using_body(self):
         from unittest.mock import patch
         html = b'<img alt="Johnny Walker" src="/images/styles/athlete_bio_full_body/s3/2026-01/WALKER_L.png">'

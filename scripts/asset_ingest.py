@@ -157,7 +157,7 @@ def official_ufc_event_headshot_url(url):
     )
 
 
-def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
+def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight", verified_source_url=None):
     parsed_page = urlparse(page_url)
     host = (parsed_page.hostname or "").lower()
     if host not in UFC_PROFILE_HOSTS or parsed_page.scheme != "https":
@@ -175,8 +175,15 @@ def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
             continue
         if kind == "thumb" and not official_ufc_event_headshot_url(image_url):
             continue
+        # The profile can contain several portraits for the same fighter.
+        # A visually reviewed Spotlight original must match the exact
+        # UFC-hosted image shown on that athlete's own profile.
+        if verified_source_url and image_url != verified_source_url:
+            continue
         return image_url
 
+    if verified_source_url:
+        fail(f"reviewed fighter photo was not found on official profile for {fighter_name}")
     if kind == "thumb":
         fail(f"official UFC profile has no real event-results headshot for {fighter_name}")
     fail(f"official UFC profile has no safe fighter photo matching {fighter_name}")
@@ -196,7 +203,7 @@ def resolve_source(spec):
     if not fighter_name:
         fail("fighter_name is required with source_page_url")
 
-    image_url = resolve_ufc_profile_source(source_page_url, fighter_name, spec.get("kind"))
+    image_url = resolve_ufc_profile_source(source_page_url, fighter_name, spec.get("kind"), spec.get("verified_source_url"))
     return image_url, request_bytes(image_url, MAX_BYTES)
 
 
