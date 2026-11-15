@@ -828,8 +828,6 @@ def ingest_fighter_candidate(spec, kind, dest, size):
             fail("spotlight is a placeholder/silhouette")
 
     im = im.crop(crop_box(im, spec.get("crop")))
-    if kind == "spotlight" and spec.get("official_ufc_three_quarter_reviewed") is True:
-        print(json.dumps({"temporary_source_diagnostic": True, "fighter": spec.get("fighter_name"), "resolved_url": source_url, "expected_url": spec.get("verified_source_url"), "source_dimensions": im.size, "reviewed_exception": reviewed_three_quarter, "original_alpha_min": im.getchannel("A").getextrema()[0]}), file=sys.stderr)
     clipping = source_looks_clipped(im, kind, allow_reviewed_three_quarter=reviewed_three_quarter)
     if clipping:
         fail(clipping)
