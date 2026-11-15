@@ -183,7 +183,7 @@ def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight", verifie
         return image_url
 
     if verified_source_url:
-        fail(f"reviewed fighter photo was not found on official profile for {fighter_name}; candidates: {parser.candidates[:8]}")
+        fail(f"reviewed fighter photo was not found on official profile for {fighter_name}")
     if kind == "thumb":
         fail(f"official UFC profile has no real event-results headshot for {fighter_name}")
     fail(f"official UFC profile has no safe fighter photo matching {fighter_name}")
