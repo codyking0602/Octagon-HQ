@@ -522,6 +522,7 @@ class AssetIngestQualityTests(unittest.TestCase):
             "verified_profile_url": "https://www.ufc.com/athlete/navajo-stirling",
             "official_ufc_three_quarter_reviewed": True,
             "force_background_removal": True,
+            "spotlight_erase_polygons": [[[200, 400], [300, 400], [300, 600], [200, 600]]],
         }
         with tempfile.TemporaryDirectory() as tmp:
             dest = str(Path(tmp) / "stirling-spotlight.webp")
@@ -537,7 +538,9 @@ class AssetIngestQualityTests(unittest.TestCase):
                                 with patch("scripts.asset_ingest.validate_asset_quality", return_value={"alpha_coverage": .4, "visible_bbox": [0, 10, 460, 700]}):
                                     ingest_fighter_candidate(spec, "spotlight", dest, (626, 800))
                                     removed.assert_called_once()
-            self.assertEqual(Image.open(dest).size, (626, 800))
+            actual = Image.open(dest).convert("RGBA")
+            self.assertEqual(actual.size, (626, 800))
+            self.assertEqual(actual.getpixel((250, 500))[3], 0)
 
     def test_spotlight_source_bottom_cutoff_is_detected(self):
         cropped = fake_fighter().crop((0, 0, 160, 180))
