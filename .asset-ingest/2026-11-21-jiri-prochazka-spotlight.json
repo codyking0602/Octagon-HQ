@@ -1,0 +1,12 @@
+{
+  "source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
+  "source_page_reference_url": "https://www.ufc.com/athlete/jiri-prochazka",
+  "fighter_name": "Jiri Prochazka",
+  "verified_source_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
+  "official_ufc_three_quarter_reviewed": true,
+  "destination": "public/assets/fighters/jiri-prochazka-spotlight.webp",
+  "kind": "spotlight",
+  "force_background_removal": true,
+  "replace_existing": true,
+  "replacement_reason": "Exact previous reviewed output visibly retained large pink and white rectangular UFC publisher backgrounds; regenerate with foreground-only masking."
+}

@@ -811,10 +811,19 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
-            # These exact manually reviewed UFC profile PNGs are clean cutouts.
-            # Re-segmentation/strip erasure can remove true belt and arm pixels.
-            if spec.get("force_background_removal") or spec.get("crop"):
-                fail("reviewed UFC portrait must not be resegmented or cropped")
+            # A source-reviewed UFC portrait can have a legitimate lower-frame
+            # boundary, but a newer/recovered publisher PNG may still include
+            # nonfighter colored panels. Explicit background removal is allowed
+            # for those VISUALLY REJECTED originals; never crop or reconstruct.
+            if spec.get("crop"):
+                fail("reviewed UFC portrait must not be cropped")
+            if spec.get("force_background_removal"):
+                try:
+                    im = remove(im).convert("RGBA")
+                except Exception as exc:
+                    fail(f"reviewed UFC spotlight background removal failed: {exc}")
+                if im.getchannel("A").getextrema() == (255, 255):
+                    fail("reviewed UFC spotlight background removal left an opaque image")
         else:
             if source_needs_background_removal(im):
                 try:
