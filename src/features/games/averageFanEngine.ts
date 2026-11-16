@@ -251,15 +251,40 @@ export function averageFanFanAccuracy(
   return Math.max(55, Math.min(98, raw));
 }
 
+// Football positions are commonly answered with either the roster abbreviation
+// or the full position name. Keep this equivalence out of other sports and
+// multiple-choice grading; short-answer typo tolerance remains unchanged.
+const FOOTBALL_POSITION_EQUIVALENTS: Readonly<Record<string, readonly string[]>> = {
+  qb: ["quarterback"],
+  rb: ["running back"],
+  wr: ["wide receiver"],
+  te: ["tight end"],
+  ol: ["offensive lineman", "offensive line"],
+  dl: ["defensive lineman", "defensive line"],
+  lb: ["linebacker"],
+  db: ["defensive back"],
+  k: ["kicker"],
+  p: ["punter"],
+};
+
+function matchesFootballPosition(candidate: string, accepted: readonly string[]) {
+  return Object.entries(FOOTBALL_POSITION_EQUIVALENTS).some(([abbreviation, names]) => {
+    const equivalent = [abbreviation, ...names];
+    return equivalent.includes(candidate) && accepted.some((answer) => equivalent.includes(answer));
+  });
+}
+
 export function averageFanAnswersMatch(
   question: Pick<AverageFanQuestion, "answer" | "aliases">
-    & Partial<Pick<AverageFanQuestion, "format" | "fanMisses">>,
+    & Partial<Pick<AverageFanQuestion, "format" | "fanMisses" | "sport">>,
   value: string,
 ) {
   const candidate = normalizePlayerAnswer(value);
   const accepted = [question.answer, ...question.aliases].map(normalizePlayerAnswer);
   if (accepted.includes(candidate)) return true;
   if (question.format !== "short-answer") return false;
+  if ((question.sport === "nfl" || question.sport === "cfb")
+    && matchesFootballPosition(candidate, accepted)) return true;
 
   // Numeric round answers are equivalent to their ordinary spoken ordinals.
   // Keep this scoped to canonical "Round N" answers so "5th" cannot match
