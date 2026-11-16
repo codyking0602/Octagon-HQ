@@ -159,6 +159,42 @@ describe("Average Fan canonical question contract", () => {
     }), "George St-Pierre")).toBe(false);
   });
 
+  it("accepts full football position names against abbreviations without confusing sports or formats", () => {
+    const positions = [
+      ["QB", "Quarterback"],
+      ["RB", "Running Back"],
+      ["WR", "Wide Receiver"],
+      ["TE", "Tight End"],
+      ["OL", "Offensive Lineman"],
+      ["DL", "Defensive Lineman"],
+      ["LB", "Linebacker"],
+      ["DB", "Defensive Back"],
+      ["K", "Kicker"],
+      ["P", "Punter"],
+    ] as const;
+    for (const sport of ["nfl", "cfb"] as const) {
+      for (const [abbreviation, fullName] of positions) {
+        const short = fixture({ sport, format: "short-answer", answer: abbreviation, aliases: [] });
+        expect(averageFanAnswersMatch(short, fullName), sport + " " + abbreviation).toBe(true);
+        expect(averageFanAnswersMatch(
+          fixture({ sport, format: "short-answer", answer: fullName, aliases: [] }),
+          abbreviation,
+        ), sport + " " + fullName).toBe(true);
+      }
+    }
+    const qb = fixture({ sport: "cfb", format: "short-answer", answer: "QB", aliases: [] });
+    expect(averageFanAnswersMatch(qb, "Running back")).toBe(false);
+    expect(averageFanAnswersMatch(
+      fixture({ sport: "ufc", format: "short-answer", answer: "QB", aliases: [] }), "Quarterback",
+    )).toBe(false);
+    expect(averageFanAnswersMatch(
+      fixture({
+        sport: "cfb", format: "four-choice", answer: "QB", aliases: [],
+        choices: ["QB", "RB", "WR", "TE"], fanMisses: undefined,
+      }), "Quarterback",
+    )).toBe(false);
+  });
+
   it("accepts ordinary round ordinals without conflating other numbered trivia answers", () => {
     const round = fixture({ format: "short-answer", answer: "Round 5", aliases: [] });
     expect(averageFanAnswersMatch(round, "5th")).toBe(true);
