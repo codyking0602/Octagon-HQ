@@ -175,6 +175,29 @@ describe("Average Fan canonical Daily runtime", () => {
   });
 
 
+  it("credits Quarterback against the already-published abbreviation-only Carson Palmer proof without using Save", () => {
+    const carson = AVERAGE_FAN_CONTENT_BANKS.cfb.find((row) =>
+      row.id === "average-fan:cfb:g1:cfb-carson-palmer:position");
+    expect(carson).toBeTruthy();
+    const publication = buildAverageFanDailySetup("football", "2026-11-16", "test-carson-position");
+    // Simulate the immutable November 16 Daily proof with only QB and no aliases.
+    const archived = { ...carson!, grade: 2 as const, answer: "QB", aliases: [] };
+    const questions = [...(publication.privateSetupEvidence.questions as AverageFanQuestion[])];
+    questions[0] = archived;
+    const published = {
+      ...publication,
+      privateSetupEvidence: { ...publication.privateSetupEvidence, questions },
+    };
+    let step = advanceAverageFanDailyRuntime(contextFrom(published), { fan: "tyler" });
+    step = advanceAverageFanDailyRuntime(contextFrom(published, step), { question_id: archived.id });
+    step = advanceAverageFanDailyRuntime(contextFrom(published, step), { answer: "Quarterback" });
+    expect(step.publicState.last_resolution).toMatchObject({
+      player_answer: "Quarterback", correct: true, saved: false, save_consumed: false,
+    });
+    expect(step.publicState.save_used).toBe(false);
+    expect(step.publicState.board_score).toBe(90);
+  });
+
   it("builds two questions per grade without leaking answers", () => {
     const publication = buildAverageFanDailySetup("ufc", "2026-10-01", "test-v1");
     const board = publication.publicSetup.board as Array<Record<string, unknown>>;
