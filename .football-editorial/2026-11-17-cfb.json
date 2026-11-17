@@ -15,7 +15,7 @@
         "name": "Maddux Madsen",
         "team": "Boise State",
         "position": "QB",
-        "summary": "23-of-32, 369 passing yards and four TDs without an interception vs Oregon State. Source: https://www.pff.com/news/college-football-week-11-highest-grades-at-every-position"
+        "summary": "23-for-32 passing, 371 yards, 4 touchdowns and no interceptions in Boise State's 46-41 win against Oregon State. Source: https://broncosports.com/news/2026/11/14/football-no-17-18-24-broncos-take-down-oregon-state"
       },
       {
         "id": "devon-dampier",
@@ -69,12 +69,16 @@
         "summary": "SEC matchup in Norman; ESPN2 3:45pm ET. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
       },
       {
-        "id": "smu-at-notre-dame",
-        "away_team": "SMU",
-        "home_team": "Notre Dame",
-        "kickoff_at": "2026-11-21T18:30:00-06:00",
-        "summary": "Notre Dame hosts SMU in a primetime NBC matchup after a 41-7 win over Boston College. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
+        "id": "lsu-at-tennessee",
+        "away_team": "LSU",
+        "home_team": "Tennessee",
+        "kickoff_at": "2026-11-21T14:30:00-06:00",
+        "summary": "No. 9 Tennessee (8-2) hosts LSU (6-4) at Neyland Stadium following a road win over Texas A&M and LSU's 22-21 loss to Texas. Nov. 21, 2:30 p.m. CT. Sources: https://www.secsports.com/news/2026/11/sec-football-on-tv-nov-21 ; https://lsusports.net/sports/fb/schedule/season/2026"
       }
     ]
+  },
+  "selection": {
+    "player_id": "maddux-madsen",
+    "game_id": "lsu-at-tennessee"
   }
 }
