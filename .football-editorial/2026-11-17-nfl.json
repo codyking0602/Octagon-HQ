@@ -80,5 +80,71 @@
   "selection": {
     "player_id": "christian-mccaffrey",
     "game_id": "vikings-at-49ers"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Christian McCaffrey",
+      "team": "San Francisco 49ers",
+      "position": "RB",
+      "stats": [
+        {
+          "label": "REC YDS",
+          "value": "161"
+        },
+        {
+          "label": "RUSH YDS",
+          "value": "62"
+        },
+        {
+          "label": "TOTAL TD",
+          "value": "3"
+        },
+        {
+          "label": "RECEPTIONS",
+          "value": "4"
+        }
+      ],
+      "result": "W 46–40 at Dallas",
+      "measurements": "5 ft 11 in · 210 lbs",
+      "team_color": "#AA0000",
+      "highlight_url": "https://www.youtube.com/watch?v=rqiN08mLDNQ",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/3117251.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-17/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Minnesota Vikings",
+      "home_team": "San Francisco 49ers",
+      "kickoff_at": "2026-11-22T19:20:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.49ers.com/news/christian-mccaffrey-keeps-the-records-falling-in-49ers-46-40-win-over-cowboys",
+        "https://www.49ers.com/team/players-roster/christian-mccaffrey/logs/",
+        "https://www.vikings.com/tickets/2026/vikings-at-49ers-information-history-112226",
+        "https://www.nfl.com/games/vikings-at-49ers-2026-reg-11",
+        "https://www.nfl.com/games/vikings-at-packers-2026-reg-10"
+      ],
+      "breakdown": {
+        "setup": [
+          "Two NFC contenders take their matchup to Mexico City: the 8–1 49ers arrive after a wild 46–40 victory at Dallas, while the 7–2 Vikings just beat Green Bay 30–10. San Francisco is the designated home team, but this is an international setting rather than a conventional game at Levi's Stadium. The central question is whether Minnesota can limit San Francisco's explosive offense."
+        ],
+        "things": [
+          {
+            "title": "Containing McCaffrey in space",
+            "body": "Christian McCaffrey produced 223 yards from scrimmage and three touchdowns against Dallas, including catch-and-run scores of 74 and 66 yards. Minnesota must account for him as both a runner and a receiver without opening easy throws elsewhere."
+          },
+          {
+            "title": "Minnesota's defensive response",
+            "body": "The Vikings enter off a divisional win in which they held Green Bay to 10 points. Repeating that discipline against Brock Purdy, McCaffrey and San Francisco's multiple playmakers will require clean tackling and pressure that does not surrender explosive plays."
+          },
+          {
+            "title": "An international-stage matchup",
+            "body": "Estadio Banorte makes this a nominal 49ers home game in Mexico City, not Santa Clara. The unfamiliar setting adds a test of preparation and communication for both offenses, with early possessions and third-down execution especially important."
+          }
+        ],
+        "bottom_line": "The 49ers have the offensive form to stress defenses in several ways, while Minnesota enters with renewed momentum from a strong divisional result. Keeping McCaffrey from breaking open short throws and winning the turnover and third-down battles will decide which team controls the night."
+      }
+    }
   }
 }
