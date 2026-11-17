@@ -20,7 +20,7 @@ import {
   compareUfcPrepToSource,
   effectiveUfcPrepStatus,
   prepAssetSummary,
-  preparedMainEventSpotlight,
+  preparedSpotlightsForDraft,
   type UfcPickPrep,
 } from "./ufcPrepModel";
 
@@ -273,17 +273,13 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     setSourcePreview(null);
   }
 
-  async function attachPreparedMainEvent(nextDraft: PickSetupDraft) {
+  async function attachPreparedSpotlights(nextDraft: PickSetupDraft) {
     const save = repository?.saveSpotlights;
-    if (!prep || !save) return;
-    const spotlight = preparedMainEventSpotlight(prep, nextDraft.bouts);
-    if (!spotlight) return;
+    if (!save) return;
+    const prepared = preparedSpotlightsForDraft(prep, nextDraft);
     const current = nextDraft.spotlights ?? [];
-    if (current.some((item) => item.boutId === spotlight.boutId)) return;
-    await save(
-      nextDraft.draftId,
-      current.filter((item) => item.boutId !== spotlight.boutId).concat(spotlight),
-    );
+    const additional = prepared.filter((item) => !current.some((saved) => saved.boutId === item.boutId));
+    if (additional.length) await save(nextDraft.draftId, current.concat(additional));
   }
 
   function syncEvent() {
@@ -299,7 +295,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     void runAction("sync", async () => {
       await repository.syncNextEvent(cardScope, sourceUrl);
       const nextDraft = await repository.loadDraft();
-      if (nextDraft) await attachPreparedMainEvent(nextDraft);
+      if (nextDraft) await attachPreparedSpotlights(nextDraft);
     });
   }
 
@@ -309,7 +305,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     void runAction("stage-prepared", async () => {
       await repository.applySourcePreview(sourcePreview);
       const nextDraft = await repository.loadDraft();
-      if (nextDraft) await attachPreparedMainEvent(nextDraft);
+      if (nextDraft) await attachPreparedSpotlights(nextDraft);
       setSourcePreview(null);
     });
   }
@@ -329,7 +325,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     void runAction("apply-preview", async () => {
       await repository.applySourcePreview(sourcePreview);
       const nextDraft = await repository.loadDraft();
-      if (nextDraft) await attachPreparedMainEvent(nextDraft);
+      if (nextDraft) await attachPreparedSpotlights(nextDraft);
       setSourcePreview(null);
     });
   }
@@ -670,7 +666,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 draft={draft}
                 bouts={orderedBouts}
                 busy={Boolean(busyAction)}
-                preparedSpotlights={prep?.spotlights ?? []}
+                preparedSpotlights={preparedSpotlightsForDraft(prep, draft)}
                 onBuild={buildSpotlight}
                 onSave={saveSpotlights}
               />

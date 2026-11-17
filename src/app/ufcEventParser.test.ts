@@ -90,6 +90,19 @@ describe("official UFC event parser", () => {
     expect(parsed.card.bouts.some((bout) => bout.red_fighter_name === "Removed Fighter")).toBe(false);
   });
 
+  it("extracts Fight Night city from the official event hero when the description lists venue only", () => {
+    const doha = html.replace(
+      'Live From Golden 1 Center In Sacramento, California On August 22, 2026',
+      'Live From ABHA Arena On August 22, 2026',
+    ).replace('<div class="c-hero__header">', '<div class="field--name-venue">ABHA Arena</div><div class="location">Doha Qatar</div><a>How to Watch</a><div class="c-hero__header">');
+    expect(parseUfcEventPage(doha, sourceUrl).metadata).toMatchObject({
+      venue: "ABHA Arena",
+      location: "Doha Qatar",
+    });
+    const missing = doha.replace('<div class="location">Doha Qatar</div>', '');
+    expect(parseUfcEventPage(missing, sourceUrl).metadata.location).toBe("");
+  });
+
   it("keeps numbered-event main start distinct from the prelim Picks lock", () => {
     const numbered = html
       .replace('<meta property="og:title" content="UFC Fight Night | UFC">', '<meta property="og:title" content="UFC 330 | UFC">')

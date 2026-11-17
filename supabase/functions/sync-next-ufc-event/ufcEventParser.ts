@@ -342,11 +342,26 @@ function eventPlaceFromDescription(value: string) {
   return venueOnly ? { venue: clean(venueOnly[1]), location: "" } : { venue: "", location: "" };
 }
 
+function placeFollowingVenue(html: string, venue: string) {
+  if (!venue) return "";
+  const escaped = venue.replace(/[.*+?^\x24{}()|[\]\\]/g, "\\$&");
+  // UFC's event hero can render "ABHA Arena, Doha Qatar" even when
+  // og:description omits the city. Read adjacent displayed text, not guesses.
+  const match = new RegExp(
+    `\\b${escaped}\\s*,?\\s+([\\p{L}][\\p{L}\\s,.'-]{2,64}?)\\s+(?=How to Watch|Buy Tickets|Follow live|Main Card|Start Times)\\b`,
+    "iu",
+  ).exec(visibleText(html));
+  return clean(match?.[1] ?? "");
+}
+
 function eventPlace(html: string, description: string) {
   const descriptionPlace = eventPlaceFromDescription(description);
-  if (descriptionPlace.venue) return descriptionPlace;
-  const venue = classBlockText(html, "field--name-venue");
-  return { venue, location: descriptionPlace.location };
+  const venue = descriptionPlace.venue || classBlockText(html, "field--name-venue");
+  const location = descriptionPlace.location
+    || classBlockText(html, "field--name-location")
+    || classBlockText(html, "field--name-city")
+    || placeFollowingVenue(html, venue);
+  return { venue, location };
 }
 
 function eventName(html: string, card: UfcEventCard) {

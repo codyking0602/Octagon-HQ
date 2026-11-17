@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { fighterOddsIdentity, fightOddsMatchupIdentity } from "../features/picks-monitoring/oddsModel.ts";
 
 const builder = readFileSync("supabase/functions/build-pick-spotlight/index.ts", "utf8");
+const prepared = readFileSync("supabase/functions/build-pick-spotlight/preparedSpotlight.ts", "utf8");
 const migration = readFileSync("supabase/migrations/202612311520_ufc_named_manual_event_push.sql", "utf8");
 const controlRepository = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
 const presentation = readFileSync("src/styles/picks-polish.css", "utf8");
@@ -16,11 +17,13 @@ describe("UFC 334 publication repairs", () => {
 
   it("matches owner-verified saved Spotlight content before the snapshot-only path", () => {
     expect(builder).toContain('from("ufc_pick_prep_packages")');
-    expect(builder).toContain('entry?.source === "UFCStats"');
-    expect(builder).toContain("matches.length === 1");
+    expect(builder).toContain("selectPreparedPickSpotlight(prepRows, source, bout)");
+    expect(prepared).toContain('spotlight?.source !== "UFCStats"');
+    expect(prepared).toContain("return matching.length === 1");
+    expect(prepared).toContain("red?.fighter_slug !== redSlug");
+    expect(prepared).toContain("blue?.fighter_slug !== blueSlug");
     expect(builder).toContain("boutId,");
-    expect(builder).toContain("r?.fighter_slug === redSlug && b?.fighter_slug === blueSlug");
-    expect(builder.indexOf("const ufcNumber")).toBeLessThan(builder.indexOf("const red = loadFighter"));
+    expect(builder.indexOf("const saved = prepError")).toBeLessThan(builder.indexOf("const red = loadFighter"));
     expect(controlRepository).toContain("pickSetupFunctionErrorMessage(error)");
   });
 
