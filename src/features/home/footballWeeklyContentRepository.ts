@@ -2,7 +2,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import { isYouTubeVideoUrl } from "../../lib/youtubeVideoUrl";
 
-// A Football editorial week begins at midnight Tuesday in America/Chicago.
+// A Football editorial week begins Tuesday; public content releases at 6 AM Central.
 // SQL derives the UTC release instant, automatically accounting for CST/CDT.
 export const footballEditorialTuesdaySchema = z.iso.date().refine(
   (value) => new Date(value + "T12:00:00Z").getUTCDay() === 2,
