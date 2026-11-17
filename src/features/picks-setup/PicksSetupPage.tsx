@@ -282,6 +282,34 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (additional.length) await save(nextDraft.draftId, current.concat(additional));
   }
 
+  function syncEvent() {
+    if (!repository) return;
+    if (prep) {
+      void runAction("prep-preview", async () => {
+        const preview = await repository.previewSource(cardScope, sourceUrl);
+        setSourcePreview(preview);
+        setSourceUrl(preview.sourceUrl);
+      }, false);
+      return;
+    }
+    void runAction("sync", async () => {
+      await repository.syncNextEvent(cardScope, sourceUrl);
+      const nextDraft = await repository.loadDraft();
+      if (nextDraft) await attachPreparedSpotlights(nextDraft);
+    });
+  }
+
+  function stagePreparedPreview() {
+    if (!repository || !sourcePreview) return;
+    if (prepChanges.length && !window.confirm("The current UFC card differs from Monday prep. Stage the freshly verified card anyway?")) return;
+    void runAction("stage-prepared", async () => {
+      await repository.applySourcePreview(sourcePreview);
+      const nextDraft = await repository.loadDraft();
+      if (nextDraft) await attachPreparedSpotlights(nextDraft);
+      setSourcePreview(null);
+    });
+  }
+
   async function checkSourceUpdates() {
     if (!repository || !draft) return;
     const preview = await runAction("preview", () => repository.previewSource(cardScope, sourceUrl), false);
