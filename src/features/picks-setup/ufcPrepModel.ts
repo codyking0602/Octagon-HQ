@@ -181,11 +181,11 @@ function boutLabel(bout: PickSetupBout | UfcPrepBout) {
 
 export function preparedSpotlightForBout(prep: UfcPickPrep | null, bout: PickSetupBout) {
   if (!prep) return null;
-  return prep.spotlights.find((spotlight) => (
-    spotlight.boutId === bout.boutId
-    && spotlight.red.fighterSlug === bout.redFighterSlug
+  const matches = prep.spotlights.filter((spotlight) => (
+    spotlight.red.fighterSlug === bout.redFighterSlug
     && spotlight.blue.fighterSlug === bout.blueFighterSlug
-  )) ?? null;
+  ));
+  return matches.length === 1 ? { ...matches[0]!, boutId: bout.boutId } : null;
 }
 
 export function preparedMainEventSpotlight(prep: UfcPickPrep | null, bouts: PickSetupBout[]) {
