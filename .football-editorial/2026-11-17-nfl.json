@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-17",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "jahmyr-gibbs",
+        "name": "Jahmyr Gibbs",
+        "team": "Detroit Lions",
+        "position": "RB",
+        "summary": "153 rushing yards, two rushing TDs and 99 receiving yards in 35-10 win over Patriots. Source: https://www.reuters.com/sports/nfl/jahmyr-gibbs-lions-dominate-patriots-munich-win-fifth-straight--flm-2026-11-15/"
+      },
+      {
+        "id": "joe-burrow",
+        "name": "Joe Burrow",
+        "team": "Cincinnati Bengals",
+        "position": "QB",
+        "summary": "35-of-44 for 408 passing yards and four TDs against Steelers. Source: https://pro.nfl.com/games/game/aab58261-4feb-11f1-abca-2c54536568a9"
+      },
+      {
+        "id": "jamarr-chase",
+        "name": "Ja'Marr Chase",
+        "team": "Cincinnati Bengals",
+        "position": "WR",
+        "summary": "11 receptions, 231 receiving yards against Steelers. Source: https://pro.nfl.com/games/game/aab58261-4feb-11f1-abca-2c54536568a9"
+      },
+      {
+        "id": "christian-mccaffrey",
+        "name": "Christian McCaffrey",
+        "team": "San Francisco 49ers",
+        "position": "RB",
+        "summary": "62 rushing yards and TD plus 161 receiving yards and two receiving TDs against Dallas. Source: https://pro.nfl.com/games/game/f6435deb-311e-11f0-b670-ae1250fadad1"
+      },
+      {
+        "id": "george-pickens",
+        "name": "George Pickens",
+        "team": "Dallas Cowboys",
+        "position": "WR",
+        "summary": "11 catches, 145 receiving yards and three TDs against 49ers. Source: https://pro.nfl.com/games/game/f6435deb-311e-11f0-b670-ae1250fadad1"
+      }
+    ],
+    "games": [
+      {
+        "id": "vikings-at-49ers",
+        "away_team": "Minnesota Vikings",
+        "home_team": "San Francisco 49ers",
+        "kickoff_at": "2026-11-22T19:20:00-06:00",
+        "summary": "Sunday Night Football in Mexico City, NBC; Minnesota coming off 30-10 win over Packers. Source: https://www.nfl.com/news/week-11-schedule-change"
+      },
+      {
+        "id": "buccaneers-at-lions",
+        "away_team": "Tampa Bay Buccaneers",
+        "home_team": "Detroit Lions",
+        "kickoff_at": "2026-11-22T12:00:00-06:00",
+        "summary": "NFC matchup against a Detroit team fresh off 35-10 Munich victory. Source: https://www.nfl.com/news/week-11-schedule-change"
+      },
+      {
+        "id": "jaguars-at-giants",
+        "away_team": "Jacksonville Jaguars",
+        "home_team": "New York Giants",
+        "kickoff_at": "2026-11-22T15:25:00-06:00",
+        "summary": "Moved into CBS late window by NFL schedule change; high-stakes interconference game. Source: https://www.nfl.com/news/week-11-schedule-change"
+      },
+      {
+        "id": "steelers-at-eagles",
+        "away_team": "Pittsburgh Steelers",
+        "home_team": "Philadelphia Eagles",
+        "kickoff_at": "2026-11-22T12:00:00-06:00",
+        "summary": "Moved to CBS early window in NFL schedule adjustment. Source: https://www.nfl.com/news/week-11-schedule-change"
+      },
+      {
+        "id": "bengals-at-commanders",
+        "away_team": "Cincinnati Bengals",
+        "home_team": "Washington Commanders",
+        "kickoff_at": "2026-11-23T19:15:00-06:00",
+        "summary": "Monday Night Football; Joe Burrow and Ja'Marr Chase coming off huge Steelers performances. Source: https://www.nfl.com/news/week-11-schedule-change"
+      }
+    ]
+  }
+}
