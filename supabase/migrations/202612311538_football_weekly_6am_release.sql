@@ -98,7 +98,7 @@ begin
   return to_jsonb(v_package) || jsonb_build_object(
     'release_at',(v_package.week_of::timestamp + interval '6 hours') at time zone 'America/Chicago');
 end;
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.live_football_weekly_editorial_at(p_as_of timestamp with time zone)
@@ -137,7 +137,7 @@ select jsonb_build_object(
     order by p.week_of desc limit 1
   )
 );
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.finalize_football_weekly_publication()
@@ -182,7 +182,7 @@ begin
     and p.production->'nfl'->>'published_at' is not null;
   return v_count;
 end;
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.get_football_weekly_content_package(p_week_of date)
@@ -202,7 +202,7 @@ begin
   from public.football_weekly_content_packages p where p.week_of = p_week_of;
   return v_result;
 end;
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.save_football_weekly_content_draft(p_week_of date, p_patch jsonb)
@@ -284,7 +284,7 @@ begin
     'release_at', (v_saved.week_of::timestamp + interval '6 hours') at time zone 'America/Chicago'
   );
 end;
-$function$
+$function$;
 
 
 -- Preserve owner/browser grants; CREATE OR REPLACE keeps existing function ACLs.
