@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { PickSetupBout, PickSetupSourcePreview, PickSetupSpotlight } from "./pickSetupModel";
+import type { PickSetupBout, PickSetupDraft, PickSetupSourcePreview, PickSetupSpotlight } from "./pickSetupModel";
 import { ufcEditorialIssues } from "../picks/ufcSpotlightEditorial";
 
 export type UfcPrepStatus = "ready" | "review-needed" | "blocked";
@@ -196,7 +196,33 @@ export function preparedMainEventSpotlight(prep: UfcPickPrep | null, bouts: Pick
     pairKey(bout.redFighterSlug, bout.blueFighterSlug)
       === pairKey(prepMain.redFighterSlug, prepMain.blueFighterSlug)
   ));
-  return draftBout ? preparedSpotlightForBout(prep, draftBout) : null;
+  const prepared = draftBout ? preparedSpotlightForBout(prep, draftBout) : null;
+  return prepared && draftBout ? { ...prepared, boutId: draftBout.boutId } : null;
+}
+
+/**
+ * Prep bout IDs and staged canonical bout IDs are not interchangeable.
+ * Reuse only a uniquely matched fighter pair from the same verified event.
+ */
+export function preparedSpotlightsForDraft(prep: UfcPickPrep | null, draft: PickSetupDraft | null): PickSetupSpotlight[] {
+  if (!prep || !draft || !draft.startsAt || !draft.sourceUrl
+    || prep.sourceEventKey !== draft.sourceEventKey
+    || prep.sourceUrl.replace(/\/+$/, "") !== draft.sourceUrl.replace(/\/+$/, "")) return [];
+  const preparedTime = Date.parse(prep.startsAt);
+  const draftTime = Date.parse(draft.startsAt);
+  if (!Number.isFinite(preparedTime) || !Number.isFinite(draftTime)
+    || Math.abs(preparedTime - draftTime) >= 6 * 60 * 60 * 1000) return [];
+
+  const usedPreparedIds = new Set<string>();
+  return draft.bouts.filter((bout) => bout.included).flatMap((bout) => {
+    const matches = prep.spotlights.filter((spotlight) => (
+      spotlight.red.fighterSlug === bout.redFighterSlug
+      && spotlight.blue.fighterSlug === bout.blueFighterSlug
+    ));
+    if (matches.length !== 1 || usedPreparedIds.has(matches[0]!.boutId)) return [];
+    usedPreparedIds.add(matches[0]!.boutId);
+    return [{ ...matches[0]!, boutId: bout.boutId }];
+  });
 }
 
 export function compareUfcPrepToSource(prep: UfcPickPrep | null, preview: PickSetupSourcePreview | null) {

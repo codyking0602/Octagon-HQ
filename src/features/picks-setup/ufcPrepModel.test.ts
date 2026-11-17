@@ -5,6 +5,7 @@ import {
   mapUfcPickPrep,
   prepAssetSummary,
   preparedMainEventSpotlight,
+  preparedSpotlightsForDraft,
 } from "./ufcPrepModel";
 
 const prepPayload = {
@@ -143,6 +144,42 @@ describe("UFC Picks prep", () => {
       included: true,
     }]);
     expect(spotlight?.boutId).toBe("main-event-alpha-beta");
+  });
+
+  it("rekeys prepared Fight Night spotlights to canonical staged bout IDs only for the exact event", () => {
+    const prep = mapUfcPickPrep({
+      ...prepPayload,
+      event_kind: "fight-night",
+      spotlights: prepPayload.spotlights.concat({
+        ...prepPayload.spotlights[0],
+        bout_id: "prep-gamma-delta",
+        red: { ...prepPayload.spotlights[0].red, fighter_slug: "gamma" },
+        blue: { ...prepPayload.spotlights[0].blue, fighter_slug: "delta" },
+      }),
+    })!;
+    const bouts = prep.bouts.map((bout) => ({
+      boutId: `canonical-${bout.redFighterSlug}-${bout.blueFighterSlug}`,
+      position: bout.position,
+      weightClass: bout.weightClass,
+      redFighterSlug: bout.redFighterSlug,
+      redFighterName: bout.redFighterName,
+      blueFighterSlug: bout.blueFighterSlug,
+      blueFighterName: bout.blueFighterName,
+      included: true,
+    }));
+    const draft = {
+      draftId: "draft", source: "UFC.com", sourceEventKey: prep.sourceEventKey, sourceUrl: prep.sourceUrl,
+      eventId: "different-imported-id", name: prep.eventName, subtitle: "", venue: "Arena",
+      location: "", startsAt: prep.startsAt, locksAt: prep.startsAt, season: 2026,
+      state: "staged" as const, syncedAt: prep.startsAt, updatedAt: prep.startsAt,
+      warnings: [], canPublish: false, bouts, spotlights: [],
+    };
+    expect(preparedSpotlightsForDraft(prep, draft).map((item) => item.boutId))
+      .toEqual(["canonical-alpha-beta", "canonical-gamma-delta"]);
+    expect(preparedMainEventSpotlight(prep, bouts)?.boutId).toBe("canonical-alpha-beta");
+    expect(preparedSpotlightsForDraft(prep, { ...draft, sourceEventKey: "another-event" })).toEqual([]);
+    expect(preparedSpotlightsForDraft(prep, { ...draft, startsAt: "2026-10-03T00:00:00Z" })).toEqual([]);
+    expect(preparedSpotlightsForDraft(prep, { ...draft, sourceUrl: "https://www.ufc.com/event/other" })).toEqual([]);
   });
 
   it("reports card drift without treating a clean card as changed", () => {
