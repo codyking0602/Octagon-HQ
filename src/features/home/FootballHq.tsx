@@ -55,6 +55,7 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   crimson: "#9E1B32",
   garnet: "#73000A",
   gold: "#D4A72C",
+  maize: "#FFCB05",
   gray: "#8A8D8F",
   green: "#0B5D3B",
   maroon: "#5D1725",
@@ -70,6 +71,7 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
 };
 
 const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
+  "Buffalo Bills:blue": "#00338D",
   "Buffalo Bills:red": "#C60C30",
   "Detroit Lions:blue": "#0076B6",
   "New York Giants:blue": "#0B2265",
@@ -77,25 +79,26 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Pittsburgh Steelers:black": "#101820",
   "Pittsburgh Steelers:gold": "#FFB612",
   "Cincinnati Bengals:orange": "#FB4F14",
+  "Minnesota Vikings:purple": "#4F2683",
+  "Minnesota Vikings:gold": "#FFC62F",
+  "San Francisco 49ers:red": "#AA0000",
+  "San Francisco 49ers:gold": "#B3995D",
+  "Tennessee:orange": "#FF8200",
   "LSU:purple": "#461D7C",
   "LSU:gold": "#FDD023",
-  "Kansas City Chiefs:gold": "#E31837",
+  "Kansas City Chiefs:red": "#E31837",
+  "Kansas City Chiefs:gold": "#FFB81C",
   "Las Vegas Raiders:black": "#000000",
+  "New Orleans Saints:black": "#101820",
   "New Orleans Saints:gold": "#D3BC8D",
   "Ole Miss:navy": "#14213D",
-  "Oregon:yellow": "#044520",
+  "Oregon:green": "#044520",
+  "Oregon:yellow": "#FEE123",
   "Texas:orange": "#BF5700",
-  "USC:gold": "#990000",
+  "USC:cardinal": "#990000",
+  "USC:gold": "#FFC72C",
 };
 
-const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
-// Neutral colors remain eligible secondary accents: Texas orange gets a white
-// stripe, just as the Cowboys get silver, without turning the pill background white.
-const FEATURED_SECONDARY_OVERRIDES: Readonly<Record<string, string>> = {
-  "Kansas City Chiefs": "#FFB81C",
-  Oregon: "#FEE123",
-  USC: "#FFC72C",
-};
 const HOME_WHITE_LOGO_TEAMS = new Set(["Alabama", "Mississippi State", "Texas"]);
 const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
   Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
@@ -129,20 +132,19 @@ export function footballHqTeamPresentationFor(name: string) {
   const metadata = footballTeamSchoolMetadataFor(name);
   const canonicalName = metadata?.name ?? name;
   const colors = metadata?.colors ?? [];
-  // Preserve the established team fill (e.g. Steelers gold, LSU gold).
-  const backgroundToken = colors.slice(1).find((token) => !HOME_LOGO_NEUTRALS.has(token))
-    ?? colors[0]
-    ?? "blue";
-  const color = footballPaletteColor(canonicalName, backgroundToken);
-  const secondaryToken = colors.find((token) => token !== backgroundToken);
-  const secondaryColor = FEATURED_SECONDARY_OVERRIDES[canonicalName]
-    ?? (secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null);
+  // Canonical metadata is ordered primary first, secondary next. Never flip
+  // team fills when weekly GOTW opponents rotate (purple LSU/Vikings, red 49ers).
+  const primaryToken = colors[0] ?? "blue";
+  const secondaryToken = colors.slice(1).find((token) => token !== primaryToken);
+  const color = footballPaletteColor(canonicalName, primaryToken);
+  const secondaryColor = secondaryToken ? footballPaletteColor(canonicalName, secondaryToken) : null;
 
   return {
     color,
     secondaryColor,
     foregroundColor: teamPillForeground(color),
     logoTreatment: HOME_WHITE_LOGO_TEAMS.has(canonicalName) ? "white" as const : "full-color" as const,
+    logoInset: canonicalName === "Tennessee",
   };
 }
 
@@ -339,14 +341,16 @@ function TeamMark({
   logoUrl,
   name,
   logoTreatment,
+  logoInset,
 }: {
   logoUrl: string | null;
   name: string;
   logoTreatment: "full-color" | "white";
+  logoInset: boolean;
 }) {
   return (
     <span
-      className={`football-hq-team-mark${logoUrl ? "" : " is-empty"}${logoTreatment === "white" ? " is-white-logo" : ""}`}
+      className={`football-hq-team-mark${logoUrl ? "" : " is-empty"}${logoTreatment === "white" ? " is-white-logo" : ""}${logoInset ? " has-inset-logo" : ""}`}
       aria-hidden="true"
     >
       {logoUrl ? <img src={logoUrl} alt="" loading="lazy" /> : <b>{name.slice(0, 2).toUpperCase()}</b>}
@@ -379,7 +383,7 @@ function FeaturedGameTeamPill({
   } as CSSProperties;
   const contents = (
     <>
-      <TeamMark logoUrl={logoForTeam(game, team)} name={team.name} logoTreatment={presentation.logoTreatment} />
+      <TeamMark logoUrl={logoForTeam(game, team)} name={team.name} logoTreatment={presentation.logoTreatment} logoInset={presentation.logoInset} />
       <span className="football-hq-game-row__team-label">
         <strong>{name}</strong>
         {nickname ? <small>{nickname}</small> : null}

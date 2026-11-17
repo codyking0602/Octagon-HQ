@@ -85,7 +85,7 @@ export const footballTeamSchoolMetadata: readonly FootballTeamSchoolMetadata[] =
   cfb("Florida", "Southeast", ["blue", "orange", "white"], stable("SEC", 1933)),
   cfb("Georgia", "Southeast", ["red", "black", "white"], stable("SEC", 1933)),
   cfb("LSU", "Southeast", ["purple", "gold", "white"], stable("SEC", 1933), ["Louisiana State"]),
-  cfb("Tennessee", "Southeast", ["orange", "white"], stable("SEC", 1933)),
+  cfb("Tennessee", "Southeast", ["orange", "white"], stable("SEC", 1933), ["Tennessee Volunteers"]),
   cfb("Kentucky", "Southeast", ["blue", "white"], stable("SEC", 1933)),
   cfb("Ole Miss", "Southeast", ["red", "navy", "blue"], stable("SEC", 1933), ["Mississippi"]),
   cfb("Mississippi State", "Southeast", ["maroon", "white"], stable("SEC", 1933)),

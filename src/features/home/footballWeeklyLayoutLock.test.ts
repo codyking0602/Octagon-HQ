@@ -59,6 +59,7 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
   });
 
   it("keeps neutral Top Games boards while displaying solid team colors in the pills", () => {
+    const home = source("./FootballHq.tsx");
     const css = source("../../styles/home-football-hq.css");
     const board = css.split(".football-hq-games {")[1]?.split("}")[0];
     const matchup = css.split(".football-hq-game-row {")[1]?.split("}")[0];
@@ -72,6 +73,13 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
     expect(matchup).not.toContain("#161e27");
     expect(css).toContain("background: var(--team-color);");
     expect(css).toContain("background: var(--team-secondary, var(--team-color));");
+    // This applies to every weekly selection, without hardcoded matchup colors.
+    expect(home).toContain("const primaryToken = colors[0]");
+    expect(home).toContain("colors.slice(1).find");
+    expect(home).toContain("logoInset={presentation.logoInset}");
+    expect(css).toContain(".football-hq--compact-preview .football-hq-team-mark.has-inset-logo img");
+    expect(css).toContain("max-width: 82%");
+    expect(css).toContain("transform: none");
     expect(css).toContain(".football-hq-game-row__team-pill[href]");
     expect(css).toContain("color: var(--home-football-blue, #8ebce6)");
   });
