@@ -6,6 +6,7 @@ import {
   resolveUfcSourcePreference,
 } from "./sourceUrls.ts";
 import { sourceChanges } from "./cardChanges.ts";
+import { matchingStagedEventLocation } from "./stagedPlace.ts";
 import {
   parseUfcEventPage,
   type ParsedUfcBout as ParsedCardBout,
@@ -457,6 +458,11 @@ Deno.serve(async (request) => {
       preferredSourceUrl,
       sourceEventKeyOverride,
     );
+    const savedLocation = matchingStagedEventLocation(event, ownerProbe.data);
+    if (savedLocation) {
+      event.location = savedLocation;
+      event.warnings = event.warnings.filter((warning) => warning !== "MISSING LOCATION");
+    }
     const hash = await sourceHash(event, effectiveScope);
     const changes = sourceChanges(ownerProbe.data, event, effectiveScope);
 
