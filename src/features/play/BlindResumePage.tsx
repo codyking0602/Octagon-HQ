@@ -28,6 +28,7 @@ import {
   blindResumeV3NextRevealCount,
   blindResumeV3RoundPoints,
   createBlindResumeV3Card,
+  createEvidenceSafeBlindResumeV3Card,
   storedBlindResumeV3Card,
   type BlindResumeV3Card,
 } from "./blindResumeV3";
@@ -90,9 +91,10 @@ function v3OpeningReveal(card: BlindResumeV3Card) {
   return asRevealCount(blindResumeV3FirstRevealCount(card));
 }
 
-function casualBlindResumeRun(seed?: string): BlindResumeRun {
+function casualBlindResumeRun(seed?: string, evidenceSafe = true): BlindResumeRun {
+  const buildCard = evidenceSafe ? createEvidenceSafeBlindResumeV3Card : createBlindResumeV3Card;
   if (seed) {
-    const card = createBlindResumeV3Card(seed);
+    const card = buildCard(seed);
     const ids = roundSetIds(card.roundSet);
     const identity = replayLineupIdentity("blind-resume", seed);
     rememberLineup(identity, ids, ids);
@@ -107,7 +109,7 @@ function casualBlindResumeRun(seed?: string): BlindResumeRun {
     validItemIds: validIds,
     validFighterIds: validIds,
     build: (nextSeed) => {
-      const card = createBlindResumeV3Card(nextSeed);
+      const card = buildCard(nextSeed);
       const ids = roundSetIds(card.roundSet);
       return { value: card, itemIds: ids, fighterIds: ids };
     },
@@ -195,6 +197,7 @@ export default function BlindResumePage() {
   const profileIsV3 = profileMatch.challenge?.gameVersion === BLIND_RESUME_V3_GAME_VERSION;
   const challengeSeed = searchParams.get("challenge") || "";
   const directChallengeIsV3 = searchParams.get("v") === "3";
+  const directChallengeIsEvidenceSafe = searchParams.get("q") === "1";
   const runSeed = searchParams.get("run") || "";
   const [run, setRun] = useState<BlindResumeRun>(() => {
     if (profileSeed) {
@@ -209,7 +212,9 @@ export default function BlindResumePage() {
       if (directChallengeIsV3) {
         return curatedV3BlindResumeRun(
           challengeSeed,
-          createBlindResumeV3Card(challengeSeed),
+          directChallengeIsEvidenceSafe
+            ? createEvidenceSafeBlindResumeV3Card(challengeSeed)
+            : createBlindResumeV3Card(challengeSeed),
           `shared:v3:${challengeSeed}`,
         );
       }
@@ -219,12 +224,12 @@ export default function BlindResumePage() {
         `shared:${challengeSeed}`,
       );
     }
-    return casualBlindResumeRun(runSeed || undefined);
+    return casualBlindResumeRun(runSeed || undefined, !runSeed || searchParams.get("q") === "1");
   });
   const roundSet = run.roundSet;
   const sessionId = run.version === "v3" ? `v3:${run.identity.challengeId}` : run.identity.challengeId;
   const returnPath = run.identity.type === "replayable"
-    ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}`
+    ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}${run.v3Card?.selectionVersion === "evidence-safe-stage3-v1" ? "&q=1" : ""}`
     : `/play/blind-resume?${searchParams.toString()}`;
   const restored = useMemo(() => loadBlindResumeSession(sessionId), [sessionId]);
   const restoredResults = useMemo(
@@ -326,7 +331,7 @@ export default function BlindResumePage() {
     setRevealedCount(nextRun.v3Card ? v3OpeningReveal(nextRun.v3Card) : 8);
     setChallengeStatus("");
     if (nextRun.identity.type === "replayable") {
-      setSearchParams({ run: nextRun.roundSet.seed }, { replace: true });
+      setSearchParams({ run: nextRun.roundSet.seed, ...(nextRun.v3Card?.selectionVersion === "evidence-safe-stage3-v1" ? { q: "1" } : {}) }, { replace: true });
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -360,7 +365,9 @@ export default function BlindResumePage() {
       shareText: v3
         ? `I scored ${pointsScore}/100 with a ${recordCopy} record in Blind Resume. Beat it on the exact same five matchups.`
         : `I challenged you to the same five hidden UFC resume matchups. Beat my ${correctCount}/${BLIND_RESUME_ROUNDS}.`,
-      shareUrl: v3 ? blindResumeV3ChallengeUrl(roundSet.seed) : blindResumeChallengeUrl(roundSet.seed),
+      shareUrl: v3
+        ? blindResumeV3ChallengeUrl(roundSet.seed, run.v3Card?.selectionVersion === "evidence-safe-stage3-v1")
+        : blindResumeChallengeUrl(roundSet.seed),
     });
     setChallengeStatus(status);
   }

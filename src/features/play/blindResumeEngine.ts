@@ -111,6 +111,48 @@ export function createBlindResumeRounds(seed: string): BlindResumeRoundSet {
   return { seed, pairs };
 }
 
+// This quality filter is deliberately narrow: an early misleading reveal is
+// valid gameplay, but the full eight-stat board must give the ranked winner a
+// defensible factual case. Preserve the legacy pairing algorithm and reveal
+// order for all existing games and challenge links.
+function primeRecordNet(record: string) {
+  const match = /^(\d+)-(\d+)/.exec(record);
+  return match ? Number(match[1]) - Number(match[2]) : Number.NaN;
+}
+
+export function blindResumePairIsEvidenceSafe(pair: BlindResumePair) {
+  const winner = blindResumeWinner(pair);
+  const other = winner.id === pair.fighterA.id ? pair.fighterB : pair.fighterA;
+  const w = winner.model.visibleStats;
+  const o = other.model.visibleStats;
+  // The internal Apex rating and era names do not independently prove a
+  // ranking verdict. Do not use potentially unaudited round percentages.
+  const differences = [
+    w.titleFightWins - o.titleFightWins,
+    w.topFiveWins - o.topFiveWins,
+    primeRecordNet(w.primeRecord) - primeRecordNet(o.primeRecord),
+    w.activeEliteYears - o.activeEliteYears,
+    w.finishRatePct - o.finishRatePct,
+  ];
+  // Two independent supporting facts at *full reveal*, without demanding
+  // the winner lead the first two clues or even a majority of all stats.
+  return differences.every(Number.isFinite)
+    && differences.filter((difference) => difference > 0).length >= 2;
+}
+
+/** Preserve the original seeded pairing distribution; retry only slates with
+ * genuinely indefensible full-reveal comparisons. Never weaken the gate. */
+export function createEvidenceSafeBlindResumeRounds(seed: string): BlindResumeRoundSet {
+  for (let attempt = 0; attempt < 96; attempt += 1) {
+    const candidateSeed = attempt === 0 ? seed : `${seed}|full-resume-review-${attempt}`;
+    const candidate = createBlindResumeRounds(candidateSeed);
+    if (candidate.pairs.every(blindResumePairIsEvidenceSafe)) {
+      return { seed, pairs: candidate.pairs };
+    }
+  }
+  throw new Error("Unable to create five solvable Blind Resume comparisons.");
+}
+
 export function blindResumeWinner(pair: BlindResumePair) {
   if (pair.fighterA.model.rank === pair.fighterB.model.rank) {
     return pair.fighterA.model.rawScore >= pair.fighterB.model.rawScore ? pair.fighterA : pair.fighterB;
