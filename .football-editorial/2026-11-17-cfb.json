@@ -80,5 +80,77 @@
   "selection": {
     "player_id": "maddux-madsen",
     "game_id": "lsu-at-tennessee"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Maddux Madsen",
+      "team": "Boise State",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "371"
+        },
+        {
+          "label": "PASS TD",
+          "value": "4"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "23/32"
+        },
+        {
+          "label": "INT",
+          "value": "0"
+        }
+      ],
+      "result": "W 46–41 vs Oregon State",
+      "measurements": "5 ft 10 in · 210 lbs",
+      "team_color": "#0033A0",
+      "highlight_url": "https://www.youtube.com/watch?v=OfATPmYC0cM",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/4870513.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-17/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "LSU",
+      "home_team": "Tennessee",
+      "kickoff_at": "2026-11-21T14:30:00-06:00",
+      "ranking_source": "AP",
+      "away_rank": null,
+      "home_rank": 9,
+      "away_record": "6-4",
+      "home_record": "8-2"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://lsusports.net/news/2026/11/09/nov-21-lsu-football-at-tennessee-kickoff-time-announced",
+        "https://lsusports.net/sports/fb/schedule/season/2026",
+        "https://dudh74xyv196a.cloudfront.net/news/2026/11/14/football-defense-leads-8-vols-to-victory-in-aggieland",
+        "https://www.cbssports.com/college-football/news/college-football-rankings-ap-top-25-poll-week-12-lsu-oregon-ohio-state/",
+        "https://broncosports.com/news/2026/11/14/football-no-17-18-24-broncos-take-down-oregon-state",
+        "https://broncosports.com/sports/football/roster/maddux-madsen/14321"
+      ],
+      "breakdown": {
+        "setup": [
+          "No. 9 Tennessee welcomes LSU to Neyland Stadium with the Volunteers at 8–2 after a strong defensive showing in their 22–7 win at Texas A&M. LSU comes in 6–4 after a painful 22–21 loss to Texas. The SEC stakes are different for the two programs: Tennessee is protecting its postseason position, while LSU is trying to break a two-game slide."
+        ],
+        "things": [
+          {
+            "title": "Tennessee's postseason stakes",
+            "body": "The Volunteers are still in the playoff conversation, and their defense just held Texas A&M to seven points. Keeping that physical edge at home is essential as they face another SEC opponent capable of making a one-score game unpredictable."
+          },
+          {
+            "title": "How LSU responds",
+            "body": "The Tigers have lost consecutive games to Alabama and Texas, including a one-point finish against the Longhorns. LSU needs steadier offensive execution, fewer empty possessions and the composure to finish opportunities against Tennessee's defense."
+          },
+          {
+            "title": "The Neyland factor",
+            "body": "LSU returns to Neyland Stadium for the first time since 2017. Tennessee won the teams' most recent meeting, 40–13 in 2022, but this matchup starts fresh. Crowd pressure and early-down efficiency will matter if the game tightens late."
+          }
+        ],
+        "bottom_line": "Tennessee brings the stronger recent results and home-field setting, while LSU has the talent and urgency to challenge it. Which team controls early downs, avoids drive-killing mistakes and handles the fourth quarter will shape this SEC test."
+      }
+    }
   }
 }
