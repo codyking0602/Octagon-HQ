@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-11-17",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "jeremiah-smith",
+        "name": "Jeremiah Smith",
+        "team": "Ohio State",
+        "position": "WR",
+        "summary": "11 catches, 117 yards and a TD vs Northwestern; became Big Ten career receiving-yards leader. Source: https://ohiostatebuckeyes.com/news/2026/11/14/football-no-20-ohio-state-grinds-out-home-win-against-northwestern"
+      },
+      {
+        "id": "maddux-madsen",
+        "name": "Maddux Madsen",
+        "team": "Boise State",
+        "position": "QB",
+        "summary": "23-of-32, 369 passing yards and four TDs without an interception vs Oregon State. Source: https://www.pff.com/news/college-football-week-11-highest-grades-at-every-position"
+      },
+      {
+        "id": "devon-dampier",
+        "name": "Devon Dampier",
+        "team": "Utah",
+        "position": "QB",
+        "summary": "204 passing yards and two passing TDs in 40-39 comeback win at Arizona, including late 70-yard winning TD to Creed Whittemore. Sources: https://www.footballdb.com/college-football/scores.html?lg=FBS&type=reg&wk=11&yr=2026 ; Reuters Nov 14 roundup"
+      },
+      {
+        "id": "noah-fifita",
+        "name": "Noah Fifita",
+        "team": "Arizona",
+        "position": "QB",
+        "summary": "27-of-43 for 356 yards and three TDs in 40-39 loss to Utah. Source: https://www.cbssports.com/college-football/gametracker/NCAAF_20261114_UTAH%40ARI/"
+      },
+      {
+        "id": "arch-manning",
+        "name": "Arch Manning",
+        "team": "Texas",
+        "position": "QB",
+        "summary": "Threw decisive 4-yard TD with three seconds remaining to beat LSU 22-21; also rushed for a score. Source: https://www.cbssports.com/college-football/gametracker/recap/NCAAF_20261114_TEX%40LSU/"
+      }
+    ],
+    "games": [
+      {
+        "id": "utah-at-tcu",
+        "away_team": "Utah",
+        "home_team": "TCU",
+        "kickoff_at": "2026-11-21T20:00:00-06:00",
+        "summary": "Unbeaten Utah takes its 40-39 Arizona escape to Fort Worth; FOX 9pm ET. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
+      },
+      {
+        "id": "ucla-at-michigan",
+        "away_team": "UCLA",
+        "home_team": "Michigan",
+        "kickoff_at": "2026-11-21T14:30:00-06:00",
+        "summary": "Top-five UCLA visits Michigan in a national Big Ten test; CBS 3:30pm ET. Source: https://www.cbssports.com/college-football/schedule/POWER4/2026/regular/12/"
+      },
+      {
+        "id": "georgia-at-south-carolina",
+        "away_team": "Georgia",
+        "home_team": "South Carolina",
+        "kickoff_at": "2026-11-21T18:30:00-06:00",
+        "summary": "No. 1 Georgia travels to South Carolina for an SEC road game; ABC 7:30pm ET. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
+      },
+      {
+        "id": "texas-am-at-oklahoma",
+        "away_team": "Texas A&M",
+        "home_team": "Oklahoma",
+        "kickoff_at": "2026-11-21T14:45:00-06:00",
+        "summary": "SEC matchup in Norman; ESPN2 3:45pm ET. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
+      },
+      {
+        "id": "smu-at-notre-dame",
+        "away_team": "SMU",
+        "home_team": "Notre Dame",
+        "kickoff_at": "2026-11-21T18:30:00-06:00",
+        "summary": "Notre Dame hosts SMU in a primetime NBC matchup after a 41-7 win over Boston College. Source: https://fbschedules.com/college-football-schedule-tv-selections-for-november-21-2026/"
+      }
+    ]
+  }
+}
