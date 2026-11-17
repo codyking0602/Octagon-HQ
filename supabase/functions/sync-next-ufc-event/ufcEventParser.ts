@@ -344,12 +344,7 @@ function eventPlaceFromDescription(value: string) {
 
 function placeFollowingVenue(html: string, venue: string) {
   if (!venue) return "";
-  const escaped = venue.replace(/[.*+?^\x24{}()|[\]\\]/g, "\\function eventPlace(html: string, description: string) {
-  const descriptionPlace = eventPlaceFromDescription(description);
-  if (descriptionPlace.venue) return descriptionPlace;
-  const venue = classBlockText(html, "field--name-venue");
-  return { venue, location: descriptionPlace.location };
-}");
+  const escaped = venue.replace(/[.*+?^\x24{}()|[\]\\]/g, "\\$&");
   // UFC's event hero can render "ABHA Arena, Doha Qatar" even when
   // og:description omits the city. Read adjacent displayed text, not guesses.
   const match = new RegExp(
