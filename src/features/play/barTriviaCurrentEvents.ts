@@ -1,6 +1,168 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  // November 17 editorial review: confirmed Week 10/11 games and UFC 334.
+  barTriviaQuestion({
+    "id": "nfl-current-2026-11-15-mccaffrey-two-long-td",
+    "league": "nfl",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Historic Performances",
+    "prompt": "Which 49ers running back became the first in NFL history with two touchdown catches of at least 65 yards in the same game?",
+    "choices": [
+      "Christian McCaffrey",
+      "Saquon Barkley",
+      "Jahmyr Gibbs",
+      "Derrick Henry"
+    ],
+    "answer": "Christian McCaffrey",
+    "explanation": "Christian McCaffrey caught 74-yard and 66-yard touchdowns against Dallas on November 15, becoming the first NFL running back to record two receiving touchdowns of at least 65 yards in one game.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "nfl-current-2026-11-15-mccaffrey-two-long-td",
+    "sourceUrl": "https://media.nfl.com/football-information/2026/seven-from-sunday/seven-from-sunday---week-10",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "nfl-current-2026-11-15-gibbs-munich",
+    "league": "nfl",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "International Standouts",
+    "prompt": "Which Lions star piled up more than 250 scrimmage yards and two touchdowns against New England in Munich?",
+    "choices": [
+      "Jahmyr Gibbs",
+      "Amon-Ra St. Brown",
+      "David Montgomery",
+      "Jameson Williams"
+    ],
+    "answer": "Jahmyr Gibbs",
+    "explanation": "Jahmyr Gibbs totaled 252 scrimmage yards and two touchdowns as Detroit beat New England 35–10 in Munich on November 15, 2026.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "nfl-current-2026-11-15-gibbs-munich",
+    "sourceUrl": "https://www.nfl.com/news/2026-nfl-season-week-10-what-we-learned-from-sunday-s-games",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "cfb-current-2026-11-14-texas-lsu-winner",
+    "league": "cfb",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Last-Second Thrillers",
+    "prompt": "Which team scored a touchdown with two seconds left to escape LSU with a 22–21 victory on November 14?",
+    "choices": [
+      "Texas",
+      "Alabama",
+      "Tennessee",
+      "Ole Miss"
+    ],
+    "answer": "Texas",
+    "explanation": "Texas rallied from an 11-point deficit and beat LSU 22–21 on a late touchdown pass from Arch Manning on November 14, preserving its playoff position.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "cfb-current-2026-11-14-texas-lsu-winner",
+    "sourceUrl": "https://www.ncaa.com/live-updates/football/fbs/college-football-week-11-recaps-highlights-scores-rankings",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "cfb-current-2026-11-14-utah-arizona-dampier",
+    "league": "cfb",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Unbeaten Seasons",
+    "prompt": "Which unbeaten Big 12 team survived Arizona 40–39 after Devon Dampier's late 70-yard touchdown pass?",
+    "choices": [
+      "Utah",
+      "BYU",
+      "Texas Tech",
+      "Colorado"
+    ],
+    "answer": "Utah",
+    "explanation": "Utah stayed undefeated at 10–0 on November 14 when Devon Dampier connected with Creed Whittemore for a late 70-yard touchdown against Arizona.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "cfb-current-2026-11-14-utah-arizona-dampier",
+    "sourceUrl": "https://www.ncaa.com/live-updates/football/fbs/college-football-week-11-recaps-highlights-scores-rankings",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "ufc-current-2026-11-14-harrison-nunes",
+    "league": "ufc",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Championship Defenses",
+    "prompt": "Which champion submitted returning former titleholder Amanda Nunes in the fourth round at UFC 334?",
+    "choices": [
+      "Kayla Harrison",
+      "Julianna Peña",
+      "Valentina Shevchenko",
+      "Raquel Pennington"
+    ],
+    "answer": "Kayla Harrison",
+    "explanation": "Kayla Harrison retained the UFC women's bantamweight championship by submitting Amanda Nunes in Round 4 on November 14, 2026, at Madison Square Garden.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "ufc-current-2026-11-14-harrison-nunes",
+    "sourceUrl": "https://www.ufc.com/news/polymarket-ufc-334-gane-vs-hokit-results",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "ufc-current-2026-11-14-gane-hokit",
+    "league": "ufc",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Heavyweight Title",
+    "prompt": "Which heavyweight champion successfully defended his belt against Josh Hokit at UFC 334 in New York?",
+    "choices": [
+      "Ciryl Gane",
+      "Tom Aspinall",
+      "Jon Jones",
+      "Alexander Volkov"
+    ],
+    "answer": "Ciryl Gane",
+    "explanation": "Ciryl Gane weathered Josh Hokit's early pressure and retained the undisputed UFC heavyweight title in the November 14, 2026 main event at Madison Square Garden.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "ufc-current-2026-11-14-gane-hokit",
+    "sourceUrl": "https://www.ufc.com/news/polymarket-ufc-334-gane-vs-hokit-results",
+    "verifiedAt": "2026-11-17"
+  }),
+
+  barTriviaQuestion({
+    "id": "ufc-current-2026-11-14-thompson-retirement",
+    "league": "ufc",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Farewell Fights",
+    "prompt": "Which longtime UFC welterweight veteran ended his career after a final appearance at UFC 334?",
+    "choices": [
+      "Stephen Thompson",
+      "Michael Chiesa",
+      "Neil Magny",
+      "Donald Cerrone"
+    ],
+    "answer": "Stephen Thompson",
+    "explanation": "Stephen 'Wonderboy' Thompson closed out his UFC career on the November 14, 2026 Madison Square Garden card, as confirmed in UFC's official prelim recap.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-17T00:00:00-06:00",
+    "expiresAt": "2026-12-01T23:59:59-06:00",
+    "sourceId": "ufc-current-2026-11-14-thompson-retirement",
+    "sourceUrl": "https://www.ufc.com/news/polymarket-ufc-334-gane-vs-hokit-prelim-results",
+    "verifiedAt": "2026-11-17"
+  }),
+
   // November 10 editorial rerun: verified, accessible weekly news across NFL, CFB and UFC.
   barTriviaQuestion({
     id: "nfl-current-2026-11-09-jessie-bates-trade",
