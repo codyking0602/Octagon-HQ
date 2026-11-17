@@ -76,5 +76,9 @@
         "summary": "Monday Night Football; Joe Burrow and Ja'Marr Chase coming off huge Steelers performances. Source: https://www.nfl.com/news/week-11-schedule-change"
       }
     ]
+  },
+  "selection": {
+    "player_id": "christian-mccaffrey",
+    "game_id": "vikings-at-49ers"
   }
 }
