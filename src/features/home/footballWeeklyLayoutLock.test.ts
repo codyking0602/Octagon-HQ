@@ -59,6 +59,7 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
   });
 
   it("keeps neutral Top Games boards while displaying solid team colors in the pills", () => {
+    const home = source("./FootballHq.tsx");
     const css = source("../../styles/home-football-hq.css");
     const board = css.split(".football-hq-games {")[1]?.split("}")[0];
     const matchup = css.split(".football-hq-game-row {")[1]?.split("}")[0];
