@@ -63,10 +63,14 @@ begin
   v_result := public.save_football_weekly_content_draft(date '2026-10-13',
     jsonb_build_object('cfb_spotlight',v_spotlight));
   if v_result->>'status' <> 'draft'
-    or (v_result->>'release_at')::timestamptz <> timestamptz '2026-10-13 00:00:00 America/Chicago'
+    or (v_result->>'release_at')::timestamptz <> timestamptz '2026-10-13 06:00:00 America/Chicago'
     or v_result->'cfb_spotlight'->>'name' <> 'Test QB'
-  then raise exception 'Wrong midnight Tuesday package: %',v_result; end if;
+  then raise exception 'Wrong six AM Tuesday package: %',v_result; end if;
 
+  v_result := public.get_football_weekly_content_package(date '2026-10-13');
+  if (v_result->>'release_at')::timestamptz
+       <> '2026-10-13 06:00:00 America/Chicago'::timestamptz then
+    raise exception 'Owner-facing package release_at must be six AM Central'; end if;
   v_result := public.save_football_weekly_content_draft(date '2026-10-13',
     jsonb_build_object('nfl_game_of_week',v_game));
   if v_result->'cfb_spotlight'->>'name' <> 'Test QB'
@@ -90,8 +94,8 @@ begin
 
   v_result := public.save_football_weekly_content_draft(date '2026-11-03',
     jsonb_build_object('cfb_game_of_week',v_game));
-  if (v_result->>'release_at')::timestamptz <> timestamptz '2026-11-03 06:00:00+00'
-  then raise exception 'Tuesday midnight failed after daylight saving time: %',v_result; end if;
+  if (v_result->>'release_at')::timestamptz <> timestamptz '2026-11-03 12:00:00+00'
+  then raise exception 'Tuesday six AM failed after daylight saving time: %',v_result; end if;
 
   perform set_config('request.jwt.claim.role','service_role',true);
   perform set_config('request.jwt.claim.sub','',true);

@@ -1,4 +1,4 @@
--- Phase 4 regression: exact Central-8am gating, DST, per-sport fallback,
+-- Phase 4 regression: exact Central-6am gating, DST, per-sport fallback,
 -- owner-only arming and immutable armed editorial. Runs against current full migrations.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
@@ -103,7 +103,8 @@ begin
   v_result := public.arm_football_weekly_editorial(v_nov,'cfb',v_verified);
   if v_result->>'status' <> 'draft'
      or v_result->'production'->'cfb'->>'ready_at' is null
-     or v_result->>'published_at' is not null then
+     or v_result->>'published_at' is not null
+     or (v_result->>'release_at')::timestamptz <> '2034-11-07T12:00:00Z'::timestamptz then
     raise exception 'Arm unexpectedly published or blocked independent CFB preparation'; end if;
 
   v_failed := false;
@@ -125,21 +126,33 @@ begin
     where week_of = v_nov;
   exception when others then v_failed := true; end;
   if not v_failed then raise exception 'Armed Spotlight video unexpectedly mutable'; end if;
-  v_projection := public.live_football_weekly_editorial_at('2034-11-07T13:59:59Z'::timestamptz);
+  -- Six AM CDT is 11:00 UTC in October, not noon as during CST.
+  v_projection := public.live_football_weekly_editorial_at('2034-10-10T10:59:59Z'::timestamptz);
+  if v_projection->'cfb' is distinct from 'null'::jsonb then
+    raise exception 'CFB leaked before six AM Central daylight release'; end if;
+  v_projection := public.live_football_weekly_editorial_at('2034-10-10T11:00:00Z'::timestamptz);
+  if v_projection->'cfb'->'spotlight'->>'name' <> 'Last week CFB'
+     or (v_projection->'cfb'->>'release_at')::timestamptz
+        <> '2034-10-10T11:00:00Z'::timestamptz then
+    raise exception 'Six AM Central daylight release did not cut over'; end if;
+  -- Six AM CST is noon UTC in November.
+  v_projection := public.live_football_weekly_editorial_at('2034-11-07T11:59:59Z'::timestamptz);
   if v_projection->'cfb'->'spotlight'->>'name' <> 'Last week CFB'
     or v_projection->'nfl' is distinct from 'null'::jsonb then
     raise exception 'Content was exposed early or failed fallback: %',v_projection; end if;
-  v_projection := public.live_football_weekly_editorial_at('2034-11-07T14:00:00Z'::timestamptz);
+  v_projection := public.live_football_weekly_editorial_at('2034-11-07T12:00:00Z'::timestamptz);
   if v_projection->'cfb'->'spotlight'->>'name' <> 'Selected Quarterback'
+    or (v_projection->'cfb'->>'release_at')::timestamptz
+       <> '2034-11-07T12:00:00Z'::timestamptz
     or v_projection->'nfl' is distinct from 'null'::jsonb
     or v_projection::text like '%selected_by%'
     or v_projection::text like '%media_verification%' then
-    raise exception 'Incorrect Central-8am cutover or leaked private editor data: %',v_projection; end if;
+    raise exception 'Incorrect Central-6am cutover or leaked private editor data: %',v_projection; end if;
 
   -- A prepared package absent any arming stays unexposed, even after its release date.
   insert into public.football_weekly_content_packages(week_of,cfb_spotlight,cfb_game_of_week,production)
     values(date '2034-11-14',v_spotlight,v_game,jsonb_build_object('cfb',v_editorial));
-  v_projection := public.live_football_weekly_editorial_at('2034-11-14T14:00:00Z'::timestamptz);
+  v_projection := public.live_football_weekly_editorial_at('2034-11-14T12:00:00Z'::timestamptz);
   if v_projection->'cfb'->>'week_of' <> v_nov::text then
     raise exception 'Unarmed future content was published'; end if;
 
@@ -150,11 +163,11 @@ begin
     production=p.production||jsonb_build_object('nfl',v_editorial||
       jsonb_build_object('ready_at','2034-10-09T04:00:00Z'))
   where p.week_of=v_oct;
-  v_projection := public.live_football_weekly_editorial_at('2034-11-07T14:00:00Z'::timestamptz);
+  v_projection := public.live_football_weekly_editorial_at('2034-11-07T12:00:00Z'::timestamptz);
   if v_projection->'cfb'->>'week_of' <> v_nov::text
     or v_projection->'nfl'->>'week_of' <> v_oct::text then
     raise exception 'Independent CFB/NFL fallback failed'; end if;
 end
 $proof$;
 rollback;
-\echo 'Football Phase 4 Central 8am publisher proof passed.'
+\echo 'Football Phase 4 Central 6am publisher proof passed.'
