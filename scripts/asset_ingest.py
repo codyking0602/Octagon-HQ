@@ -254,6 +254,12 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
             "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
         "public/assets/fighters/navajo-stirling-spotlight.webp":
             "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
+        # Exact current official profile photos were individually verified on
+        # UFC athlete pages, but their HTML image alt/src path is incomplete.
+        "public/assets/fighters/israel-adesanya-spotlight.webp":
+            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1",
+        "public/assets/fighters/shara-magomedov-spotlight.webp":
+            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC",
     }
     legacy_reference = bool(spec.get("source_page_reference_url")) and (
         spec.get("source_url") == source_url
@@ -694,6 +700,13 @@ VISUALLY_REJECTED_THUMB_BLOBS = {
     "980470d26bea70e9cf8e67363769986a20328005",  # Luis Gurule: yellow rectangle
     "23a9f2d38f63650da1ab0f68a6e72911e222ab2c",  # Charles Radtke: pink rectangle
     "3869ee9959066e4f49c2c73f4d1dc94cdef30578",  # Chris Duncan: red-brown rectangle
+    # December 5 media manual visual-review rejections, November 20, 2026.
+    "8911b9172380cccdad1ede8e32d9b4c7fcc14f09",  # Ion Cutelaba UFC event-results colored strokes
+    "b98dc2e3f9b946bf8fbdd8ee6eccf5ebd1533228",  # Ion Cutelaba ESPN large white rectangle
+    "82cb47b49c1f66745389aad3fa33f1bd22d72b10",  # Levan Chokheli ESPN red publisher stroke
+    "04fc5856fb706ca07c67fff040021ac34ef6e7cf",  # Mairon Santos ESPN white rectangle
+    "653f407c4b5b9ac1ba1658395bc8efe0e0e7efc9",  # Akbar Abdullaev ESPN tinted publisher block
+    "6f92ca93552ed5c1f626c0e6cd1fb1acbcdb01af",  # Magomed Tuchalov ESPN white rectangle
 }
 
 
