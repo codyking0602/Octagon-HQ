@@ -774,11 +774,12 @@ def broad_upper_side_alpha_panel(im):
 
 
 def require_clean_original_thumb(im):
-    """Only use an already-transparent, genuine official headshot.
+    """Reject contaminated source frames before fitting a fighter thumbnail.
 
-    No rembg, alpha matting, color painting, side trimming, or replacement
-    backgrounds are allowed for thumbs. A rejected original must be replaced
-    by a *different verified official source*, never 'repaired' in place.
+    Ordinary thumbnails must be clean original official transparent photos.
+    An explicitly allowlisted, visually audited ESPN publisher-panel cleanup
+    may run only through reviewed_thumb_panel_cleanup; it cannot replace the
+    identity and crop constraints on eligible official athlete headshots.
     """
     alpha = im.getchannel("A")
     if alpha.getextrema()[0] != 0:
@@ -851,10 +852,21 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         if spec.get("force_background_removal") or spec.get("crop"):
             fail("thumbnail source cannot be cropped or ML background-removed")
         if reviewed_thumb_panel_cleanup(spec, source_url, im):
-            before = im.getchannel("A").tobytes()
+            # First try source-preserving flat-panel cleanup. If source panels
+            # have complex antialiasing, use the existing cutout model ONLY on
+            # the five exact, individually reviewed ESPN photo URLs above.
+            original_alpha = im.getchannel("A").tobytes()
             im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-            if im.getchannel("A").tobytes() == before:
-                fail("reviewed publisher panel cleanup produced no change")
+            if im.getchannel("A").tobytes() == original_alpha:
+                flattened = Image.new("RGB", im.size, (248, 248, 248))
+                flattened.paste(im, (0, 0), im.getchannel("A"))
+                try:
+                    im = remove(flattened).convert("RGBA")
+                except Exception as exc:
+                    fail(f"reviewed thumbnail publisher cleanup failed: {exc}")
+                im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+                if im.getchannel("A").tobytes() == original_alpha:
+                    fail("reviewed thumbnail publisher cleanup produced no change")
         elif spec.get("reviewed_publisher_panel_cleanup"):
             fail("thumbnail publisher cleanup requires exact reviewed source and replacement")
         require_clean_original_thumb(im)
@@ -878,6 +890,9 @@ def ingest_fighter_candidate(spec, kind, dest, size):
                     fail(f"reviewed UFC spotlight background removal failed: {exc}")
                 if im.getchannel("A").getextrema() == (255, 255):
                     fail("reviewed UFC spotlight background removal left an opaque image")
+                im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+                if inset_side_background_panels(im) or broad_upper_side_alpha_panel(im):
+                    fail("reviewed UFC spotlight retains publisher panel after cleanup")
         else:
             if source_needs_background_removal(im):
                 try:
