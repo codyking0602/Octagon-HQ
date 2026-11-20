@@ -234,6 +234,35 @@ def visible_subject_box(im):
     return solid.getbbox()
 
 
+# Opt-in, exact-photo manual review for December 5 official ESPN headshots.
+# Only non-generative removal of uniform publisher side panels is permitted.
+# The athlete portrait itself is never cropped, reconstructed or re-segmented.
+REVIEWED_THUMB_PANEL_CLEANUP = {
+    "public/assets/fighters/ion-cutelaba-thumb.webp":
+        "https://a.espncdn.com/i/headshots/mma/players/full/3994033.png",
+    "public/assets/fighters/levan-chokheli-thumb.webp":
+        "https://a.espncdn.com/i/headshots/mma/players/full/4867651.png",
+    "public/assets/fighters/mairon-santos-thumb.webp":
+        "https://a.espncdn.com/i/headshots/mma/players/full/4914573.png",
+    "public/assets/fighters/akbar-abdullaev-thumb.webp":
+        "https://a.espncdn.com/i/headshots/mma/players/full/5210077.png",
+    "public/assets/fighters/magomed-tuchalov-thumb.webp":
+        "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png",
+}
+
+
+def reviewed_thumb_panel_cleanup(spec, source_url, im):
+    """Permit only an individually sourced, opt-in non-ML publisher overlay trim."""
+    return (
+        spec.get("reviewed_publisher_panel_cleanup") is True
+        and spec.get("official_headshot_reviewed") is True
+        and spec.get("replace_existing") is True
+        and REVIEWED_THUMB_PANEL_CLEANUP.get(spec.get("destination")) == source_url
+        and im.size == (600, 436)
+        and im.getchannel("A").getextrema()[0] == 0
+    )
+
+
 def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
     """Allow an individually reviewed UFC profile's natural three-quarter finish.
 
@@ -820,7 +849,14 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         if not approved_square_thumb_source(spec, source_url, im.size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
-            fail("thumbnail source cannot be cropped or background-removed")
+            fail("thumbnail source cannot be cropped or ML background-removed")
+        if reviewed_thumb_panel_cleanup(spec, source_url, im):
+            before = im.getchannel("A").tobytes()
+            im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+            if im.getchannel("A").tobytes() == before:
+                fail("reviewed publisher panel cleanup produced no change")
+        elif spec.get("reviewed_publisher_panel_cleanup"):
+            fail("thumbnail publisher cleanup requires exact reviewed source and replacement")
         require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:

@@ -133,6 +133,30 @@ class AssetIngestQualityTests(unittest.TestCase):
             (256, 160),
         ))
 
+    def test_dec05_exact_reviewed_thumb_overlay_cleanup_is_narrowly_scoped(self):
+        from scripts.asset_ingest import reviewed_thumb_panel_cleanup
+        portrait = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        spec = {
+            "destination": "public/assets/fighters/ion-cutelaba-thumb.webp",
+            "kind": "thumb",
+            "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/3994033.png",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "3994033",
+            "reviewed_publisher_panel_cleanup": True,
+            "replace_existing": True,
+        }
+        url = spec["source_url"]
+        self.assertTrue(reviewed_thumb_panel_cleanup(spec, url, portrait))
+        self.assertFalse(reviewed_thumb_panel_cleanup(
+            {**spec, "destination": "public/assets/fighters/someone-else-thumb.webp"},
+            url, portrait))
+        self.assertFalse(reviewed_thumb_panel_cleanup(
+            {**spec, "reviewed_publisher_panel_cleanup": False}, url, portrait))
+        self.assertFalse(reviewed_thumb_panel_cleanup(
+            {**spec, "replace_existing": False}, url, portrait))
+        self.assertFalse(reviewed_thumb_panel_cleanup(
+            spec, url + "?fake=1", portrait))
+
     def test_reviewed_spotlight_selects_exact_profile_original_not_first_fighter_image(self):
         from unittest.mock import patch
         page = "https://www.ufc.com/athlete/navajo-stirling"
