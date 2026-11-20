@@ -453,6 +453,27 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(reviewed_ufc_three_quarter_spotlight(
             spec, "https://ufc.com/news/cropped-portrait.jpg", source))
 
+    def test_dec05_adesanya_exact_official_source_exception(self):
+        source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        ImageDraw.Draw(source).ellipse((100, 20, 350, 699), fill=(170, 100, 80, 255))
+        url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1"
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Israel Adesanya",
+            "destination": "public/assets/fighters/israel-adesanya-spotlight.webp",
+            "source_url": url,
+            "source_page_reference_url": "https://www.ufc.com/athlete/israel-adesanya",
+            "verified_source_url": url,
+            "official_ufc_three_quarter_reviewed": True,
+        }
+        self.assertTrue(reviewed_ufc_three_quarter_spotlight(spec, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "source_page_reference_url": "https://www.ufc.com/athlete/other"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "verified_source_url": url + "altered"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "destination": "public/assets/fighters/other-spotlight.webp"}, url, source))
+
     def test_reviewed_three_quarter_is_not_resegmented_or_stripped(self):
         import tempfile
         from io import BytesIO
