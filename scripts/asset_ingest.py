@@ -850,7 +850,7 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         if not approved_square_thumb_source(spec, source_url, im.size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
-            fail("thumbnail source cannot be cropped or ML background-removed")
+            fail("thumbnail source cannot be cropped or background-removed")
         if reviewed_thumb_panel_cleanup(spec, source_url, im):
             # First try source-preserving flat-panel cleanup. If source panels
             # have complex antialiasing, use the existing cutout model ONLY on
