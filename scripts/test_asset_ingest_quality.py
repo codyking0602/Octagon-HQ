@@ -133,30 +133,6 @@ class AssetIngestQualityTests(unittest.TestCase):
             (256, 160),
         ))
 
-    def test_dec05_exact_reviewed_thumb_overlay_cleanup_is_narrowly_scoped(self):
-        from scripts.asset_ingest import reviewed_thumb_panel_cleanup
-        portrait = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
-        spec = {
-            "destination": "public/assets/fighters/ion-cutelaba-thumb.webp",
-            "kind": "thumb",
-            "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/3994033.png",
-            "official_headshot_reviewed": True,
-            "verified_espn_athlete_id": "3994033",
-            "reviewed_publisher_panel_cleanup": True,
-            "replace_existing": True,
-        }
-        url = spec["source_url"]
-        self.assertTrue(reviewed_thumb_panel_cleanup(spec, url, portrait))
-        self.assertFalse(reviewed_thumb_panel_cleanup(
-            {**spec, "destination": "public/assets/fighters/someone-else-thumb.webp"},
-            url, portrait))
-        self.assertFalse(reviewed_thumb_panel_cleanup(
-            {**spec, "reviewed_publisher_panel_cleanup": False}, url, portrait))
-        self.assertFalse(reviewed_thumb_panel_cleanup(
-            {**spec, "replace_existing": False}, url, portrait))
-        self.assertFalse(reviewed_thumb_panel_cleanup(
-            spec, url + "?fake=1", portrait))
-
     def test_reviewed_spotlight_selects_exact_profile_original_not_first_fighter_image(self):
         from unittest.mock import patch
         page = "https://www.ufc.com/athlete/navajo-stirling"
@@ -477,34 +453,26 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(reviewed_ufc_three_quarter_spotlight(
             spec, "https://ufc.com/news/cropped-portrait.jpg", source))
 
-    def test_dec05_reviewed_ufc_profile_portraits_exact_allowlist(self):
-        image = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
-        ImageDraw.Draw(image).rectangle((80, 20, 360, 699), fill=(170, 90, 75, 255))
-        cases = [
-            ("Israel Adesanya", "israel-adesanya",
-             "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1"),
-            ("Shara Magomedov", "shara-magomedov",
-             "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC"),
-        ]
-        for name, slug, url in cases:
-            spec = {
-                "kind": "spotlight",
-                "fighter_name": name,
-                "destination": f"public/assets/fighters/{slug}-spotlight.webp",
-                "source_url": url,
-                "source_page_reference_url": f"https://www.ufc.com/athlete/{slug}",
-                "verified_source_url": url,
-                "official_ufc_three_quarter_reviewed": True,
-            }
-            self.assertTrue(reviewed_ufc_three_quarter_spotlight(spec, url, image))
-            self.assertFalse(reviewed_ufc_three_quarter_spotlight(
-                {**spec, "source_page_reference_url": "https://www.ufc.com/athlete/other"},
-                url, image))
-            self.assertFalse(reviewed_ufc_three_quarter_spotlight(
-                {**spec, "verified_source_url": url + "bad"}, url, image))
-            self.assertFalse(reviewed_ufc_three_quarter_spotlight(
-                {**spec, "destination": "public/assets/fighters/other-spotlight.webp"},
-                url, image))
+    def test_dec05_adesanya_exact_official_source_exception(self):
+        source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        ImageDraw.Draw(source).ellipse((100, 20, 350, 699), fill=(170, 100, 80, 255))
+        url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1"
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Israel Adesanya",
+            "destination": "public/assets/fighters/israel-adesanya-spotlight.webp",
+            "source_url": url,
+            "source_page_reference_url": "https://www.ufc.com/athlete/israel-adesanya",
+            "verified_source_url": url,
+            "official_ufc_three_quarter_reviewed": True,
+        }
+        self.assertTrue(reviewed_ufc_three_quarter_spotlight(spec, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "source_page_reference_url": "https://www.ufc.com/athlete/other"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "verified_source_url": url + "altered"}, url, source))
+        self.assertFalse(reviewed_ufc_three_quarter_spotlight(
+            {**spec, "destination": "public/assets/fighters/other-spotlight.webp"}, url, source))
 
     def test_reviewed_three_quarter_is_not_resegmented_or_stripped(self):
         import tempfile

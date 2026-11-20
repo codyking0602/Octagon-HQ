@@ -234,35 +234,6 @@ def visible_subject_box(im):
     return solid.getbbox()
 
 
-# Opt-in, exact-photo manual review for December 5 official ESPN headshots.
-# Only non-generative removal of uniform publisher side panels is permitted.
-# The athlete portrait itself is never cropped, reconstructed or re-segmented.
-REVIEWED_THUMB_PANEL_CLEANUP = {
-    "public/assets/fighters/ion-cutelaba-thumb.webp":
-        "https://a.espncdn.com/i/headshots/mma/players/full/3994033.png",
-    "public/assets/fighters/levan-chokheli-thumb.webp":
-        "https://a.espncdn.com/i/headshots/mma/players/full/4867651.png",
-    "public/assets/fighters/mairon-santos-thumb.webp":
-        "https://a.espncdn.com/i/headshots/mma/players/full/4914573.png",
-    "public/assets/fighters/akbar-abdullaev-thumb.webp":
-        "https://a.espncdn.com/i/headshots/mma/players/full/5210077.png",
-    "public/assets/fighters/magomed-tuchalov-thumb.webp":
-        "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png",
-}
-
-
-def reviewed_thumb_panel_cleanup(spec, source_url, im):
-    """Permit only an individually sourced, opt-in non-ML publisher overlay trim."""
-    return (
-        spec.get("reviewed_publisher_panel_cleanup") is True
-        and spec.get("official_headshot_reviewed") is True
-        and spec.get("replace_existing") is True
-        and REVIEWED_THUMB_PANEL_CLEANUP.get(spec.get("destination")) == source_url
-        and im.size == (600, 436)
-        and im.getchannel("A").getextrema()[0] == 0
-    )
-
-
 def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
     """Allow an individually reviewed UFC profile's natural three-quarter finish.
 
@@ -283,12 +254,9 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
             "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-10/PROCHAZKA_JIRI_L_10-04.png?itok=BSKkQiIg",
         "public/assets/fighters/navajo-stirling-spotlight.webp":
             "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-09/STIRLING_NAVAJO_L_09-27.png?itok=g-xNLDG3",
-        # Exact current official profile photos were individually verified on
-        # UFC athlete pages, but their HTML image alt/src path is incomplete.
+        # Manually source-verified official UFC portrait for the December 5 event.
         "public/assets/fighters/israel-adesanya-spotlight.webp":
             "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1",
-        "public/assets/fighters/shara-magomedov-spotlight.webp":
-            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC",
     }
     legacy_reference = bool(spec.get("source_page_reference_url")) and (
         spec.get("source_url") == source_url
@@ -729,13 +697,16 @@ VISUALLY_REJECTED_THUMB_BLOBS = {
     "980470d26bea70e9cf8e67363769986a20328005",  # Luis Gurule: yellow rectangle
     "23a9f2d38f63650da1ab0f68a6e72911e222ab2c",  # Charles Radtke: pink rectangle
     "3869ee9959066e4f49c2c73f4d1dc94cdef30578",  # Chris Duncan: red-brown rectangle
-    # December 5 media manual visual-review rejections, November 20, 2026.
-    "8911b9172380cccdad1ede8e32d9b4c7fcc14f09",  # Ion Cutelaba UFC event-results colored strokes
-    "b98dc2e3f9b946bf8fbdd8ee6eccf5ebd1533228",  # Ion Cutelaba ESPN large white rectangle
-    "82cb47b49c1f66745389aad3fa33f1bd22d72b10",  # Levan Chokheli ESPN red publisher stroke
-    "04fc5856fb706ca07c67fff040021ac34ef6e7cf",  # Mairon Santos ESPN white rectangle
-    "653f407c4b5b9ac1ba1658395bc8efe0e0e7efc9",  # Akbar Abdullaev ESPN tinted publisher block
-    "6f92ca93552ed5c1f626c0e6cd1fb1acbcdb01af",  # Magomed Tuchalov ESPN white rectangle
+    # December 5 hand-reviewed image rejections; never reintroduce these blobs.
+    "8911b9172380cccdad1ede8e32d9b4c7fcc14f09",  # Ion Cutelaba original UFC publisher bars
+    "b98dc2e3f9b946bf8fbdd8ee6eccf5ebd1533228",  # Ion Cutelaba ESPN white publisher slab
+    "82cb47b49c1f66745389aad3fa33f1bd22d72b10",  # Levan Chokheli ESPN vertical red publisher panel
+    "93c7c05e316d36653dc5d648041ae5900741ca37",  # Levan Chokheli cleaned but horizontal artifact
+    "04fc5856fb706ca07c67fff040021ac34ef6e7cf",  # Mairon Santos ESPN white publisher slab
+    "653f407c4b5b9ac1ba1658395bc8efe0e0e7efc9",  # Akbar Abdullaev ESPN tinted publisher slab
+    "db96c93a29f1d70034d752ee1939939d67ecebc3",  # Akbar Abdullaev cleaned but publisher lines
+    "6f92ca93552ed5c1f626c0e6cd1fb1acbcdb01af",  # Magomed Tuchalov ESPN publisher slab
+    "467170b4d35eadc0cca709d7ef67f7e4973a6c2a",  # Magomed Tuchalov cleaned but red publisher block
 }
 
 
@@ -774,12 +745,11 @@ def broad_upper_side_alpha_panel(im):
 
 
 def require_clean_original_thumb(im):
-    """Reject contaminated source frames before fitting a fighter thumbnail.
+    """Only use an already-transparent, genuine official headshot.
 
-    Ordinary thumbnails must be clean original official transparent photos.
-    An explicitly allowlisted, visually audited ESPN publisher-panel cleanup
-    may run only through reviewed_thumb_panel_cleanup; it cannot replace the
-    identity and crop constraints on eligible official athlete headshots.
+    No rembg, alpha matting, color painting, side trimming, or replacement
+    backgrounds are allowed for thumbs. A rejected original must be replaced
+    by a *different verified official source*, never 'repaired' in place.
     """
     alpha = im.getchannel("A")
     if alpha.getextrema()[0] != 0:
@@ -851,24 +821,6 @@ def ingest_fighter_candidate(spec, kind, dest, size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
             fail("thumbnail source cannot be cropped or background-removed")
-        if reviewed_thumb_panel_cleanup(spec, source_url, im):
-            # First try source-preserving flat-panel cleanup. If source panels
-            # have complex antialiasing, use the existing cutout model ONLY on
-            # the five exact, individually reviewed ESPN photo URLs above.
-            original_alpha = im.getchannel("A").tobytes()
-            im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-            if im.getchannel("A").tobytes() == original_alpha:
-                flattened = Image.new("RGB", im.size, (248, 248, 248))
-                flattened.paste(im, (0, 0), im.getchannel("A"))
-                try:
-                    im = remove(flattened).convert("RGBA")
-                except Exception as exc:
-                    fail(f"reviewed thumbnail publisher cleanup failed: {exc}")
-                im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-                if im.getchannel("A").tobytes() == original_alpha:
-                    fail("reviewed thumbnail publisher cleanup produced no change")
-        elif spec.get("reviewed_publisher_panel_cleanup"):
-            fail("thumbnail publisher cleanup requires exact reviewed source and replacement")
         require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
@@ -890,9 +842,6 @@ def ingest_fighter_candidate(spec, kind, dest, size):
                     fail(f"reviewed UFC spotlight background removal failed: {exc}")
                 if im.getchannel("A").getextrema() == (255, 255):
                     fail("reviewed UFC spotlight background removal left an opaque image")
-                im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-                if inset_side_background_panels(im) or broad_upper_side_alpha_panel(im):
-                    fail("reviewed UFC spotlight retains publisher panel after cleanup")
         else:
             if source_needs_background_removal(im):
                 try:
