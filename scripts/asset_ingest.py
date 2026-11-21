@@ -925,42 +925,26 @@ def remove_reviewed_publisher_graphics(im, destination):
                               or (r >= g + 50 and g <= 125)):
                     target[x, y] = 255
 
-    # The exact UFC original contains a broad rectangular publisher panel.
-    # Detect the last genuine warm skin/hair pixel on each row; everything to
-    # its right is background. This retains the fighter's face, beard, arms
-    # and gloves without inventing or reconstructing body pixels.
+    # Shara's official UFC source contains flat non-athlete publisher panels.
+    # Their colors vary (white/gray, purple and dark teal), so a color-only
+    # mask can leave entire rectangles. Follow the source's warm skin / brown
+    # hair outline by row, and remove only the non-athlete right-side region.
     if slug == "shara-magomedov-spotlight.webp":
-        last_subject_edge = None
-        for y in range(round(height * 0.03), round(height * 0.99)):
-            subject_edges = []
-            for x in range(round(width * 0.24), round(width * 0.95)):
+        for y in range(round(height * 0.03), round(height * 0.95)):
+            warm_subject_xs = []
+            for x in range(round(width * 0.18), round(width * 0.91)):
                 r, g, b, a = original[x, y]
-                if a >= 40 and r >= 68 and r >= g + 11 and r >= b + 14:
-                    subject_edges.append(x)
-            if subject_edges:
-                last_subject_edge = max(subject_edges)
-            if last_subject_edge is None:
+                if (
+                    a >= 40 and r >= 75 and g >= 23
+                    and r >= g + 24 and r >= b + 25
+                    and g >= b - 8
+                ):
+                    warm_subject_xs.append(x)
+            if not warm_subject_xs:
                 continue
-            for x in range(max(round(width * 0.53), last_subject_edge + 2), width):
+            right_edge = min(max(warm_subject_xs) + 2, round(width * 0.87))
+            for x in range(max(right_edge, round(width * 0.57)), width):
                 if original[x, y][3] >= 8:
-                    target[x, y] = 255
-
-    # Source-specific cleanup for the multi-color right publisher panel in
-    # Shara's official UFC photo. The overlay cycles purple/teal/neutral black
-    # rather than having a single RGB tone. Keep warm skin and brown hair
-    # intact; clear only non-human flat overlay colors outside the right half.
-    if slug == "shara-magomedov-spotlight.webp":
-        for y in range(round(height * 0.055), round(height * 0.935)):
-            for x in range(round(width * 0.66), width):
-                r, g, b, a = original[x, y]
-                if a < 8:
-                    continue
-                purple = b >= r + 18 and b >= g + 18
-                teal = g >= r + 8 and b >= r + 8
-                dark_neutral = max(r, g, b) <= 115 and (
-                    max(r, g, b) - min(r, g, b) <= 36)
-                neutral = max(r, g, b) - min(r, g, b) <= 20 and r <= 175
-                if purple or teal or dark_neutral or neutral:
                     target[x, y] = 255
 
     # One edge pixel of antialiasing around a publisher graphic can still show

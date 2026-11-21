@@ -496,6 +496,17 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(is_exact_reviewed_graphics_source(
             {**spec, "destination": "public/assets/fighters/another-thumb.webp"}, spec["source_url"], im))
 
+    def test_dec05_shara_right_panel_mask_rejects_no_skin_outside_subject(self):
+        from scripts.asset_ingest import remove_reviewed_publisher_graphics
+        im = Image.new("RGBA", (626, 800), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.rectangle((440, 48, 625, 530), fill=(95, 65, 148, 255))
+        draw.ellipse((155, 22, 475, 745), fill=(188, 112, 77, 255))
+        masked = remove_reviewed_publisher_graphics(
+            im, "public/assets/fighters/shara-magomedov-spotlight.webp")
+        self.assertEqual(masked.getpixel((590, 160))[3], 0)
+        self.assertEqual(masked.getpixel((315, 260))[3], 255)
+
     def test_dec05_multicolor_shara_panel_uses_source_guard(self):
         from scripts.asset_ingest import is_exact_reviewed_graphics_source
         url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC"
