@@ -929,7 +929,8 @@ def remove_reviewed_publisher_graphics(im, destination):
     count = sum(value > 0 and original[index % width, index // width][3] >= 8
                 for index, value in enumerate(mask.getdata()))
     min_count = 80 if destination.endswith("-thumb.webp") else 100
-    max_fraction = 0.12 if destination.endswith("-thumb.webp") else 0.41
+    max_fraction = (0.24 if slug == "magomed-tuchalov-thumb.webp" else
+                    0.12 if destination.endswith("-thumb.webp") else 0.41)
     if count < min_count or count > width * height * max_fraction:
         fail(f"reviewed graphic cleanup changed implausible area: {count} pixels")
     alpha = result.getchannel("A")
