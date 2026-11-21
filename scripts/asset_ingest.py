@@ -868,17 +868,8 @@ def remove_reviewed_publisher_graphics(im, destination):
                 continue
             clear = False
             if slug == "shara-magomedov-spotlight.webp":
-                # The entire right-side publisher panel shares a flat studio
-                # RGB tone; detect it from the photo itself rather than assume
-                # one color channel profile. The athlete's skin is far from
-                # the sampled background tone.
-                sr, sg, sb, sa = original[int(width * 0.95), int(height * 0.22)]
-                if sa < 8:
-                    fail("reviewed UFC profile background seed was transparent")
-                clear = (
-                    x >= width * 0.58 and height * 0.035 <= y <= height * 0.91
-                    and max(abs(r - sr), abs(g - sg), abs(b - sb)) <= 54
-                )
+                # Only the strictly-source-approved silhouette mask below.
+                clear = False
             elif slug == "magomed-tuchalov-thumb.webp":
                 # Flat muted-red card on the right, above his right shoulder.
                 clear = (
@@ -910,7 +901,7 @@ def remove_reviewed_publisher_graphics(im, destination):
     safe_bottom_y = {
         "levan-chokheli-thumb.webp": 244,
         "akbar-abdullaev-thumb.webp": 240,
-        "magomed-tuchalov-thumb.webp": 228,
+        "magomed-tuchalov-thumb.webp": 212,
     }.get(slug)
     if safe_bottom_y is not None:
         for y in range(safe_bottom_y, height):
@@ -932,6 +923,26 @@ def remove_reviewed_publisher_graphics(im, destination):
                 r, g, b, a = original[x, y]
                 if a >= 8 and ((r <= 150 and g <= 135 and b <= 135)
                               or (r >= g + 50 and g <= 125)):
+                    target[x, y] = 255
+
+    # The exact UFC original contains a broad rectangular publisher panel.
+    # Detect the last genuine warm skin/hair pixel on each row; everything to
+    # its right is background. This retains the fighter's face, beard, arms
+    # and gloves without inventing or reconstructing body pixels.
+    if slug == "shara-magomedov-spotlight.webp":
+        last_subject_edge = None
+        for y in range(round(height * 0.03), round(height * 0.99)):
+            subject_edges = []
+            for x in range(round(width * 0.24), round(width * 0.95)):
+                r, g, b, a = original[x, y]
+                if a >= 40 and r >= 68 and r >= g + 11 and r >= b + 14:
+                    subject_edges.append(x)
+            if subject_edges:
+                last_subject_edge = max(subject_edges)
+            if last_subject_edge is None:
+                continue
+            for x in range(max(round(width * 0.53), last_subject_edge + 2), width):
+                if original[x, y][3] >= 8:
                     target[x, y] = 255
 
     # One edge pixel of antialiasing around a publisher graphic can still show
