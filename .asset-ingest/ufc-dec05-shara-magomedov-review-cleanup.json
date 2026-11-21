@@ -7,5 +7,7 @@
   "force_background_removal": true,
   "fighter_name": "Shara Magomedov",
   "destination": "public/assets/fighters/shara-magomedov-spotlight.webp",
-  "kind": "spotlight"
+  "kind": "spotlight",
+  "reviewed_on": "2026-11-21",
+  "review_note": "UFC official source; remove only publisher color, preserve athlete silhouette."
 }

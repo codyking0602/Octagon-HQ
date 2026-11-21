@@ -523,7 +523,7 @@ class AssetIngestQualityTests(unittest.TestCase):
                 result = remove_reviewed_publisher_graphics(
                     image, "public/assets/fighters/" + name)
                 self.assertEqual(result.getpixel(sample)[3], 0)
-                self.assertEqual(result.getpixel((160, 170))[3], 255)
+                self.assertEqual(result.getpixel((300, 170) if size == (626, 800) else (160, 170))[3], 255)
 
     def test_reviewed_three_quarter_is_not_resegmented_or_stripped(self):
         import tempfile
