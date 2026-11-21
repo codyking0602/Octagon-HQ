@@ -257,6 +257,9 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
         # Manually source-verified official UFC portrait for the December 5 event.
         "public/assets/fighters/israel-adesanya-spotlight.webp":
             "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1",
+        # Official UFC athlete portrait; same exact source previously inspected.
+        "public/assets/fighters/shara-magomedov-spotlight.webp":
+            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC",
     }
     legacy_reference = bool(spec.get("source_page_reference_url")) and (
         spec.get("source_url") == source_url
@@ -802,6 +805,115 @@ def verified_thumb_candidates(spec):
     return candidates
 
 
+# Exact fighter/source pairs whose official images contain publisher overlays.
+# The mask removes only clearly identified non-athlete graphics, never alters
+# facial features or crops/reconstructs a person's body. Every output still
+# requires visual approval and the regular quality gate.
+REVIEWED_GRAPHICS = {
+    "public/assets/fighters/levan-chokheli-thumb.webp": (
+        "thumb", "https://a.espncdn.com/i/headshots/mma/players/full/4867651.png",
+    ),
+    "public/assets/fighters/akbar-abdullaev-thumb.webp": (
+        "thumb", "https://a.espncdn.com/i/headshots/mma/players/full/5210077.png",
+    ),
+    "public/assets/fighters/magomed-tuchalov-thumb.webp": (
+        "thumb", "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png",
+    ),
+    "public/assets/fighters/shara-magomedov-spotlight.webp": (
+        "spotlight", "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC",
+    ),
+}
+
+
+def is_exact_reviewed_graphics_source(spec, source_url, im):
+    """No generalized source or portrait exemption: match URL, dimensions and review."""
+    dest = spec.get("destination")
+    item = REVIEWED_GRAPHICS.get(dest)
+    if not item or spec.get("reviewed_publisher_graphics_cleanup") is not True:
+        return False
+    kind, expected_url = item
+    if kind != spec.get("kind") or source_url != expected_url:
+        return False
+    if kind == "thumb":
+        return (
+            im.size == (600, 436)
+            and spec.get("official_headshot_reviewed") is True
+            and str(spec.get("verified_espn_athlete_id")) == expected_url.split("/")[-1][:-4]
+            and im.getchannel("A").getextrema()[0] == 0
+        )
+    return reviewed_ufc_three_quarter_spotlight(spec, source_url, im)
+
+
+def remove_reviewed_publisher_graphics(im, destination):
+    """Remove hand-identified flat publisher overlays from four exact fighter tiles.
+
+    Color + region constraints prevent erasing body pixels. Each acceptance
+    threshold is deliberately fail-closed; visual approval remains mandatory.
+    """
+    if destination not in REVIEWED_GRAPHICS:
+        fail("not an individually reviewed publisher overlay")
+    result = im.copy()
+    width, height = result.size
+    expected = (626, 800) if destination.endswith("-spotlight.webp") else (320, 320)
+    if (width, height) != expected:
+        fail("unexpected dimensions for individually reviewed overlay cleanup")
+    original = result.load()
+    mask = Image.new("L", result.size, 0)
+    target = mask.load()
+    slug = destination.split("/")[-1]
+    for y in range(height):
+        for x in range(width):
+            r, g, b, a = original[x, y]
+            if a < 8:
+                continue
+            clear = False
+            if slug == "shara-magomedov-spotlight.webp":
+                # The official UFC transparent portrait has a flat blue-gray
+                # rectangle to the right of the torso, not part of the athlete.
+                clear = (
+                    x >= width * 0.62 and height * 0.035 <= y <= height * 0.94
+                    and 10 <= r <= 90 and 20 <= g <= 115 and 22 <= b <= 120
+                    and g >= r + 5 and b >= r + 6 and abs(g - b) <= 32
+                )
+            elif slug == "magomed-tuchalov-thumb.webp":
+                # Flat muted-red card on the right, above his right shoulder.
+                clear = (
+                    x >= width * 0.64 and height * 0.17 <= y <= height * 0.64
+                    and 90 <= r <= 210 and 30 <= g <= 145 and 30 <= b <= 145
+                    and r >= g + 36 and abs(g - b) <= 32
+                )
+            elif slug == "akbar-abdullaev-thumb.webp":
+                # Thin uniform publisher strokes beyond the right edge of
+                # his head, not the dark hair or the skin of the athlete.
+                clear = (
+                    x >= width * 0.69 and height * 0.08 <= y <= height * 0.54
+                    and (max(r, g, b) - min(r, g, b) <= 42
+                         or (r < 130 and g < 145 and b < 145))
+                )
+            elif slug == "levan-chokheli-thumb.webp":
+                # Short, nearly neutral bottom bar intersecting his chest
+                # cutout: natural skin at this height is not neutral gray.
+                clear = (
+                    height * 0.66 <= y <= height * 0.90
+                    and 45 <= min(r, g, b) and max(r, g, b) <= 240
+                    and max(r, g, b) - min(r, g, b) <= 27
+                )
+            if clear:
+                target[x, y] = 255
+    # One edge pixel of antialiasing around a publisher graphic can still show
+    # in a card; a one-pixel dilation is capped to the reviewed source region.
+    mask = mask.filter(ImageFilter.MaxFilter(3))
+    count = sum(value > 0 for value in mask.getdata())
+    min_count = 80 if destination.endswith("-thumb.webp") else 2000
+    max_fraction = 0.12 if destination.endswith("-thumb.webp") else 0.41
+    if count < min_count or count > width * height * max_fraction:
+        fail(f"reviewed graphic cleanup changed implausible area: {count} pixels")
+    alpha = result.getchannel("A")
+    alpha.paste(0, (0, 0, width, height), mask)
+    result.putalpha(alpha)
+    return result
+
+
 def ingest_fighter_candidate(spec, kind, dest, size):
     source_url, data = resolve_source(spec)
     if source_url_looks_like_placeholder(source_url):
@@ -815,13 +927,17 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         reviewed_ufc_three_quarter_spotlight(spec, source_url, im)
         if kind == "spotlight" else False
     )
+    reviewed_graphics = is_exact_reviewed_graphics_source(spec, source_url, im)
+    if spec.get("reviewed_publisher_graphics_cleanup") and not reviewed_graphics:
+        fail("reviewed publisher cleanup did not match exact athlete/source")
 
     if kind == "thumb":
         if not approved_square_thumb_source(spec, source_url, im.size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
             fail("thumbnail source cannot be cropped or background-removed")
-        require_clean_original_thumb(im)
+        if not reviewed_graphics:
+            require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
             # A source-reviewed UFC portrait can have a legitimate lower-frame
@@ -889,6 +1005,8 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     else:
         # Pure fit onto a transparent tile: preserve original fighter pixels.
         im = render_thumb(im, size)
+    if reviewed_graphics:
+        im = remove_reviewed_publisher_graphics(im, dest)
 
     # Validate *before* writing. A failed candidate must never leave an
     # unreviewed WebP in the working tree (which a later successful batchmate
