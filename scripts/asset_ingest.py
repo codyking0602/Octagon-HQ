@@ -868,12 +868,16 @@ def remove_reviewed_publisher_graphics(im, destination):
                 continue
             clear = False
             if slug == "shara-magomedov-spotlight.webp":
-                # The official UFC transparent portrait has a flat blue-gray
-                # rectangle to the right of the torso, not part of the athlete.
+                # The entire right-side publisher panel shares a flat studio
+                # RGB tone; detect it from the photo itself rather than assume
+                # one color channel profile. The athlete's skin is far from
+                # the sampled background tone.
+                sr, sg, sb, sa = original[int(width * 0.95), int(height * 0.22)]
+                if sa < 8:
+                    fail("reviewed UFC profile background seed was transparent")
                 clear = (
-                    x >= width * 0.62 and height * 0.035 <= y <= height * 0.94
-                    and 10 <= r <= 90 and 20 <= g <= 115 and 22 <= b <= 120
-                    and g >= r + 5 and b >= r + 6 and abs(g - b) <= 32
+                    x >= width * 0.58 and height * 0.035 <= y <= height * 0.91
+                    and max(abs(r - sr), abs(g - sg), abs(b - sb)) <= 54
                 )
             elif slug == "magomed-tuchalov-thumb.webp":
                 # Flat muted-red card on the right, above his right shoulder.
@@ -911,6 +915,13 @@ def remove_reviewed_publisher_graphics(im, destination):
     if safe_bottom_y is not None:
         for y in range(safe_bottom_y, height):
             for x in range(width):
+                target[x, y] = 255
+
+    if slug == "magomed-tuchalov-thumb.webp":
+        # The remaining 1-2px colored stroke next to the beard is a source
+        # publisher seam, not a facial feature. Remove only its 7px column.
+        for y in range(125, min(height, 214)):
+            for x in range(207, min(width, 214)):
                 target[x, y] = 255
 
     if slug == "magomed-tuchalov-thumb.webp":
