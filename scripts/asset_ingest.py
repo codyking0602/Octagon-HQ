@@ -900,6 +900,29 @@ def remove_reviewed_publisher_graphics(im, destination):
                 )
             if clear:
                 target[x, y] = 255
+    # The reviewed ESPN busts contain residual straight publisher strips at
+    # the cutout's bottom; finish on a clean, ordinary shoulder crop. These
+    # coordinates remove no face or torso landmark needed by a thumbnail.
+    safe_bottom_y = {
+        "levan-chokheli-thumb.webp": 244,
+        "akbar-abdullaev-thumb.webp": 240,
+        "magomed-tuchalov-thumb.webp": 228,
+    }.get(slug)
+    if safe_bottom_y is not None:
+        for y in range(safe_bottom_y, height):
+            for x in range(width):
+                target[x, y] = 255
+
+    if slug == "magomed-tuchalov-thumb.webp":
+        # A narrow black/red publisher edge is fused to the right side of
+        # his photo. Remove only non-skin colored pixels in that strip.
+        for y in range(121, min(height, 215)):
+            for x in range(207, min(width, 224)):
+                r, g, b, a = original[x, y]
+                if a >= 8 and ((r <= 150 and g <= 135 and b <= 135)
+                              or (r >= g + 50 and g <= 125)):
+                    target[x, y] = 255
+
     # One edge pixel of antialiasing around a publisher graphic can still show
     # in a card; a one-pixel dilation is capped to the reviewed source region.
     mask = mask.filter(ImageFilter.MaxFilter(3))
