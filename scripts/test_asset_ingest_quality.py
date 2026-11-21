@@ -496,6 +496,24 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(is_exact_reviewed_graphics_source(
             {**spec, "destination": "public/assets/fighters/another-thumb.webp"}, spec["source_url"], im))
 
+    def test_dec05_multicolor_shara_panel_uses_source_guard(self):
+        from scripts.asset_ingest import is_exact_reviewed_graphics_source
+        url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC"
+        portrait = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Shara Magomedov",
+            "destination": "public/assets/fighters/shara-magomedov-spotlight.webp",
+            "source_url": url,
+            "source_page_reference_url": "https://www.ufc.com/athlete/shara-magomedov",
+            "verified_source_url": url,
+            "official_ufc_three_quarter_reviewed": True,
+            "reviewed_publisher_graphics_cleanup": True,
+        }
+        self.assertTrue(is_exact_reviewed_graphics_source(spec, url, portrait))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            {**spec, "destination": "public/assets/fighters/israel-adesanya-spotlight.webp"}, url, portrait))
+
     def test_dec05_reviewed_cleanup_removes_graphics_but_preserves_skin(self):
         from scripts.asset_ingest import remove_reviewed_publisher_graphics
         cases = [

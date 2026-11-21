@@ -945,6 +945,24 @@ def remove_reviewed_publisher_graphics(im, destination):
                 if original[x, y][3] >= 8:
                     target[x, y] = 255
 
+    # Source-specific cleanup for the multi-color right publisher panel in
+    # Shara's official UFC photo. The overlay cycles purple/teal/neutral black
+    # rather than having a single RGB tone. Keep warm skin and brown hair
+    # intact; clear only non-human flat overlay colors outside the right half.
+    if slug == "shara-magomedov-spotlight.webp":
+        for y in range(round(height * 0.055), round(height * 0.935)):
+            for x in range(round(width * 0.66), width):
+                r, g, b, a = original[x, y]
+                if a < 8:
+                    continue
+                purple = b >= r + 18 and b >= g + 18
+                teal = g >= r + 8 and b >= r + 8
+                dark_neutral = max(r, g, b) <= 115 and (
+                    max(r, g, b) - min(r, g, b) <= 36)
+                neutral = max(r, g, b) - min(r, g, b) <= 20 and r <= 175
+                if purple or teal or dark_neutral or neutral:
+                    target[x, y] = 255
+
     # One edge pixel of antialiasing around a publisher graphic can still show
     # in a card; a one-pixel dilation is capped to the reviewed source region.
     mask = mask.filter(ImageFilter.MaxFilter(3))
