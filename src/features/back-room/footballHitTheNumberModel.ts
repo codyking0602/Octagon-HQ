@@ -25,9 +25,9 @@ import {
 } from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v5" as const;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v6" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
-export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 6;
+export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 5;
 export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
 
 export type FootballHitTheNumberFormatId =
@@ -140,9 +140,8 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
 ] as const satisfies readonly { value: FootballHitTheNumberFormatId; weight: number }[];
 
 export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = [
-  { value: 4, weight: 20 },
-  { value: 5, weight: 40 },
-  { value: 6, weight: 40 },
+  { value: 4, weight: 85 },
+  { value: 5, weight: 15 },
 ] as const satisfies readonly { value: number; weight: number }[];
 
 export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
@@ -553,9 +552,10 @@ function buildTierGroups(
 function buildSlotsFor(
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
+  pickCount = 5,
 ): readonly FootballHitTheNumberSlot[] {
   const groups = buildTierGroups(subjects, metricId);
-  const labels = ["Tier 1", "Tier 2", "Tier 3", "Tier 4"] as const;
+  const labels = ["Highest Tier", "High Tier", "Middle Tier", "Lower Tier"] as const;
   return [
     ...groups.map((group, index) => {
       const ids = new Set(group.map((subject) => subject.id));
@@ -565,11 +565,11 @@ function buildSlotsFor(
         accepts: (subject: FootballHitTheNumberSubject) => ids.has(subject.id),
       };
     }),
-    { id: "wild-card", label: "Wild Card", accepts: () => true },
+    ...(pickCount === 5 ? [{ id: "wild-card", label: "Wild Card", accepts: () => true }] : []),
   ];
 }
 
-function oneFromEachSlots(): readonly FootballHitTheNumberSlot[] {
+function oneFromEachSlots(pickCount = 5): readonly FootballHitTheNumberSlot[] {
   const season = (subject: FootballHitTheNumberSubject) => subject.kind === "team-season" ? subject.season : undefined;
   const champion = (subject: FootballHitTheNumberSubject) => subject.nationalChampion === true;
   return [
@@ -577,7 +577,7 @@ function oneFromEachSlots(): readonly FootballHitTheNumberSlot[] {
     { id: "2003-08", label: "2003–08 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2003 && (season(subject) ?? 0) <= 2008 },
     { id: "2009-14", label: "2009–14 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2009 && (season(subject) ?? 0) <= 2014 },
     { id: "2015-22", label: "2015–22 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2015 && (season(subject) ?? 0) <= 2022 },
-    { id: "wild-card", label: "Wild Card", accepts: (subject) => champion(subject) },
+    ...(pickCount === 5 ? [{ id: "wild-card", label: "Wild Card", accepts: (subject: FootballHitTheNumberSubject) => champion(subject) }] : []),
   ];
 }
 
@@ -625,7 +625,7 @@ function progressionSlotsHaveDepth(
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
 ) {
-  return slots.slice(0, 4).every((slot) => (
+  return slots.every((slot) => (
     subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId))).length
       >= FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH
   ));
@@ -651,14 +651,15 @@ function balancedProgressionRandomPool(
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
   slots: readonly FootballHitTheNumberSlot[],
+  pickCount: number,
   random: () => number,
 ) {
-  const capacities = [3, 4, 4, 3] as const;
+  const capacities = pickCount === 4 ? [3, 3, 3, 3] : [3, 4, 4, 3];
   const pool = slots.slice(0, 4).flatMap((slot, index) => {
     const group = subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId)));
     return stratifiedProgressionSample(group, metricId, capacities[index]!, random);
   });
-  if (pool.length !== FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return null;
+  if (pool.length !== footballHitTheNumberRandomPoolSize(pickCount)) return null;
   if (new Set(pool.map((subject) => subject.id)).size !== pool.length) return null;
   return shuffleLineup(pool, random);
 }
@@ -667,10 +668,14 @@ function balancedProgressionTargetSolution(
   pool: readonly FootballHitTheNumberSubject[],
   slots: readonly FootballHitTheNumberSlot[],
   metricId: FootballFactMetricId,
+  pickCount: number,
+  random: () => number,
 ) {
   const legal: { subjects: FootballHitTheNumberSubject[]; total: number; signature: string }[] = [];
-  combinations(pool, 5, (selection) => {
-    if (!assignSlots(slots, selection, metricId)) return;
+  combinations(pool, pickCount, (selection) => {
+    // Classic and Themed have no progression slots. Only constrained formats
+    // require a slot assignment; rejecting empty slots eliminated both formats.
+    if (slots.length > 0 && !assignSlots(slots, selection, metricId)) return;
     const total = selection.reduce((sum, subject) => sum + valueFor(subject.id, metricId), 0);
     if (!(total > 0)) return;
     legal.push({
@@ -681,8 +686,12 @@ function balancedProgressionTargetSolution(
   });
   if (!legal.length) return null;
   legal.sort((left, right) => left.total - right.total || left.signature.localeCompare(right.signature));
-  const selected = legal[Math.floor((legal.length - 1) / 2)]!.subjects;
-  return subjectsAssignedToSlots(slots, selected, metricId);
+  // A modest percentile shift breaks tied-value plateaus while keeping the target
+  // near the middle (NBA's .44–.56 core, with 30–70% quality gate outside it).
+  const targetIndex = Math.max(0, Math.min(legal.length - 1,
+    Math.floor(legal.length * (0.4 + random() * 0.2))));
+  const selected = legal[targetIndex]!.subjects;
+  return slots.length ? subjectsAssignedToSlots(slots, selected, metricId) : selected;
 }
 
 function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
@@ -802,7 +811,7 @@ function pickOptionsFor(
     const slots = oneFromEachSlots();
     if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
     if (subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
-    return [5];
+    return [4, 5];
   }
 
   if (formatId === "build-the-team") {
@@ -815,7 +824,7 @@ function pickOptionsFor(
     const slots = buildSlotsFor(subjects, board.metricId);
     if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
     if (subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
-    return [5];
+    return [4, 5];
   }
 
   const options = FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
@@ -845,8 +854,8 @@ function metricBoardFor(metricId: FootballFactMetricId) {
 
 function slotsForPlan(plan: FootballHitTheNumberPlan) {
   const board = metricBoardFor(plan.metricId);
-  if (plan.formatId === "one-from-each") return oneFromEachSlots();
-  if (plan.formatId === "build-the-team") return buildSlotsFor(metricSubjects(board), plan.metricId);
+  if (plan.formatId === "one-from-each") return oneFromEachSlots(plan.pickCount);
+  if (plan.formatId === "build-the-team") return buildSlotsFor(metricSubjects(board), plan.metricId, plan.pickCount);
   return [];
 }
 
@@ -868,12 +877,23 @@ export function footballHitTheNumberAvailableProgressionSubjectIds(
 ) {
   if (!isProgressionFormat(plan) || selectedSubjectIds.length >= plan.pickCount) return [];
   const selected = new Set(selectedSubjectIds);
-  const activeSlot = slotsForPlan(plan)[selectedSubjectIds.length];
+  const slots = slotsForPlan(plan);
+  const activeSlot = slots[selectedSubjectIds.length];
   if (!activeSlot) return [];
-  return plan.subjectIds.filter((subjectId) => {
-    if (selected.has(subjectId)) return false;
-    const subject = subjectFor(subjectId);
-    return activeSlot.accepts(subject, valueFor(subject.id, plan.metricId));
+  // NBA-style forward checking: every selectable candidate must leave a legal finish.
+  const canFinish = (index: number, used: Set<string>): boolean => {
+    if (index === slots.length) return true;
+    return plan.subjectIds.some((id) => {
+      if (used.has(id) || !slots[index]!.accepts(subjectFor(id), valueFor(id, plan.metricId))) return false;
+      used.add(id);
+      const found = canFinish(index + 1, used);
+      used.delete(id);
+      return found;
+    });
+  };
+  return plan.subjectIds.filter((id) => {
+    if (selected.has(id) || !activeSlot.accepts(subjectFor(id), valueFor(id, plan.metricId))) return false;
+    return canFinish(selectedSubjectIds.length + 1, new Set([...selected, id]));
   });
 }
 
@@ -930,69 +950,68 @@ function minimumGoodUnderScore(plan: FootballHitTheNumberPlan) {
 }
 
 export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan): FootballHitTheNumberQualityResult {
+  // Full-distribution review needs one cached board lookup, not a registry lookup
+  // and a rebuilt progression slot set for every combination.
+  const values = new Map(plan.subjectIds.map((id) => [id, valueFor(id, plan.metricId)] as const));
+  const constrained = isProgressionFormat(plan);
+  const eligibility = constrained
+    ? slotsForPlan(plan).map((slot) => new Set(plan.subjectIds.filter((id) =>
+        slot.accepts(subjectFor(id), values.get(id)!))))
+    : [];
+  const legalAssignment = (ids: readonly string[]) => {
+    if (!constrained) return true;
+    const used = new Set<string>();
+    const assign = (index: number): boolean => {
+      if (index === eligibility.length) return true;
+      for (const id of ids) {
+        if (used.has(id) || !eligibility[index]!.has(id)) continue;
+        used.add(id);
+        if (assign(index + 1)) return true;
+        used.delete(id);
+      }
+      return false;
+    };
+    return assign(0);
+  };
   let legalSelectionCount = 0;
+  let underCount = 0;
+  let bustCount = 0;
   let hasGoodUnder = false;
   let hasMiddlingOutcome = false;
   let hasBadUnder = false;
   let hasMeaningfulBust = false;
-  const requiresBadUnder = !isProgressionFormat(plan);
+  const requiresBadUnder = !constrained;
   const goodUnderMinimum = Math.min(
     FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.goodUnderMinScore,
     minimumGoodUnderScore(plan),
   );
-
-  const inspectSelection = (subjectIds: readonly string[]) => {
-    if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return false;
-    const total = subjectIds.reduce((sum, subjectId) => sum + valueFor(subjectId, plan.metricId), 0);
-    if (Math.abs(total - plan.target) < 1e-9) return false;
-    legalSelectionCount += 1;
+  combinations(plan.subjectIds, plan.pickCount, (ids) => {
+    if (!legalAssignment(ids)) return;
+    const total = ids.reduce((sum, id) => sum + values.get(id)!, 0);
+    if (Math.abs(total - plan.target) < 1e-9) return;
+    legalSelectionCount++;
     const status: HitTheNumberResultStatus = total > plan.target ? "bust" : "under";
     const score = hitTheNumberBoardQualityScore({
-      status,
-      target: plan.target,
-      distance: Math.abs(plan.target - total),
-      pickCount: plan.pickCount,
+      status, target: plan.target, distance: Math.abs(plan.target - total), pickCount: plan.pickCount,
     });
     if (status === "under") {
+      underCount++;
       if (score >= goodUnderMinimum) hasGoodUnder = true;
       if (score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.badUnderMaxScore) hasBadUnder = true;
+    } else {
+      bustCount++;
+      if (score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.meaningfulBustMaxScore) hasMeaningfulBust = true;
     }
-    if (
-      score >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMin
-      && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMax
-    ) {
-      hasMiddlingOutcome = true;
-    }
-    if (
-      status === "bust"
-      && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.meaningfulBustMaxScore
-    ) {
-      hasMeaningfulBust = true;
-    }
-    return (
-      legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
-      && hasGoodUnder
-      && hasMiddlingOutcome
-      && (!requiresBadUnder || hasBadUnder)
-      && hasMeaningfulBust
-    );
-  };
-
-  combinations(plan.subjectIds, plan.pickCount, inspectSelection);
-
+    if (score >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMin &&
+        score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMax) hasMiddlingOutcome = true;
+  });
+  const underRatio = underCount / Math.max(1, underCount + bustCount);
   return {
-    passes: (
-      legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
-      && hasGoodUnder
-      && hasMiddlingOutcome
-      && (!requiresBadUnder || hasBadUnder)
-      && hasMeaningfulBust
-    ),
-    legalSelectionCount,
-    hasGoodUnder,
-    hasMiddlingOutcome,
-    hasBadUnder,
-    hasMeaningfulBust,
+    passes: footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)
+      && legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
+      && hasGoodUnder && hasMiddlingOutcome && (!requiresBadUnder || hasBadUnder)
+      && hasMeaningfulBust && underRatio >= 0.3 && underRatio <= 0.7,
+    legalSelectionCount, hasGoodUnder, hasMiddlingOutcome, hasBadUnder, hasMeaningfulBust,
   };
 }
 
@@ -1002,19 +1021,6 @@ function formatLabel(formatId: FootballHitTheNumberFormatId) {
   if (formatId === "one-from-each") return "One From Each";
   return "Build the Team";
 }
-function pickCountFor(
-  formatId: FootballHitTheNumberFormatId,
-  boardType: FootballHitTheNumberBoardType,
-  metricBoard: FootballHitTheNumberMetricBoard,
-  random: () => number,
-) {
-  const options = pickOptionsFor(formatId, boardType, metricBoard);
-  if (!options.length) return null;
-  if (formatId === "one-from-each" || formatId === "build-the-team") return 5;
-  const weighted = FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE.filter((row) => options.includes(row.value));
-  return weightedValue(weighted, random);
-}
-
 function buildCandidate(
   seed: string,
   boardType: FootballHitTheNumberBoardType,
@@ -1050,20 +1056,22 @@ function buildCandidate(
     solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
     eligible = oneFromEachSubjects(metricBoard);
-    slots = oneFromEachSlots();
-    configurationLabel = "One champion from each era + wild card";
+    slots = oneFromEachSlots(pickCount);
+    configurationLabel = pickCount === 5 ? "One champion from each era + wild card" : "One champion from each era";
   } else if (formatId === "build-the-team") {
-    slots = buildSlotsFor(eligible, metricId);
-    configurationLabel = "4 stat tiers + wild card";
+    // Tier membership must match the canonical slots used when selecting, grading,
+    // and replaying this board. The curated subset can shift quartile boundaries.
+    slots = buildSlotsFor(metricSubjects(metricBoard), metricId, pickCount);
+    configurationLabel = pickCount === 5 ? "Four performance tiers + wild card" : "Four performance tiers";
   } else {
     solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   }
 
   let subjectIds: string[];
   if (formatId === "one-from-each" || formatId === "build-the-team") {
-    const balancedPool = balancedProgressionRandomPool(eligible, metricId, slots, random);
+    const balancedPool = balancedProgressionRandomPool(eligible, metricId, slots, pickCount, random);
     if (!balancedPool) return null;
-    solution = balancedProgressionTargetSolution(balancedPool, slots, metricId);
+    solution = balancedProgressionTargetSolution(balancedPool, slots, metricId, pickCount, random);
     if (!solution || solution.length !== pickCount) return null;
     subjectIds = balancedPool.map((subject) => subject.id);
   } else {
@@ -1072,6 +1080,8 @@ function buildCandidate(
     const curatedPool = curatedRandomPool(eligible, solution, metricId, poolSize, random);
     if (!curatedPool) return null;
     subjectIds = curatedPool.map((subject) => subject.id);
+    // The target is a realizable near-median total rather than a random extreme.
+    solution = balancedProgressionTargetSolution(curatedPool, [], metricId, pickCount, random);
   }
 
   if (!solution || solution.length !== pickCount) return null;
@@ -1107,14 +1117,16 @@ function viableDomainChoices(
   league: FootballHitTheNumberLeague,
   formatId: FootballHitTheNumberFormatId,
   boardType: FootballHitTheNumberBoardType,
+  pickCount: number,
 ) {
-  const key = `${league}:${formatId}:${boardType}`;
+  const key = `${league}:${formatId}:${boardType}:${pickCount}`;
   const cached = viableDomainChoicesCache.get(key);
   if (cached) return cached;
   const choices = domains
     .map((domain) => ({
       domain,
-      boards: viableMetricBoards(domain, league, formatId, boardType),
+      boards: viableMetricBoards(domain, league, formatId, boardType)
+        .filter((board) => pickOptionsFor(formatId, boardType, board).includes(pickCount)),
     }))
     .filter((choice) => choice.boards.length > 0);
   viableDomainChoicesCache.set(key, choices);
@@ -1126,11 +1138,13 @@ export function createFootballHitTheNumberPlan(
   boardType: FootballHitTheNumberBoardType = FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
 ): FootballHitTheNumberPlan {
   const choiceRandom = seededLineupRandom(FOOTBALL_HIT_THE_NUMBER_GAME_ID, "choice", seed, boardType);
+  // Draw once up front, including progression formats, to preserve 85% / 15%.
+  const desiredPickCount = weightedValue(FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE, choiceRandom);
   const formatId = weightedValue(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE, choiceRandom);
   const league: FootballHitTheNumberLeague = formatId === "one-from-each"
     ? "CFB"
     : choiceRandom() < 0.5 ? "NFL" : "CFB";
-  const choices = viableDomainChoices(league, formatId, boardType);
+  const choices = viableDomainChoices(league, formatId, boardType, desiredPickCount);
   if (!choices.length) throw new Error(`Football Hit the Number has no viable ${league} ${formatId} metrics.`);
   const selected = choices[Math.floor(choiceRandom() * choices.length)]!;
   const domain = selected.domain;
@@ -1138,16 +1152,46 @@ export function createFootballHitTheNumberPlan(
     selected.boards.map((board) => ({ value: board, weight: board.weight })),
     choiceRandom,
   );
-  const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
-  if (pickCount == null) {
-    throw new Error(`Football Hit the Number does not have enough ${metricBoard.metricId} depth for ${boardType}.`);
-  }
+  const pickCount = desiredPickCount;
 
-  for (let attempt = 0; attempt < 128; attempt += 1) {
-    const candidate = buildCandidate(seed, boardType, formatId, domain, metricBoard, pickCount, attempt);
-    if (candidate && footballHitTheNumberPlanQuality(candidate).passes) return candidate;
+  // A category may have too little distribution for the higher NBA-style quality gate.
+  // Keep the initial format, league, and 85/15 pick draw, but try other approved metrics
+  // instead of ever throwing away a Daily or Casual game.
+  const pool = choices.flatMap((choice) => choice.boards.map((board) => ({ domain: choice.domain, board })));
+  const alternatives = shuffleLineup(pool.filter((item) => item.board.metricId !== metricBoard.metricId), choiceRandom);
+  for (const selectedMetric of [{ domain, board: metricBoard }, ...alternatives]) {
+    for (let attempt = 0; attempt < 64; attempt += 1) {
+      const candidate = buildCandidate(
+        seed, boardType, formatId, selectedMetric.domain, selectedMetric.board, pickCount, attempt,
+      );
+      if (candidate && footballHitTheNumberPlanQuality(candidate).passes) return candidate;
+    }
   }
-  throw new Error(`Football Hit the Number could not build a balanced ${formatId} ${metricBoard.metricId} board.`);
+  // A league can exhaust one constrained format (especially four-slot CFB eras).
+  // Use an alternate approved format at the same pick count, never a sixth pick.
+  for (const fallbackFormat of shuffleLineup(
+    FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE.map((option) => option.value)
+      .filter((candidate) => candidate !== formatId), choiceRandom,
+  )) {
+    // Keep the randomly selected sport stable. Falling back across leagues
+    // inflated CFB to ~76% and robbed NFL of its intended Daily/Casual variety.
+    if (fallbackFormat === "one-from-each" && league !== "CFB") continue;
+    const fallbackLeagues: FootballHitTheNumberLeague[] = [league];
+    for (const fallbackLeague of fallbackLeagues) {
+      const fallback = viableDomainChoices(fallbackLeague, fallbackFormat, boardType, pickCount);
+      for (const choice of fallback) {
+        for (const board of choice.boards) {
+          for (let attempt = 0; attempt < 32; attempt += 1) {
+            const candidate = buildCandidate(
+              seed, boardType, fallbackFormat, choice.domain, board, pickCount, attempt,
+            );
+            if (candidate && footballHitTheNumberPlanQuality(candidate).passes) return candidate;
+          }
+        }
+      }
+    }
+  }
+  throw new Error(`Football Hit the Number has no balanced ${pickCount}-pick board for seed ${seed}.`);
 }
 
 function planSignature(plan: FootballHitTheNumberPlan) {

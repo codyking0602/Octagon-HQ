@@ -482,42 +482,86 @@ describe("Football Today’s Challenge session", () => {
     }, { lock: true })).toThrow(/do not satisfy this board/);
   });
 
-  it("advances the September 13 capped Classic board from persisted evidence without rebuilding it", () => {
-    const setup = buildFootballOfficialDailySetup(
-      "hit_the_number",
-      "2026-09-13",
-      FOOTBALL_TODAY_SCHEDULE_VERSION,
-    );
-    const candidates = setup.publicSetup.candidates as Array<Record<string, unknown>>;
-    const initialState = setup.publicSetup.initial_state as JsonRecord;
-    const firstId = String(candidates[0]?.id ?? "");
+  it("advances a frozen historical five-pick Classic setup without regenerating the board", () => {
+    // Persisted Official Daily submissions are graded from their stored private
+    // evidence. These legacy 5/14 ids intentionally do not exist in the new
+    // 4/5 generator: this verifies replay does not regenerate or reclassify them.
+    const historicalIds = Array.from({ length: 14 }, (_, index) =>
+      `historical-2026-09-13-choice-${index + 1}`);
+    const historicalValues = Object.fromEntries(historicalIds.map((id, index) =>
+      [id, index + 1]));
+    const initialState = {
+      complete: false,
+      selected_ids: [] as string[],
+      available_subject_ids: historicalIds,
+      active_slot: null,
+    };
+    const legacyPlan = {
+      version: "football-hit-the-number-v5",
+      formatId: "classic",
+      pickCount: 5,
+      subjectIds: historicalIds,
+      solutionSubjectIds: historicalIds.slice(0, 5),
+      slots: [],
+    };
     const context = {
       gameType: "hit_the_number" as const,
-      setupKey: setup.setupKey,
-      publicSetup: setup.publicSetup,
-      revealSetup: setup.revealSetup,
-      privateSetupEvidence: setup.privateSetupEvidence,
-      privateGradingEvidence: setup.privateGradingEvidence,
+      setupKey: "legacy:2026-09-13:classic:5",
+      publicSetup: {
+        format_id: "classic",
+        pick_count: 5,
+        slots: [],
+        candidates: historicalIds.map((id) => ({ id, name: id })),
+        initial_state: initialState,
+      },
+      revealSetup: { target: 15, values: historicalValues },
+      privateSetupEvidence: {
+        fighter_ids: historicalIds,
+        pick_count: 5,
+        plan: legacyPlan,
+        progression_slot_subject_ids: [],
+      },
+      privateGradingEvidence: {
+        fighter_ids: historicalIds,
+        target: 15,
+        pick_count: 5,
+        values: historicalValues,
+      },
       submissionState: {},
       publicState: initialState,
     };
 
-    expect(setup.publicSetup.format_id).toBe("classic");
-    expect(setup.publicSetup.pick_count).toBe(5);
-    expect(candidates).toHaveLength(14);
-    expect(setup.privateSetupEvidence.progression_slot_subject_ids).toEqual([]);
+    expect(context.publicSetup.format_id).toBe("classic");
+    expect(context.publicSetup.pick_count).toBe(5);
+    expect(context.publicSetup.candidates).toHaveLength(14);
+    expect(context.privateSetupEvidence.progression_slot_subject_ids).toEqual([]);
 
-    const selected = advanceFootballOfficialDailyRuntime(context, { fighter_id: firstId });
-    expect(selected.submissionState.selected_ids).toEqual([firstId]);
-    expect(selected.publicState.selected_ids).toEqual([firstId]);
+    const first = advanceFootballOfficialDailyRuntime(context, { fighter_id: historicalIds[0] });
+    expect(first.submissionState.selected_ids).toEqual([historicalIds[0]]);
+    expect(first.publicState.selected_ids).toEqual([historicalIds[0]]);
 
     const deselected = advanceFootballOfficialDailyRuntime({
       ...context,
-      submissionState: selected.submissionState,
-      publicState: selected.publicState,
-    }, { fighter_id: firstId });
+      submissionState: first.submissionState,
+      publicState: first.publicState,
+    }, { fighter_id: historicalIds[0] });
     expect(deselected.submissionState.selected_ids).toEqual([]);
     expect(deselected.publicState.selected_ids).toEqual([]);
+
+    let submissionState: JsonRecord = {};
+    let publicState: JsonRecord = initialState;
+    for (const id of historicalIds.slice(0, 5)) {
+      const step = advanceFootballOfficialDailyRuntime({
+        ...context, submissionState, publicState,
+      }, { fighter_id: id });
+      submissionState = step.submissionState;
+      publicState = step.publicState;
+    }
+    const locked = advanceFootballOfficialDailyRuntime({
+      ...context, submissionState, publicState,
+    }, { lock: true });
+    expect(locked.complete).toBe(true);
+    expect(locked.finalSubmission).toEqual({ selected_ids: historicalIds.slice(0, 5) });
   });
 
   it("keeps Hit the Number subject values private before the final lock", () => {

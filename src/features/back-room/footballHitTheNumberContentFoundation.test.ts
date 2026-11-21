@@ -18,7 +18,7 @@ const careerSpecialGroups = new Set(["nfl-qb-career"]);
 
 describe("Football Hit the Number content foundation", () => {
   it("keeps exact player seasons and team seasons core while removing CFB best-season boards", () => {
-    expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v5");
+    expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v6");
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["peak-season"])
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["team-season"])

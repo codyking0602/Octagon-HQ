@@ -31,7 +31,7 @@ function fighterIds(setup: Obj) {
 const expectedChoices: Record<number, number> = { 4: 12, 5: 14, 6: 16 };
 
 describe("six-month Official Hit the Number seed/content audit (merged canonical Part 1 dates)", () => {
-  it("generates distinct, fact-backed, solvable 4–6-pick Football and UFC boards at planned 2x demand", () => {
+  it("generates distinct, fact-backed, solvable 4–5-pick Football and UFC boards at planned 2x demand", () => {
     const slots = auditMergedPartOneCalendar().filter(slot =>
       slot.game === "hit_the_number" && (slot.sport === "football" || slot.sport === "ufc"));
     const fullBoards = new Set<string>();
@@ -79,7 +79,7 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
         const values = child.privateGradingEvidence.values as Record<string, number>;
         report.childBoards[sport]++;
         report.metrics[sport + ":" + stat] = (report.metrics[sport + ":" + stat] ?? 0) + 1;
-        expect(slot.sport === "ufc" ? [4, 5] : [4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
+        expect([4, 5], slot.sport + ":" + slot.day).toContain(count);
         expect(Number.isFinite(target) && target > 0, `${sport}:${slot.day}:board-${boardIndex + 1}:${stat}:${target}`).toBe(true);
         expect(new Set(ids).size).toBe(ids.length);
         expect(ids.length).toBeGreaterThan(count);
