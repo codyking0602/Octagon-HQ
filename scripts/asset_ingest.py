@@ -926,7 +926,8 @@ def remove_reviewed_publisher_graphics(im, destination):
     # One edge pixel of antialiasing around a publisher graphic can still show
     # in a card; a one-pixel dilation is capped to the reviewed source region.
     mask = mask.filter(ImageFilter.MaxFilter(3))
-    count = sum(value > 0 for value in mask.getdata())
+    count = sum(value > 0 and original[index % width, index // width][3] >= 8
+                for index, value in enumerate(mask.getdata()))
     min_count = 80 if destination.endswith("-thumb.webp") else 100
     max_fraction = 0.12 if destination.endswith("-thumb.webp") else 0.41
     if count < min_count or count > width * height * max_fraction:

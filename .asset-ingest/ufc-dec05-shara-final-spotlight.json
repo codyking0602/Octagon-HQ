@@ -8,5 +8,6 @@
   "fighter_name": "Shara Magomedov",
   "destination": "public/assets/fighters/shara-magomedov-spotlight.webp",
   "kind": "spotlight",
-  "reviewed_on": "2026-11-21"
+  "reviewed_on": "2026-11-21",
+  "review_note": "Pixel-area safety checks count occupied fighter pixels only, not transparent trim."
 }
