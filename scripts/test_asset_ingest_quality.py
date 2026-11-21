@@ -474,6 +474,86 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(reviewed_ufc_three_quarter_spotlight(
             {**spec, "destination": "public/assets/fighters/other-spotlight.webp"}, url, source))
 
+    def test_dec05_reviewed_publisher_cleanup_is_exact_source_scoped(self):
+        from scripts.asset_ingest import is_exact_reviewed_graphics_source
+        im = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        spec = {
+            "kind": "thumb",
+            "fighter_name": "Levan Chokheli",
+            "destination": "public/assets/fighters/levan-chokheli-thumb.webp",
+            "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4867651.png",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "4867651",
+            "reviewed_publisher_graphics_cleanup": True,
+        }
+        self.assertTrue(is_exact_reviewed_graphics_source(spec, spec["source_url"], im))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            {**spec, "reviewed_publisher_graphics_cleanup": False}, spec["source_url"], im))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            spec, spec["source_url"] + "?changed=1", im))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            {**spec, "verified_espn_athlete_id": "bad"}, spec["source_url"], im))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            {**spec, "destination": "public/assets/fighters/another-thumb.webp"}, spec["source_url"], im))
+
+    def test_dec05_shara_right_panel_mask_rejects_no_skin_outside_subject(self):
+        from scripts.asset_ingest import remove_reviewed_publisher_graphics
+        im = Image.new("RGBA", (626, 800), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.rectangle((440, 48, 625, 530), fill=(95, 65, 148, 255))
+        draw.ellipse((155, 22, 475, 745), fill=(188, 112, 77, 255))
+        masked = remove_reviewed_publisher_graphics(
+            im, "public/assets/fighters/shara-magomedov-spotlight.webp")
+        self.assertEqual(masked.getpixel((590, 160))[3], 0)
+        self.assertEqual(masked.getpixel((315, 260))[3], 255)
+
+    def test_dec05_multicolor_shara_panel_uses_source_guard(self):
+        from scripts.asset_ingest import is_exact_reviewed_graphics_source
+        url = "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC"
+        portrait = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
+        spec = {
+            "kind": "spotlight",
+            "fighter_name": "Shara Magomedov",
+            "destination": "public/assets/fighters/shara-magomedov-spotlight.webp",
+            "source_url": url,
+            "source_page_reference_url": "https://www.ufc.com/athlete/shara-magomedov",
+            "verified_source_url": url,
+            "official_ufc_three_quarter_reviewed": True,
+            "reviewed_publisher_graphics_cleanup": True,
+        }
+        self.assertTrue(is_exact_reviewed_graphics_source(spec, url, portrait))
+        self.assertFalse(is_exact_reviewed_graphics_source(
+            {**spec, "destination": "public/assets/fighters/israel-adesanya-spotlight.webp"}, url, portrait))
+
+    def test_dec05_reviewed_cleanup_removes_graphics_but_preserves_skin(self):
+        from scripts.asset_ingest import remove_reviewed_publisher_graphics
+        cases = [
+            ("levan-chokheli-thumb.webp", (320, 320), (113, 110, 108, 255), (150, 250)),
+            ("akbar-abdullaev-thumb.webp", (320, 320), (36, 59, 62, 255), (270, 85)),
+            ("magomed-tuchalov-thumb.webp", (320, 320), (170, 90, 88, 255), (265, 105)),
+            ("shara-magomedov-spotlight.webp", (626, 800), (35, 55, 60, 255), (550, 210)),
+        ]
+        for name, size, overlay, sample in cases:
+            with self.subTest(name=name):
+                image = Image.new("RGBA", size, (0, 0, 0, 0))
+                draw = ImageDraw.Draw(image)
+                if size == (320, 320):
+                    draw.ellipse((85, 12, 230, 235), fill=(205, 145, 110, 255))
+                    draw.rectangle((20, 225, 305, 250), fill=(205, 145, 110, 255))
+                    if name.startswith("levan"):
+                        draw.rectangle((10, 248, 309, 252), fill=overlay)
+                    elif name.startswith("akbar"):
+                        draw.rectangle((215, 83, 319, 87), fill=overlay)
+                    else:
+                        draw.rectangle((213, 80, 319, 165), fill=overlay)
+                else:
+                    draw.ellipse((150, 30, 430, 730), fill=(205, 145, 110, 255))
+                    draw.rectangle((444, 46, 625, 735), fill=overlay)
+                result = remove_reviewed_publisher_graphics(
+                    image, "public/assets/fighters/" + name)
+                self.assertEqual(result.getpixel(sample)[3], 0)
+                self.assertEqual(result.getpixel((300, 170) if size == (626, 800) else (160, 170))[3], 255)
+
     def test_reviewed_three_quarter_is_not_resegmented_or_stripped(self):
         import tempfile
         from io import BytesIO
