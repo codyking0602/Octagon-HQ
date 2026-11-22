@@ -2,11 +2,13 @@ import { lazy } from "react";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
+import { CrownsRouteGate } from "../features/crowns/CrownsAccess";
 import { MlbGate } from "../features/mlb/MlbGate";
 import { NbaPreviewGate } from "../features/nba/NbaPreviewGate";
 import { NbaWhoAmIOwnerGate } from "../features/nba/NbaWhoAmIOwnerGate";
 import { NbaCupOwnerGate } from "../features/nba/NbaCupOwnerGate";
 
+const CrownsPage = lazy(() => import("../features/crowns/CrownsPage"));
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
 const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
@@ -179,6 +181,7 @@ export const appRoutes: RouteObject[] = [
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
       { path: "picks/monitoring", element: <Navigate to="/picks/control#monitoring" replace /> },
+      { path: "crowns/*", element: <CrownsRouteGate><CrownsPage /></CrownsRouteGate> },
       { path: "whats-new", element: <WhatsNewPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
