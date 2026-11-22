@@ -2,6 +2,7 @@ import { Suspense, useEffect } from "react";
 import "../styles/picks-disclosures.css";
 import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
+import { CrownsHeaderLink } from "../features/crowns/CrownsAccess";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
 import { useIdentity } from "../features/identity/IdentityProvider";
@@ -277,6 +278,7 @@ export function AppShell() {
         <header className={`app-header app-header--universal${sportContext ? " app-header--with-sport-context" : ""}`}>
           <BackRoomLogoLink enabled={location.pathname === "/play"} />
           <div className="app-header__actions">
+            <CrownsHeaderLink />
             <NotificationHeaderAction />
             <IdentityControl />
           </div>
