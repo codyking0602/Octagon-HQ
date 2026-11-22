@@ -124,7 +124,7 @@ create unique index if not exists crowns_one_the_only_checklist
 
 create or replace function public.crowns_enforce_closed_checklist()
 returns trigger language plpgsql set search_path = ''
-as $
+as $crowns_closed_checklist$
 declare v_name text;
 begin
   if new.series_slug = 'the-one-the-only' then
@@ -135,7 +135,7 @@ begin
   end if;
   return new;
 end;
-$;
+$crowns_closed_checklist$;
 drop trigger if exists crowns_closed_checklist on public.crowns_cards;
 create trigger crowns_closed_checklist before insert or update of series_slug,subject_id
 on public.crowns_cards for each row execute function public.crowns_enforce_closed_checklist();
