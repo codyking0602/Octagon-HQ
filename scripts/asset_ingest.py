@@ -257,6 +257,10 @@ def reviewed_ufc_three_quarter_spotlight(spec, source_url, im):
         # Manually source-verified official UFC portrait for the December 5 event.
         "public/assets/fighters/israel-adesanya-spotlight.webp":
             "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/ADESANYA_ISRAEL_L_03-28.png?itok=krImOvG1",
+        # Official UFC photo, source-locked Dec. 5 review; publisher overlay
+        # is cut out by reviewed_dec05_mask after ordinary portrait framing.
+        "public/assets/fighters/shara-magomedov-spotlight.webp":
+            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC",
     }
     legacy_reference = bool(spec.get("source_page_reference_url")) and (
         spec.get("source_url") == source_url
@@ -802,6 +806,86 @@ def verified_thumb_candidates(spec):
     return candidates
 
 
+
+# The only two reviewed Dec 5 publisher-contaminated official source images.
+# Do not authorize these masks for any other athlete, source, or destination.
+DEC05_SOURCE_MASKS = {
+    "public/assets/fighters/magomed-tuchalov-thumb.webp": (
+        "thumb", "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png"),
+    "public/assets/fighters/shara-magomedov-spotlight.webp": (
+        "spotlight", "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/MAGOMEDOV_SHARA_L_07-26.png?itok=EfC12GKC"),
+}
+
+
+def reviewed_dec05_source(spec, source_url, original):
+    item = DEC05_SOURCE_MASKS.get(spec.get("destination"))
+    if (not item
+            or spec.get("dec05_source_boundary_reviewed") is not True
+            or spec.get("kind") != item[0]
+            or source_url != item[1]):
+        return False
+    if item[0] == "thumb":
+        return (
+            original.size == (600, 436)
+            and spec.get("official_headshot_reviewed") is True
+            and spec.get("verified_espn_athlete_id") == "5360467"
+            and original.getchannel("A").getextrema()[0] == 0
+        )
+    return reviewed_ufc_three_quarter_spotlight(spec, source_url, original)
+
+
+def reviewed_dec05_mask(image, destination):
+    """Drop flat publisher overlays beyond source-reviewed athlete outlines.
+
+    These narrowly scoped shapes are copied from manual frame-by-frame visual
+    review of the exact official photos, not inferred from a new athlete or
+    generated replacement. Never alter faces, clothing, or central body pixels.
+    """
+    if destination not in DEC05_SOURCE_MASKS:
+        fail("reviewed Dec 5 mask not permitted for this destination")
+    size = (626, 800) if destination.endswith("-spotlight.webp") else (320, 320)
+    if image.size != size:
+        fail("reviewed Dec 5 mask dimension mismatch")
+    if destination.endswith("-thumb.webp"):
+        # ESPN card has a thin vertical right-of-beard line and a horizontal
+        # publisher footer. Retain the entire face/hair above y=207.
+        points = (
+            (0, 222), (90, 218), (122, 211),
+            (160, 208), (194, 207), (207, 207),
+            (212, 0), (320, 0),
+        )
+    else:
+        # Source portrait's publisher block begins right of Shara's hair,
+        # then tracks his shoulder, right forearm, and glove. Geometry stays
+        # outside the body outline and removes the full-height right panel.
+        points = (
+            (0, 396), (28, 396), (55, 410), (90, 428),
+            (125, 447), (170, 455), (208, 456), (240, 453),
+            (267, 467), (300, 493), (340, 500), (400, 506),
+            (465, 519), (525, 524), (600, 537),
+            (680, 551), (752, 558), (800, 558),
+        )
+
+    alpha = image.getchannel("A")
+    # Use an explicit contour, not color matching. This blocks all the
+    # varying publisher colors (purple, teal, brown, white), even if rembg
+    # returns slightly different RGB for the background on another run.
+    for index in range(len(points) - 1):
+        y0, x0 = points[index]
+        y1, x1 = points[index + 1]
+        for y in range(y0, min(y1, size[1])):
+            t = (y - y0) / max(1, y1 - y0)
+            xcut = round(x0 + (x1 - x0) * t)
+            for x in range(max(0, xcut), size[0]):
+                alpha.putpixel((x, y), 0)
+    # Last row is as carefully masked as the rest.
+    for x in range(points[-1][1], size[0]):
+        alpha.putpixel((x, size[1] - 1), 0)
+    image = image.copy()
+    image.putalpha(alpha)
+    return image
+
+
 def ingest_fighter_candidate(spec, kind, dest, size):
     source_url, data = resolve_source(spec)
     if source_url_looks_like_placeholder(source_url):
@@ -815,13 +899,17 @@ def ingest_fighter_candidate(spec, kind, dest, size):
         reviewed_ufc_three_quarter_spotlight(spec, source_url, im)
         if kind == "spotlight" else False
     )
+    dec05_reviewed = reviewed_dec05_source(spec, source_url, im)
+    if spec.get("dec05_source_boundary_reviewed") and not dec05_reviewed:
+        fail("December 5 source boundary requires exact athlete and original URL")
 
     if kind == "thumb":
         if not approved_square_thumb_source(spec, source_url, im.size):
             fail("thumbnail requires a verified UFC/ESPN headshot product")
         if spec.get("force_background_removal") or spec.get("crop"):
             fail("thumbnail source cannot be cropped or background-removed")
-        require_clean_original_thumb(im)
+        if not dec05_reviewed:
+            require_clean_original_thumb(im)
     else:
         if reviewed_three_quarter:
             # A source-reviewed UFC portrait can have a legitimate lower-frame
@@ -889,6 +977,9 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     else:
         # Pure fit onto a transparent tile: preserve original fighter pixels.
         im = render_thumb(im, size)
+
+    if dec05_reviewed:
+        im = reviewed_dec05_mask(im, dest)
 
     # Validate *before* writing. A failed candidate must never leave an
     # unreviewed WebP in the working tree (which a later successful batchmate

@@ -1,0 +1,14 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/magomed-tuchalov",
+  "kind": "thumb",
+  "fighter_name": "Magomed Tuchalov",
+  "destination": "public/assets/fighters/magomed-tuchalov-thumb.webp",
+  "fallback_sources": [
+    {
+      "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png",
+      "official_headshot_reviewed": true,
+      "verified_espn_athlete_id": "5360467",
+      "dec05_source_boundary_reviewed": true
+    }
+  ]
+}
