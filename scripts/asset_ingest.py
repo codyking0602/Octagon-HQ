@@ -791,7 +791,7 @@ def verified_thumb_candidates(spec):
         if set(candidate) - {
             "source_url", "source_page_url", "fighter_name",
             "official_headshot_reviewed", "official_square_headshot_reviewed",
-            "verified_espn_athlete_id",
+            "verified_espn_athlete_id", "dec05_source_boundary_reviewed",
         }:
             fail("unsupported fallback source field")
         next_spec = {
