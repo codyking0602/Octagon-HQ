@@ -13,12 +13,13 @@ function optional(form: FormData, name: string) { return field(form, name) || nu
 function numberOrNull(form: FormData, name: string) { return field(form, name) ? Number(field(form, name)) : null; }
 
 export default function CrownsStudio({
-  data, refresh, urls,
+  data, refresh, urls, initialCardId = 0,
 }: {
-  data: CrownsData; refresh: () => Promise<void>; urls: Record<string, string>;
+  data: CrownsData; refresh: () => Promise<void>; urls: Record<string, string>; initialCardId?: number;
 }) {
   const [tab, setTab] = useState<StudioTab>("cards");
-  const [cardId, setCardId] = useState(0);
+  const [cardId, setCardId] = useState(initialCardId);
+  const [cardSearch, setCardSearch] = useState("");
   const [subjectId, setSubjectId] = useState(0);
   const [seriesSlug, setSeriesSlug] = useState("");
   const [variantId, setVariantId] = useState(0);
@@ -46,7 +47,15 @@ export default function CrownsStudio({
     void ownerTask(() => task(fields), success);
   };
   const selection = (id: number) => setCardId(id);
-  const options = data.cards.map(item =>
+  const visibleCards = data.cards.filter(item => {
+    if (item.id === card?.id) return true;
+    const term = cardSearch.trim().toLocaleLowerCase();
+    if (!term) return true;
+    const subject = data.subjects.find(s => s.id === item.subject_id);
+    return [subject?.name, item.title, item.classification, item.source_row?.toString()]
+      .some(value => value?.toLocaleLowerCase().includes(term));
+  });
+  const options = visibleCards.map(item =>
     <option key={item.id} value={item.id}>{cardLabel(item, data.subjects)}{item.source_row ? ` · row ${item.source_row}` : ` · #${item.id}`}</option>
   );
   const upload = async (target: "cards" | "variants", id: number, side: "front" | "back", file?: File) => {
@@ -88,7 +97,8 @@ export default function CrownsStudio({
         <div className="crowns-studio-grid">
           <section className="crowns-panel">
             <h2>Card editor</h2>
-            <p>Each imported workbook row is its own unassigned card slot. Intentional duplicates remain separate.</p>
+            <p>Every workbook row is a separate planning slot, including intentional repeats.</p>
+            <label>FIND CARD<input type="search" value={cardSearch} onChange={e=>setCardSearch(e.target.value)} placeholder="Search names, sports or row number" /></label>
             <label>SELECT A CARD
               <select value={card?.id ?? ""} onChange={e=>selection(Number(e.target.value))}>{options}</select>
             </label>
