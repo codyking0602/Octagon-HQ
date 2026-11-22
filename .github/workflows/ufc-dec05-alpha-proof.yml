@@ -1,0 +1,51 @@
+name: UFC Dec 5 one-time alpha visual proof
+on:
+  push:
+    paths:
+      - '.github/workflows/ufc-dec05-alpha-proof.yml'
+permissions:
+  contents: write
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Flatten actual alpha onto solid charcoal for human inspection
+        shell: bash
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          items = [
+              "public/assets/fighters/shara-magomedov-spotlight.webp",
+              "public/assets/fighters/magomed-tuchalov-thumb.webp",
+          ]
+          for path in items:
+              im = Image.open(path).convert("RGBA")
+              bg = Image.new("RGBA", im.size, (22, 26, 34, 255))
+              bg.alpha_composite(im)
+              proof = Path(path).with_suffix(".alpha-proof.png")
+              bg.convert("RGB").save(proof, "PNG")
+              alpha = im.getchannel("A")
+              samples = [(min(im.width-1, x), min(im.height-1, y)) for x,y in (
+                  ((590,130) if im.width==626 else (270,130)),
+                  ((590,400) if im.width==626 else (270,225)),
+                  ((590,700) if im.width==626 else (270,270)),
+              )]
+              print(f"{path}: size={im.size} alpha={alpha.getextrema()} "
+                    f"alpha_samples={[(p,alpha.getpixel(p)) for p in samples]};"
+                    f" flattened={proof}")
+          PY
+      - name: Commit temporary proof images (never merge this audit branch)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/fighters/*alpha-proof.png
+          git commit -m "Generate audit-only alpha-composited previews"
+          git push origin HEAD:${GITHUB_REF_NAME}
