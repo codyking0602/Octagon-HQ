@@ -116,7 +116,7 @@ export default function CrownsPage() {
   const seriesName = (slug: string | null) => data?.series.find(s => s.slug === slug)?.name ?? "Unassigned";
   const featured = data?.cards.filter(card => card.front_path).slice(-6).reverse() ?? [];
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [location.pathname]);
 
   return (
