@@ -184,7 +184,6 @@ export default function CrownsStudio({
                 name:field(f,"name"), subject_kind:field(f,"subject_kind"),
                 sport:optional(f,"sport"), notes:optional(f,"notes"),
               });
-              e.currentTarget?.reset();
             },"Subject added to your library.")}>
               <label>SUBJECT NAME<input name="name" required placeholder="Athlete, person, event, character…"/></label>
               <label>TYPE<select name="subject_kind">{kinds.map(k=><option key={k} value={k}>{humanize(k)}</option>)}</select></label>
