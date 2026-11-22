@@ -453,6 +453,41 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(reviewed_ufc_three_quarter_spotlight(
             spec, "https://ufc.com/news/cropped-portrait.jpg", source))
 
+    def test_dec05_two_source_masks_require_exact_fighter_and_image(self):
+        from scripts.asset_ingest import reviewed_dec05_source
+        espn = "https://a.espncdn.com/i/headshots/mma/players/full/5360467.png"
+        thumb = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        spec = {
+            "kind": "thumb", "destination": "public/assets/fighters/magomed-tuchalov-thumb.webp",
+            "fighter_name": "Magomed Tuchalov",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "5360467",
+            "dec05_source_boundary_reviewed": True,
+        }
+        self.assertTrue(reviewed_dec05_source(spec, espn, thumb))
+        self.assertFalse(reviewed_dec05_source(
+            {**spec, "destination": "public/assets/fighters/ion-cutelaba-thumb.webp"}, espn, thumb))
+        self.assertFalse(reviewed_dec05_source(
+            {**spec, "verified_espn_athlete_id": "invalid"}, espn, thumb))
+        self.assertFalse(reviewed_dec05_source(
+            {**spec, "dec05_source_boundary_reviewed": False}, espn, thumb))
+        self.assertFalse(reviewed_dec05_source(spec, espn + "?other", thumb))
+
+    def test_dec05_mask_clears_publisher_side_but_preserves_fighter_center(self):
+        from scripts.asset_ingest import reviewed_dec05_mask
+        scenarios = [
+            ("public/assets/fighters/magomed-tuchalov-thumb.webp",
+             (320, 320), (300, 130), (130, 130)),
+            ("public/assets/fighters/shara-magomedov-spotlight.webp",
+             (626, 800), (590, 300), (295, 300)),
+        ]
+        for destination, size, blocked, protected in scenarios:
+            with self.subTest(destination=destination):
+                image = Image.new("RGBA", size, (140, 90, 65, 255))
+                result = reviewed_dec05_mask(image, destination)
+                self.assertEqual(result.getpixel(blocked)[3], 0)
+                self.assertEqual(result.getpixel(protected)[3], 255)
+
     def test_dec05_adesanya_exact_official_source_exception(self):
         source = Image.new("RGBA", (460, 700), (0, 0, 0, 0))
         ImageDraw.Draw(source).ellipse((100, 20, 350, 699), fill=(170, 100, 80, 255))
