@@ -1,51 +1,51 @@
 {
-  "weekStart": "2026-11-09",
-  "weekEnd": "2026-11-15",
-  "publishedAt": "2026-11-16T18:47:46.945Z",
+  "weekStart": "2026-11-16",
+  "weekEnd": "2026-11-22",
+  "publishedAt": "2026-11-23T20:09:43.993Z",
   "player": {
-    "name": "Giannis Antetokounmpo",
-    "team": "Miami Heat",
-    "teamId": "MIA",
+    "name": "Victor Wembanyama",
+    "team": "San Antonio Spurs",
+    "teamId": "SA",
     "position": "F",
     "gamesPlayed": 3,
-    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/3032977.png",
-    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Giannis%20Antetokounmpo",
-    "highlightUrl": "https://www.youtube.com/watch?v=2harr1Kgg9w",
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/5104157.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Victor%20Wembanyama",
+    "highlightUrl": "https://www.youtube.com/watch?v=IeYYoNUN-Ts",
     "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
     "channelUrl": "https://www.youtube.com/@NBA",
     "stats": [
       {
         "label": "PPG",
-        "value": "33.7"
+        "value": "35.7"
       },
       {
         "label": "APG",
-        "value": "4.7"
+        "value": "2.7"
       },
       {
         "label": "RPG",
-        "value": "11.3"
+        "value": "16.0"
       },
       {
         "label": "FG%",
-        "value": "69.0"
+        "value": "56.4"
       }
     ]
   },
   "team": {
-    "name": "Boston Celtics",
-    "teamId": "BOS",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/bos.png",
-    "profileUrl": "https://www.basketball-reference.com/teams/BOS/2027.html",
+    "name": "Phoenix Suns",
+    "teamId": "PHX",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/PHO/2027.html",
     "record": "3-0",
-    "ppg": "117.3",
-    "oppPpg": "96.0",
-    "netMargin": "+21.3",
-    "fgPct": "47.9",
-    "threePct": "41.0",
-    "seasonRecord": "11-2",
-    "conference": "EAST",
-    "conferenceSeed": 1,
-    "standingsAsOf": "2026-11-16T18:47:47.029Z"
+    "ppg": "118.7",
+    "oppPpg": "104.3",
+    "netMargin": "+14.3",
+    "fgPct": "50.4",
+    "threePct": "39.4",
+    "seasonRecord": "8-7",
+    "conference": "WEST",
+    "conferenceSeed": 10,
+    "standingsAsOf": "2026-11-23T20:09:44.127Z"
   }
 }

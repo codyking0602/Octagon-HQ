@@ -1,0 +1,51 @@
+{
+  "weekStart": "2026-11-16",
+  "weekEnd": "2026-11-22",
+  "publishedAt": "2026-11-23T20:09:43.993Z",
+  "player": {
+    "name": "Victor Wembanyama",
+    "team": "San Antonio Spurs",
+    "teamId": "SA",
+    "position": "F",
+    "gamesPlayed": 3,
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/5104157.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Victor%20Wembanyama",
+    "highlightUrl": "https://www.youtube.com/watch?v=IeYYoNUN-Ts",
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "35.7"
+      },
+      {
+        "label": "APG",
+        "value": "2.7"
+      },
+      {
+        "label": "RPG",
+        "value": "16.0"
+      },
+      {
+        "label": "FG%",
+        "value": "56.4"
+      }
+    ]
+  },
+  "team": {
+    "name": "Phoenix Suns",
+    "teamId": "PHX",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/PHO/2027.html",
+    "record": "3-0",
+    "ppg": "118.7",
+    "oppPpg": "104.3",
+    "netMargin": "+14.3",
+    "fgPct": "50.4",
+    "threePct": "39.4",
+    "seasonRecord": "8-7",
+    "conference": "WEST",
+    "conferenceSeed": 10,
+    "standingsAsOf": "2026-11-23T20:09:44.127Z"
+  }
+}
