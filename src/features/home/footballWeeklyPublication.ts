@@ -56,6 +56,20 @@ const VERIFIED_OCT20_CFB = {
   homeRecord: "4-2",
 } as const;
 
+/** Verified pregame records for the immutable November 24 NFL publication.
+ * The original approved editorial sources already confirm both records:
+ * https://www.washingtonpost.com/sports/nfl/2026/11/23/bills-analysis-week-11/d9707b4a-e792-11f1-8db0-6f1e3c389e7c_story.html
+ * This narrowly scoped presentation correction does not reopen or rearm the package.
+ */
+const VERIFIED_NOV24_NFL = {
+  week: "2026-11-24",
+  away: "Kansas City Chiefs",
+  home: "Buffalo Bills",
+  kickoff: "2026-11-27T01:20:00Z",
+  awayRecord: "8-2",
+  homeRecord: "9-1",
+} as const;
+
 export function publishedFootballMatchup(
   sport: FootballSpotlightKind,
   item: PublishedFootballSport,
@@ -74,8 +88,15 @@ export function publishedFootballMatchup(
     ? (verifiedOct20 ? VERIFIED_OCT20_CFB.awayRank : undefined) : game.away_rank;
   const homeRank = game.home_rank === undefined
     ? (verifiedOct20 ? VERIFIED_OCT20_CFB.homeRank : undefined) : game.home_rank;
-  const awayRecord = game.away_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.awayRecord : undefined);
-  const homeRecord = game.home_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.homeRecord : undefined);
+  const verifiedNov24 = sport === "nfl"
+    && item.week_of === VERIFIED_NOV24_NFL.week
+    && normTeam(away) === normTeam(VERIFIED_NOV24_NFL.away)
+    && normTeam(home) === normTeam(VERIFIED_NOV24_NFL.home)
+    && Date.parse(game.kickoff_at) === Date.parse(VERIFIED_NOV24_NFL.kickoff);
+  const awayRecord = game.away_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.awayRecord
+    : verifiedNov24 ? VERIFIED_NOV24_NFL.awayRecord : undefined);
+  const homeRecord = game.home_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.homeRecord
+    : verifiedNov24 ? VERIFIED_NOV24_NFL.homeRecord : undefined);
   const rankSource = sport === "cfb" && (awayRank != null || homeRank != null)
     ? game.ranking_source ?? (verifiedOct20 ? "AP" : undefined)
     : undefined;
