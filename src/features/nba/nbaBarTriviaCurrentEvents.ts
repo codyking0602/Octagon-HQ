@@ -6,6 +6,76 @@ import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEng
  * Each story has a short explicit window. Expired stories are never playable.
  */
 export const NBA_BAR_TRIVIA_CURRENT_EVENTS: readonly BarTriviaQuestion[] = [
+  // November 24 editorial review: officially verified stories.
+  barTriviaQuestion({
+    "id": "nba-current-2026-11-20-harden-50-point-milestone",
+    "league": "nba",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Career Milestones",
+    "prompt": "Which NBA star moved ahead of Kobe Bryant for the third-most career 50-point games on November 20?",
+    "choices": [
+      "James Harden",
+      "Stephen Curry",
+      "Kevin Durant",
+      "LeBron James"
+    ],
+    "answer": "James Harden",
+    "explanation": "James Harden scored 51 points in Cleveland's 128–119 NBA Cup win over Indiana on November 20, 2026, passing Kobe Bryant for third place in career 50-point games.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-09T23:59:59-06:00",
+    "sourceId": "nba-current-2026-11-20-harden-50-point-milestone",
+    "sourceUrl": "https://www.nba.com/news/starting-5-november-21-2026",
+    "verifiedAt": "2026-11-24"
+  }),
+
+  barTriviaQuestion({
+    "id": "nba-current-2026-11-22-jokic-murray-duo",
+    "league": "nba",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Historic Teammates",
+    "prompt": "Which NBA duo set the record for games with one teammate scoring 40 or more points and the other recording a triple-double?",
+    "choices": [
+      "Nikola Jokić and Jamal Murray",
+      "Luka Dončić and LeBron James",
+      "Giannis Antetokounmpo and Damian Lillard",
+      "Kevin Durant and Russell Westbrook"
+    ],
+    "answer": "Nikola Jokić and Jamal Murray",
+    "explanation": "In Denver's 151–145 overtime win over Chicago on November 22, 2026, Jamal Murray scored 45 and Nikola Jokić recorded a triple-double. It was their eighth such game, a new NBA record.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-12T23:59:59-06:00",
+    "sourceId": "nba-current-2026-11-22-jokic-murray-duo",
+    "sourceUrl": "https://www.nba.com/news/nuggets-murray-jokic-make-history-in-win-over-bulls",
+    "verifiedAt": "2026-11-24"
+  }),
+
+  barTriviaQuestion({
+    "id": "nba-current-2026-11-21-bridges-buzzer-beater",
+    "league": "nba",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Game-Winning Shots",
+    "prompt": "Which Knicks player hit a buzzer-beating three-pointer to defeat Portland 97–96 on November 21?",
+    "choices": [
+      "Mikal Bridges",
+      "Jalen Brunson",
+      "OG Anunoby",
+      "Karl-Anthony Towns"
+    ],
+    "answer": "Mikal Bridges",
+    "explanation": "Mikal Bridges sank the winning three-pointer as time expired at Madison Square Garden, lifting New York over Portland 97–96 on November 21, 2026.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-06T23:59:59-06:00",
+    "sourceId": "nba-current-2026-11-21-bridges-buzzer-beater",
+    "sourceUrl": "https://www.nba.com/news/brunson-scores-30-bridges-hits-3-at-buzzer-lifting-knicks-over-blazers",
+    "verifiedAt": "2026-11-24"
+  }),
+
   // November 10 editorial rerun; timed to the first November 19 NBA Bar Trivia appearance.
   barTriviaQuestion({
     id: "nba-current-2026-11-04-wembanyama-52-24",
