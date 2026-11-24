@@ -903,8 +903,17 @@ function boutIncludesTeam(bout: PickBout, team: FootballMatchupTeam) {
 export function footballMatchupBreakdownsForEvent(event: PickEvent | null) {
   if (event?.sport !== "football") return [];
 
-  return [...FOOTBALL_MATCHUP_BREAKDOWNS, ...FOOTBALL_OCTOBER_13_FEATURED].filter((breakdown) => event.bouts.some((bout) => {
-    const teamSets = [breakdown.teams, ...(breakdown.eventBindings ?? [])];
-    return teamSets.some((teams) => teams.every((team) => boutIncludesTeam(bout, team)));
-  }));
+  // The archive is not a schedule: a divisional rematch can have the same
+  // two teams in a later week. Undated or placeholder-bound editorials are
+  // not eligible for automatic display; preserve their original archive data.
+  return [...FOOTBALL_MATCHUP_BREAKDOWNS, ...FOOTBALL_OCTOBER_13_FEATURED].filter((breakdown) => {
+    const kickoff = Date.parse(breakdown.kickoffAt ?? "");
+    if (!Number.isFinite(kickoff)) return false;
+    return event.bouts.some((bout) => {
+      const boutKickoff = Date.parse(bout.locksAt ?? "");
+      return Number.isFinite(boutKickoff)
+        && Math.abs(kickoff - boutKickoff) < 24 * 60 * 60 * 1000
+        && breakdown.teams.every((team) => boutIncludesTeam(bout, team));
+    });
+  });
 }

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { PickEvent } from "./picksModel";
 import { FOOTBALL_MATCHUP_BREAKDOWNS, footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 
-function footballEvent(teamPairs: Array<[string, string, string, string]>): PickEvent {
+function footballEvent(teamPairs: Array<[string, string, string, string, string?]>): PickEvent {
   return {
     eventId: "football-week-1",
     sport: "football",
@@ -14,7 +14,7 @@ function footballEvent(teamPairs: Array<[string, string, string, string]>): Pick
     locksAt: "2026-09-05T16:00:00Z",
     season: 2026,
     status: "upcoming",
-    bouts: teamPairs.map(([homeSlug, homeName, awaySlug, awayName], index) => ({
+    bouts: teamPairs.map(([homeSlug, homeName, awaySlug, awayName, kickoff], index) => ({
       boutId: `${awaySlug}-${homeSlug}`,
       position: index + 1,
       weightClass: "COLLEGE-FOOTBALL ATS",
@@ -28,6 +28,7 @@ function footballEvent(teamPairs: Array<[string, string, string, string]>): Pick
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       resultStatus: "pending",
+      locksAt: kickoff ?? "2026-09-05T16:00:00Z",
     })),
   };
 }
@@ -35,8 +36,8 @@ function footballEvent(teamPairs: Array<[string, string, string, string]>): Pick
 describe("football matchup breakdowns", () => {
   it("discovers this week's authored featured matchups from the canonical slate games without an event-id map", () => {
     const event = footballEvent([
-      ["seattle-seahawks", "Seattle Seahawks", "san-francisco-49ers", "San Francisco 49ers"],
-      ["alabama-crimson-tide", "Alabama Crimson Tide", "georgia-bulldogs", "Georgia Bulldogs"],
+      ["seattle-seahawks", "Seattle Seahawks", "san-francisco-49ers", "San Francisco 49ers", "2026-10-11T20:25:00Z"],
+      ["alabama-crimson-tide", "Alabama Crimson Tide", "georgia-bulldogs", "Georgia Bulldogs", "2026-10-10T23:30:00Z"],
       ["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"],
     ]);
 
@@ -44,6 +45,21 @@ describe("football matchup breakdowns", () => {
       "2026-49ers-seahawks",
       "2026-georgia-alabama",
     ]);
+  });
+
+  it("rejects the October 11 archive on the November 29 reverse fixture", () => {
+    const rematch = footballEvent([[
+      "san-francisco-49ers", "San Francisco 49ers", "seattle-seahawks", "Seattle Seahawks", "2026-11-29T21:25:00Z",
+    ]]);
+    expect(footballMatchupBreakdownsForEvent(rematch)).toEqual([]);
+  });
+
+  it("does not bind an editorial to unrelated placeholder opponents or an undated archive", () => {
+    const unrelated = footballEvent([
+      ["usc-trojans", "USC Trojans", "oregon-ducks", "Oregon Ducks", "2026-10-03T16:00:00Z"],
+      ["lsu-tigers", "LSU Tigers", "clemson-tigers", "Clemson Tigers", "2026-11-29T21:25:00Z"],
+    ]);
+    expect(footballMatchupBreakdownsForEvent(unrelated)).toEqual([]);
   });
 
   it("frames LSU-Ole Miss around Lane Kiffin's return to Oxford", () => {
@@ -66,6 +82,7 @@ describe("football matchup breakdowns", () => {
       "Mississippi State Bulldogs",
       "alabama-crimson-tide",
       "Alabama Crimson Tide",
+      "2026-10-03T16:00:00Z",
     ]]);
 
     expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
@@ -88,7 +105,7 @@ describe("football matchup breakdowns", () => {
 
   it("binds the current Patriots at Bears Thursday matchup to the published slate", () => {
     const event = footballEvent([[
-      "chicago-bears", "Chicago Bears", "new-england-patriots", "New England Patriots",
+      "chicago-bears", "Chicago Bears", "new-england-patriots", "New England Patriots", "2026-10-23T00:15:00Z",
     ]]);
     const matching = footballMatchupBreakdownsForEvent(event);
     expect(matching.map((item) => item.id)).toEqual(["2026-patriots-bears-week7"]);
@@ -169,8 +186,8 @@ describe("football matchup breakdowns", () => {
   });
   it("uses published SeatGeek team graphics for the two owner-selected October 13 games", () => {
     const event = footballEvent([
-      ["byu-cougars", "BYU Cougars", "notre-dame-fighting-irish", "Notre Dame Fighting Irish"],
-      ["green-bay-packers", "Green Bay Packers", "dallas-cowboys", "Dallas Cowboys"],
+      ["byu-cougars", "BYU Cougars", "notre-dame-fighting-irish", "Notre Dame Fighting Irish", "2026-10-17T23:30:00Z"],
+      ["green-bay-packers", "Green Bay Packers", "dallas-cowboys", "Dallas Cowboys", "2026-10-19T00:20:00Z"],
     ]);
     const matches = footballMatchupBreakdownsForEvent(event);
     expect(matches.map((game) => game.id)).toEqual([

@@ -5,7 +5,7 @@ import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import type { PlayChallenge } from "../challenges/challengeModel";
 import { parsePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballTeamSchoolMetadata } from "../back-room/footballTeamSchoolMetadata";
-import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, playerSpotlightSecondaryColor, footballSpotlightKindAt, footballOutstandingChallengeCount } from "./FootballHq";
+import { FootballHq, featuredGameForBreakdown, featuredFootballGamesForEvent, footballHqTeamPresentationFor, playerSpotlightSecondaryColor, footballSpotlightKindAt, footballOutstandingChallengeCount } from "./FootballHq";
 import type { FootballPlayerSpotlight } from "./footballPlayerSpotlightSchedule";
 
 // These legacy presentation tests intentionally exercise the static fallback
@@ -53,40 +53,40 @@ const event: PickEvent = {
       locksAt: "2026-09-12T16:00:00Z",
     },
     {
-      boutId: "football-college-football-oregon-usc",
+      boutId: "football-college-football-alabama-mississippi-state",
       position: 9,
       weightClass: "COLLEGE-FOOTBALL ATS",
-      redFighterSlug: "usc-trojans",
-      redFighterName: "USC Trojans",
-      blueFighterSlug: "oregon-ducks",
-      blueFighterName: "Oregon Ducks",
-      homeTeamSlug: "usc-trojans",
-      awayTeamSlug: "oregon-ducks",
-      homeTeamLogoUrl: "https://example.com/usc.png",
-      awayTeamLogoUrl: "https://example.com/oregon.png",
+      redFighterSlug: "mississippi-state-bulldogs",
+      redFighterName: "Mississippi State Bulldogs",
+      blueFighterSlug: "alabama-crimson-tide",
+      blueFighterName: "Alabama Crimson Tide",
+      homeTeamSlug: "mississippi-state-bulldogs",
+      awayTeamSlug: "alabama-crimson-tide",
+      homeTeamLogoUrl: "https://example.com/mississippi-state.png",
+      awayTeamLogoUrl: "https://example.com/alabama.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-26T23:30:00Z",
+      locksAt: "2026-10-03T16:00:00Z",
     },
     {
-      boutId: "football-nfl-raiders-saints",
+      boutId: "football-nfl-chiefs-raiders",
       position: 23,
       weightClass: "NFL ATS",
-      redFighterSlug: "new-orleans-saints",
-      redFighterName: "New Orleans Saints",
-      blueFighterSlug: "las-vegas-raiders",
-      blueFighterName: "Las Vegas Raiders",
-      homeTeamSlug: "new-orleans-saints",
-      awayTeamSlug: "las-vegas-raiders",
-      homeTeamLogoUrl: "https://example.com/saints.png",
-      awayTeamLogoUrl: "https://example.com/raiders.png",
+      redFighterSlug: "las-vegas-raiders",
+      redFighterName: "Las Vegas Raiders",
+      blueFighterSlug: "kansas-city-chiefs",
+      blueFighterName: "Kansas City Chiefs",
+      homeTeamSlug: "las-vegas-raiders",
+      awayTeamSlug: "kansas-city-chiefs",
+      homeTeamLogoUrl: "https://example.com/raiders.png",
+      awayTeamLogoUrl: "https://example.com/chiefs.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-27T20:25:00Z",
+      locksAt: "2026-10-04T20:25:00Z",
     },
   ],
 };
@@ -194,6 +194,43 @@ describe("weekly owner-selected Games of the Week", () => {
     expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-cfb", parsed)?.boutId).toBe("cfb-ole-miss-at-texas");
     expect(featuredGameForBreakdown(actual, "2026-patriots-bears-week7", parsed)?.boutId).toBe("nfl-week7-patriots-bears");
     expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-nfl", null)).toBeNull();
+
+    // Even an otherwise valid authored contest must not add a third row to
+    // the owner-selected weekly CFB + NFL slots.
+    const extra = { ...event.bouts[2]!, boutId: "extra-authored-nfl" };
+    const withExtra = { ...actual, bouts: [...actual.bouts, extra] };
+    expect(featuredFootballGamesForEvent(withExtra, parsed).map(({ game }) => game.boutId))
+      .toEqual(["cfb-ole-miss-at-texas", "nfl-week7-patriots-bears"]);
+    // Independent release: never fill the missing NFL slot with archive content.
+    expect(featuredFootballGamesForEvent(withExtra, { ...parsed, nfl: null }).map(({ game }) => game.boutId))
+      .toEqual(["cfb-ole-miss-at-texas"]);
+
+    const rematch = {
+      ...event.bouts[2]!, boutId: "nov29-seahawks-49ers",
+      redFighterSlug: "san-francisco-49ers", redFighterName: "San Francisco 49ers",
+      blueFighterSlug: "seattle-seahawks", blueFighterName: "Seattle Seahawks",
+      homeTeamSlug: "san-francisco-49ers", awayTeamSlug: "seattle-seahawks", locksAt: "2026-11-29T21:25:00Z",
+    };
+    const nov = parsePublishedFootballWeek({
+      cfb: { ...makeSport("cfb"), week_of: "2026-11-24", release_at: "2026-11-24T12:00:00Z",
+        game: { away_team: "Texas", home_team: "Texas A&M", kickoff_at: "2026-11-28T00:30:00Z" },
+        spotlight: { ...makeSport("cfb").spotlight, photo_asset_path: "/assets/football/weekly/2026-11-24/cfb/spotlight.webp" } },
+      nfl: { ...makeSport("nfl"), week_of: "2026-11-24", release_at: "2026-11-24T12:00:00Z",
+        game: { away_team: "Kansas City Chiefs", home_team: "Buffalo Bills", kickoff_at: "2026-11-27T01:20:00Z" },
+        spotlight: { ...makeSport("nfl").spotlight, photo_asset_path: "/assets/football/weekly/2026-11-24/nfl/spotlight.webp" } },
+    });
+    const slate = { ...event, bouts: [
+      { ...actual.bouts[1]!, boutId: "texas-am", redFighterSlug: "texas-am-aggies", redFighterName: "Texas A&M Aggies",
+        blueFighterSlug: "texas-longhorns", blueFighterName: "Texas Longhorns",
+        homeTeamSlug: "texas-am-aggies", awayTeamSlug: "texas-longhorns", locksAt: "2026-11-28T00:30:00Z" },
+      { ...actual.bouts[0]!, boutId: "chiefs-bills", redFighterSlug: "buffalo-bills", redFighterName: "Buffalo Bills",
+        blueFighterSlug: "kansas-city-chiefs", blueFighterName: "Kansas City Chiefs",
+        homeTeamSlug: "buffalo-bills", awayTeamSlug: "kansas-city-chiefs", locksAt: "2026-11-27T01:20:00Z" },
+      rematch,
+    ] };
+    expect(featuredFootballGamesForEvent(slate, nov).map(({ game }) => game.boutId))
+      .toEqual(["texas-am", "chiefs-bills"]);
+    expect(featuredGameForBreakdown(slate, "2026-49ers-seahawks", nov)).toBeNull();
   });
 });
 
