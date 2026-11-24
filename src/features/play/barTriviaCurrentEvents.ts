@@ -1,6 +1,99 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  // November 24 editorial review: officially verified stories.
+  barTriviaQuestion({
+    "id": "nfl-current-2026-11-23-aiyuk-release",
+    "league": "nfl",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Roster Moves",
+    "prompt": "Which wide receiver was released by the San Francisco 49ers on November 23 after a lengthy absence from the team?",
+    "choices": [
+      "Brandon Aiyuk",
+      "Deebo Samuel",
+      "Ricky Pearsall",
+      "Jauan Jennings"
+    ],
+    "answer": "Brandon Aiyuk",
+    "explanation": "The NFL reported that San Francisco released Brandon Aiyuk on November 23, 2026, ending his extended separation from the team.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-06T23:59:59-06:00",
+    "sourceId": "nfl-current-2026-11-23-aiyuk-release",
+    "sourceUrl": "https://www.nfl.com/news/49ers-releasing-wr-brandon-aiyuk",
+    "verifiedAt": "2026-11-24"
+  }),
+
+  barTriviaQuestion({
+    "id": "nfl-current-2026-11-22-prescott-five-td",
+    "league": "nfl",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Star Performances",
+    "prompt": "Which quarterback threw four touchdowns and ran for another in a 51-point Week 11 win over Tennessee?",
+    "choices": [
+      "Dak Prescott",
+      "Josh Allen",
+      "Lamar Jackson",
+      "Patrick Mahomes"
+    ],
+    "answer": "Dak Prescott",
+    "explanation": "Dak Prescott threw for 325 yards and four touchdowns and added a rushing score as Dallas defeated Tennessee 51–30 on November 22, 2026.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-08T23:59:59-06:00",
+    "sourceId": "nfl-current-2026-11-22-prescott-five-td",
+    "sourceUrl": "https://www.dallascowboys.com/news/dak-prescott-cowboys-offense-find-rhythm-answers-for-everything-vs-titans",
+    "verifiedAt": "2026-11-24"
+  }),
+
+  barTriviaQuestion({
+    "id": "cfb-current-2026-11-21-washington-indiana-upset",
+    "league": "cfb",
+    "round": "round1",
+    "difficulty": "easy",
+    "category": "Ranked Upsets",
+    "prompt": "Which Big Ten team upset defending national champion Indiana 27–24 in overtime on November 21?",
+    "choices": [
+      "Washington",
+      "Oregon",
+      "Michigan",
+      "Penn State"
+    ],
+    "answer": "Washington",
+    "explanation": "Washington won 27–24 at home against ranked Indiana on November 21, 2026. Tyler Robles made the decisive 46-yard overtime field goal.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-07T23:59:59-06:00",
+    "sourceId": "cfb-current-2026-11-21-washington-indiana-upset",
+    "sourceUrl": "https://gohuskies.com/news/2026/11/21/football-uw-upsets-no-6-8-indiana-27-24-in-ot-on-tyler-robles-field-goal",
+    "verifiedAt": "2026-11-24"
+  }),
+
+  barTriviaQuestion({
+    "id": "ufc-current-2026-11-21-stirling-prochazka",
+    "league": "ufc",
+    "round": "round2",
+    "difficulty": "medium",
+    "category": "Main Event Finishes",
+    "prompt": "Which light heavyweight knocked out former champion Jiří Procházka in the second round of the November 21 UFC Qatar main event?",
+    "choices": [
+      "Navajo Stirling",
+      "Carlos Ulberg",
+      "Khalil Rountree Jr.",
+      "Aleksandar Rakić"
+    ],
+    "answer": "Navajo Stirling",
+    "explanation": "Navajo Stirling stopped Jiří Procházka by second-round knockout in the UFC Qatar light heavyweight main event on November 21, 2026.",
+    "contentType": "current-event",
+    "activeFrom": "2026-11-24T00:00:00-06:00",
+    "expiresAt": "2026-12-10T23:59:59-06:00",
+    "sourceId": "ufc-current-2026-11-21-stirling-prochazka",
+    "sourceUrl": "https://www.ufc.com/news/ufc-qatar-official-scorecards-prochazka-vs-stirling",
+    "verifiedAt": "2026-11-24"
+  }),
+
   // November 17 editorial review: confirmed Week 10/11 games and UFC 334.
   barTriviaQuestion({
     "id": "nfl-current-2026-11-15-mccaffrey-two-long-td",
