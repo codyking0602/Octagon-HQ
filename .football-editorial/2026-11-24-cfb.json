@@ -1,0 +1,157 @@
+{
+  "week_of": "2026-11-24",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "gio-lopez",
+        "name": "Gio Lopez",
+        "team": "Wake Forest",
+        "position": "QB",
+        "summary": "17/22, 324 passing yards, two passing and two rushing TDs in 50–29 win at Georgia Tech. Source: https://godeacs.com/news/2026/11/21/no-11-wake-forest-earns-college-football-playoff-era-record-sixth-power-four-road-victory-at-georgia-tech"
+      },
+      {
+        "id": "jeremiah-smith",
+        "name": "Jeremiah Smith",
+        "team": "Ohio State",
+        "position": "WR",
+        "summary": "Six receptions for 165 yards and two touchdowns in a 31–28 loss at Nebraska. Source: https://ohiostatebuckeyes.com/news/2026/11/21/football-buckeyes-drop-tightly-contested-game-at-nebraska"
+      },
+      {
+        "id": "arch-manning",
+        "name": "Arch Manning",
+        "team": "Texas",
+        "position": "QB",
+        "summary": "21/25 for 287 yards and three total TDs in 45–3 win over Arkansas. Source: https://texaslonghorns.com/news/2026/11/21/no-8-8-5-football-routs-arkansas-45-3"
+      },
+      {
+        "id": "arion-carter",
+        "name": "Arion Carter",
+        "team": "Tennessee",
+        "position": "LB",
+        "summary": "10 tackles, two TFLs, one sack, a forced fumble and recovery in 27–13 win over LSU. Source: https://www.secsports.com/news/2026/11/sec-football-players-of-the-week-nov-23"
+      },
+      {
+        "id": "jaylin-carter",
+        "name": "Jaylin Carter",
+        "team": "Memphis",
+        "position": "RB",
+        "summary": "23 carries, 229 yards and three rushing TDs at Navy. Source: https://gotigersgo.com/sports/football/stats/2026/navy/boxscore/20064"
+      }
+    ],
+    "games": [
+      {
+        "id": "texas-at-texas-am",
+        "away_team": "Texas",
+        "home_team": "Texas A&M",
+        "kickoff_at": "2026-11-27T18:30:00-06:00",
+        "summary": "Lone Star Showdown at Kyle Field; No. 5 Texas is 9–2. Source: https://texaslonghorns.com/game-center/22505"
+      },
+      {
+        "id": "usc-at-ucla",
+        "away_team": "USC",
+        "home_team": "UCLA",
+        "kickoff_at": "2026-11-28T14:30:00-06:00",
+        "summary": "Ranked crosstown rivals at the Rose Bowl. Source: https://fbschedules.com/college-football-tv-schedule-slate-finalized-for-rivalry-week-2026/"
+      },
+      {
+        "id": "michigan-at-ohio-state",
+        "away_team": "Michigan",
+        "home_team": "Ohio State",
+        "kickoff_at": "2026-11-28T11:00:00-06:00",
+        "summary": "The Game in Columbus. Source: https://fbschedules.com/college-football-tv-schedule-slate-finalized-for-rivalry-week-2026/"
+      },
+      {
+        "id": "auburn-at-alabama",
+        "away_team": "Auburn",
+        "home_team": "Alabama",
+        "kickoff_at": "2026-11-28T18:30:00-06:00",
+        "summary": "Iron Bowl in Tuscaloosa. Source: https://fbschedules.com/college-football-tv-schedule-slate-finalized-for-rivalry-week-2026/"
+      },
+      {
+        "id": "louisville-at-kentucky",
+        "away_team": "Louisville",
+        "home_team": "Kentucky",
+        "kickoff_at": "2026-11-28T11:00:00-06:00",
+        "summary": "In-state rivalry at Kroger Field. Source: https://fbschedules.com/college-football-tv-schedule-slate-finalized-for-rivalry-week-2026/"
+      }
+    ]
+  },
+  "selection": {
+    "player_id": "gio-lopez",
+    "game_id": "texas-at-texas-am"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Gio Lopez",
+      "team": "Wake Forest",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "324"
+        },
+        {
+          "label": "COMP/ATT",
+          "value": "17/22"
+        },
+        {
+          "label": "PASS TD",
+          "value": "2"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "2"
+        }
+      ],
+      "result": "W 50–29 at Georgia Tech",
+      "measurements": "6 ft 0 in · 220 lbs",
+      "team_color": "#9E7E38",
+      "highlight_url": "https://www.youtube.com/watch?v=gobFiqVCXGo",
+      "photo_source": "https://a.espncdn.com/combiner/i?img=%2Fi%2Fheadshots%2Fcollege-football%2Fplayers%2Ffull%2F4920227.png&w=350&h=254",
+      "photo_asset_path": "/assets/football/weekly/2026-11-24/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Texas",
+      "home_team": "Texas A&M",
+      "kickoff_at": "2026-11-27T18:30:00-06:00",
+      "ranking_source": "AP",
+      "away_rank": 5,
+      "home_rank": null,
+      "away_record": "9-2",
+      "home_record": "4-7"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://godeacs.com/sports/football/stats/2026/georgia-tech/boxscore/14642",
+        "https://godeacs.com/sports/football/roster/gio-lopez/9347",
+        "https://www.cbssports.com/college-football/rankings/ap/",
+        "https://texaslonghorns.com/news/2026/11/21/no-8-8-5-football-routs-arkansas-45-3",
+        "https://12thman.com/news/2026/11/23/texas-game-week-press-conference-and-game-notes",
+        "https://www.houstonchronicle.com/sports/college/aggies/article/tamu-quarterbacks-marcel-reed-brady-hart-texas-22545381.php",
+        "https://statsnext.com/college-football/games/2026-11-28-longhorns-at-aggies-95865b07"
+      ],
+      "breakdown": {
+        "setup": [
+          "No. 5 Texas (9–2) enters the Lone Star Showdown after five straight victories, most recently a 45–3 win over Arkansas. Texas A&M (4–7) has dropped four straight, but a rivalry game at Kyle Field offers a chance to disrupt the Longhorns' playoff ambitions."
+        ],
+        "things": [
+          {
+            "title": "Manning's efficiency",
+            "body": "Arch Manning completed 21 of 25 passes for 287 yards and accounted for three touchdowns against Arkansas. A&M needs to force longer drives and disrupt his rhythm without giving up easy throws."
+          },
+          {
+            "title": "The Aggies' quarterback decision",
+            "body": "Brady Hart made his first start against Oklahoma and completed eight of 20 attempts for 131 yards. Mike Elko has not committed to a starter for the rivalry; whichever quarterback plays needs manageable third downs against Colin Simmons and the Texas pass rush."
+          },
+          {
+            "title": "Turnovers and field position",
+            "body": "Texas defensive back Jelani McDonald recorded four interceptions and a pick-six across two games. The Aggies need clean possessions and a physical run game to limit the short fields that could let Texas take control."
+          }
+        ],
+        "bottom_line": "Texas has the momentum and postseason stakes, while A&M has home-field energy and a chance to salvage its season. Protection, early-down execution and avoiding turnovers will determine whether the Aggies can keep the rivalry competitive."
+      }
+    }
+  }
+}
