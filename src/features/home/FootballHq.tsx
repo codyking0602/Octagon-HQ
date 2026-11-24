@@ -203,6 +203,26 @@ function fullTeamNameForGame(game: PickBout, team: FootballMatchupBreakdown["tea
   return team.name;
 }
 
+/** Home features only the approved weekly slots, not every available sheet.
+ * Before a canonical publication exists, use only dated, real legacy matches.
+ * One slot per sport is a hard limit in both compact and full Home layouts.
+ */
+export function featuredFootballGamesForEvent(event: PickEvent | null, published: PublishedFootballWeek | null) {
+  if (!event) return [];
+  const weekly = publishedFootballMatchupsForEvent(event, published);
+  const merged = mergeFootballWeeklyMatchupBreakdowns(weekly, footballMatchupBreakdownsForEvent(event));
+  const candidates = published?.cfb || published?.nfl ? merged.slice(0, weekly.length) : merged;
+  const seen = new Set<"cfb" | "nfl">();
+  return candidates.flatMap((breakdown) => {
+    const game = featuredGameForBreakdown(event, breakdown.id, published);
+    if (!game) return [];
+    const sport = isCollegeGame(game.weightClass) ? "cfb" : "nfl";
+    if (seen.has(sport)) return [];
+    seen.add(sport);
+    return [{ breakdown, game }];
+  });
+}
+
 /**
  * Keep long school/city names intact while giving nicknames a calmer second line.
  * This works for the live matchup each week, not a hardcoded pair of teams.
@@ -546,14 +566,7 @@ export function FootballHq({
   const standings = picksSeasonStandings(history, "football");
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? standingLabel(standing.rank, standings) : "";
-  const matchupBreakdowns = event ? mergeFootballWeeklyMatchupBreakdowns(
-    publishedFootballMatchupsForEvent(event, published ?? null),
-    footballMatchupBreakdownsForEvent(event),
-  ) : [];
-  const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
-    const game = featuredGameForBreakdown(event, breakdown.id, published ?? null);
-    return game ? [{ breakdown, game }] : [];
-  }) : [];
+  const featuredMatchups = featuredFootballGamesForEvent(event, published ?? null);
   const season = event?.season ?? history?.season ?? new Date().getFullYear();
   const status = !signedIn
     ? "SIGN IN TO PLAY"
