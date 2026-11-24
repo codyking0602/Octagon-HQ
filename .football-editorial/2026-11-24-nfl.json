@@ -1,0 +1,151 @@
+{
+  "week_of": "2026-11-24",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "dak-prescott",
+        "name": "Dak Prescott",
+        "team": "Dallas Cowboys",
+        "position": "QB",
+        "summary": "325 passing yards, four passing TDs and one rushing TD in 51–30 win over Tennessee. Source: https://www.dallascowboys.com/news/game-recap-offense-dominates-in-51-30-win"
+      },
+      {
+        "id": "jahmyr-gibbs",
+        "name": "Jahmyr Gibbs",
+        "team": "Detroit Lions",
+        "position": "RB",
+        "summary": "98 rushing yards, two rushing TDs and 20 receiving yards in 31–21 win over Tampa Bay. Source: https://www.detroitlions.com/team/players-roster/jahmyr-gibbs/logs/"
+      },
+      {
+        "id": "ceedee-lamb",
+        "name": "CeeDee Lamb",
+        "team": "Dallas Cowboys",
+        "position": "WR",
+        "summary": "11 catches, 132 yards and one TD in win over Tennessee. Source: https://www.dallascowboys.com/news/game-recap-offense-dominates-in-51-30-win"
+      },
+      {
+        "id": "bryce-young",
+        "name": "Bryce Young",
+        "team": "Carolina Panthers",
+        "position": "QB",
+        "summary": "22/30, 254 passing yards and two TDs in 35–33 win over Baltimore. Source: https://www.panthers.com/news/rapid-reactions-panthers-win-second-straight-stay-in-first"
+      },
+      {
+        "id": "brock-purdy",
+        "name": "Brock Purdy",
+        "team": "San Francisco 49ers",
+        "position": "QB",
+        "summary": "21/26, 255 yards, three TDs and zero interceptions in 35–10 win over Minnesota. Source: https://www.49ers.com/team/players-roster/brock-purdy/logs/"
+      }
+    ],
+    "games": [
+      {
+        "id": "chiefs-at-bills",
+        "away_team": "Kansas City Chiefs",
+        "home_team": "Buffalo Bills",
+        "kickoff_at": "2026-11-26T19:20:00-06:00",
+        "summary": "Thanksgiving night; 8–2 Chiefs at 9–1 Bills. Source: https://www.nfl.com/schedules/2026/by-week/week-12"
+      },
+      {
+        "id": "eagles-at-cowboys",
+        "away_team": "Philadelphia Eagles",
+        "home_team": "Dallas Cowboys",
+        "kickoff_at": "2026-11-26T15:30:00-06:00",
+        "summary": "Thanksgiving NFC East rivalry. Source: https://www.nfl.com/schedules/2026/by-week/week-12"
+      },
+      {
+        "id": "bears-at-lions",
+        "away_team": "Chicago Bears",
+        "home_team": "Detroit Lions",
+        "kickoff_at": "2026-11-26T12:00:00-06:00",
+        "summary": "Thanksgiving NFC North rivalry. Source: https://www.nfl.com/schedules/2026/by-week/week-12"
+      },
+      {
+        "id": "seahawks-at-49ers",
+        "away_team": "Seattle Seahawks",
+        "home_team": "San Francisco 49ers",
+        "kickoff_at": "2026-11-29T15:25:00-06:00",
+        "summary": "NFC West matchup at Levi's Stadium. Source: https://www.nfl.com/schedules/2026/by-week/week-12"
+      },
+      {
+        "id": "broncos-at-steelers",
+        "away_team": "Denver Broncos",
+        "home_team": "Pittsburgh Steelers",
+        "kickoff_at": "2026-11-27T14:00:00-06:00",
+        "summary": "Black Friday AFC matchup. Source: https://www.nfl.com/schedules/2026/by-week/week-12"
+      }
+    ]
+  },
+  "selection": {
+    "player_id": "dak-prescott",
+    "game_id": "chiefs-at-bills"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Dak Prescott",
+      "team": "Dallas Cowboys",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "325"
+        },
+        {
+          "label": "PASS TD",
+          "value": "4"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "1"
+        },
+        {
+          "label": "PASS RTG",
+          "value": "147.3"
+        }
+      ],
+      "result": "W 51–30 vs Tennessee Titans",
+      "measurements": "6 ft 2 in · 230 lbs",
+      "team_color": "#003594",
+      "highlight_url": "https://www.youtube.com/watch?v=8oWgHgf_c_w",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/2577417.png",
+      "photo_asset_path": "/assets/football/weekly/2026-11-24/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Kansas City Chiefs",
+      "home_team": "Buffalo Bills",
+      "kickoff_at": "2026-11-26T19:20:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.dallascowboys.com/news/game-recap-offense-dominates-in-51-30-win",
+        "https://www.dallascowboys.com/team/players-roster/dak-prescott/",
+        "https://www.buffalobills.com/news/how-special-buffalo-is-bills-anticipate-special-home-thanksgiving-game-detail-keys-to-facing-red-hot-chiefs",
+        "https://amp.nfl.com/news/bills-have-been-feasting-now-comes-the-main-course-patrick-mahomes-and-the-chiefs",
+        "https://www.washingtonpost.com/sports/nfl/2026/11/23/bills-analysis-week-11/d9707b4a-e792-11f1-8db0-6f1e3c389e7c_story.html",
+        "https://www.nfl.com/schedules/2026/by-week/week-12"
+      ],
+      "breakdown": {
+        "setup": [
+          "Buffalo (9–1) hosts Kansas City (8–2) in a Thanksgiving meeting of two AFC contenders. The Bills just beat Miami 26–9 while the Chiefs defeated Arizona 34–7. Josh Allen and Patrick Mahomes renew a rivalry in which Buffalo has enjoyed regular-season success but Kansas City has won all four playoff meetings between the quarterbacks."
+        ],
+        "things": [
+          {
+            "title": "Kansas City's explosive run game",
+            "body": "The Chiefs rank second in yards per rush and explosive runs. Buffalo must prevent the ground game from creating favorable passing downs for Mahomes, whose offense can exploit defenders drawn toward the line."
+          },
+          {
+            "title": "Finishing in the red zone",
+            "body": "Buffalo has scored on all 41 red-zone trips this season, but six of its last 12 scoring drives inside the 20 ended in field goals. Against Kansas City's offense, turning those opportunities into touchdowns matters."
+          },
+          {
+            "title": "Allen against a stronger test",
+            "body": "Buffalo's recent winning stretch included several opponents starting backup quarterbacks. Against Mahomes, Allen and the offense need sustained drives and sound decisions to keep the Chiefs from controlling possession."
+          }
+        ],
+        "bottom_line": "Buffalo's home field and strong record meet a Kansas City team with an explosive rushing attack and a proven quarterback. The red-zone battle, explosive plays and possession efficiency will shape this AFC showdown."
+      }
+    }
+  }
+}
