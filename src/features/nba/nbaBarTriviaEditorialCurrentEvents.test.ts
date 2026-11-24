@@ -93,7 +93,18 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
       }
     }
     expect(seen.size).toBe(200);
-    expect(news.size).toBe(4;
+    expect(news.size).toBe(4);
+    expect(news.has("nba-current-2026-11-04-wembanyama-52-24")).toBe(true);
+    expect(news.has("nba-current-2026-11-07-warriors-seven-straight")).toBe(true);
+    const nov24 = NBA_BAR_TRIVIA_CURRENT_EVENTS.filter(q => q.verifiedAt === "2026-11-24");
+    expect(nov24).toHaveLength(3);
+    expect(nov24.filter(q => news.has(q.id))).toHaveLength(2);
+    const dec3 = buildNbaBarTriviaDailyBoard(1, "2026-12-03").questions.filter(q => q.contentType === "current-event");
+    expect(dec3).toHaveLength(2);
+    for (const q of dec3) {
+      expect(nov24.some(row => row.id === q.id)).toBe(true);
+      expect(isBarTriviaQuestionActive(q, "2026-12-03T18:00:00Z")).toBe(true);
+    }
     expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
   });
 
