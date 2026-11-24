@@ -79,6 +79,16 @@ jobs:
                   raise SystemExit(f"Manifest path/data mismatch: {path}")
               if set(data) - {"week_of", "sport", "candidates", "selection", "preparation"}:
                   raise SystemExit(f"Unexpected manifest fields: {path}")
+              # Require both sourced pregame records for every new prepared
+              # weekly matchup. Earlier immutable publications remain replayable.
+              preparation = data.get("preparation")
+              if preparation is not None and data["week_of"] >= "2026-12-01":
+                  game = preparation.get("game", {}) if isinstance(preparation, dict) else {}
+                  pattern = r"\d{1,2}-\d{1,2}(?:-\d{1,2})?" if data["sport"] == "nfl" else r"\d{1,2}-\d{1,2}"
+                  for side in ("away", "home"):
+                      record = game.get(f"{side}_record") if isinstance(game, dict) else None
+                      if not isinstance(record, str) or not re.fullmatch(pattern, record):
+                          raise SystemExit(f"{path}: missing or invalid sourced {side}_record")
               body = json.dumps(data).encode()
               for attempt in range(4):
                   req = urllib.request.Request(os.environ["ENDPOINT"], data=body, headers={

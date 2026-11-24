@@ -111,6 +111,29 @@ describe("public Football weekly release projection", () => {
     expect(sourced.teams[1]).toMatchObject({ rank: null, record: "4-3" });
   });
 
+  it("restores both NFL pregame records for the exact immutable Thanksgiving publication without NFL rankings", () => {
+    const week = parsePublishedFootballWeek({ cfb: null, nfl: {
+      ...sport, week_of: "2026-11-24", release_at: "2026-11-24T12:00:00Z",
+      game: { away_team: "Kansas City Chiefs", home_team: "Buffalo Bills",
+        kickoff_at: "2026-11-26T19:20:00-06:00" },
+    } }).nfl!;
+    const game = publishedFootballMatchup("nfl", week);
+    expect(game.teams.map(team => team.record)).toEqual(["8-2", "9-1"]);
+    expect(game.compact?.rankingSource).toBeUndefined();
+    for (const other of [
+      { ...week, week_of: "2026-12-01" },
+      { ...week, game: { ...week.game, kickoff_at: "2026-11-29T19:20:00-06:00" } },
+      { ...week, game: { ...week.game, home_team: "Kansas City Chiefs", away_team: "Buffalo Bills" } },
+      { ...week, game: { ...week.game, away_team: "Miami Dolphins" } },
+    ]) {
+      expect(publishedFootballMatchup("nfl", other).teams.map(team => team.record)).toEqual([undefined, undefined]);
+    }
+    const sourced = parsePublishedFootballWeek({ cfb: null, nfl: {
+      ...week, week_of: "2026-12-01", game: { ...week.game, away_record: "8-2-1", home_record: "10-1" },
+    } }).nfl!;
+    expect(publishedFootballMatchup("nfl", sourced).teams.map(team => team.record)).toEqual(["8-2-1", "10-1"]);
+  });
+
   it("only attaches published GOTW breakdown when exact matchup and kickoff are on the Picks event", () => {
     const event = {
       sport: "football", startsAt: "2026-10-17T12:00:00Z",

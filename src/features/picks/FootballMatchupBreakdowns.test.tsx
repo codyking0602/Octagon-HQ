@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { FOOTBALL_MATCHUP_BREAKDOWNS } from "./footballMatchupBreakdowns";
 import { usePicks } from "./PicksProvider";
+import { publishedFootballMatchup, type PublishedFootballSport } from "../home/footballWeeklyPublication";
 
 vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
 vi.mock("../picks-control/pickControlRepository", () => ({
@@ -41,6 +42,23 @@ describe("FootballMatchupBreakdowns", () => {
     expect(images[0]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png");
     expect(images[1]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png");
     expect(dialog.querySelectorAll(".football-matchup-breakdown-feature-team__logo b")).toHaveLength(0);
+  });
+
+  it("renders the Thanksgiving NFL records underneath the correct team names in the actual modal", () => {
+    const item = {
+      week_of: "2026-11-24",
+      game: { away_team: "Kansas City Chiefs", home_team: "Buffalo Bills", kickoff_at: "2026-11-26T19:20:00-06:00" },
+      breakdown: {
+        setup: ["Pregame setup."],
+        things: [{ title: "One", body: "One." }, { title: "Two", body: "Two." }, { title: "Three", body: "Three." }],
+        bottom_line: "Bottom line.",
+      },
+    } as PublishedFootballSport;
+    render(<FootballMatchupBreakdowns breakdowns={[publishedFootballMatchup("nfl", item)]} />);
+    fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWN" }));
+    expect(screen.getByRole("link", { name: "Kansas City Chiefs" })).toHaveTextContent("8-2");
+    expect(screen.getByRole("link", { name: "Buffalo Bills" })).toHaveTextContent("9-1");
+    expect(screen.getByRole("dialog")).not.toHaveTextContent("AP #");
   });
 
   it("opens the featured breakdown sheet and switches between authored matchups without a read or prediction section", () => {
