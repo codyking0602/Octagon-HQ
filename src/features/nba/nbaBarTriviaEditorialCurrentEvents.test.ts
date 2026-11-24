@@ -44,7 +44,7 @@ describe("NBA Bar Trivia semantic duplicates and difficulty calibration", () => 
 
 describe("NBA Bar Trivia current-event editorial publishing", () => {
   it("only stages verified, bounded and sourced NBA current events", () => {
-    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(8);
+    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(11);
     expect(() => validateNbaBarTriviaCurrentEvents(NBA_BAR_TRIVIA_CURRENT_EVENTS)).not.toThrow();
     for (const q of NBA_BAR_TRIVIA_CURRENT_EVENTS) {
       expect(q.contentType).toBe("current-event");
@@ -61,7 +61,7 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
     ])).toThrow();
   });
 
-  it("uses two eligible November stories but never resurrects expired launch-week news", () => {
+  it("uses at most two eligible stories on each scheduled board and never resurrects expired launch-week news", () => {
     const seen = new Set<string>();
     let newsCount = 0;
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
@@ -74,9 +74,9 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
         seen.add(q.id);
       }
     }
-    // The six launch-week stories expired before Nov 19. Two fresh Nov 4–7
-    // stories qualify for the Nov 19 board, then expire before Dec 3.
-    expect(newsCount).toBe(2);
+    // Two Nov 4–7 stories qualify on Nov 19; two of the three Nov 24
+    // editorial additions qualify on Dec 3. Later boards fall back to evergreen.
+    expect(newsCount).toBe(4);
     expect(seen.size).toBe(200);
   });
 
@@ -93,10 +93,18 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
       }
     }
     expect(seen.size).toBe(200);
-    expect(news).toEqual(new Set([
-      "nba-current-2026-11-04-wembanyama-52-24",
-      "nba-current-2026-11-07-warriors-seven-straight",
-    ]));
+    expect(news.size).toBe(4);
+    expect(news.has("nba-current-2026-11-04-wembanyama-52-24")).toBe(true);
+    expect(news.has("nba-current-2026-11-07-warriors-seven-straight")).toBe(true);
+    const nov24 = NBA_BAR_TRIVIA_CURRENT_EVENTS.filter(q => q.verifiedAt === "2026-11-24");
+    expect(nov24).toHaveLength(3);
+    expect(nov24.filter(q => news.has(q.id))).toHaveLength(2);
+    const dec3 = buildNbaBarTriviaDailyBoard(1, "2026-12-03").questions.filter(q => q.contentType === "current-event");
+    expect(dec3).toHaveLength(2);
+    for (const q of dec3) {
+      expect(nov24.some(row => row.id === q.id)).toBe(true);
+      expect(isBarTriviaQuestionActive(q, "2026-12-03T18:00:00Z")).toBe(true);
+    }
     expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
   });
 
@@ -117,8 +125,8 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
     }
     expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
     expect([...seenEvergreen].every(id => questions.some(q => q.id === id))).toBe(true);
-    expect(seenEvergreen.size).toBe(198);
-    expect(news.size).toBe(2);
+    expect(seenEvergreen.size).toBe(196);
+    expect(news.size).toBe(4);
     expect(seen.size).toBe(200);
     expect(() => buildNbaBarTriviaDailyBoard(0, "not-a-date")).toThrow();
   });
